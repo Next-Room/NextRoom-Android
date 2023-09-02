@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sv_admin_main"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/Dark01"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_background"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-126dp"
+                android:alpha="0.3"
+                android:importantForAccessibility="no"
+                android:src="@drawable/bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_logout_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/bg_button_small"
+                android:text="@string/logout_button"
+                android:textAppearance="@style/Poppins.14"
+                android:textColor="@color/Dark01"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_shop_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="46dp"
+                android:includeFontPadding="false"
+                android:text="@string/admin_main_shop_name_label"
+                android:textAppearance="@style/Pretendard.32"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_logout_button" />
+
+            <TextView
+                android:id="@+id/tv_shop_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:includeFontPadding="false"
+                android:textAppearance="@style/Pretendard.32.bold"
+                app:layout_constraintStart_toStartOf="@id/tv_shop_name_label"
+                app:layout_constraintTop_toBottomOf="@id/tv_shop_name_label"
+                tools:text="비트포비아 강남 2호점" />
+
+            <TextView
+                android:id="@+id/tv_update_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:alpha="0.6"
+                android:includeFontPadding="false"
+                android:text="@string/admin_main_update_hint"
+                android:textAppearance="@style/Pretendard.14"
+                app:layout_constraintEnd_toEndOf="@id/tv_logout_button"
+                app:layout_constraintStart_toStartOf="@id/tv_shop_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_shop_name" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_themes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_update_description"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_theme" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

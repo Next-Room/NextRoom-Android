@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Button">
+        <item name="android:background">@drawable/bg_button</item>
+        <item name="android:gravity">center</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAppearance">@style/Poppins.16</item>
+        <item name="android:textColor">@color/Dark01</item>
+    </style>
+
+    <style name="Button.Kor">
+        <item name="android:textAppearance">@style/Pretendard.16.Bold</item>
+    </style>
+
+    <style name="SmallButton">
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:background">@drawable/bg_button_small</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/Poppins.14</item>
+        <item name="android:textColor">@color/Dark01</item>
+    </style>
+
+    <style name="SmallButton.Dialog">
+        <item name="android:textAppearance">@style/Pretendard.14</item>
+        <item name="android:background">@drawable/bg_dialog_button</item>
+    </style>
+
+    <style name="SmallButton.Dialog.Negative">
+        <item name="android:background">@drawable/bg_dialog_button_negative</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="Keypad">
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:maxWidth">130dp</item>
+        <item name="android:background">@drawable/bg_keypad</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textAppearance">@style/Poppins.24</item>
+        <item name="android:textColor">@color/color_keypad_text</item>
+    </style>
+</resources>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/adminCodeFragment">
+
+    <fragment
+        android:id="@+id/adminCodeFragment"
+        android:name="com.nexters.nextroom.presentation.ui.login.LoginFragment"
+        android:label="AdminCodeFragment"
+        tools:layout="@layout/fragment_admin_code">
+        <action
+            android:id="@+id/action_adminCodeFragment_to_adminMainFragment"
+            app:destination="@id/adminMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/adminMainFragment"
+        android:name="com.nexters.nextroom.presentation.ui.adminmain.AdminMainFragment"
+        android:label="AdminMainFragment"
+        tools:layout="@layout/fragment_admin_main">
+        <action
+            android:id="@+id/action_adminMainFragment_to_verifyFragment"
+            app:destination="@id/verifyFragment" />
+        <action
+            android:id="@+id/action_adminMainFragment_to_adminCodeFragment"
+            app:destination="@id/adminCodeFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/adminMainFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.nexters.nextroom.presentation.ui.main.GameFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_hintFragment"
+            app:destination="@id/hintFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyFragment"
+        android:name="com.nexters.nextroom.presentation.ui.verity.VerifyFragment"
+        android:label="VerifyFragment"
+        tools:layout="@layout/fragment_admin_code">
+        <action
+            android:id="@+id/action_verifyFragment_to_startTimerFragment"
+            app:destination="@id/startTimerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startTimerFragment"
+        android:name="com.nexters.nextroom.presentation.ui.counter.CounterFragment"
+        android:label="StartTimerFragment"
+        tools:layout="@layout/fragment_start_timer">
+        <action
+            android:id="@+id/action_startTimerFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/adminMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/hintFragment"
+        android:name="com.nexters.nextroom.presentation.ui.hint.HintFragment"
+        android:label="HintFragment"
+        tools:layout="@layout/fragment_hint">
+        <action
+            android:id="@+id/action_hintFragment_to_mainFragment"
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/mainFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/memoFragment"
+        android:name="com.nexters.nextroom.presentation.ui.memo.MemoFragment"
+        android:label="MemoFragment"
+        tools:layout="@layout/fragment_memo">
+        <action
+            android:id="@+id/action_memoFragment_to_hintFragment"
+            app:destination="@id/hintFragment"
+            app:popUpTo="@id/hintFragment"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="fromHint"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_memoFragment"
+        app:destination="@id/memoFragment" />
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.nexters.nextroom.presentation.ui.webview.WebViewFragment"
+        android:label="WebViewFragment"
+        tools:layout="@layout/fragment_webview" >
+        <argument
+            android:name="url"
+            app:argType="string" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_webViewFragment"
+        app:destination="@id/webViewFragment" />
+</navigation>

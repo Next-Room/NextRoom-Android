@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/Dark01"
+    android:backgroundTintMode="add"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-41dp"
+        android:alpha="0.15"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/gradient_bottom_black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_hint_count" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_half"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.48" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_keypad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <include
+        android:id="@+id/tb_game"
+        layout="@layout/common_toolbar" />
+
+    <com.nexters.nextroom.presentation.customview.ArcProgressView
+        android:id="@+id/custom_timer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:arc_finished_color="@color/White"
+        app:arc_stroke_width="6dp"
+        app:arc_unfinished_color="@color/Gray01"
+        app:layout_constraintBottom_toBottomOf="@id/guide_half"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tb_game" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_timer_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_hint_label"
+        app:layout_constraintEnd_toEndOf="@id/custom_timer"
+        app:layout_constraintStart_toStartOf="@id/custom_timer"
+        app:layout_constraintTop_toTopOf="@id/custom_timer"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_colon_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.28" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_colon_second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.58" />
+
+        <TextView
+            android:id="@+id/tv_hours"
+            style="@style/Poppins.54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guide_colon_first"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            style="@style/Poppins.54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_colon_first"
+            app:layout_constraintStart_toStartOf="@id/guide_colon_first"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tv_minutes"
+            style="@style/Poppins.54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_colon_second"
+            app:layout_constraintStart_toStartOf="@id/guide_colon_first"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="00" />
+
+        <TextView
+            style="@style/Poppins.54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_colon_second"
+            app:layout_constraintStart_toStartOf="@id/guide_colon_second"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tv_seconds"
+            style="@style/Poppins.54"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toEndOf="@id/guide_colon_second"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="00" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_hint_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:includeFontPadding="false"
+        android:text="@string/common_hint_eng"
+        android:textAppearance="@style/Poppins.20"
+        app:layout_constraintBottom_toTopOf="@id/tv_hint_count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_timer_container" />
+
+    <TextView
+        android:id="@+id/tv_hint_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:includeFontPadding="false"
+        android:textAppearance="@style/Poppins.14"
+        app:layout_constraintBottom_toBottomOf="@id/custom_timer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_hint_label"
+        tools:text="12/999" />
+
+    <TextView
+        android:id="@+id/tv_code_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:text="@string/game_hint_code_label"
+        android:textAppearance="@style/Poppins.24"
+        app:layout_constraintBottom_toTopOf="@id/custom_code_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guide_half"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <com.nexters.nextroom.presentation.customview.CodeInputView
+        android:id="@+id/custom_code_input"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/guide_keypad"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_code_label" />
+
+    <TextView
+        android:id="@+id/tv_key_1"
+        style="@style/Keypad"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
+        android:text="1"
+        app:layout_constraintBottom_toTopOf="@id/tv_key_4"
+        app:layout_constraintEnd_toStartOf="@id/tv_key_2"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guide_keypad"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_2"
+        style="@style/Keypad"
+        android:text="2"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_1"
+        app:layout_constraintEnd_toStartOf="@id/tv_key_3"
+        app:layout_constraintStart_toEndOf="@id/tv_key_1"
+        app:layout_constraintTop_toTopOf="@id/tv_key_1"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_3"
+        style="@style/Keypad"
+        android:layout_marginEnd="20dp"
+        android:text="3"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_key_2"
+        app:layout_constraintTop_toTopOf="@id/tv_key_1"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_4"
+        style="@style/Keypad"
+        android:text="4"
+        app:layout_constraintBottom_toTopOf="@id/tv_key_7"
+        app:layout_constraintEnd_toStartOf="@id/tv_key_5"
+        app:layout_constraintStart_toStartOf="@id/tv_key_1"
+        app:layout_constraintTop_toBottomOf="@id/tv_key_1"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_5"
+        style="@style/Keypad"
+        android:text="5"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_4"
+        app:layout_constraintEnd_toStartOf="@id/tv_key_6"
+        app:layout_constraintStart_toEndOf="@id/tv_key_4"
+        app:layout_constraintTop_toTopOf="@id/tv_key_4"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_6"
+        style="@style/Keypad"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_4"
+        app:layout_constraintEnd_toEndOf="@id/tv_key_3"
+        app:layout_constraintStart_toEndOf="@id/tv_key_5"
+        app:layout_constraintTop_toTopOf="@id/tv_key_4"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_7"
+        style="@style/Keypad"
+        android:text="7"
+        app:layout_constraintBottom_toTopOf="@id/tv_key_0"
+        app:layout_constraintEnd_toStartOf="@id/tv_key_8"
+        app:layout_constraintStart_toStartOf="@id/tv_key_1"
+        app:layout_constraintTop_toBottomOf="@id/tv_key_4"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_8"
+        style="@style/Keypad"
+        android:text="8"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_7"
+        app:layout_constraintEnd_toStartOf="@id/tv_key_9"
+        app:layout_constraintStart_toEndOf="@id/tv_key_7"
+        app:layout_constraintTop_toTopOf="@id/tv_key_7"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_9"
+        style="@style/Keypad"
+        android:text="9"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_7"
+        app:layout_constraintEnd_toEndOf="@id/tv_key_3"
+        app:layout_constraintStart_toEndOf="@id/tv_key_8"
+        app:layout_constraintTop_toTopOf="@id/tv_key_7"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tv_key_0"
+        style="@style/Keypad"
+        android:layout_marginBottom="42dp"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_key_8"
+        app:layout_constraintStart_toStartOf="@id/tv_key_8"
+        app:layout_constraintTop_toBottomOf="@id/tv_key_7"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/iv_key_backspace"
+        style="@style/Keypad"
+        android:contentDescription="@string/game_backspace_description"
+        android:padding="16dp"
+        android:src="@drawable/ic_backspace"
+        app:layout_constraintBottom_toBottomOf="@id/tv_key_0"
+        app:layout_constraintEnd_toEndOf="@id/tv_key_9"
+        app:layout_constraintStart_toEndOf="@id/tv_key_0"
+        app:layout_constraintTop_toTopOf="@id/tv_key_0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

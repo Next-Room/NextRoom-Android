@@ -1,0 +1,22 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.NextRoom" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/Dark01</item>
+        <item name="colorPrimaryVariant">@color/Dark01</item>
+        <item name="colorOnPrimary">@color/White</item>
+        <item name="colorSurface">@color/Dark01</item>
+        <item name="colorOnSurface">@color/White</item>
+        <item name="android:colorBackground">@color/Dark01</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/Gray01</item>
+        <item name="colorSecondaryVariant">@color/Gray02</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Customize your theme here. -->
+        <item name="colorControlNormal">@color/Gray01</item>
+        <item name="colorControlActivated">@color/White</item>
+    </style>
+</resources>

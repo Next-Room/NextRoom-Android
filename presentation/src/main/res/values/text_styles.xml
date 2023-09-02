@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Pretendard">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="Pretendard.12">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="Pretendard.14">
+        <item name="fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="Pretendard.16">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:lineSpacingExtra">3dp</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Pretendard.16.Bold">
+        <item name="fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="Pretendard.18">
+        <item name="fontFamily">@font/pretendard_bold</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="Pretendard.20">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="Pretendard.24">
+        <item name="fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+        <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="Pretendard.32">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:lineSpacingExtra">6dp</item>
+        <item name="android:textSize">32dp</item>
+    </style>
+
+    <style name="Pretendard.32.bold">
+        <item name="fontFamily">@font/pretendard_bold</item>
+    </style>
+
+    <style name="Poppins">
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="Poppins.14">
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:lineSpacingExtra">-1dp</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="Poppins.16">
+        <item name="fontFamily">@font/poppins_medium</item>
+        <item name="android:lineSpacingExtra">-2dp</item>
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Poppins.18">
+        <item name="fontFamily">@font/poppins_semi_bold</item>
+        <item name="android:lineSpacingExtra">-2dp</item>
+        <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="Poppins.20">
+        <item name="fontFamily">@font/poppins_semi_bold</item>
+        <item name="android:lineSpacingExtra">-2dp</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="Poppins.24">
+        <item name="fontFamily">@font/poppins_semi_bold</item>
+        <item name="android:lineSpacingExtra">-2dp</item>
+        <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="Poppins.54">
+        <item name="fontFamily">@font/poppins_semi_bold</item>
+        <item name="android:lineSpacingExtra">-5dp</item>
+        <item name="android:textSize">54dp</item>
+    </style>
+</resources>

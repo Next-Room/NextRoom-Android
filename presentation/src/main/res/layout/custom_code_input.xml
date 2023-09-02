@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="4dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_code_1"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_code_normal"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textAppearance="@style/Poppins.24"
+        tools:text="3" />
+
+    <TextView
+        android:id="@+id/tv_code_2"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/bg_code_normal"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textAppearance="@style/Poppins.24"
+        tools:text="3" />
+
+    <TextView
+        android:id="@+id/tv_code_3"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/bg_code_normal"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textAppearance="@style/Poppins.24"
+        tools:text="3" />
+
+    <TextView
+        android:id="@+id/tv_code_4"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="6dp"
+        android:background="@drawable/bg_code_normal"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textAppearance="@style/Poppins.24"
+        tools:text="3" />
+</LinearLayout>
