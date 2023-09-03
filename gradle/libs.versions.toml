@@ -17,6 +17,7 @@ espresso = "3.5.1"
 firebase-bom = "32.2.2"
 coroutines = "1.7.2"
 glide = "4.14.2"
+coil = "2.4.0"
 hilt = "2.46.1"
 hilt-navigation-fragment = "1.0.0"
 javax-inject = "1"
@@ -24,7 +25,7 @@ timber = "5.0.1"
 junit = "4.13.2"
 kotlinx-serialization-json = "1.5.1"
 logging-interceptor = "4.9.3"
-lottie = "5.2.0"
+lottie = "6.1.0"
 material = "1.9.0"
 navigation = "2.6.0"
 navigation-safe-args-gradle-plugin = "2.6.0"
@@ -61,6 +62,7 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
@@ -73,9 +75,11 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "logging-interceptor" }
 lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
+orbit-compose = { module = "org.orbit-mvi:orbit-compose", version.ref = "orbit" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.require = "false" }
@@ -94,7 +98,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 
 [bundles]
 coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm", "kotlinx-coroutines-android"]
-orbit = ["orbit-core", "orbit-viewmodel"]
+orbit = ["orbit-core", "orbit-viewmodel", "orbit-compose"]
 navigation = ["androidx-navigation-ui-ktx", "androidx-hilt-navigation-fragment", "androidx-navigation-fragment-ktx"]
 lifecycle = ["androidx-lifecycle-runtime-ktx", "androidx-lifecycle-viewmodel-ktx", "androidx-lifecycle-viewmodel-savedstate"]
 android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-coroutines-test"]

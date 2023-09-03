@@ -37,6 +37,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        compose = true
     }
 }
 
@@ -58,7 +59,9 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     implementation(libs.glide)
+    implementation(libs.coil.compose)
     implementation(libs.lottie)
+    implementation(libs.lottie.compose)
     implementation(libs.bundles.orbit)
     implementation(libs.bundles.navigation)
     implementation(libs.timber)
