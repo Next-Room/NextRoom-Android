@@ -8,6 +8,7 @@ compileSdk = "33"
 activity-ktx = "1.7.2"
 fragment-ktx = "1.6.1"
 lifecycle = "2.6.1"
+material3 = "1.1.1"
 androidx-junit = "1.1.5"
 appcompat = "1.6.1"
 constraintlayout = "2.1.4"
@@ -53,6 +54,13 @@ androidx-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-j
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "lifecycle" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+androidx-compose-uitooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.require = "false" }
+androidx-compose-uitooling = { module = "androidx.compose.ui:ui-tooling", version.require = "false" }
+androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.require = "false" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.require = "false" }
+androidx-compose-activity = { module = "androidx.activity:activity-compose", version.ref = "activity-ktx" }
+androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation-safe-args-gradle-plugin" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
@@ -94,7 +102,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref="kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm", "kotlinx-coroutines-android"]
@@ -105,3 +113,4 @@ android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-co
 network = ["retrofit", "converter-gson", "logging-interceptor"]
 db = ["androidx-datastore", "androidx-datastore-preferences-core", "androidx-room-runtime", "androidx-room-ktx"]
 firebase = ["firebase-analytics-ktx", "firebase-crashlytics-ktx"]
+compose = ["androidx-compose-material3", "androidx-compose-activity", "androidx-compose-material-icons-core", "androidx-compose-material-icons-extended", "androidx-compose-uitooling-preview", "androidx-compose-viewmodel"]
