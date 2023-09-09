@@ -25,10 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nexters.nextroom.presentation.R
-import com.nexters.nextroom.presentation.ui.theme.Gray02
 import com.nexters.nextroom.presentation.ui.theme.KeypadButton
 import com.nexters.nextroom.presentation.ui.theme.NextRoomTheme
-import com.nexters.nextroom.presentation.ui.theme.White
 
 @Composable
 fun NumberKeypad(
