@@ -11,7 +11,7 @@ import com.nexters.nextroom.presentation.extension.vibrator
 
 abstract class BaseFragment<VB : ViewBinding, STATE : Any, SIDE_EFFECT : Any>(private val inflate: (LayoutInflater, ViewGroup?) -> VB) :
     Fragment() {
-    private var _binding: VB? = null
+    open var _binding: VB? = null
     val binding
         get() = _binding ?: error("binding is null")
 
