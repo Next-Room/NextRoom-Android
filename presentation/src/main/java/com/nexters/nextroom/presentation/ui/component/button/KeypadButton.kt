@@ -51,7 +51,7 @@ fun NumberKeypad(
                 .align(Alignment.Center),
             text = number.toString(),
             style = MaterialTheme.typography.KeypadButton,
-            color = if (isPressed) Gray02 else White,
+            color = if (isPressed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary,
         )
     }
 }
@@ -76,7 +76,7 @@ fun IconKeypad(
                 .align(Alignment.Center),
             painter = painterResource(id = drawableRes),
             contentDescription = contentDescription,
-            colorFilter = ColorFilter.tint(if (isPressed) Gray02 else White),
+            colorFilter = ColorFilter.tint(if (isPressed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary),
             contentScale = ContentScale.Fit,
         )
     }
