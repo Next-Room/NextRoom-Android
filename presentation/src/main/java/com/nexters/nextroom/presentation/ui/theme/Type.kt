@@ -98,3 +98,10 @@ val Typography.KeypadButton: TextStyle
         color = White,
         fontSize = TextUnit(24f, TextUnitType.Sp),
     )
+
+val Typography.ToolbarTimerTitle: TextStyle
+    @Composable get() = bodyMedium.copy(
+        fontFamily = Poppins,
+        color = White,
+        fontWeight = FontWeight.SemiBold,
+    )
