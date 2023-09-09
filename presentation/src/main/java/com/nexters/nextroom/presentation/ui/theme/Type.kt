@@ -105,3 +105,10 @@ val Typography.ToolbarTimerTitle: TextStyle
         color = White,
         fontWeight = FontWeight.SemiBold,
     )
+
+val Typography.TextInput: TextStyle
+    @Composable get() = TextStyle(
+        fontFamily = Pretendard,
+        color = White,
+        fontSize = TextUnit(16f, TextUnitType.Sp),
+    )
