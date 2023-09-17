@@ -3,8 +3,9 @@ package com.nexters.nextroom.presentation.ui.component.button
 import androidx.annotation.StringRes
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -34,8 +35,9 @@ fun MainButton(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     Button(
-        modifier = modifier.fillMaxWidth().padding(vertical = 20.dp),
+        modifier = modifier.fillMaxWidth().defaultMinSize(minHeight = 60.dp),
         interactionSource = interactionSource,
+        contentPadding = PaddingValues(vertical = 0.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isPressed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary,
             contentColor = Dark01,

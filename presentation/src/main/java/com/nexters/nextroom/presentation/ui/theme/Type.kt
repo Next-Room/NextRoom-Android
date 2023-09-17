@@ -6,8 +6,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
+import androidx.compose.ui.unit.sp
 import com.nexters.nextroom.presentation.R
 
 private val Poppins = FontFamily(
@@ -26,41 +25,41 @@ val NextRoomTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = Poppins,
         color = White,
-        fontSize = TextUnit(54f, TextUnitType.Sp),
+        fontSize = 54.sp,
         fontWeight = FontWeight.SemiBold,
     ),
     titleLarge = TextStyle(
         fontFamily = Pretendard,
         color = White,
-        fontSize = TextUnit(32f, TextUnitType.Sp),
+        fontSize = 32.sp,
         fontWeight = FontWeight.Bold,
     ),
     titleMedium = TextStyle(
         fontFamily = Pretendard,
         color = White,
-        fontSize = TextUnit(24f, TextUnitType.Sp),
+        fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold,
     ),
     bodyMedium = TextStyle(
         fontFamily = Pretendard,
         color = White,
-        fontSize = TextUnit(20f, TextUnitType.Sp),
+        fontSize = 20.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = Poppins,
         color = White,
-        fontSize = TextUnit(14f, TextUnitType.Sp),
+        fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
     ),
     labelMedium = TextStyle(
-        fontFamily = Poppins,
+        fontFamily = Pretendard,
         color = Gray01,
-        fontSize = TextUnit(16f, TextUnitType.Sp),
+        fontSize = 16.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = Pretendard,
         color = Gray01,
-        fontSize = TextUnit(12f, TextUnitType.Sp),
+        fontSize = 12.sp,
     ),
 )
 
@@ -68,35 +67,35 @@ val Typography.EngButton: TextStyle
     @Composable get() = labelMedium.copy(
         fontFamily = Poppins,
         color = Dark01,
-        fontSize = TextUnit(16f, TextUnitType.Sp),
+        fontSize = 16.sp,
     )
 
 val Typography.KorButton: TextStyle
     @Composable get() = labelMedium.copy(
         fontFamily = Pretendard,
         color = Dark01,
-        fontSize = TextUnit(16f, TextUnitType.Sp),
+        fontSize = 16.sp,
     )
 
 val Typography.EngSubButton: TextStyle
     @Composable get() = labelMedium.copy(
         fontFamily = Poppins,
         color = Dark01,
-        fontSize = TextUnit(14f, TextUnitType.Sp),
+        fontSize = 14.sp,
     )
 
 val Typography.KorSubButton: TextStyle
     @Composable get() = labelMedium.copy(
         fontFamily = Pretendard,
         color = Dark01,
-        fontSize = TextUnit(14f, TextUnitType.Sp),
+        fontSize = 14.sp,
     )
 
 val Typography.KeypadButton: TextStyle
     @Composable get() = labelMedium.copy(
         fontFamily = Poppins,
         color = White,
-        fontSize = TextUnit(24f, TextUnitType.Sp),
+        fontSize = 24.sp,
     )
 
 val Typography.ToolbarTimerTitle: TextStyle
@@ -110,5 +109,5 @@ val Typography.TextInput: TextStyle
     @Composable get() = TextStyle(
         fontFamily = Pretendard,
         color = White,
-        fontSize = TextUnit(16f, TextUnitType.Sp),
+        fontSize = 16.sp,
     )
