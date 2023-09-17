@@ -69,7 +69,12 @@ class LoginViewModel @Inject constructor(
             .onSuccess {
                 verifySuccess()
             }.onFailure {
-                reduce { state.copy(idInputState = InputState.Error(R.string.blank)) }
+                reduce {
+                    state.copy(
+                        idInputState = InputState.Error(R.string.blank),
+                        passwordInputState = InputState.Error(R.string.blank),
+                    )
+                }
                 when (it) {
                     is Result.Failure.HttpError -> event(LoginEvent.LoginFailed(it.message))
                     is Result.Failure.NetworkError -> showMessage(R.string.error_network)
