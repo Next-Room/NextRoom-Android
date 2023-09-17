@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -33,9 +34,9 @@ fun SubButton(
     val isPressed by interactionSource.collectIsPressedAsState()
 
     Button(
-        modifier = modifier,
+        modifier = modifier.heightIn(min = 32.dp),
         interactionSource = interactionSource,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = if (isPressed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.primary,
             contentColor = Dark01,
