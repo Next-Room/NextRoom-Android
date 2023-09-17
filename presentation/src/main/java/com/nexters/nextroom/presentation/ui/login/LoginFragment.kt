@@ -39,7 +39,6 @@ import androidx.navigation.fragment.findNavController
 import com.nexters.nextroom.presentation.R
 import com.nexters.nextroom.presentation.base.BaseFragment
 import com.nexters.nextroom.presentation.databinding.FragmentLoginBinding
-import com.nexters.nextroom.presentation.extension.repeatOnStarted
 import com.nexters.nextroom.presentation.extension.safeNavigate
 import com.nexters.nextroom.presentation.extension.snackbar
 import com.nexters.nextroom.presentation.model.InputState
@@ -166,26 +165,14 @@ class LoginFragment :
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        observe()
-    }
-
-    private fun observe() {
-        viewLifecycleOwner.repeatOnStarted {
-            viewModel.loginState.collect { loggedIn ->
-                if (loggedIn) {
-                    val action =
-                        LoginFragmentDirections.actionAdminCodeFragmentToAdminMainFragment()
-                    findNavController().safeNavigate(action)
-                }
-            }
-        }
-    }
-
     private fun handleEvent(event: LoginEvent) {
         when (event) {
+            is LoginEvent.LoginSuccess -> {
+                val action =
+                    LoginFragmentDirections.actionAdminCodeFragmentToAdminMainFragment()
+                findNavController().safeNavigate(action)
+            }
+
             is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
             is LoginEvent.LoginFailed -> {
                 snackbar(event.message)

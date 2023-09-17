@@ -11,9 +11,6 @@ import com.nexters.nextroom.presentation.base.BaseViewModel
 import com.nexters.nextroom.presentation.model.InputState
 import com.nexters.nextroom.presentation.model.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -28,11 +25,6 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel<LoginState, LoginEvent>() {
 
     override val container: Container<LoginState, LoginEvent> = container(LoginState())
-    val loginState: StateFlow<Boolean> = adminRepository.loggedIn.stateIn(
-        viewModelScope,
-        SharingStarted.Eagerly,
-        false,
-    )
 
     init {
         viewModelScope.launch {
@@ -93,6 +85,7 @@ class LoginViewModel @Inject constructor(
         reduce {
             state.copy(idInputState = InputState.Ok, passwordInputState = InputState.Ok)
         }
+        postSideEffect(LoginEvent.LoginSuccess)
     }
 
     private fun showMessage(message: String) = intent {

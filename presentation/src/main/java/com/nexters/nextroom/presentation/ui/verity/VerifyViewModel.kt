@@ -37,8 +37,13 @@ class VerifyViewModel @Inject constructor(
     fun complete() = intent {
         val success = adminRepository.verifyAdminCode(state.currentInput)
         reduce {
+            if (success) verifySuccess()
             state.copy(inputState = if (success) InputState.Ok else InputState.Error(R.string.blank))
         }
+    }
+
+    private fun verifySuccess() = intent {
+        postSideEffect(LoginEvent.LoginSuccess)
     }
 
     private fun showMessage(message: String) = intent {

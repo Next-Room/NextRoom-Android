@@ -29,6 +29,7 @@ fun MainButton(
     @StringRes stringRes: Int? = null,
     text: String = "",
     isKorean: Boolean = true,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
@@ -43,6 +44,7 @@ fun MainButton(
             contentColor = Dark01,
         ),
         shape = MaterialTheme.shapes.large,
+        enabled = enabled,
         onClick = onClick,
     ) {
         Text(
