@@ -99,7 +99,7 @@ class VerifyFragment :
                 modifier = Modifier.padding(top = 10.dp),
             )
             NRTextInput(
-                modifier = Modifier.padding(top = 32.dp),
+                modifier = Modifier.padding(top = 32.dp).fillMaxWidth(),
                 value = state.currentInput,
                 onValueChange = viewModel::inputCode,
                 hint = stringResource(id = R.string.admin_code_hint),
