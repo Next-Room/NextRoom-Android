@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -28,27 +29,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nexters.nextroom.presentation.R
-import com.nexters.nextroom.presentation.base.BaseFragment
-import com.nexters.nextroom.presentation.databinding.FragmentAdminCodeBinding
 import com.nexters.nextroom.presentation.extension.safeNavigate
 import com.nexters.nextroom.presentation.extension.snackbar
 import com.nexters.nextroom.presentation.ui.component.button.MainButton
 import com.nexters.nextroom.presentation.ui.component.textinput.NRTextInput
 import com.nexters.nextroom.presentation.ui.login.LoginEvent
-import com.nexters.nextroom.presentation.ui.login.LoginState
 import com.nexters.nextroom.presentation.ui.theme.NextRoomTheme
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @AndroidEntryPoint
-class VerifyFragment :
-    BaseFragment<FragmentAdminCodeBinding, LoginState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentAdminCodeBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class VerifyFragment : Fragment() {
 
     private val viewModel: VerifyViewModel by viewModels()
 
@@ -57,8 +53,7 @@ class VerifyFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentAdminCodeBinding.inflate(inflater, container, false)
-        binding.composeView.apply {
+        return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
             setContent {
@@ -71,7 +66,6 @@ class VerifyFragment :
                 }
             }
         }
-        return binding.root
     }
 
     private fun handleEvent(event: LoginEvent) {
@@ -104,7 +98,10 @@ class VerifyFragment :
                 value = state.currentInput,
                 onValueChange = viewModel::inputCode,
                 hint = stringResource(id = R.string.admin_code_hint),
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
+                keyboardOptions = KeyboardOptions.Default.copy(
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal,
+                ),
                 keyboardActions = KeyboardActions(onDone = { viewModel.complete() }),
             )
             MainButton(

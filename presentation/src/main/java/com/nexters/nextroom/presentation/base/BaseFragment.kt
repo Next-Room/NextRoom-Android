@@ -9,7 +9,7 @@ import androidx.viewbinding.ViewBinding
 import com.nexters.nextroom.presentation.extension.statusBarHeight
 import com.nexters.nextroom.presentation.extension.vibrator
 
-abstract class BaseFragment<VB : ViewBinding, STATE : Any, SIDE_EFFECT : Any>(private val inflate: (LayoutInflater, ViewGroup?) -> VB) :
+abstract class BaseFragment<VB : ViewBinding>(private val inflate: (LayoutInflater, ViewGroup?) -> VB) :
     Fragment() {
     open var _binding: VB? = null
     val binding

@@ -1,7 +1,9 @@
 package com.nexters.nextroom.presentation.ui.hint
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -19,13 +21,19 @@ import org.orbitmvi.orbit.viewmodel.observe
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HintFragment :
-    BaseFragment<FragmentHintBinding, GameScreenState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentHintBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class HintFragment : BaseFragment<FragmentHintBinding>({ layoutInflater, viewGroup ->
+    FragmentHintBinding.inflate(layoutInflater, viewGroup, false)
+}) {
 
     private val gameViewModel: GameViewModel by activityViewModels()
     private var scrolled: Boolean = false
+    override var _binding: FragmentHintBinding? = null
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = FragmentHintBinding.inflate(inflater, container, false)
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

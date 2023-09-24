@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -44,11 +45,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nexters.nextroom.presentation.R
-import com.nexters.nextroom.presentation.base.BaseFragment
-import com.nexters.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nexters.nextroom.presentation.extension.safeNavigate
 import com.nexters.nextroom.presentation.model.ThemeInfoPresentation
 import com.nexters.nextroom.presentation.ui.component.button.SubButton
@@ -58,10 +58,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.compose.collectAsState
 
 @AndroidEntryPoint
-class AdminMainFragment :
-    BaseFragment<FragmentAdminMainBinding, AdminMainState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentAdminMainBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class AdminMainFragment : Fragment() {
 
     private lateinit var backCallback: OnBackPressedCallback
 
@@ -82,8 +79,7 @@ class AdminMainFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentAdminMainBinding.inflate(inflater, container, false)
-        binding.composeView.apply {
+        return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
 
             setContent {
@@ -95,7 +91,6 @@ class AdminMainFragment :
                 }
             }
         }
-        return binding.root
     }
 
     private fun startGame(code: Int) {

@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,11 +35,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nexters.nextroom.presentation.R
-import com.nexters.nextroom.presentation.base.BaseFragment
-import com.nexters.nextroom.presentation.databinding.FragmentLoginBinding
 import com.nexters.nextroom.presentation.extension.safeNavigate
 import com.nexters.nextroom.presentation.extension.snackbar
 import com.nexters.nextroom.presentation.model.InputState
@@ -50,24 +50,17 @@ import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.compose.collectSideEffect
 
 @AndroidEntryPoint
-class LoginFragment :
-    BaseFragment<FragmentLoginBinding, LoginState, LoginEvent>({ layoutInflater, viewGroup ->
-        FragmentLoginBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class LoginFragment : Fragment() {
 
     private val viewModel: LoginViewModel by viewModels()
-
-    override var _binding: FragmentLoginBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
-        binding.composeView.apply {
+        return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-
             setContent {
                 NextRoomTheme {
                     Surface {
@@ -78,7 +71,6 @@ class LoginFragment :
                 }
             }
         }
-        return binding.root
     }
 
     @Composable
