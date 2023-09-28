@@ -13,19 +13,21 @@ val Red = Color(0xFFFF5065)
 val NextRoomDarkColors = darkColorScheme(
     primary = White,
     onPrimary = Dark01,
-    surfaceVariant = Gray02,
     surface = Dark01,
+    surfaceVariant = Gray02,
+    background = Dark01,
     onSurface = White,
     error = Red,
-    onError = White
+    onError = White,
 )
 
 val NextRoomLightColors = lightColorScheme(
     primary = White,
     onPrimary = Dark01,
-    surfaceVariant = Gray02,
     surface = Dark01,
+    surfaceVariant = Gray02,
+    background = Dark01,
     onSurface = White,
     error = Red,
-    onError = White
+    onError = White,
 )
