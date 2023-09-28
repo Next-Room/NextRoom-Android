@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/adminCodeFragment"
         android:name="com.nexters.nextroom.presentation.ui.login.LoginFragment"
-        android:label="AdminCodeFragment"
-        tools:layout="@layout/fragment_admin_code">
+        android:label="AdminCodeFragment">
         <action
             android:id="@+id/action_adminCodeFragment_to_adminMainFragment"
             app:destination="@id/adminMainFragment"
@@ -19,8 +18,7 @@
     <fragment
         android:id="@+id/adminMainFragment"
         android:name="com.nexters.nextroom.presentation.ui.adminmain.AdminMainFragment"
-        android:label="AdminMainFragment"
-        tools:layout="@layout/fragment_admin_main">
+        android:label="AdminMainFragment">
         <action
             android:id="@+id/action_adminMainFragment_to_verifyFragment"
             app:destination="@id/verifyFragment" />
@@ -43,8 +41,7 @@
     <fragment
         android:id="@+id/verifyFragment"
         android:name="com.nexters.nextroom.presentation.ui.verity.VerifyFragment"
-        android:label="VerifyFragment"
-        tools:layout="@layout/fragment_admin_code">
+        android:label="VerifyFragment">
         <action
             android:id="@+id/action_verifyFragment_to_startTimerFragment"
             app:destination="@id/startTimerFragment" />
@@ -52,8 +49,7 @@
     <fragment
         android:id="@+id/startTimerFragment"
         android:name="com.nexters.nextroom.presentation.ui.counter.CounterFragment"
-        android:label="StartTimerFragment"
-        tools:layout="@layout/fragment_start_timer">
+        android:label="StartTimerFragment">
         <action
             android:id="@+id/action_startTimerFragment_to_mainFragment"
             app:destination="@id/mainFragment"
@@ -62,8 +58,7 @@
     <fragment
         android:id="@+id/hintFragment"
         android:name="com.nexters.nextroom.presentation.ui.hint.HintFragment"
-        android:label="HintFragment"
-        tools:layout="@layout/fragment_hint">
+        android:label="HintFragment">
         <action
             android:id="@+id/action_hintFragment_to_mainFragment"
             app:destination="@id/mainFragment"
