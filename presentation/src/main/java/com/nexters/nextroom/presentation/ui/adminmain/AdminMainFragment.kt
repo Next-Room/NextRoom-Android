@@ -200,7 +200,7 @@ class AdminMainFragment : Fragment() {
             Text(
                 text = theme.title,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
             )
             Spacer(modifier = Modifier.size(10.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {

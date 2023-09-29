@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             MainEvent.GoToAdminCode -> {
-                navController?.popBackStack(navController.graph.startDestinationId, false)
+                navController?.navigate(R.id.action_global_adminCodeFragment)
             }
         }
     }
