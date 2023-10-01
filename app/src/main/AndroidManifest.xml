@@ -6,7 +6,8 @@
 
     <supports-screens
         android:largeScreens="false"
-        android:resizeable="false"
+        android:normalScreens="true"
+        android:smallScreens="false"
         android:xlargeScreens="false" />
 
     <application

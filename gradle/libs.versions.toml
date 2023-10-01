@@ -1,13 +1,13 @@
 [versions]
 minSdk = "24"
 targetSdk = "34"
-versionCode = "6"
-versionName = "0.2.2"
+versionCode = "7"
+versionName = "0.2.3"
 compileSdk = "34"
 targetJvm = "17"
 kotlin = "1.9.10"
 android = "8.1.2"
-ksp = "1.9.0-1.0.13"
+ksp = "1.9.10-1.0.13"
 
 activity-ktx = "1.7.2"
 fragment-ktx = "1.6.1"
