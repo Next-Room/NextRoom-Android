@@ -1,7 +1,7 @@
 ---
 name: Refactoring
 about: 리팩터링
-title: ''
+title: '[REFACTOR]'
 labels: refactor
 assignees: mangbaam
 
