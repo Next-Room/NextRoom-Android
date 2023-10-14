@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nexters.nextroom.presentation"
+    namespace = "com.nextroom.nextroom.presentation"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

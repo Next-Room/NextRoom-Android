@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/adminCodeFragment"
-        android:name="com.nexters.nextroom.presentation.ui.login.LoginFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
         android:label="AdminCodeFragment"
         tools:layout="@layout/fragment_admin_code">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/adminMainFragment"
-        android:name="com.nexters.nextroom.presentation.ui.adminmain.AdminMainFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.adminmain.AdminMainFragment"
         android:label="AdminMainFragment"
         tools:layout="@layout/fragment_admin_main">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.nexters.nextroom.presentation.ui.main.GameFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.main.GameFragment"
         android:label="MainFragment"
         tools:layout="@layout/fragment_main">
         <action
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/verifyFragment"
-        android:name="com.nexters.nextroom.presentation.ui.verity.VerifyFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.verity.VerifyFragment"
         android:label="VerifyFragment"
         tools:layout="@layout/fragment_admin_code">
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/startTimerFragment"
-        android:name="com.nexters.nextroom.presentation.ui.counter.CounterFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"
         android:label="StartTimerFragment"
         tools:layout="@layout/fragment_start_timer">
         <action
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/hintFragment"
-        android:name="com.nexters.nextroom.presentation.ui.hint.HintFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
         android:label="HintFragment"
         tools:layout="@layout/fragment_hint">
         <action
@@ -64,7 +64,7 @@
     </fragment>
     <fragment
         android:id="@+id/memoFragment"
-        android:name="com.nexters.nextroom.presentation.ui.memo.MemoFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
         android:label="MemoFragment"
         tools:layout="@layout/fragment_memo">
         <action
@@ -82,7 +82,7 @@
         app:destination="@id/memoFragment" />
     <fragment
         android:id="@+id/webViewFragment"
-        android:name="com.nexters.nextroom.presentation.ui.webview.WebViewFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.webview.WebViewFragment"
         android:label="WebViewFragment"
         tools:layout="@layout/fragment_webview" >
         <argument

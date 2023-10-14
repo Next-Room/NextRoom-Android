@@ -11,7 +11,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nexters.nextroom.data"
+    namespace = "com.nextroom.nextroom.data"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

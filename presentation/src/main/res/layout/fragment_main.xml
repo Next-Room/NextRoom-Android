@@ -47,7 +47,7 @@
         android:id="@+id/tb_game"
         layout="@layout/common_toolbar" />
 
-    <com.nexters.nextroom.presentation.customview.ArcProgressView
+    <com.nextroom.nextroom.presentation.customview.ArcProgressView
         android:id="@+id/custom_timer"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -183,7 +183,7 @@
         app:layout_constraintTop_toTopOf="@id/guide_half"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <com.nexters.nextroom.presentation.customview.CodeInputView
+    <com.nextroom.nextroom.presentation.customview.CodeInputView
         android:id="@+id/custom_code_input"
         android:layout_width="wrap_content"
         android:layout_height="48dp"

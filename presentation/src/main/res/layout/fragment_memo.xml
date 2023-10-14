@@ -9,7 +9,7 @@
         android:id="@+id/tb_memo"
         layout="@layout/common_toolbar" />
 
-    <com.nexters.nextroom.presentation.customview.PainterView
+    <com.nextroom.nextroom.presentation.customview.PainterView
         android:id="@+id/custom_painter_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

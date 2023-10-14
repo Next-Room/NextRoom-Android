@@ -9,7 +9,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fcv_nav_host"
-        android:name="com.nexters.nextroom.presentation.util.system.DispatchInsetsNavHostFragment"
+        android:name="com.nextroom.nextroom.presentation.util.system.DispatchInsetsNavHostFragment"
         android:layout_width="match_parent"
         android:background="@color/Dark01"
         android:layout_height="match_parent"

@@ -1,0 +1,18 @@
+package com.nextroom.nextroom.data.datasource
+
+import com.nextroom.nextroom.data.network.ApiService
+import com.nextroom.nextroom.data.network.response.toDomain
+import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.ThemeInfo
+import com.nextroom.nextroom.domain.model.mapOnSuccess
+import javax.inject.Inject
+
+class ThemeRemoteDataSource @Inject constructor(
+    private val apiService: ApiService,
+) {
+
+    suspend fun getThemes(adminCode: String): Result<List<ThemeInfo>> {
+        return apiService.getThemes(adminCode)
+            .mapOnSuccess { it.data.toDomain() }
+    }
+}

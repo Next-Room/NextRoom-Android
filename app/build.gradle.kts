@@ -10,7 +10,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nexters.nextroom"
+    namespace = "com.nextroom.nextroom"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     lint {

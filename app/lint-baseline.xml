@@ -4,7 +4,7 @@
     <issue
         id="Instantiatable"
         message="`MainActivity` must extend android.app.Activity"
-        errorLine1="            android:name=&quot;com.nexters.nextroom.presentation.ui.MainActivity&quot;"
+        errorLine1="            android:name=&quot;com.nextroom.nextroom.presentation.ui.MainActivity&quot;"
         errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/AndroidManifest.xml"

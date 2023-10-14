@@ -11,7 +11,7 @@
         android:xlargeScreens="false" />
 
     <application
-        android:name="com.nexters.nextroom.NextRoomApplication"
+        android:name="com.nextroom.nextroom.NextRoomApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,7 +22,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="com.nexters.nextroom.presentation.ui.MainActivity"
+            android:name="com.nextroom.nextroom.presentation.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
