@@ -53,17 +53,21 @@ class AdminMainFragment :
     }
 
     private fun initViews() = with(binding) {
-        setMarginTopStatusBarHeight(tvLogoutButton)
-
+        setMarginTopStatusBarHeight(ivMyButton)
         rvThemes.adapter = adapter
-        tvLogoutButton.setOnClickListener {
-            viewModel.logout()
+        ivMyButton.setOnClickListener {
+            findNavController().safeNavigate(AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment())
         }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
+    }
+
+    override fun onDestroyView() {
+        binding.rvThemes.adapter = null
+        super.onDestroyView()
     }
 
     override fun onDetach() {

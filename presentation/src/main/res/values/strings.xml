@@ -38,7 +38,7 @@
     <string name="login_admin_code_hint">관리자 코드</string>
     <string name="login_password_hint">비밀번호</string>
     <string name="login_button">Login</string>
-    <string name="logout_button">Logout</string>
+    <string name="logout_button">로그아웃</string>
     <string name="logout_button_description">로그아웃</string>
     <string name="update_button_description">테마 업데이트</string>
 
@@ -57,4 +57,8 @@
     <string name="game_answer">정답</string>
     <string name="toolbar_navigate_back_description">뒤로가기</string>
     <string name="game_backspace_description">지우기</string>
+    <string name="purchase_ticket">이용권 구매</string>
+    <string name="expire_period">구독 기간</string>
+    <string name="mypage_button_description">마이페이지 이동</string>
+    <string name="mypage_title">My</string>
 </resources>

@@ -32,15 +32,28 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_logout_button"
+                android:id="@+id/tv_purchase_ticket_button"
+                style="@style/Pretendard.14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_secondary_button"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="@string/purchase_ticket"
+                android:textColor="@color/White"
+                app:layout_constraintBottom_toBottomOf="@id/iv_my_button"
+                app:layout_constraintEnd_toStartOf="@id/iv_my_button"
+                app:layout_constraintTop_toTopOf="@id/iv_my_button" />
+
+            <ImageView
+                android:id="@+id/iv_my_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/bg_button_small"
-                android:text="@string/logout_button"
-                android:textAppearance="@style/Poppins.14"
-                android:textColor="@color/Dark01"
+                android:contentDescription="@string/mypage_button_description"
+                android:src="@drawable/ic_my"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,7 +67,7 @@
                 android:text="@string/admin_main_shop_name_label"
                 android:textAppearance="@style/Pretendard.32"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_logout_button" />
+                app:layout_constraintTop_toBottomOf="@id/tv_purchase_ticket_button" />
 
             <TextView
                 android:id="@+id/tv_shop_name"
@@ -72,11 +85,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="20dp"
                 android:alpha="0.6"
                 android:includeFontPadding="false"
                 android:text="@string/admin_main_update_hint"
                 android:textAppearance="@style/Pretendard.14"
-                app:layout_constraintEnd_toEndOf="@id/tv_logout_button"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_shop_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_shop_name" />
 

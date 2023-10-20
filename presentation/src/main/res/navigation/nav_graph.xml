@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_adminMainFragment_to_verifyFragment"
             app:destination="@id/verifyFragment" />
+        <action
+            android:id="@+id/action_adminMainFragment_to_mypageFragment"
+            app:destination="@id/mypageFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -84,7 +87,7 @@
         android:id="@+id/webViewFragment"
         android:name="com.nextroom.nextroom.presentation.ui.webview.WebViewFragment"
         android:label="WebViewFragment"
-        tools:layout="@layout/fragment_webview" >
+        tools:layout="@layout/fragment_webview">
         <argument
             android:name="url"
             app:argType="string" />
@@ -97,4 +100,9 @@
         app:destination="@id/adminCodeFragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
+    <fragment
+        android:id="@+id/mypageFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
+        android:label="MypageFragment"
+        tools:layout="@layout/fragment_mypage" />
 </navigation>
