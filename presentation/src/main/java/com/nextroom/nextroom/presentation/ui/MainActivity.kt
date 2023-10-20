@@ -30,11 +30,6 @@ class MainActivity : AppCompatActivity() {
         repeatOnStarted {
             viewModel.event.collect(::observe)
         }
-        repeatOnStarted {
-            viewModel.loginState.collect { loggedIn ->
-                if (!loggedIn) viewModel.logout()
-            }
-        }
     }
 
     private fun observe(event: MainEvent) {
@@ -44,10 +39,6 @@ class MainActivity : AppCompatActivity() {
         when (event) {
             is MainEvent.GoToGameScreen -> {
                 navController?.navigate(R.id.mainFragment)
-            }
-
-            MainEvent.GoToAdminCode -> {
-                navController?.navigate(R.id.action_global_adminCodeFragment)
             }
         }
     }
