@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.TimerState
+import com.nextroom.nextroom.presentation.BuildConfig
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentStartTimerBinding
 import org.orbitmvi.orbit.viewmodel.observe
@@ -30,7 +31,7 @@ class CounterFragment :
 
     override fun onStart() {
         super.onStart()
-        viewModel.startCounter()
+        viewModel.startCounter(if (BuildConfig.DEBUG) 3 else 10)
     }
 
     private fun render(state: CounterState) = with(binding) {
