@@ -10,9 +10,6 @@ import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
@@ -29,9 +26,6 @@ class AdminMainViewModel @Inject constructor(
 ) : BaseViewModel<AdminMainState, Nothing>() {
 
     override val container: Container<AdminMainState, Nothing> = container(AdminMainState())
-
-    val loggedIn: StateFlow<Boolean>
-        get() = adminRepository.loggedIn.stateIn(viewModelScope, SharingStarted.Eagerly, true)
 
     init {
         loadData()
