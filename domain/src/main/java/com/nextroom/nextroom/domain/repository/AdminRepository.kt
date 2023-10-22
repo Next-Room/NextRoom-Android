@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.domain.repository
 
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import kotlinx.coroutines.flow.Flow
 
 interface AdminRepository {
@@ -14,4 +15,5 @@ interface AdminRepository {
     suspend fun login(adminCode: String, password: String): Result<String>
     suspend fun logout()
     suspend fun verifyAdminCode(code: String): Boolean
+    suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus>
 }

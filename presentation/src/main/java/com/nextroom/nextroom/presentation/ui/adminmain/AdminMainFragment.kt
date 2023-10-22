@@ -67,6 +67,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding, AdminMainState,
     }
 
     private fun render(state: AdminMainState) = with(binding) {
+        if (state.loading) return@with
+
         tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.구독중
         when (state.userSubscribeStatus.subscribeStatus) {
             SubscribeStatus.None, SubscribeStatus.유예기간만료 -> logout()

@@ -1,8 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.adminmain
 
 import androidx.lifecycle.viewModelScope
-import com.nextroom.nextroom.domain.model.SubscribeStatus
-import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -27,11 +25,7 @@ class AdminMainViewModel @Inject constructor(
     private val hintRepository: HintRepository,
 ) : BaseViewModel<AdminMainState, Nothing>() {
 
-    override val container: Container<AdminMainState, Nothing> = container(
-        AdminMainState(
-            userSubscribeStatus = UserSubscribeStatus(SubscribeStatus.구독중),
-        ),
-    )
+    override val container: Container<AdminMainState, Nothing> = container(AdminMainState(loading = true))
 
     init {
         loadData()
@@ -60,7 +54,13 @@ class AdminMainViewModel @Inject constructor(
     }
 
     private fun loadData() = intent {
+        reduce { state.copy(loading = true) }
         viewModelScope.launch {
+            launch {
+                adminRepository.getUserSubscribeStatus().onSuccess {
+                    reduce { state.copy(userSubscribeStatus = it) }
+                }
+            }
             launch {
                 adminRepository.shopName.collect {
                     updateShopInfo(it)
@@ -78,6 +78,7 @@ class AdminMainViewModel @Inject constructor(
                 }
             }
         }
+        reduce { state.copy(loading = false) }
     }
 
     private fun updateShopInfo(shopName: String) = intent {
