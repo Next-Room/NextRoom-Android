@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
                 navController?.navigate(R.id.mainFragment)
             }
 
-            MainEvent.GoToAdminCode -> {
+            is MainEvent.GoToAdminCode -> {
                 navController?.navigate(R.id.action_global_adminCodeFragment)
             }
         }
