@@ -58,6 +58,7 @@
     <string name="toolbar_navigate_back_description">뒤로가기</string>
     <string name="game_backspace_description">지우기</string>
     <string name="purchase_ticket">이용권 구매</string>
+    <string name="purchase_change_ticket">이용권 변경</string>
     <string name="expire_period">구독 기간</string>
     <string name="mypage_button_description">마이페이지 이동</string>
     <string name="mypage_title">My</string>

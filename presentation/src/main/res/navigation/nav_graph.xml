@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_adminMainFragment_to_mypageFragment"
             app:destination="@id/mypageFragment" />
+        <action
+            android:id="@+id/action_adminMainFragment_to_purchaseFragment"
+            app:destination="@id/purchaseFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -104,5 +107,19 @@
         android:id="@+id/mypageFragment"
         android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
         android:label="MypageFragment"
-        tools:layout="@layout/fragment_mypage" />
+        tools:layout="@layout/fragment_mypage" >
+        <action
+            android:id="@+id/action_mypageFragment_to_purchaseFragment"
+            app:destination="@id/purchaseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
+        android:label="PurchaseFragment"
+        tools:layout="@layout/fragment_purchase" >
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus"
+            android:defaultValue="None" />
+    </fragment>
 </navigation>

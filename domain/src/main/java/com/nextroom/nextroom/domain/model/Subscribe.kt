@@ -12,10 +12,11 @@ data class SubscribeItem(
 )
 
 data class UserSubscribeStatus(
-    val subscribeStatus: SubscribeStatus = SubscribeStatus.무료체험중,
-    val expiredDate: String,
+    val subscribeStatus: SubscribeStatus = SubscribeStatus.None,
+    val expiredDate: String = "",
 )
 
+@Suppress("NonAsciiCharacters")
 enum class SubscribeStatus {
-    무료체험중, 무료체험끝, 유예기간만료, 구독중, 구독만료
+    None, 무료체험중, 무료체험끝, 유예기간만료, 구독중, 구독만료 // ktlint-disable enum-entry-name-case
 }
