@@ -39,8 +39,7 @@ class MypageViewModel @Inject constructor(
                 state.copy(
                     userSubscribeStatus = it,
                     userSubscribe = UserSubscribe(
-                        id = 0,
-                        type = SubscribeItem(id = 0, name = "스타터"),
+                        type = SubscribeItem(id = 1, name = "미니"),
                         period = "2023.10.5 ~ 2023.11.5",
                     ),
                 )

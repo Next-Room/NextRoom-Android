@@ -1,14 +1,13 @@
 package com.nextroom.nextroom.domain.model
 
 data class UserSubscribe(
-    val id: Long,
-    val type: SubscribeItem,
-    val period: String,
+    val type: SubscribeItem = SubscribeItem(),
+    val period: String = "",
 )
 
 data class SubscribeItem(
-    val id: Long,
-    val name: String,
+    val id: Long = 0,
+    val name: String = "",
 )
 
 data class UserSubscribeStatus(

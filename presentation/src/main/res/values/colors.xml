@@ -22,6 +22,7 @@
     <color name="Gray02">#47474E</color>
     <color name="Gray03">#222223</color>
     <color name="White">#FFFFFF</color>
+    <color name="White_a8">#14FFFFFF</color>
     <color name="Red">#FF5065</color>
 
     <drawable name="drawable_White">@color/White</drawable>

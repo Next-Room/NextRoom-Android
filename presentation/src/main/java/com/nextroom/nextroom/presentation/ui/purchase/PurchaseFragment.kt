@@ -6,9 +6,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.domain.model.Ticket
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.LinearSpaceDecoration
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
+import com.nextroom.nextroom.presentation.extension.dp
+import com.nextroom.nextroom.presentation.extension.snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -17,6 +21,8 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, Pu
     inflate = { inflater, parent -> FragmentPurchaseBinding.inflate(inflater, parent, false) },
 ) {
     private val viewModel: PurchaseViewModel by viewModels()
+    private val adapter: TicketAdapter = TicketAdapter(::purchase)
+    private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,6 +37,10 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, Pu
             tvButton.isVisible = false
             ivBack.setOnClickListener { findNavController().popBackStack() }
         }
+        rvSubscribes.apply {
+            adapter = this@PurchaseFragment.adapter
+            addItemDecoration(spacer)
+        }
     }
 
     private fun render(state: PurchaseState) = with(binding) {
@@ -40,16 +50,32 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, Pu
             SubscribeStatus.구독중 -> getString(R.string.purchase_change_ticket)
             else -> ""
         }
-        val text = when (state.subscribeStatus) {
-            SubscribeStatus.None -> "None"
-            SubscribeStatus.무료체험중 -> "무료 체험 중"
-            SubscribeStatus.무료체험끝 -> "무료 체험 끝"
-            SubscribeStatus.유예기간만료 -> "유예기간 만료"
-            SubscribeStatus.구독중 -> "구독 중"
-            SubscribeStatus.구독만료 -> "구독 만료"
+        tvMainLabel.text = when (state.subscribeStatus) {
+            SubscribeStatus.무료체험중 -> getString(R.string.purchase_main_label_normal)
+            SubscribeStatus.무료체험끝 -> getString(R.string.purchase_main_label_free_end)
+            SubscribeStatus.구독중 -> getString(R.string.purchase_main_label_normal)
+            SubscribeStatus.구독만료 -> getString(R.string.purchase_main_label_subscribe_end)
+            else -> ""
         }
-        tvText.text = text
+        tvSubLabel.text = when (state.subscribeStatus) {
+            SubscribeStatus.무료체험중 -> getString(R.string.purchase_sub_label_normal)
+            SubscribeStatus.무료체험끝 -> getString(R.string.purchase_sub_label_free_end)
+            SubscribeStatus.구독중 -> getString(R.string.purchase_sub_label_normal)
+            SubscribeStatus.구독만료 -> getString(R.string.purchase_sub_label_subscribe_end)
+            else -> ""
+        }
+        adapter.submitList(state.ticketsForUi)
     }
 
     private fun handleEvent(event: PurchaseEvent) {}
+
+    private fun purchase(ticket: Ticket) {
+        snackbar(ticket.plan)
+    }
+
+    override fun onDestroyView() {
+        binding.rvSubscribes.removeItemDecoration(spacer)
+        binding.rvSubscribes.adapter = null
+        super.onDestroyView()
+    }
 }
