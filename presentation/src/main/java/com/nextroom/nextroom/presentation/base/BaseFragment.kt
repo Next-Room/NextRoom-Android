@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.vibrator
+import com.nextroom.nextroom.presentation.util.FragmentLifecycleLogger
+import com.nextroom.nextroom.presentation.util.FragmentLifecycleLoggerImpl
 
 abstract class BaseFragment<VB : ViewBinding, STATE : Any, SIDE_EFFECT : Any>(private val inflate: (LayoutInflater, ViewGroup?) -> VB) :
-    Fragment() {
+    Fragment(),
+    FragmentLifecycleLogger by FragmentLifecycleLoggerImpl() {
     private var _binding: VB? = null
     val binding
         get() = _binding ?: error("binding is null")
@@ -22,6 +25,11 @@ abstract class BaseFragment<VB : ViewBinding, STATE : Any, SIDE_EFFECT : Any>(pr
     ): View? {
         _binding = inflate(inflater, container)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        registerViewLifecycleOwner(this)
     }
 
     /**
