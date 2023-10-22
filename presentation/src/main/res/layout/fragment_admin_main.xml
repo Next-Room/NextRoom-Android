@@ -33,7 +33,7 @@
 
             <TextView
                 android:id="@+id/tv_purchase_ticket_button"
-                style="@style/Pretendard.14"
+                style="@style/Pretendard.14.SemiBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -89,7 +89,7 @@
                 android:alpha="0.6"
                 android:includeFontPadding="false"
                 android:text="@string/admin_main_update_hint"
-                android:textAppearance="@style/Pretendard.14"
+                android:textAppearance="@style/Pretendard.14.SemiBold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_shop_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_shop_name" />

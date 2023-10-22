@@ -93,7 +93,7 @@ class GameFragment :
     }
 
     private fun showExitDialog() {
-        NRDialog.Companion.Builder(requireContext())
+        NRDialog.Builder(requireContext())
             .setTitle(R.string.game_main_exit_dialog)
             .setMessage(R.string.game_main_exit_dialog_message)
             .setPositiveButton(R.string.dialog_yes) { _, _ ->

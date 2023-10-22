@@ -14,9 +14,13 @@
     </style>
 
     <style name="Pretendard.14">
-        <item name="fontFamily">@font/pretendard_semi_bold</item>
+        <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:lineSpacingExtra">3dp</item>
         <item name="android:textSize">14dp</item>
+    </style>
+
+    <style name="Pretendard.14.SemiBold">
+        <item name="fontFamily">@font/pretendard_semi_bold</item>
     </style>
 
     <style name="Pretendard.16">
@@ -49,6 +53,10 @@
         <item name="fontFamily">@font/pretendard_semi_bold</item>
         <item name="android:lineSpacingExtra">4dp</item>
         <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="Pretendard.24.Bold">
+        <item name="fontFamily">@font/pretendard_bold</item>
     </style>
 
     <style name="Pretendard.32">

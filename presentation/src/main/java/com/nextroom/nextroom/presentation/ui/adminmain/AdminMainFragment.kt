@@ -8,7 +8,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRImageDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +33,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding, AdminMainState,
 
     private val state: AdminMainState
         get() = viewModel.container.stateFlow.value
+
+    private var opened = false // TODO 하루에 한 번 뜨도록 Preference 에서 설정
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,7 +63,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding, AdminMainState,
         setMarginTopStatusBarHeight(ivMyButton)
         rvThemes.adapter = adapter
         tvPurchaseTicketButton.setOnClickListener {
-            goToPurchase(state.userSubscribeStatus.subscribeStatus)
+            goToPurchase()
         }
         ivMyButton.setOnClickListener {
             goToMyPage()
@@ -81,9 +85,15 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding, AdminMainState,
         }
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
+
+        if (!opened) {
+            opened = true
+            val dday = state.calculateDday()
+            showDialog(dday)
+        }
     }
 
-    private fun goToPurchase(subscribeStatus: SubscribeStatus) {
+    private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment(subscribeStatus)
         findNavController().safeNavigate(action)
     }
@@ -96,6 +106,21 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding, AdminMainState,
     private fun goToCounter() {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment()
         findNavController().safeNavigate(action)
+    }
+
+    private fun showDialog(dDay: Int) {
+        NRImageDialog.Builder(requireContext())
+            .setTitle(getString(R.string.dialog_free_plan_title, dDay))
+            .setMessage(getString(R.string.dialog_free_plan_message))
+            .setImage(R.drawable.ticket)
+            .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
+                opened = true
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
+                goToPurchase()
+            }
+            .show(childFragmentManager)
     }
 
     private fun logout() {

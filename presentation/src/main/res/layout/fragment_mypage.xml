@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tv_shop_name_label"
-            style="@style/Pretendard.14"
+            style="@style/Pretendard.14.SemiBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"

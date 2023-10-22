@@ -38,6 +38,6 @@ class AdminRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus> {
-        return Result.Success(UserSubscribeStatus(SubscribeStatus.무료체험중, "2023.11.5")) // FIXME FAKE DATA
+        return Result.Success(UserSubscribeStatus(SubscribeStatus.무료체험중, "2023.10.24")) // FIXME FAKE DATA
     }
 }
