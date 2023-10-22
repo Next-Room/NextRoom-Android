@@ -77,8 +77,8 @@ class AdminMainViewModel @Inject constructor(
                     )
                 }
             }
+            reduce { state.copy(loading = false) }
         }
-        reduce { state.copy(loading = false) }
     }
 
     private fun updateShopInfo(shopName: String) = intent {
