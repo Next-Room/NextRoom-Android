@@ -37,6 +37,7 @@ retrofit = "2.9.0"
 room = "2.5.2"
 google-services = "4.4.0"
 firebase-crashlytics = "2.9.9"
+billing = "6.0.1"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -81,6 +82,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.require = "false" }
 firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.require = "false" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
