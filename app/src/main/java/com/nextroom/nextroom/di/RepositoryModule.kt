@@ -2,6 +2,7 @@ package com.nextroom.nextroom.di
 
 import android.content.Context
 import com.nextroom.nextroom.data.datasource.AuthDataSource
+import com.nextroom.nextroom.data.datasource.BillingDataSource
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
 import com.nextroom.nextroom.data.datasource.HintRemoteDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
@@ -13,11 +14,13 @@ import com.nextroom.nextroom.data.db.ThemeDao
 import com.nextroom.nextroom.data.db.ThemeTimeDao
 import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.repository.AdminRepositoryImpl
+import com.nextroom.nextroom.data.repository.BillingRepositoryImpl
 import com.nextroom.nextroom.data.repository.GameStateRepositoryImpl
 import com.nextroom.nextroom.data.repository.HintRepositoryImpl
 import com.nextroom.nextroom.data.repository.ThemeRepositoryImpl
 import com.nextroom.nextroom.data.repository.TimerRepositoryImpl
 import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.domain.repository.BillingRepository
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
@@ -121,6 +124,22 @@ object RepositoryModule {
             settingDataSource,
             timerRepository,
             gameStateDao,
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideBillingDataSource(
+
+    ): BillingDataSource = BillingDataSource()
+
+    @Singleton
+    @Provides
+    fun provideBillingRepository(
+        billingDataSource: BillingDataSource,
+    ): BillingRepository {
+        return BillingRepositoryImpl(
+            billingDataSource
         )
     }
 }
