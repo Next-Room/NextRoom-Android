@@ -20,7 +20,7 @@
     <string name="memo_eraser_description">지우개</string>
 
     <string name="admin_code_input_label">관리자 코드 5자리를\n입력해주세요</string>
-    <string name="admin_code_forgot_button"><u>혹시 계정을 잃어버리셨나요?</u></string>
+    <string name="admin_code_no_account_guide"><u>계정이 없으신가요?</u></string>
     <string name="admin_code_description">메일을 통해 전달받은 관리자코드를 입력해주세요</string>
     <string name="admin_code_hint">관리자 코드</string>
     <string name="admin_code_input_button">입력</string>

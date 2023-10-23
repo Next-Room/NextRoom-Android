@@ -6,6 +6,7 @@ import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.InputState
@@ -25,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
+    private val dataStoreRepository: DataStoreRepository,
 ) : BaseViewModel<LoginState, LoginEvent>() {
 
     override val container: Container<LoginState, LoginEvent> = container(LoginState())
@@ -38,6 +40,12 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             adminRepository.loggedIn.collect {
                 if (it) verifySuccess() // 로그인 됐으면 테마 목록으로 이동
+            }
+        }
+        viewModelScope.launch {
+            if (dataStoreRepository.getIsInitLaunch()) {
+                event(LoginEvent.GoToOnboardingScreen)
+                dataStoreRepository.setIsNotInitLaunch()
             }
         }
     }
@@ -58,10 +66,6 @@ class LoginViewModel @Inject constructor(
                 passwordInputState = if (pw.isNotBlank()) InputState.Typing else InputState.Empty,
             )
         }
-    }
-
-    fun forgotCode() = intent {
-        postSideEffect(LoginEvent.ShowMessage(UiText("현재 지원되지 않는 기능입니다")))
     }
 
     fun complete() = intent {

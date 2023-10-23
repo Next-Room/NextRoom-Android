@@ -51,7 +51,6 @@ class VerifyFragment :
             }
             showKeyboard()
         }
-        tvForgotAccount.setOnClickListener { viewModel.forgotCode() }
         btnInput.setOnClickListener { viewModel.complete() }
     }
 
@@ -71,6 +70,7 @@ class VerifyFragment :
         when (event) {
             is LoginEvent.LoginFailed -> snackbar(event.message)
             is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
+            LoginEvent.GoToOnboardingScreen -> Unit
         }
     }
 }
