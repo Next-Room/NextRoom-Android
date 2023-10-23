@@ -8,18 +8,28 @@ import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ActivityMainBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModels()
+    private val billingViewModel: BillingViewModel by viewModels()
+
+    private val billingClientLifecycle by lazy {
+        BillingClientLifecycle.getInstance(this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        lifecycle.addObserver(billingClientLifecycle)
+        billingViewModel.setBillingClientLifecycle(billingClientLifecycle)
 
         binding.fcvNavHost.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
@@ -35,6 +45,11 @@ class MainActivity : AppCompatActivity() {
                 if (!loggedIn) viewModel.logout()
             }
         }
+        repeatOnStarted {
+            billingViewModel.buyEvent.collect {
+                billingClientLifecycle.launchBillingFlow(this@MainActivity, it)
+            }
+        }
     }
 
     private fun observe(event: MainEvent) {
@@ -46,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 navController?.navigate(R.id.mainFragment)
             }
 
-            MainEvent.GoToAdminCode -> {
+            is MainEvent.GoToAdminCode -> {
                 navController?.navigate(R.id.action_global_adminCodeFragment)
             }
         }

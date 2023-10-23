@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.bundles.orbit)
     implementation(libs.bundles.navigation)
     implementation(libs.timber)
+    implementation(libs.billing)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)

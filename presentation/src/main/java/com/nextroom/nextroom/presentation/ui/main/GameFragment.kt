@@ -97,10 +97,7 @@ class GameFragment :
             .setTitle(R.string.game_main_exit_dialog)
             .setMessage(R.string.game_main_exit_dialog_message)
             .setPositiveButton(R.string.dialog_yes) { _, _ ->
-                viewModel.finishGame {
-                    requireActivity().viewModelStore.clear()
-                    findNavController().popBackStack()
-                }
+                viewModel.finishGame { findNavController().popBackStack() }
             }
             .setNegativeButton(R.string.dialog_no) { dialog, _ ->
                 dialog.dismiss()
