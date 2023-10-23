@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun logout() {
-        event(MainEvent.GoToAdminCode)
+        event(MainEvent.GoToLoginScreen)
     }
 
     private fun event(event: MainEvent) {
