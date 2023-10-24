@@ -105,6 +105,7 @@ class LoginViewModel @Inject constructor(
     private fun event(event: LoginEvent) {
         when (event) {
             is LoginEvent.LoginFailed -> showMessage(event.message)
+            LoginEvent.GoToOnboardingScreen -> intent { postSideEffect(LoginEvent.GoToOnboardingScreen) }
             else -> {}
         }
     }
