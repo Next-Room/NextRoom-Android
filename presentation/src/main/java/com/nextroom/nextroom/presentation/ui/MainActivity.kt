@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ActivityMainBinding
+import com.nextroom.nextroom.presentation.extension.repeatOn
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         repeatOnStarted {
             viewModel.event.collect(::observe)
         }
-        repeatOnStarted {
+        repeatOn(Lifecycle.State.CREATED) {
             viewModel.loginState.collect { loggedIn ->
                 if (!loggedIn) viewModel.logout()
             }
