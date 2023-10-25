@@ -76,4 +76,5 @@
     <string name="ticket_origin_price">%d원</string>
     <string name="ticket_sell_price">%d원/월</string>
     <string name="ticket_subscribing">구독중</string>
+    <string name="purchase_price_alert">추후 금액이 인상될 수 있습니다.</string>
 </resources>

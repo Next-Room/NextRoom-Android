@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.purchase
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -44,7 +45,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, Pu
     }
 
     private fun render(state: PurchaseState) = with(binding) {
-        tbPurchase.root.isVisible = state.subscribeStatus !in listOf(SubscribeStatus.무료체험끝, SubscribeStatus.구독만료)
+        tbPurchase.root.isInvisible = state.subscribeStatus in listOf(SubscribeStatus.무료체험끝, SubscribeStatus.구독만료)
         tbPurchase.tvTitle.text = when (state.subscribeStatus) {
             SubscribeStatus.무료체험중 -> getString(R.string.purchase_ticket)
             SubscribeStatus.구독중 -> getString(R.string.purchase_change_ticket)
