@@ -10,9 +10,11 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
+import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.toTimeUnit
+import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -29,7 +31,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             override fun handleOnBackPressed() {}
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
-        setFullscreen()
+        enableFullScreen()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,9 +122,12 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         binding.customCodeInput.setCode("")
     }
 
+    private fun vibrate() {
+        requireContext().vibrator.vibrate(longArrayOf(100, 100, 100, 100), -1)
+    }
+
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
-        exitFullscreen()
     }
 }
