@@ -14,7 +14,7 @@
     <string name="dialog_close">닫기</string>
     <string name="dialog_image_description">다이얼로그의 이미지</string>
     <string name="dialog_free_plan_message">만료된 계정은 유예기간 후 초기화 됩니다.</string>
-    <string name="dialog_free_plan_title">무료 체험기간이 %d일 남았어요!</string>
+    <string name="dialog_free_plan_title">무료 체험기간이 %d일 남았어요</string>
     <string name="dialog_subscribe_button">구독하기</string>
 
     <string name="privacy_policy">개인정보처리방침</string>
@@ -38,7 +38,7 @@
     <string name="admin_main_shop_name_label">우리 지점은</string>
     <string name="admin_main_updated_at">최근 업데이트 일 : %s</string>
 
-    <string name="login_title">안녕하세요 사장님\n넥스트룸입니다!</string>
+    <string name="login_title">안녕하세요 사장님\n넥스트룸입니다</string>
     <string name="login_description">메일을 통해 전달받은 관리자코드와 비밀번호를\n입력해주세요</string>
     <string name="login_admin_code_hint">관리자 코드</string>
     <string name="login_password_hint">비밀번호</string>
@@ -64,9 +64,9 @@
     <string name="game_backspace_description">지우기</string>
     <string name="purchase_ticket">이용권 구매</string>
     <string name="purchase_change_ticket">이용권 변경</string>
-    <string name="purchase_main_label_normal">방탈출 1인 가격보다,\n최저시급보다 저렴하게!</string>
-    <string name="purchase_main_label_subscribe_end">구독이 만료되었어요!</string>
-    <string name="purchase_main_label_free_end">무료 체험기간이 끝났어요!</string>
+    <string name="purchase_main_label_normal">방탈출 1인 가격보다,\n최저시급보다 저렴하게</string>
+    <string name="purchase_main_label_subscribe_end">구독이 만료되었어요</string>
+    <string name="purchase_main_label_free_end">무료 체험기간이 끝났어요</string>
     <string name="purchase_sub_label_normal" />
     <string name="purchase_sub_label_subscribe_end">다시 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
     <string name="purchase_sub_label_free_end">지금 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
