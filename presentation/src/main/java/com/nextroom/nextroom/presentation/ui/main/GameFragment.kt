@@ -18,10 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class GameFragment :
-    BaseFragment<FragmentMainBinding, GameScreenState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentMainBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
     private lateinit var backCallback: OnBackPressedCallback
 
     private val viewModel: GameViewModel by activityViewModels()

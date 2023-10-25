@@ -11,10 +11,7 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentStartTimerBinding
 import org.orbitmvi.orbit.viewmodel.observe
 
-class CounterFragment :
-    BaseFragment<FragmentStartTimerBinding, CounterState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentStartTimerBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class CounterFragment : BaseFragment<FragmentStartTimerBinding>(FragmentStartTimerBinding::inflate) {
 
     private val viewModel: CounterViewModel by viewModels()
 

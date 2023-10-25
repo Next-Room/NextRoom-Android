@@ -14,15 +14,11 @@ import com.nextroom.nextroom.presentation.extension.showKeyboard
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.model.InputState
 import com.nextroom.nextroom.presentation.ui.login.LoginEvent
-import com.nextroom.nextroom.presentation.ui.login.LoginState
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class VerifyFragment :
-    BaseFragment<FragmentAdminCodeBinding, LoginState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentAdminCodeBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeBinding::inflate) {
 
     private val viewModel: VerifyViewModel by viewModels()
 

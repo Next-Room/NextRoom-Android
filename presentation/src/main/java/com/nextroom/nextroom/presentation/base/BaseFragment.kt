@@ -9,18 +9,21 @@ import androidx.viewbinding.ViewBinding
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.vibrator
 
-abstract class BaseFragment<VB : ViewBinding, STATE : Any, SIDE_EFFECT : Any>(private val inflate: (LayoutInflater, ViewGroup?) -> VB) :
+typealias Inflate<T> = (LayoutInflater, ViewGroup?, Boolean) -> T
+
+abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) :
     Fragment() {
+
     private var _binding: VB? = null
     val binding
-        get() = _binding ?: error("binding is null")
+        get() = checkNotNull(_binding) { "binding is null" }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = inflate(inflater, container)
+        _binding = inflate.invoke(inflater, container, false) // inflate(inflater, container)
         return binding.root
     }
 

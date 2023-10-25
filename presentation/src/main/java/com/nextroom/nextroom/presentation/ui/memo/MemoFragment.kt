@@ -18,10 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class MemoFragment :
-    BaseFragment<FragmentMemoBinding, MemoState, MemoEvent>({ layoutInflater, viewGroup ->
-        FragmentMemoBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::inflate) {
 
     private val args: MemoFragmentArgs by navArgs()
 
