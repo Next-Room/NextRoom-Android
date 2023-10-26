@@ -8,10 +8,8 @@ class DataStoreRepositoryImpl @Inject constructor(
     private val settingDataSource: SettingDataSource,
 ) : DataStoreRepository {
     override suspend fun getIsInitLaunch(): Boolean {
-        return settingDataSource.getIsInitLaunch()
-    }
-
-    override suspend fun setIsNotInitLaunch() {
-        settingDataSource.setIsNotInitLaunch()
+        return settingDataSource.getIsInitLaunch().also {
+            if (it) settingDataSource.setIsNotInitLaunch()
+        }
     }
 }

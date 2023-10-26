@@ -45,7 +45,6 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (dataStoreRepository.getIsInitLaunch()) {
                 event(LoginEvent.GoToOnboardingScreen)
-                dataStoreRepository.setIsNotInitLaunch()
             }
         }
     }

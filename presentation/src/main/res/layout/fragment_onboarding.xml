@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        style="@style/Pretendard.16"
+        style="@style/Button.Kor"
         android:id="@+id/tv_apply_free_trial"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -40,7 +40,6 @@
         android:background="@drawable/bg_button"
         android:text="@string/onboarding_apply_free_trial"
         android:textColor="@color/Dark01"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tv_existing_user_guide"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
