@@ -7,6 +7,7 @@ import com.nextroom.nextroom.data.db.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SettingDataSource @Inject constructor(
@@ -48,6 +49,16 @@ class SettingDataSource @Inject constructor(
         dataStore.updateData {
             it.copy(isInitLaunch = false)
         }
+    }
+
+    fun setLastLaunchDate() = runBlocking {
+        dataStore.updateData {
+            it.copy(lastLaunchDate = System.currentTimeMillis())
+        }
+    }
+
+    fun getLastLaunchDate(): Long = runBlocking {
+        data.first().lastLaunchDate
     }
 
     /**

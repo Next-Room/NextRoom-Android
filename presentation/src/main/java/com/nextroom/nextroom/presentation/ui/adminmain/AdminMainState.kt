@@ -1,9 +1,10 @@
 package com.nextroom.nextroom.presentation.ui.adminmain
 
+import com.mangbaam.commonutil.DateTimeUtil
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.presentation.extension.calculateDday
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
-import com.nextroom.nextroom.util.DateTimeUtil
 
 data class AdminMainState(
     val loading: Boolean = false,
@@ -14,6 +15,9 @@ data class AdminMainState(
     private val dateTimeUtil = DateTimeUtil()
 
     fun calculateDday(): Int {
-        return dateTimeUtil.stringToDate(userSubscribeStatus.expiredDate, "yyyy.MM.dd")?.calculateDday() ?: -1
+        return when (userSubscribeStatus.subscribeStatus) {
+            SubscribeStatus.무료체험중 -> dateTimeUtil.stringToDate(userSubscribeStatus.expiredDate, "yyyy.MM.dd")?.calculateDday() ?: -1
+            else -> -1
+        }
     }
 }

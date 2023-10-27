@@ -11,4 +11,5 @@ data class AppSettings(
     val accessToken: String = "",
     val refreshToken: String = "",
     val isInitLaunch: Boolean = true,
+    val lastLaunchDate: Long = 0L,
 )

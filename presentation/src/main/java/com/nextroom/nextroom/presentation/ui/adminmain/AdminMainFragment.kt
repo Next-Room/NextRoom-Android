@@ -32,8 +32,6 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     private val state: AdminMainState
         get() = viewModel.container.stateFlow.value
 
-    private var opened = false // TODO 하루에 한 번 뜨도록 Preference 에서 설정
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         backCallback = object : OnBackPressedCallback(true) {
@@ -84,10 +82,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
 
-        if (!opened) {
-            opened = true
-            val dday = state.calculateDday()
-            showDialog(dday)
+        state.calculateDday().let { dday ->
+            if (dday >= 0) showDialog(dday)
         }
     }
 
@@ -107,18 +103,19 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun showDialog(dDay: Int) {
-        NRImageDialog.Builder(requireContext())
-            .setTitle(getString(R.string.dialog_free_plan_title, dDay))
-            .setMessage(getString(R.string.dialog_free_plan_message))
-            .setImage(R.drawable.ticket)
-            .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
-                opened = true
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
-                goToPurchase()
-            }
-            .show(childFragmentManager)
+        if (viewModel.isFirstLaunchOfDay) {
+            NRImageDialog.Builder(requireContext())
+                .setTitle(getString(R.string.dialog_free_plan_title, dDay))
+                .setMessage(getString(R.string.dialog_free_plan_message))
+                .setImage(R.drawable.ticket)
+                .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
+                    goToPurchase()
+                }
+                .show(childFragmentManager)
+        }
     }
 
     private fun logout() {

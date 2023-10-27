@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.adminmain
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
@@ -23,9 +24,13 @@ class AdminMainViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
+    private val dataStoreRepository: DataStoreRepository,
 ) : BaseViewModel<AdminMainState, Nothing>() {
 
     override val container: Container<AdminMainState, Nothing> = container(AdminMainState(loading = true))
+
+    val isFirstLaunchOfDay: Boolean
+        get() = dataStoreRepository.isFirstInitOfDay
 
     init {
         loadData()
