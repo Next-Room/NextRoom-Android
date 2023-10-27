@@ -12,16 +12,14 @@ import androidx.navigation.fragment.navArgs
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentMemoBinding
+import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class MemoFragment :
-    BaseFragment<FragmentMemoBinding, MemoState, MemoEvent>({ layoutInflater, viewGroup ->
-        FragmentMemoBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::inflate) {
 
     private val args: MemoFragmentArgs by navArgs()
 
@@ -35,7 +33,7 @@ class MemoFragment :
             override fun handleOnBackPressed() {}
         }
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
-        setFullscreen()
+        enableFullScreen()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

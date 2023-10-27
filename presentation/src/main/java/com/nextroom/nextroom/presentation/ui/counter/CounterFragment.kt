@@ -6,20 +6,19 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.TimerState
+import com.nextroom.nextroom.presentation.BuildConfig
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentStartTimerBinding
+import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import org.orbitmvi.orbit.viewmodel.observe
 
-class CounterFragment :
-    BaseFragment<FragmentStartTimerBinding, CounterState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentStartTimerBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class CounterFragment : BaseFragment<FragmentStartTimerBinding>(FragmentStartTimerBinding::inflate) {
 
     private val viewModel: CounterViewModel by viewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        setFullscreen()
+        enableFullScreen()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class CounterFragment :
 
     override fun onStart() {
         super.onStart()
-        viewModel.startCounter()
+        viewModel.startCounter(if (BuildConfig.DEBUG) 3 else 10)
     }
 
     private fun render(state: CounterState) = with(binding) {

@@ -25,7 +25,7 @@
     <string name="memo_eraser_description">지우개</string>
 
     <string name="admin_code_input_label">관리자 코드 5자리를\n입력해주세요</string>
-    <string name="admin_code_forgot_button"><u>혹시 계정을 잃어버리셨나요?</u></string>
+    <string name="admin_code_no_account_guide"><u>계정이 없으신가요?</u></string>
     <string name="admin_code_description">메일을 통해 전달받은 관리자코드를 입력해주세요</string>
     <string name="admin_code_hint">관리자 코드</string>
     <string name="admin_code_input_button">입력</string>
@@ -62,6 +62,11 @@
     <string name="game_answer">정답</string>
     <string name="toolbar_navigate_back_description">뒤로가기</string>
     <string name="game_backspace_description">지우기</string>
+
+    <string name="onboarding_title">웹으로 힌트를 관리하고\n앱으로 연동까지!</string>
+    <string name="onboarding_apply_free_trial">첫 달 무료 체험 신청하기</string>
+    <string name="onboarding_existing_user_guide">이미 기존 회원이라면? <font color='#FFFFFF'><b>로그인</b></font></string>
+
     <string name="purchase_ticket">이용권 구매</string>
     <string name="purchase_change_ticket">이용권 변경</string>
     <string name="purchase_main_label_normal">방탈출 1인 가격보다,\n최저시급보다 저렴하게</string>

@@ -10,18 +10,17 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
+import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.toTimeUnit
+import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class GameFragment :
-    BaseFragment<FragmentMainBinding, GameScreenState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentMainBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
     private lateinit var backCallback: OnBackPressedCallback
 
     private val viewModel: GameViewModel by activityViewModels()
@@ -32,7 +31,7 @@ class GameFragment :
             override fun handleOnBackPressed() {}
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
-        setFullscreen()
+        enableFullScreen()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -97,10 +96,7 @@ class GameFragment :
             .setTitle(R.string.game_main_exit_dialog)
             .setMessage(R.string.game_main_exit_dialog_message)
             .setPositiveButton(R.string.dialog_yes) { _, _ ->
-                viewModel.finishGame {
-                    requireActivity().viewModelStore.clear()
-                    findNavController().popBackStack()
-                }
+                viewModel.finishGame { findNavController().popBackStack() }
             }
             .setNegativeButton(R.string.dialog_no) { dialog, _ ->
                 dialog.dismiss()
@@ -126,9 +122,12 @@ class GameFragment :
         binding.customCodeInput.setCode("")
     }
 
+    private fun vibrate() {
+        requireContext().vibrator.vibrate(longArrayOf(100, 100, 100, 100), -1)
+    }
+
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
-        exitFullscreen()
     }
 }

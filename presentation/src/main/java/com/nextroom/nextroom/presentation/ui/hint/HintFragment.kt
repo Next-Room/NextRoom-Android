@@ -19,10 +19,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 import timber.log.Timber
 
 @AndroidEntryPoint
-class HintFragment :
-    BaseFragment<FragmentHintBinding, GameScreenState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentHintBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::inflate) {
 
     private val gameViewModel: GameViewModel by activityViewModels()
     private var scrolled: Boolean = false
