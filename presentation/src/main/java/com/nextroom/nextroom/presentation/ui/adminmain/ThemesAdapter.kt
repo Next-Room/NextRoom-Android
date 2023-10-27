@@ -33,7 +33,7 @@ class ThemesAdapter(
             item = themeInfo
             tvThemeName.text = themeInfo.title
             val updatedAt = if (themeInfo.recentUpdated != 0L) {
-                DateTimeUtil().longToDateString(themeInfo.recentUpdated, retPattern = "yyyy-MM-dd")
+                DateTimeUtil().longToDateString(themeInfo.recentUpdated, pattern = "yyyy-MM-dd")
             } else {
                 context.getString(R.string.common_not_exists)
             }

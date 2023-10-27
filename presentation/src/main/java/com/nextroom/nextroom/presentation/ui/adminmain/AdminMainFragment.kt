@@ -82,8 +82,10 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
 
-        state.calculateDday().let { dday ->
-            if (dday >= 0) showDialog(dday)
+        if (viewModel.isFirstLaunchOfDay) {
+            state.calculateDday().let { dday ->
+                if (dday >= 0) showDialog(dday)
+            }
         }
     }
 
@@ -103,19 +105,17 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun showDialog(dDay: Int) {
-        if (viewModel.isFirstLaunchOfDay) {
-            NRImageDialog.Builder(requireContext())
-                .setTitle(getString(R.string.dialog_free_plan_title, dDay))
-                .setMessage(getString(R.string.dialog_free_plan_message))
-                .setImage(R.drawable.ticket)
-                .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
-                    goToPurchase()
-                }
-                .show(childFragmentManager)
-        }
+        NRImageDialog.Builder(requireContext())
+            .setTitle(getString(R.string.dialog_free_plan_title, dDay))
+            .setMessage(getString(R.string.dialog_free_plan_message))
+            .setImage(R.drawable.ticket)
+            .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
+                goToPurchase()
+            }
+            .show(childFragmentManager)
     }
 
     private fun logout() {

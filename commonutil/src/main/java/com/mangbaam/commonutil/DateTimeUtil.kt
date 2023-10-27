@@ -27,8 +27,7 @@ class DateTimeUtil(private val locale: Locale = Locale.getDefault()) {
     fun longToDateString(
         milliseconds: Long,
         pattern: String = dateFormatString,
-        retPattern: String,
-    ) = dateToString(longToDate(milliseconds, pattern), retPattern)
+    ) = dateToString(longToDate(milliseconds, pattern), pattern)
 
     fun calculateDday(targetDate: Date): Int {
         val currentDateCal = Calendar.getInstance(locale).apply {
