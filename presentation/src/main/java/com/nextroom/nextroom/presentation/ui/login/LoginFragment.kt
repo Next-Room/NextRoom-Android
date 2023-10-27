@@ -18,10 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class LoginFragment :
-    BaseFragment<FragmentLoginBinding, LoginState, LoginEvent>({ layoutInflater, viewGroup ->
-        FragmentLoginBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     private val viewModel: LoginViewModel by viewModels()
 

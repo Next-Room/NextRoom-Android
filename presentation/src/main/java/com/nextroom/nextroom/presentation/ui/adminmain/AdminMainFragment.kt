@@ -13,10 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class AdminMainFragment :
-    BaseFragment<FragmentAdminMainBinding, AdminMainState, Nothing>({ layoutInflater, viewGroup ->
-        FragmentAdminMainBinding.inflate(layoutInflater, viewGroup, false)
-    }) {
+class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
 
