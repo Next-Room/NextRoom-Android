@@ -10,4 +10,5 @@ data class AppSettings(
     val latestGameCode: Int = -1,
     val accessToken: String = "",
     val refreshToken: String = "",
+    val isInitLaunch: Boolean = true,
 )

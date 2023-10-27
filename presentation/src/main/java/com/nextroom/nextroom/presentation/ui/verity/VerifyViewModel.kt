@@ -18,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class VerifyViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
-) : BaseViewModel<VerifyState, LoginEvent>() {
+) : BaseViewModel<VerifyState, LoginEvent>() { // TODO: LoginEvent 사용 하지 말고 따로 Event 분리 하기
     override val container: Container<VerifyState, LoginEvent> = container(VerifyState())
 
     fun inputCode(code: String) = intent {

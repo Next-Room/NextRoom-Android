@@ -15,12 +15,14 @@ import com.nextroom.nextroom.data.db.ThemeTimeDao
 import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.repository.AdminRepositoryImpl
 import com.nextroom.nextroom.data.repository.BillingRepositoryImpl
+import com.nextroom.nextroom.data.repository.DataStoreRepositoryImpl
 import com.nextroom.nextroom.data.repository.GameStateRepositoryImpl
 import com.nextroom.nextroom.data.repository.HintRepositoryImpl
 import com.nextroom.nextroom.data.repository.ThemeRepositoryImpl
 import com.nextroom.nextroom.data.repository.TimerRepositoryImpl
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.BillingRepository
+import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
@@ -140,6 +142,16 @@ object RepositoryModule {
     ): BillingRepository {
         return BillingRepositoryImpl(
             billingDataSource
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideDataStoreRepository(
+        settingDataSource: SettingDataSource,
+    ): DataStoreRepository {
+        return DataStoreRepositoryImpl(
+            settingDataSource,
         )
     }
 }
