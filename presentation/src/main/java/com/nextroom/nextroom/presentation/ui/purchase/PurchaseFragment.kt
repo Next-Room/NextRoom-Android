@@ -7,13 +7,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
-import com.nextroom.nextroom.domain.model.Ticket
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.LinearSpaceDecoration
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
 import com.nextroom.nextroom.presentation.extension.dp
-import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -22,7 +21,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, Pu
     inflate = { inflater, parent -> FragmentPurchaseBinding.inflate(inflater, parent, false) },
 ) {
     private val viewModel: PurchaseViewModel by viewModels()
-    private val adapter: TicketAdapter = TicketAdapter(::purchase)
+    private val adapter: TicketAdapter by lazy { TicketAdapter(viewModel::startPurchase) }
     private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,10 +67,13 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, Pu
         adapter.submitList(state.ticketsForUi)
     }
 
-    private fun handleEvent(event: PurchaseEvent) {}
-
-    private fun purchase(ticket: Ticket) {
-        snackbar(ticket.plan)
+    private fun handleEvent(event: PurchaseEvent) {
+        when (event) {
+            is PurchaseEvent.StartPurchase -> {
+                val action = PurchaseFragmentDirections.actionPurchaseFragmentToPurchaseSuccessFragment()
+                findNavController().safeNavigate(action)
+            }
+        }
     }
 
     override fun onDestroyView() {

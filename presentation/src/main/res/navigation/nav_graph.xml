@@ -107,7 +107,7 @@
         android:id="@+id/mypageFragment"
         android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
         android:label="MypageFragment"
-        tools:layout="@layout/fragment_mypage" >
+        tools:layout="@layout/fragment_mypage">
         <action
             android:id="@+id/action_mypageFragment_to_purchaseFragment"
             app:destination="@id/purchaseFragment" />
@@ -116,10 +116,23 @@
         android:id="@+id/purchaseFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
         android:label="PurchaseFragment"
-        tools:layout="@layout/fragment_purchase" >
+        tools:layout="@layout/fragment_purchase">
         <argument
             android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus"
-            android:defaultValue="None" />
+            android:defaultValue="None"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        <action
+            android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"
+            app:destination="@id/purchaseSuccessFragment"
+            app:popUpTo="@id/adminMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseSuccessFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
+        android:label="PurchaseSuccessFragment"
+        tools:layout="@layout/fragment_purchase_success" >
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/adminMainFragment" />
     </fragment>
 </navigation>
