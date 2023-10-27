@@ -54,7 +54,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
         }
 
-        tvForgotAccount.setOnClickListener { viewModel.forgotCode() }
+        tvNoAccountGuide.setOnClickListener { goToOnboardingScreen() }
         btnLogin.setOnClickListener { viewModel.complete() }
 
         tvPrivacyPolicy.setOnClickListener {
@@ -71,7 +71,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             viewModel.loginState.collect { loggedIn ->
                 if (loggedIn) {
                     val action =
-                        LoginFragmentDirections.actionAdminCodeFragmentToAdminMainFragment()
+                        LoginFragmentDirections.actionLoginFragmentToAdminMainFragment()
                     findNavController().safeNavigate(action)
                 }
             }
@@ -86,7 +86,15 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 binding.etPassword.setError()
                 snackbar(event.message)
             }
+            LoginEvent.GoToOnboardingScreen -> {
+                goToOnboardingScreen()
+            }
         }
+    }
+
+    private fun goToOnboardingScreen() {
+        val action = LoginFragmentDirections.actionLoginFragmentToOnboardingFragment()
+        findNavController().safeNavigate(action)
     }
 
     override fun onStop() {

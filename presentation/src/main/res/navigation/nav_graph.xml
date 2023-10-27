@@ -3,16 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/adminCodeFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
-        android:id="@+id/adminCodeFragment"
+        android:id="@+id/loginFragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
         android:label="AdminCodeFragment"
-        tools:layout="@layout/fragment_admin_code">
+        tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_adminCodeFragment_to_adminMainFragment"
+            android:id="@+id/action_loginFragment_to_adminMainFragment"
             app:destination="@id/adminMainFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment" />
     </fragment>
     <fragment
         android:id="@+id/adminMainFragment"
@@ -84,17 +87,22 @@
         android:id="@+id/webViewFragment"
         android:name="com.nextroom.nextroom.presentation.ui.webview.WebViewFragment"
         android:label="WebViewFragment"
-        tools:layout="@layout/fragment_webview" >
+        tools:layout="@layout/fragment_webview">
         <argument
             android:name="url"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.onboarding.OnboardingFragment"
+        android:label="OnboardingFragment"
+        tools:layout="@layout/fragment_onboarding" />
     <action
         android:id="@+id/action_global_webViewFragment"
         app:destination="@id/webViewFragment" />
     <action
-        android:id="@+id/action_global_adminCodeFragment"
-        app:destination="@id/adminCodeFragment"
+        android:id="@+id/action_global_loginFragment"
+        app:destination="@id/loginFragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
 </navigation>

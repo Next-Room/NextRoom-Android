@@ -40,6 +40,16 @@ class SettingDataSource @Inject constructor(
         }
     }
 
+    suspend fun getIsInitLaunch(): Boolean {
+        return data.first().isInitLaunch
+    }
+
+    suspend fun setIsNotInitLaunch() {
+        dataStore.updateData {
+            it.copy(isInitLaunch = false)
+        }
+    }
+
     /**
      * 관리자 코드 저장과 로그인 처리
      * */

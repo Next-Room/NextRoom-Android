@@ -47,7 +47,6 @@ class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeB
             }
             showKeyboard()
         }
-        tvForgotAccount.setOnClickListener { viewModel.forgotCode() }
         btnInput.setOnClickListener { viewModel.complete() }
     }
 
@@ -67,6 +66,7 @@ class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeB
         when (event) {
             is LoginEvent.LoginFailed -> snackbar(event.message)
             is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
+            LoginEvent.GoToOnboardingScreen -> Unit
         }
     }
 }
