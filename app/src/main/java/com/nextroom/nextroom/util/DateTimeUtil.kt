@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.presentation.util
+package com.nextroom.nextroom.util
 
 import java.text.SimpleDateFormat
 import java.util.Calendar

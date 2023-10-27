@@ -15,8 +15,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MypageViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
-) : BaseViewModel<MypageState, MypageEvent>() {
-    override val container: Container<MypageState, MypageEvent> = container(MypageState())
+) : BaseViewModel<MypageState, Nothing>() {
+
+    override val container: Container<MypageState, Nothing> = container(MypageState())
 
     init {
         fetchShopName()

@@ -14,9 +14,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class MypageFragment : BaseFragment<FragmentMypageBinding, MypageState, MypageEvent>(
-    inflate = { inflater, parent -> FragmentMypageBinding.inflate(inflater, parent, false) },
-) {
+class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding::inflate) {
+
     private val viewModel: MypageViewModel by viewModels()
     private val state: MypageState
         get() = viewModel.container.stateFlow.value
@@ -25,7 +24,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding, MypageState, MypageEv
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+        viewModel.observe(viewLifecycleOwner, state = ::render)
     }
 
     private fun initViews() = with(binding) {
@@ -48,12 +47,6 @@ class MypageFragment : BaseFragment<FragmentMypageBinding, MypageState, MypageEv
         state.userSubscribe?.let { subs ->
             tvSubsName.text = subs.type.name
             tvSubsPeriod.text = subs.period
-        }
-    }
-
-    private fun handleEvent(event: MypageEvent) {
-        when (event) {
-            MypageEvent.Logout -> findNavController().safeNavigate(MypageFragmentDirections.actionGlobalAdminCodeFragment())
         }
     }
 

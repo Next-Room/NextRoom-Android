@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
-import com.nextroom.nextroom.presentation.util.DateTimeUtil
+import com.nextroom.nextroom.util.DateTimeUtil
 
 class ThemesAdapter(
     private val onStartGame: (Int) -> Unit,

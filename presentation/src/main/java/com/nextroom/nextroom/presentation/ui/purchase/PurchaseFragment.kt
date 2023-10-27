@@ -17,9 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class PurchaseFragment : BaseFragment<FragmentPurchaseBinding, PurchaseState, PurchaseEvent>(
-    inflate = { inflater, parent -> FragmentPurchaseBinding.inflate(inflater, parent, false) },
-) {
+class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseBinding::inflate) {
+
     private val viewModel: PurchaseViewModel by viewModels()
     private val adapter: TicketAdapter by lazy { TicketAdapter(viewModel::startPurchase) }
     private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
