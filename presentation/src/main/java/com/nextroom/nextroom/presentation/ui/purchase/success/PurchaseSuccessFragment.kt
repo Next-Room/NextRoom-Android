@@ -7,9 +7,7 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseSuccessBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 
-class PurchaseSuccessFragment : BaseFragment<FragmentPurchaseSuccessBinding, Nothing, Nothing>({ inflater, parent ->
-    FragmentPurchaseSuccessBinding.inflate(inflater, parent, false)
-}) {
+class PurchaseSuccessFragment : BaseFragment<FragmentPurchaseSuccessBinding>(FragmentPurchaseSuccessBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

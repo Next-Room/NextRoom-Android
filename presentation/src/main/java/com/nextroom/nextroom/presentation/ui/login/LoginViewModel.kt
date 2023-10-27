@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
+import com.nextroom.nextroom.domain.model.onFinally
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
@@ -68,6 +69,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun complete() = intent {
+        reduce { state.copy(loading = true) }
         adminRepository.login(state.currentIdInput, state.currentPasswordInput)
             .onSuccess {
                 verifySuccess()
@@ -78,6 +80,8 @@ class LoginViewModel @Inject constructor(
                     is Result.Failure.NetworkError -> showMessage(R.string.error_network)
                     else -> showMessage(R.string.error_something)
                 }
+            }.onFinally {
+                reduce { state.copy(loading = false) }
             }
     }
 

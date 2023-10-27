@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.login
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -27,6 +28,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         initViews()
         observe()
+
+        viewModel.observe(viewLifecycleOwner, state = ::render)
     }
 
     private fun initViews() = with(binding) {
@@ -73,9 +76,19 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                     val action =
                         LoginFragmentDirections.actionLoginFragmentToAdminMainFragment()
                     findNavController().safeNavigate(action)
+                    clearInputs()
                 }
             }
         }
+    }
+
+    private fun render(state: LoginState) = with(binding) {
+        pbLoading.isVisible = state.loading
+        etAdminCode.isEnabled = !state.loading
+        etPassword.isEnabled = !state.loading
+        btnLogin.isEnabled = !state.loading
+        tvPrivacyPolicy.isEnabled = !state.loading
+        tvNoAccountGuide.isEnabled = !state.loading
     }
 
     private fun handleEvent(event: LoginEvent) {
@@ -86,6 +99,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 binding.etPassword.setError()
                 snackbar(event.message)
             }
+
             LoginEvent.GoToOnboardingScreen -> {
                 goToOnboardingScreen()
             }
@@ -97,10 +111,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         findNavController().safeNavigate(action)
     }
 
-    override fun onStop() {
+    private fun clearInputs() {
         binding.etAdminCode.setText("")
         binding.etPassword.setText("")
         viewModel.initState()
-        super.onStop()
     }
 }

@@ -72,6 +72,11 @@ suspend fun <T> Result<T>.onSuspendFailure(action: suspend (error: Result.Failur
     return this
 }
 
+inline fun <T> Result<T>.onFinally(action: (Result<T>) -> Unit): Result<T> {
+    action(this)
+    return this
+}
+
 fun <T, R> Result<T>.mapOnSuccess(map: (T) -> R): Result<R> {
     return if (isSuccessful) Result.Success(map(getOrThrow)) else failureOrThrow
 }
