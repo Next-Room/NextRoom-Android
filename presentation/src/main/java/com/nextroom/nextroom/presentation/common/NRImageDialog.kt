@@ -125,8 +125,6 @@ class NRImageDialog private constructor() : DialogFragment() {
 
     override fun onDestroyView() {
         _binding = null
-        posListener = null
-        negListener = null
         super.onDestroyView()
     }
 
