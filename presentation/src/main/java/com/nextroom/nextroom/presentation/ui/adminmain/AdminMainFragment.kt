@@ -12,7 +12,9 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRImageDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
+import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -56,7 +58,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun initViews() = with(binding) {
-        setMarginTopStatusBarHeight(ivMyButton)
+        ivMyButton.addMargin(top = requireContext().statusBarHeight)
         rvThemes.adapter = adapter
         tvPurchaseTicketButton.setOnClickListener {
             goToPurchase()

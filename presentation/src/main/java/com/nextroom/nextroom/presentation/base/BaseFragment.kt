@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.util.FragmentLifecycleLogger
 import com.nextroom.nextroom.presentation.util.FragmentLifecycleLoggerImpl
 
@@ -32,18 +31,6 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerViewLifecycleOwner(this)
-    }
-
-    fun setMarginTopStatusBarHeight(view: View) {
-        (view.layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-            setMargins(
-                leftMargin,
-                topMargin + view.context.statusBarHeight,
-                rightMargin,
-                bottomMargin,
-            )
-        }
-        view.requestLayout()
     }
 
     override fun onDestroyView() {
