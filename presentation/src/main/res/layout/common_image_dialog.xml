@@ -71,7 +71,7 @@
             style="@style/Pretendard.16.Bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/Gray01_a6"
+            android:background="@color/Gray01"
             android:gravity="center"
             android:paddingVertical="16dp"
             android:textColor="@color/black"
