@@ -3,6 +3,8 @@ package com.nextroom.nextroom.data.repository
 import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.domain.model.mapOnSuccess
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
@@ -33,5 +35,9 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun verifyAdminCode(code: String): Boolean {
         return settingDataSource.getAdminCode() == code
+    }
+
+    override suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus> {
+        return Result.Success(UserSubscribeStatus(SubscribeStatus.무료체험중, "2023.10.28")) // FIXME FAKE DATA
     }
 }

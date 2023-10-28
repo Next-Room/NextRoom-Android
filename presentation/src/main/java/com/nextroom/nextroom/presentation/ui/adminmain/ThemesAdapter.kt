@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
-import com.nextroom.nextroom.presentation.util.DateTimeUtil
 
 class ThemesAdapter(
     private val onStartGame: (Int) -> Unit,
@@ -33,7 +33,7 @@ class ThemesAdapter(
             item = themeInfo
             tvThemeName.text = themeInfo.title
             val updatedAt = if (themeInfo.recentUpdated != 0L) {
-                DateTimeUtil().longToDateString(themeInfo.recentUpdated, retPattern = "yyyy-MM-dd")
+                DateTimeUtil().longToDateString(themeInfo.recentUpdated, pattern = "yyyy-MM-dd")
             } else {
                 context.getString(R.string.common_not_exists)
             }

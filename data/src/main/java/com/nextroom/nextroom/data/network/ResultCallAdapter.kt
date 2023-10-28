@@ -60,7 +60,11 @@ private class ApiResultCall<R>(
                             }
                         }
                 } else {
-                    val errorBody = errorBody()?.string()?.let { JSONObject(it) }
+                    val errorBody = try {
+                        errorBody()?.string()?.let { JSONObject(it) }
+                    } catch (_: Exception) {
+                        null
+                    }
                     val message = errorBody?.getString("message") ?: ""
                     when ((errorBody?.getInt("code") ?: code()).toString().first()) {
                         '4' -> Result.Failure.HttpError.NotFound(message)

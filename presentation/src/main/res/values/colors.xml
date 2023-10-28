@@ -10,21 +10,14 @@
     <color name="colorSecondarySurface">#146750A4</color>
     <color name="colorLightPrimary">#146750A4</color>
 
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-
     <color name="Dark01">#151516</color>
-    <color name="Dark01_a4">#66151516</color>
     <color name="Gray01">#9898A0</color>
     <color name="Gray02">#47474E</color>
+    <color name="Gray03">#222223</color>
     <color name="White">#FFFFFF</color>
     <color name="Red">#FF5065</color>
 
     <drawable name="drawable_White">@color/White</drawable>
     <drawable name="drawable_Gray02">@color/Gray02</drawable>
     <drawable name="drawable_Dark01">@color/Dark01</drawable>
-    <drawable name="drawable_Dark01_a4">@color/Dark01_a4</drawable>
 </resources>

@@ -4,9 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRImageDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +28,9 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
             onClickUpdate = viewModel::updateHints,
         )
     }
+
+    private val state: AdminMainState
+        get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -44,23 +51,78 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 
     private fun startGame(code: Int) {
         viewModel.start(code) {
-            val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment()
-            findNavController().safeNavigate(action)
+            goToCounter()
         }
     }
 
     private fun initViews() = with(binding) {
-        setMarginTopStatusBarHeight(tvLogoutButton)
-
+        setMarginTopStatusBarHeight(ivMyButton)
         rvThemes.adapter = adapter
-        tvLogoutButton.setOnClickListener {
-            viewModel.logout()
+        tvPurchaseTicketButton.setOnClickListener {
+            goToPurchase()
+        }
+        ivMyButton.setOnClickListener {
+            goToMyPage()
         }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
+        if (state.loading) return@with
+
+        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.구독중
+        when (state.userSubscribeStatus.subscribeStatus) {
+            SubscribeStatus.None, SubscribeStatus.유예기간만료 -> logout()
+            SubscribeStatus.무료체험끝, SubscribeStatus.구독만료 -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
+            SubscribeStatus.무료체험중 -> {
+                if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
+                    state.calculateDday().let { dday ->
+                        if (dday >= 0) showDialog(dday)
+                    }
+                }
+            }
+
+            SubscribeStatus.구독중 -> Unit
+        }
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
+    }
+
+    private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment(subscribeStatus)
+        findNavController().safeNavigate(action)
+    }
+
+    private fun goToMyPage() {
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment()
+        findNavController().safeNavigate(action)
+    }
+
+    private fun goToCounter() {
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment()
+        findNavController().safeNavigate(action)
+    }
+
+    private fun showDialog(dDay: Int) {
+        NRImageDialog.Builder(requireContext())
+            .setTitle(getString(R.string.dialog_free_plan_title, dDay))
+            .setMessage(getString(R.string.dialog_free_plan_message))
+            .setImage(R.drawable.ticket)
+            .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
+                goToPurchase()
+            }
+            .show(childFragmentManager)
+    }
+
+    private fun logout() {
+        viewModel.logout()
+    }
+
+    override fun onDestroyView() {
+        binding.rvThemes.adapter = null
+        super.onDestroyView()
     }
 
     override fun onDetach() {

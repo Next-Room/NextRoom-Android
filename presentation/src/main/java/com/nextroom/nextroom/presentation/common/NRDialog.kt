@@ -94,9 +94,65 @@ class NRDialog : DialogFragment() {
 
     override fun onDestroyView() {
         _binding = null
-        posListener = null
-        negListener = null
         super.onDestroyView()
+    }
+
+    class Builder(private val context: Context) {
+        private val params = Params()
+
+        fun setTitle(title: String): Builder {
+            params.title = title
+            return this
+        }
+
+        fun setTitle(@StringRes titleId: Int): Builder {
+            return setTitle(context.getString(titleId))
+        }
+
+        fun setMessage(message: String): Builder {
+            params.message = message
+            return this
+        }
+
+        fun setMessage(@StringRes messageId: Int): Builder {
+            return setMessage(context.getString(messageId))
+        }
+
+        fun setPositiveButton(text: String, onClickListener: OnClickListener): Builder {
+            params.posBtnText = text
+            params.posListener = onClickListener
+            return this
+        }
+
+        fun setPositiveButton(
+            @StringRes textId: Int,
+            onClickListener: OnClickListener,
+        ): Builder {
+            return setPositiveButton(context.getString(textId), onClickListener)
+        }
+
+        fun setNegativeButton(text: String, onClickListener: OnClickListener): Builder {
+            params.negBtnText = text
+            params.negListener = onClickListener
+            return this
+        }
+
+        fun setNegativeButton(
+            @StringRes textId: Int,
+            onClickListener: OnClickListener,
+        ): Builder {
+            return setNegativeButton(context.getString(textId), onClickListener)
+        }
+
+        fun create(): NRDialog {
+            return params.create()
+        }
+
+        fun show(manager: FragmentManager, tag: String? = null): NRDialog {
+            return create().also {
+                it.show(manager, tag)
+            }
+        }
     }
 
     companion object {
@@ -123,64 +179,6 @@ class NRDialog : DialogFragment() {
                     }
                     this@Params.posListener?.let { listener -> setPositiveListener(listener) }
                     this@Params.negListener?.let { listener -> setNegativeListener(listener) }
-                }
-            }
-        }
-
-        class Builder(private val context: Context) {
-            private val params = Params()
-
-            fun setTitle(title: String): Builder {
-                params.title = title
-                return this
-            }
-
-            fun setTitle(@StringRes titleId: Int): Builder {
-                return setTitle(context.getString(titleId))
-            }
-
-            fun setMessage(message: String): Builder {
-                params.message = message
-                return this
-            }
-
-            fun setMessage(@StringRes messageId: Int): Builder {
-                return setMessage(context.getString(messageId))
-            }
-
-            fun setPositiveButton(text: String, onClickListener: OnClickListener): Builder {
-                params.posBtnText = text
-                params.posListener = onClickListener
-                return this
-            }
-
-            fun setPositiveButton(
-                @StringRes textId: Int,
-                onClickListener: OnClickListener,
-            ): Builder {
-                return setPositiveButton(context.getString(textId), onClickListener)
-            }
-
-            fun setNegativeButton(text: String, onClickListener: OnClickListener): Builder {
-                params.negBtnText = text
-                params.negListener = onClickListener
-                return this
-            }
-
-            fun setNegativeButton(
-                @StringRes textId: Int,
-                onClickListener: OnClickListener,
-            ): Builder {
-                return setNegativeButton(context.getString(textId), onClickListener)
-            }
-
-            fun create(): NRDialog {
-                return params.create()
-            }
-
-            fun show(manager: FragmentManager, tag: String? = null): NRDialog {
-                return create().also {
-                    it.show(manager, tag)
                 }
             }
         }

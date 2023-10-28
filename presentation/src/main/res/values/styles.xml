@@ -26,7 +26,7 @@
     </style>
 
     <style name="SmallButton.Dialog">
-        <item name="android:textAppearance">@style/Pretendard.14</item>
+        <item name="android:textAppearance">@style/Pretendard.14.SemiBold</item>
         <item name="android:background">@drawable/bg_dialog_button</item>
     </style>
 

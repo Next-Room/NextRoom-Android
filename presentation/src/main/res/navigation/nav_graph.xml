@@ -25,6 +25,12 @@
         <action
             android:id="@+id/action_adminMainFragment_to_verifyFragment"
             app:destination="@id/verifyFragment" />
+        <action
+            android:id="@+id/action_adminMainFragment_to_mypageFragment"
+            app:destination="@id/mypageFragment" />
+        <action
+            android:id="@+id/action_adminMainFragment_to_purchaseFragment"
+            app:destination="@id/purchaseFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
@@ -105,4 +111,36 @@
         app:destination="@id/loginFragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
+    <fragment
+        android:id="@+id/mypageFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
+        android:label="MypageFragment"
+        tools:layout="@layout/fragment_mypage">
+        <action
+            android:id="@+id/action_mypageFragment_to_purchaseFragment"
+            app:destination="@id/purchaseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
+        android:label="PurchaseFragment"
+        tools:layout="@layout/fragment_purchase">
+        <argument
+            android:name="subscribeStatus"
+            android:defaultValue="None"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        <action
+            android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"
+            app:destination="@id/purchaseSuccessFragment"
+            app:popUpTo="@id/adminMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseSuccessFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
+        android:label="PurchaseSuccessFragment"
+        tools:layout="@layout/fragment_purchase_success" >
+        <action
+            android:id="@+id/action_to_home"
+            app:destination="@id/adminMainFragment" />
+    </fragment>
 </navigation>

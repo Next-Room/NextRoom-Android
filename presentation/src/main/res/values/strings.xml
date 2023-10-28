@@ -11,6 +11,11 @@
 
     <string name="dialog_yes">예</string>
     <string name="dialog_no">아니오</string>
+    <string name="dialog_close">닫기</string>
+    <string name="dialog_image_description">다이얼로그의 이미지</string>
+    <string name="dialog_free_plan_message">만료된 계정은 유예기간 후 초기화 됩니다.</string>
+    <string name="dialog_free_plan_title">무료 체험기간이 %d일 남았어요</string>
+    <string name="dialog_subscribe_button">구독하기</string>
 
     <string name="privacy_policy">개인정보처리방침</string>
 
@@ -33,12 +38,12 @@
     <string name="admin_main_shop_name_label">우리 지점은</string>
     <string name="admin_main_updated_at">최근 업데이트 일 : %s</string>
 
-    <string name="login_title">안녕하세요 사장님\n넥스트룸입니다!</string>
+    <string name="login_title">안녕하세요 사장님\n넥스트룸입니다</string>
     <string name="login_description">메일을 통해 전달받은 관리자코드와 비밀번호를\n입력해주세요</string>
     <string name="login_admin_code_hint">관리자 코드</string>
     <string name="login_password_hint">비밀번호</string>
     <string name="login_button">Login</string>
-    <string name="logout_button">Logout</string>
+    <string name="logout_button">로그아웃</string>
     <string name="logout_button_description">로그아웃</string>
     <string name="update_button_description">테마 업데이트</string>
 
@@ -61,4 +66,22 @@
     <string name="onboarding_title">웹으로 힌트를 관리하고\n앱으로 연동까지!</string>
     <string name="onboarding_apply_free_trial">첫 달 무료 체험 신청하기</string>
     <string name="onboarding_existing_user_guide">이미 기존 회원이라면? <font color='#FFFFFF'><b>로그인</b></font></string>
+
+    <string name="purchase_ticket">이용권 구매</string>
+    <string name="purchase_change_ticket">이용권 변경</string>
+    <string name="purchase_main_label_normal">방탈출 1인 가격보다,\n최저시급보다 저렴하게</string>
+    <string name="purchase_main_label_subscribe_end">구독이 만료되었어요</string>
+    <string name="purchase_main_label_free_end">무료 체험기간이 끝났어요</string>
+    <string name="purchase_sub_label_subscribe_end">다시 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
+    <string name="purchase_sub_label_free_end">지금 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
+    <string name="purchase_price_alert">추후 금액이 인상될 수 있습니다.</string>
+    <string name="purchase_success_button">홈으로</string>
+    <string name="purchase_success_title">결제가 완료되었어요</string>
+    <string name="purchase_success_content">지금 바로 넥스트룸을 사용해보세요</string>
+    <string name="expire_period">구독 기간</string>
+    <string name="mypage_button_description">마이페이지 이동</string>
+    <string name="mypage_title">My</string>
+    <string name="ticket_origin_price">%d원</string>
+    <string name="ticket_sell_price">%d원/월</string>
+    <string name="ticket_subscribing">구독중</string>
 </resources>
