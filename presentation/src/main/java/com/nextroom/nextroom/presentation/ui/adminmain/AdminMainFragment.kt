@@ -74,19 +74,17 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
             SubscribeStatus.None, SubscribeStatus.유예기간만료 -> logout()
             SubscribeStatus.무료체험끝, SubscribeStatus.구독만료 -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
             SubscribeStatus.무료체험중 -> {
-                // TODO 디데이 확인 후 다이얼로그 표시. 하루 한 번
+                if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
+                    state.calculateDday().let { dday ->
+                        if (dday >= 0) showDialog(dday)
+                    }
+                }
             }
 
             SubscribeStatus.구독중 -> Unit
         }
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
-
-        if (viewModel.isFirstLaunchOfDay) {
-            state.calculateDday().let { dday ->
-                if (dday >= 0) showDialog(dday)
-            }
-        }
     }
 
     private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
