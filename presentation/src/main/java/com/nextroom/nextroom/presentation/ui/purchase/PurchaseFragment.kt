@@ -57,9 +57,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
             else -> ""
         }
         tvSubLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.무료체험중 -> getString(R.string.purchase_sub_label_normal)
             SubscribeStatus.무료체험끝 -> getString(R.string.purchase_sub_label_free_end)
-            SubscribeStatus.구독중 -> getString(R.string.purchase_sub_label_normal)
             SubscribeStatus.구독만료 -> getString(R.string.purchase_sub_label_subscribe_end)
             else -> ""
         }

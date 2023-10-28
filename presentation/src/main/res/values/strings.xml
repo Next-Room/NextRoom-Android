@@ -72,7 +72,6 @@
     <string name="purchase_main_label_normal">방탈출 1인 가격보다,\n최저시급보다 저렴하게</string>
     <string name="purchase_main_label_subscribe_end">구독이 만료되었어요</string>
     <string name="purchase_main_label_free_end">무료 체험기간이 끝났어요</string>
-    <string name="purchase_sub_label_normal" />
     <string name="purchase_sub_label_subscribe_end">다시 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
     <string name="purchase_sub_label_free_end">지금 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
     <string name="purchase_price_alert">추후 금액이 인상될 수 있습니다.</string>
