@@ -103,7 +103,9 @@ object RepositoryModule {
     fun provideAdminRepository(
         authDataSource: AuthDataSource,
         settingDataSource: SettingDataSource,
-    ): AdminRepository = AdminRepositoryImpl(authDataSource, settingDataSource)
+        tokenDataSource: TokenDataSource,
+        subscriptionDataSource: SubscriptionDataSource,
+    ): AdminRepository = AdminRepositoryImpl(authDataSource, settingDataSource, tokenDataSource, subscriptionDataSource)
 
     @Singleton
     @Provides

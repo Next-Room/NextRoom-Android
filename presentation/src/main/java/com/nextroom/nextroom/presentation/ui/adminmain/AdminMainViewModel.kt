@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.adminmain
 
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -34,6 +35,24 @@ class AdminMainViewModel @Inject constructor(
 
     init {
         loadData()
+
+        viewModelScope.launch {
+            launch {
+                adminRepository.shopName.collect {
+                    updateShopInfo(it)
+                }
+            }
+            launch {
+                themeRepository.getLocalThemes().collect { themes ->
+                    updateThemes(
+                        themes.map { themeInfo ->
+                            val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
+                            themeInfo.toPresentation(updatedAt)
+                        },
+                    )
+                }
+            }
+        }
     }
 
     fun updateHints(themeId: Int) = intent {
@@ -60,30 +79,11 @@ class AdminMainViewModel @Inject constructor(
 
     private fun loadData() = intent {
         reduce { state.copy(loading = true) }
-        viewModelScope.launch {
-            launch {
-                adminRepository.getUserSubscribeStatus().onSuccess {
-                    reduce { state.copy(userSubscribeStatus = it) }
-                }
-            }
-            launch {
-                adminRepository.shopName.collect {
-                    updateShopInfo(it)
-                }
-            }
-            launch {
-                themeRepository.getThemes()
-                themeRepository.getLocalThemes().collect { themes ->
-                    updateThemes(
-                        themes.map { themeInfo ->
-                            val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                            themeInfo.toPresentation(updatedAt)
-                        },
-                    )
-                }
-            }
-            reduce { state.copy(loading = false) }
+        adminRepository.getUserSubscribeStatus().suspendOnSuccess {
+            reduce { state.copy(userSubscribeStatus = it) }
+            themeRepository.getThemes()
         }
+        reduce { state.copy(loading = false) }
     }
 
     private fun updateShopInfo(shopName: String) = intent {

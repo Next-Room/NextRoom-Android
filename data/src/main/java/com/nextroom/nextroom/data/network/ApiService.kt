@@ -5,6 +5,7 @@ import com.nextroom.nextroom.data.network.response.HintDto
 import com.nextroom.nextroom.data.network.response.ListDto
 import com.nextroom.nextroom.data.network.response.LoginResponse
 import com.nextroom.nextroom.data.network.response.ThemeDto
+import com.nextroom.nextroom.data.network.response.UserSubscriptionStatusResponse
 import com.nextroom.nextroom.domain.model.Result
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -19,8 +20,11 @@ interface ApiService {
     suspend fun refreshToken(refreshToken: String): Result<String> // TODO Refresh Tokens
 
     @GET("api/v1/theme")
-    suspend fun getThemes(@Query("adminCode") adminCode: String): Result<ListDto<ThemeDto>>
+    suspend fun getThemes(): Result<ListDto<ThemeDto>>
 
     @GET("api/v1/hint")
     suspend fun getHint(@Query("themeId") themeId: Int): Result<ListDto<HintDto>>
+
+    @GET("api/v1/subscription/status")
+    suspend fun getUserSubscriptionStatus(): Result<UserSubscriptionStatusResponse>
 }

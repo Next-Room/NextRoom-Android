@@ -11,8 +11,8 @@ class ThemeRemoteDataSource @Inject constructor(
     private val apiService: ApiService,
 ) {
 
-    suspend fun getThemes(adminCode: String): Result<List<ThemeInfo>> {
-        return apiService.getThemes(adminCode)
+    suspend fun getThemes(): Result<List<ThemeInfo>> {
+        return apiService.getThemes()
             .mapOnSuccess { it.data.toDomain() }
     }
 }

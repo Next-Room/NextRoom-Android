@@ -32,15 +32,6 @@ class AuthDataSource @Inject constructor(
         return apiService.login(LoginRequest(adminCode, password)).mapOnSuccess { it.toDomain() }
     }
 
-    suspend fun saveTokens(accessToken: String, refreshToken: String) {
-        dataStore.updateData {
-            it.copy(
-                accessToken = accessToken,
-                refreshToken = refreshToken,
-            )
-        }
-    }
-
     /**
      * 관리자 코드 제거와 로그아웃 처리
      * */
