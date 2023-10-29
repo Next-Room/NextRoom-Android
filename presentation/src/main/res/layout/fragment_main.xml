@@ -159,11 +159,11 @@
 
     <TextView
         android:id="@+id/tv_hint_count"
+        style="@style/Poppins.14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:includeFontPadding="false"
-        android:textAppearance="@style/Poppins.14"
+        android:textColor="@color/Gray04"
         app:layout_constraintBottom_toBottomOf="@id/custom_timer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -299,14 +299,19 @@
         app:layout_constraintTop_toBottomOf="@id/tv_key_7"
         tools:ignore="HardcodedText" />
 
-    <ImageView
-        android:id="@+id/iv_key_backspace"
+    <FrameLayout
+        android:id="@+id/key_backspace"
         style="@style/Keypad"
-        android:contentDescription="@string/game_backspace_description"
-        android:padding="16dp"
-        android:src="@drawable/ic_backspace"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_0"
         app:layout_constraintEnd_toEndOf="@id/tv_key_9"
         app:layout_constraintStart_toEndOf="@id/tv_key_0"
-        app:layout_constraintTop_toTopOf="@id/tv_key_0" />
+        app:layout_constraintTop_toTopOf="@id/tv_key_0">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/game_backspace_description"
+            android:src="@drawable/ic_backspace" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
