@@ -10,11 +10,12 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthAuthenticator @Inject constructor(
-    private val authDataSource: AuthDataSource,
     private val tokenDataSource: TokenDataSource,
+    private val authDataSource: AuthDataSource,
     private val apiService: ApiService,
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -22,10 +23,12 @@ class AuthAuthenticator @Inject constructor(
             apiService.refreshToken(tokenDataSource.getRefreshToken())
                 .onSuccess { newToken -> tokenDataSource.saveTokens(newToken, tokenDataSource.getRefreshToken()) }
                 .mapOnSuccess { newToken ->
+                    Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token Success: $newToken")
                     return@mapOnSuccess response.request.newBuilder()
                         .header("Authorization", "Bearer $newToken")
                         .build()
                 }.onFailure {
+                    Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token Failed")
                     authDataSource.logout()
                 }.getOrNull
         }

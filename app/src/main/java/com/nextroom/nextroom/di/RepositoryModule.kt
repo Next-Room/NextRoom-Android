@@ -35,6 +35,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -111,7 +112,7 @@ object RepositoryModule {
     @Provides
     fun provideAuthDataSource(
         @ApplicationContext context: Context,
-        apiSource: ApiService,
+        @Named("defaultApiService") apiSource: ApiService,
     ): AuthDataSource = AuthDataSource(context, apiSource)
 
     @Singleton
