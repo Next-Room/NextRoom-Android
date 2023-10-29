@@ -1,7 +1,9 @@
 package com.nextroom.nextroom.data.di
 
 import com.nextroom.nextroom.data.BuildConfig
+import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.network.ApiService
+import com.nextroom.nextroom.data.network.AuthInterceptor
 import com.nextroom.nextroom.data.network.ResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -36,7 +38,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
@@ -45,7 +47,14 @@ object NetworkModule {
             }
         }
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthInterceptor(tokenDataSource: TokenDataSource): AuthInterceptor {
+        return AuthInterceptor(tokenDataSource)
     }
 }

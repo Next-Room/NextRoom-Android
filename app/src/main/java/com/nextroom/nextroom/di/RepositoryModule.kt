@@ -6,8 +6,10 @@ import com.nextroom.nextroom.data.datasource.BillingDataSource
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
 import com.nextroom.nextroom.data.datasource.HintRemoteDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
+import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.ThemeLocalDataSource
 import com.nextroom.nextroom.data.datasource.ThemeRemoteDataSource
+import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
 import com.nextroom.nextroom.data.db.ThemeDao
@@ -70,6 +72,13 @@ object RepositoryModule {
     }
 
     @Provides
+    fun provideSubscriptionDataSource(
+        apiService: ApiService,
+    ): SubscriptionDataSource {
+        return SubscriptionDataSource(apiService)
+    }
+
+    @Provides
     fun provideThemeLocalDataSource(
         themeDao: ThemeDao,
         themeTimeDao: ThemeTimeDao,
@@ -105,6 +114,12 @@ object RepositoryModule {
 
     @Singleton
     @Provides
+    fun provideTokenDataSource(
+        @ApplicationContext context: Context,
+    ): TokenDataSource = TokenDataSource(context)
+
+    @Singleton
+    @Provides
     fun provideThemeRepository(
         settingDataSource: SettingDataSource,
         themeLocalDataSource: ThemeLocalDataSource,
@@ -131,18 +146,14 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideBillingDataSource(
-
-    ): BillingDataSource = BillingDataSource()
+    fun provideBillingDataSource(): BillingDataSource = BillingDataSource()
 
     @Singleton
     @Provides
     fun provideBillingRepository(
         billingDataSource: BillingDataSource,
     ): BillingRepository {
-        return BillingRepositoryImpl(
-            billingDataSource
-        )
+        return BillingRepositoryImpl(billingDataSource)
     }
 
     @Singleton
