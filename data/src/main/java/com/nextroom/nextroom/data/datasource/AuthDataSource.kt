@@ -29,7 +29,7 @@ class AuthDataSource @Inject constructor(
         get() = data.map { it.loggedIn }
 
     suspend fun login(adminCode: String, password: String): Result<LoginInfo> {
-        return apiService.login(LoginRequest(adminCode, password)).mapOnSuccess { it.toDomain() }
+        return apiService.login(LoginRequest(adminCode, password)).mapOnSuccess { it.data.toDomain() }
     }
 
     /**

@@ -5,6 +5,7 @@ import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.domain.model.mapOnSuccess
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.request.TokenRefreshRequest
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -20,8 +21,12 @@ class AuthAuthenticator @Inject constructor(
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
         return runBlocking {
-            apiService.refreshToken(tokenDataSource.getRefreshToken())
-                .onSuccess { newToken -> tokenDataSource.saveTokens(newToken, tokenDataSource.getRefreshToken()) }
+            val tokenRequest: TokenRefreshRequest = run {
+                val (access, refresh) = tokenDataSource.getTokenPair()
+                TokenRefreshRequest(accessToken = access, refreshToken = refresh)
+            }
+            apiService.refreshToken(tokenRequest)
+                .onSuccess { newToken -> tokenDataSource.saveTokens(newToken.data.accessToken, newToken.data.refreshToken) }
                 .mapOnSuccess { newToken ->
                     Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token Success: $newToken")
                     return@mapOnSuccess response.request.newBuilder()

@@ -19,11 +19,16 @@ class TokenDataSource @Inject constructor(
         get() = dataStore.data
 
     fun getAccessToken(): String = runBlocking {
-        dataStore.data.first().accessToken
+        data.first().accessToken
     }
 
-    fun getRefreshToken(): String = runBlocking {
-        dataStore.data.first().refreshToken
+    /**
+     * 엑세스 토큰, 리프레시 토큰 쌍 반환
+     *
+     * @return first: **AccessToken**, second: **RefreshToken**
+     */
+    fun getTokenPair(): Pair<String, String> = runBlocking {
+        data.first().run { Pair(accessToken, refreshToken) }
     }
 
     suspend fun saveTokens(accessToken: String, refreshToken: String) {
