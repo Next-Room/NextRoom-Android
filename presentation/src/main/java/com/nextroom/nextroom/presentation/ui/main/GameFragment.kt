@@ -114,7 +114,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         tvKey8.setOnClickListener { viewModel.inputHintCode(8) }
         tvKey9.setOnClickListener { viewModel.inputHintCode(9) }
         tvKey0.setOnClickListener { viewModel.inputHintCode(0) }
-        ivKeyBackspace.setOnClickListener { viewModel.backspaceHintCode() }
+        keyBackspace.setOnClickListener { viewModel.backspaceHintCode() }
     }
 
     private fun clearHintCode() {

@@ -65,7 +65,7 @@ class ArcProgressView @JvmOverloads constructor(
     private val minSize = 100.dp
     private val defaultUnfinishedColor = ContextCompat.getColor(context, R.color.Gray01)
     private val defaultFinishedColor = ContextCompat.getColor(context, R.color.White)
-    private val defaultTextColor = ContextCompat.getColor(context, R.color.White)
+    private val defaultTextColor = ContextCompat.getColor(context, R.color.Gray04)
     private val defaultStrokeWidth: Float = 6.dp.toFloat()
     private val defaultTextSize: Float = 56.dp.toFloat()
 
@@ -128,7 +128,6 @@ class ArcProgressView @JvmOverloads constructor(
             } catch (_: ArrayIndexOutOfBoundsException) {
             }
 
-            alpha = 204 // alpha 0.8
             val edgeStartAngle = Math.toRadians(startAngle.toDouble()).toFloat()
             val edgeEndAngle = Math.toRadians(endAngle.toDouble()).toFloat()
             val edgeTextY = rectF.centerY() + sin(edgeStartAngle) * radius + 30

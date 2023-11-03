@@ -1,58 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.onboarding.OnboardingFragment">
 
     <TextView
-        style="@style/Pretendard.32.bold"
         android:id="@+id/tv_title"
+        style="@style/Pretendard.32.bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="88dp"
-        android:text="@string/onboarding_title"
         android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
+        android:text="@string/onboarding_title"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_onboarding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:src="@drawable/bg_onboarding"
         android:adjustViewBounds="true"
-        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        android:src="@drawable/bg_onboarding"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        android:importantForAccessibility="no" />
 
     <TextView
-        style="@style/Button.Kor"
         android:id="@+id/tv_apply_free_trial"
+        style="@style/Button.Kor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="20dp"
-        android:gravity="center"
-        android:background="@drawable/bg_button"
+        android:layout_marginBottom="20dp"
         android:text="@string/onboarding_apply_free_trial"
-        android:textColor="@color/Dark01"
         app:layout_constraintBottom_toTopOf="@id/tv_existing_user_guide"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        style="@style/Pretendard.16"
         android:id="@+id/tv_existing_user_guide"
+        style="@style/Pretendard.16"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="60dp"
         android:text="@string/onboarding_existing_user_guide"
-        android:textColor="#CCFFFFFF"
+        android:textColor="@color/White"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
