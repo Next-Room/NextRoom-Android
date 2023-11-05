@@ -12,6 +12,7 @@ import com.nextroom.nextroom.presentation.extension.repeatOn
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -20,9 +21,8 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private val billingViewModel: BillingViewModel by viewModels()
 
-    private val billingClientLifecycle by lazy {
-        BillingClientLifecycle.getInstance(this)
-    }
+    @Inject
+    lateinit var billingClientLifecycle: BillingClientLifecycle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         lifecycle.addObserver(billingClientLifecycle)
-        billingViewModel.setBillingClientLifecycle(billingClientLifecycle)
 
         binding.fcvNavHost.apply {
             systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or

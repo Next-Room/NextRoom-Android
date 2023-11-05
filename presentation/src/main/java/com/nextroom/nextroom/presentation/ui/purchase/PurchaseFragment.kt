@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
@@ -13,6 +14,8 @@ import com.nextroom.nextroom.presentation.common.LinearSpaceDecoration
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
 import com.nextroom.nextroom.presentation.extension.dp
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.ui.BillingViewModel
+import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -20,6 +23,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseBinding::inflate) {
 
     private val viewModel: PurchaseViewModel by viewModels()
+    private val billingViewModel: BillingViewModel by activityViewModels()
     private val adapter: TicketAdapter by lazy { TicketAdapter(viewModel::startPurchase) }
     private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
 

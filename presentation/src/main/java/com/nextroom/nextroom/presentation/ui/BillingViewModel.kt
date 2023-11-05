@@ -17,7 +17,10 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class BillingViewModel @Inject constructor() : ViewModel() {
+class BillingViewModel
+@Inject constructor(
+    billingClientLifecycle: BillingClientLifecycle,
+) : ViewModel() {
 
     // 사용자의 현재 구독 상품 구매 정보
     private val purchases = billingClientLifecycle.subscriptionPurchases
