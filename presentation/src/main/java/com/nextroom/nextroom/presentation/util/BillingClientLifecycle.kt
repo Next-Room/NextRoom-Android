@@ -22,10 +22,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.pow
 
 class BillingClientLifecycle private constructor(
@@ -55,9 +59,9 @@ class BillingClientLifecycle private constructor(
     val premiumSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
     val basicSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
 
-    /**
-     * Instantiate a new BillingClient instance.
-     */
+    private val _uiEvent = MutableSharedFlow<UIEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
     private lateinit var billingClient: BillingClient
 
     // onCreate때 billingClient를 생성하고 연결

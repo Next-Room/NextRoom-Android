@@ -65,6 +65,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
     implementation(libs.timber)
+    implementation(libs.billing)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

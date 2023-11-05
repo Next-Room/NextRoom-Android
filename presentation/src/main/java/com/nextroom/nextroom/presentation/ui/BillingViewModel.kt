@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.BillingFlowParams
@@ -9,12 +8,10 @@ import com.android.billingclient.api.Purchase
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-
 
 @HiltViewModel
 class BillingViewModel
@@ -29,10 +26,32 @@ class BillingViewModel
     private val premiumSubProductWithProductDetails = billingClientLifecycle.premiumSubProductWithProductDetails
     private val basicSubProductWithProductDetails = billingClientLifecycle.basicSubProductWithProductDetails
 
-    val billingClientEvent = billingClientLifecycle.uiEvent
-
     private val _buyEvent = MutableSharedFlow<BillingFlowParams>()
     val buyEvent = _buyEvent.asSharedFlow()
+
+    private val _uiEvent = MutableSharedFlow<UIEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            billingClientLifecycle.uiEvent.collect {
+                when (it) {
+                    BillingClientLifecycle.UIEvent.PurchaseAcknowledged -> _uiEvent.emit(UIEvent.PurchaseAcknowledged)
+                }
+            }
+        }
+        viewModelScope.launch {
+            purchases.collect {
+                it.forEach { purchase ->
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        billingClientLifecycle.acknowledgePurchase(purchase.purchaseToken)
+                    } else {
+                        _uiEvent.emit(UIEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * @param productDetails ProductDetails object returned by the library.
@@ -227,6 +246,11 @@ class BillingViewModel
         viewModelScope.launch {
             _buyEvent.emit(billingParams)
         }
+    }
+
+    sealed interface UIEvent {
+        data object PurchaseAcknowledged : UIEvent
+        data class PurchaseFailed(val purchaseState: Int) : UIEvent
     }
 
     companion object {
