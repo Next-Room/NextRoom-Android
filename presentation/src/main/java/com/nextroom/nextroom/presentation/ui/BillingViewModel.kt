@@ -161,16 +161,8 @@ class BillingViewModel
     }
 
     // 이미 구독 중인 상품이 있는지 체크
-    private fun purchaseForProduct(purchases: List<Purchase>?, product: String): Purchase? {
-        purchases?.let {
-            for (purchase in it) {
-                if (purchase.products[0] == product) {
-                    return purchase
-                }
-            }
-        }
-        return null
-    }
+    private fun purchaseForProduct(purchases: List<Purchase>?, product: String) =
+        purchases?.firstOrNull { it.products.first() == product }
 
     // 이미 구독 중인 상품이 있는지 리턴 (로컬)
     fun deviceHasGooglePlaySubscription(purchases: List<Purchase>?, product: String) =
