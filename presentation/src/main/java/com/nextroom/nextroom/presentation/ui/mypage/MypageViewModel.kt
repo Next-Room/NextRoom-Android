@@ -1,8 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.mypage
 
-import com.nextroom.nextroom.domain.model.SubscribeItem
-import com.nextroom.nextroom.domain.model.UserSubscribe
-import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.model.suspendConcatMap
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,14 +33,23 @@ class MypageViewModel @Inject constructor(
     }
 
     private fun fetchSubsInfo() = intent {
-        adminRepository.getUserSubscribeStatus().onSuccess {
+        /*adminRepository.getUserSubscribeStatus().onSuccess {
             reduce {
                 state.copy(
                     userSubscribeStatus = it,
                     userSubscribe = UserSubscribe(
                         type = SubscribeItem(id = 1, name = "미니"),
-                        period = "2023.10.5 ~ 2023.11.5",
                     ),
+                )
+            }
+        }*/
+        adminRepository.getUserSubscribeStatus().suspendConcatMap(
+            other = adminRepository.getUserSubscribe(),
+        ) { subsStatus, mypageInfo ->
+            reduce {
+                state.copy(
+                    userSubscribeStatus = subsStatus,
+                    userSubscription = mypageInfo,
                 )
             }
         }

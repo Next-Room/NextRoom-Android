@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import com.nextroom.nextroom.domain.model.SubscribeItem
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.Ticket
-import com.nextroom.nextroom.domain.model.UserSubscribe
+import com.nextroom.nextroom.domain.model.UserSubscription
+import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.repository.BillingRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -17,24 +19,28 @@ import javax.inject.Inject
 @HiltViewModel
 class PurchaseViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val billingRepository: BillingRepository,
 ) : BaseViewModel<PurchaseState, PurchaseEvent>() {
     override val container: Container<PurchaseState, PurchaseEvent> = container(
         PurchaseState(
             subscribeStatus = savedStateHandle["subscribeStatus"] ?: SubscribeStatus.None,
-            userSubscribe = UserSubscribe(SubscribeItem(id = 1, name = "미니")),
+            userSubscription = UserSubscription(SubscribeItem(id = 1, name = "미니")),
         ),
     )
 
     init {
-        fetchSubscribes()
+        fetchTickets()
     }
 
     fun startPurchase(ticket: Ticket) = intent {
         postSideEffect(PurchaseEvent.StartPurchase(ticket))
     }
 
-    private fun fetchSubscribes() = intent {
-        reduce {
+    private fun fetchTickets() = intent {
+        billingRepository.getTickets().onSuccess { tickets ->
+            reduce { state.copy(tickets = tickets) }
+        }
+        /*reduce {
             state.copy(
                 tickets = listOf(
                     Ticket(
@@ -60,6 +66,6 @@ class PurchaseViewModel @Inject constructor(
                     ),
                 ),
             )
-        }
+        }*/
     }
 }

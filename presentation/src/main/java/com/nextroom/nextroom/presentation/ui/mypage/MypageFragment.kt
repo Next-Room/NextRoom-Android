@@ -39,15 +39,13 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private fun render(state: MypageState) = with(binding) {
         tvShopName.text = state.shopName
-        tvPurchaseTicketButton.text = if (state.userSubscribeStatus.subscribeStatus == SubscribeStatus.구독중) {
+        tvPurchaseTicketButton.text = if (state.userSubscribeStatus.subscribeStatus == SubscribeStatus.Subscription) {
             getString(R.string.purchase_change_ticket)
         } else {
             getString(R.string.purchase_ticket)
         }
-        state.userSubscribe?.let { subs ->
-            tvSubsName.text = subs.type.name
-            tvSubsPeriod.text = subs.period
-        }
+        tvSubsName.text = state.userSubscription?.type?.name ?: ""
+        tvSubsPeriod.text = state.period
     }
 
     private fun goToPurchase(subscribeStatus: SubscribeStatus) {

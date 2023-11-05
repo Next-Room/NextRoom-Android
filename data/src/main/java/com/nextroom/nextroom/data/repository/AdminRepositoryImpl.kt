@@ -5,8 +5,8 @@ import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.domain.model.Result
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
+import com.nextroom.nextroom.domain.model.UserSubscription
 import com.nextroom.nextroom.domain.model.mapOnSuccess
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
@@ -42,12 +42,16 @@ class AdminRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus> {
-//        return subscriptionDataSource.getUserSubscriptionStatus()
-        return Result.Success(
+        return subscriptionDataSource.getUserSubscriptionStatus()
+        /*return Result.Success(
             UserSubscribeStatus(
-                subscribeStatus = SubscribeStatus.무료체험중,
+                subscribeStatus = SubscribeStatus.Free,
                 expiryDate = "2023.10.28",
             ),
-        ) // FIXME FAKE DATA
+        ) // FIXME FAKE DATA*/
+    }
+
+    override suspend fun getUserSubscribe(): Result<UserSubscription> {
+        return subscriptionDataSource.getUserSubscription()
     }
 }

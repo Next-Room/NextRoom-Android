@@ -43,22 +43,22 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
     }
 
     private fun render(state: PurchaseState) = with(binding) {
-        tbPurchase.root.isInvisible = state.subscribeStatus in listOf(SubscribeStatus.무료체험끝, SubscribeStatus.구독만료)
+        tbPurchase.root.isInvisible = state.subscribeStatus in listOf(SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration)
         tbPurchase.tvTitle.text = when (state.subscribeStatus) {
-            SubscribeStatus.무료체험중 -> getString(R.string.purchase_ticket)
-            SubscribeStatus.구독중 -> getString(R.string.purchase_change_ticket)
+            SubscribeStatus.Free -> getString(R.string.purchase_ticket)
+            SubscribeStatus.Subscription -> getString(R.string.purchase_change_ticket)
             else -> ""
         }
         tvMainLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.무료체험중 -> getString(R.string.purchase_main_label_normal)
-            SubscribeStatus.무료체험끝 -> getString(R.string.purchase_main_label_free_end)
-            SubscribeStatus.구독중 -> getString(R.string.purchase_main_label_normal)
-            SubscribeStatus.구독만료 -> getString(R.string.purchase_main_label_subscribe_end)
+            SubscribeStatus.Free -> getString(R.string.purchase_main_label_normal)
+            SubscribeStatus.Hold -> getString(R.string.purchase_main_label_free_end)
+            SubscribeStatus.Subscription -> getString(R.string.purchase_main_label_normal)
+            SubscribeStatus.SubscriptionExpiration -> getString(R.string.purchase_main_label_subscribe_end)
             else -> ""
         }
         tvSubLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.무료체험끝 -> getString(R.string.purchase_sub_label_free_end)
-            SubscribeStatus.구독만료 -> getString(R.string.purchase_sub_label_subscribe_end)
+            SubscribeStatus.Hold -> getString(R.string.purchase_sub_label_free_end)
+            SubscribeStatus.SubscriptionExpiration -> getString(R.string.purchase_sub_label_subscribe_end)
             else -> ""
         }
         adapter.submitList(state.ticketsForUi)

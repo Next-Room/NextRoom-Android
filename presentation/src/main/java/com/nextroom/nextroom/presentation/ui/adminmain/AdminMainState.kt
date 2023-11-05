@@ -16,7 +16,7 @@ data class AdminMainState(
 
     fun calculateDday(): Int {
         return when (userSubscribeStatus.subscribeStatus) {
-            SubscribeStatus.무료체험중 -> dateTimeUtil.stringToDate(userSubscribeStatus.expiryDate, "yyyy.MM.dd")?.calculateDday() ?: -1
+            SubscribeStatus.Free -> dateTimeUtil.stringToDate(userSubscribeStatus.expiryDate, "yyyy.MM.dd")?.calculateDday() ?: -1
             else -> -1
         }
     }
