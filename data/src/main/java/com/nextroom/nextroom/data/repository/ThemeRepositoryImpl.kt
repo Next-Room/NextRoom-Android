@@ -22,9 +22,8 @@ class ThemeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getThemes(): Result<List<ThemeInfo>> {
-        val adminCode = settingDataSource.getAdminCode()
         // 로컬에 저장
-        return themeRemoteDateSource.getThemes(adminCode).suspendOnSuccess {
+        return themeRemoteDateSource.getThemes().suspendOnSuccess {
             themeLocalDataSource.updateThemes(
                 settingDataSource.getAdminCode(),
                 it,

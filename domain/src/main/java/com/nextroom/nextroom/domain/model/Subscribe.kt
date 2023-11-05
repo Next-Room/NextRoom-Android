@@ -11,8 +11,12 @@ data class SubscribeItem(
 )
 
 data class UserSubscribeStatus(
+    val subscriptionId: Long = 0L,
     val subscribeStatus: SubscribeStatus = SubscribeStatus.None,
-    val expiredDate: String = "",
+    val expiryDate: String = "",
+    val subscribedAt: String = "",
+    val createdAt: String = "",
+    val modifiedAt: String = "",
 )
 
 @Suppress("NonAsciiCharacters")

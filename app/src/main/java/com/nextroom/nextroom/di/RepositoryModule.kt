@@ -6,8 +6,10 @@ import com.nextroom.nextroom.data.datasource.BillingDataSource
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
 import com.nextroom.nextroom.data.datasource.HintRemoteDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
+import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.ThemeLocalDataSource
 import com.nextroom.nextroom.data.datasource.ThemeRemoteDataSource
+import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
 import com.nextroom.nextroom.data.db.ThemeDao
@@ -33,6 +35,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -70,6 +73,13 @@ object RepositoryModule {
     }
 
     @Provides
+    fun provideSubscriptionDataSource(
+        apiService: ApiService,
+    ): SubscriptionDataSource {
+        return SubscriptionDataSource(apiService)
+    }
+
+    @Provides
     fun provideThemeLocalDataSource(
         themeDao: ThemeDao,
         themeTimeDao: ThemeTimeDao,
@@ -94,14 +104,22 @@ object RepositoryModule {
     fun provideAdminRepository(
         authDataSource: AuthDataSource,
         settingDataSource: SettingDataSource,
-    ): AdminRepository = AdminRepositoryImpl(authDataSource, settingDataSource)
+        tokenDataSource: TokenDataSource,
+        subscriptionDataSource: SubscriptionDataSource,
+    ): AdminRepository = AdminRepositoryImpl(authDataSource, settingDataSource, tokenDataSource, subscriptionDataSource)
 
     @Singleton
     @Provides
     fun provideAuthDataSource(
         @ApplicationContext context: Context,
-        apiSource: ApiService,
+        @Named("defaultApiService") apiSource: ApiService,
     ): AuthDataSource = AuthDataSource(context, apiSource)
+
+    @Singleton
+    @Provides
+    fun provideTokenDataSource(
+        @ApplicationContext context: Context,
+    ): TokenDataSource = TokenDataSource(context)
 
     @Singleton
     @Provides
@@ -131,18 +149,14 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideBillingDataSource(
-
-    ): BillingDataSource = BillingDataSource()
+    fun provideBillingDataSource(): BillingDataSource = BillingDataSource()
 
     @Singleton
     @Provides
     fun provideBillingRepository(
         billingDataSource: BillingDataSource,
     ): BillingRepository {
-        return BillingRepositoryImpl(
-            billingDataSource
-        )
+        return BillingRepositoryImpl(billingDataSource)
     }
 
     @Singleton
