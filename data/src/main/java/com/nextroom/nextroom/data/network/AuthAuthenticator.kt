@@ -20,6 +20,7 @@ class AuthAuthenticator @Inject constructor(
     private val apiService: ApiService,
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
+        Timber.tag("MANGBAAM-AuthAuthenticator(authenticate)").d("Access Token EXPIRED!! try refresh...")
         return runBlocking {
             val tokenRequest: TokenRefreshRequest = run {
                 val (access, refresh) = tokenDataSource.getTokenPair()
@@ -30,10 +31,10 @@ class AuthAuthenticator @Inject constructor(
                 .mapOnSuccess { newToken ->
                     Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token Success: $newToken")
                     return@mapOnSuccess response.request.newBuilder()
-                        .header("Authorization", "Bearer $newToken")
+                        .header("Authorization", "Bearer ${newToken.data.accessToken}")
                         .build()
                 }.onFailure {
-                    Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token Failed")
+                    Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token EXPIRED!!: $it")
                     authDataSource.logout()
                 }.getOrNull
         }

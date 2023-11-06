@@ -22,8 +22,8 @@ interface ApiService {
     @POST("api/v1/auth/login")
     suspend fun login(@Body loginRequest: LoginRequest): Result<BaseResponse<LoginDto>>
 
-    @GET("api/v1/auth/reissue")
-    suspend fun refreshToken(refreshRequest: TokenRefreshRequest): Result<BaseResponse<TokenDto>>
+    @POST("api/v1/auth/reissue")
+    suspend fun refreshToken(@Body refreshRequest: TokenRefreshRequest): Result<BaseResponse<TokenDto>>
 
     @GET("api/v1/theme")
     suspend fun getThemes(): Result<BaseListResponse<ThemeDto>>
