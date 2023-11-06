@@ -42,9 +42,11 @@
                 android:paddingVertical="6dp"
                 android:text="@string/purchase_ticket"
                 android:textColor="@color/White"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/iv_my_button"
                 app:layout_constraintEnd_toStartOf="@id/iv_my_button"
-                app:layout_constraintTop_toTopOf="@id/iv_my_button" />
+                app:layout_constraintTop_toTopOf="@id/iv_my_button"
+                tools:visibility="visible" />
 
             <ImageView
                 android:id="@+id/iv_my_button"

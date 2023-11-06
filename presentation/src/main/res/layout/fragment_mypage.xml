@@ -17,6 +17,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_my_subscription"
+        android:minHeight="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tb_mypage">
@@ -75,11 +76,11 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_secondary_button"
             android:padding="10dp"
-            android:text="@string/purchase_ticket"
             android:textColor="@color/Gray01"
             app:layout_constraintBottom_toBottomOf="@id/tv_subs_name"
             app:layout_constraintEnd_toEndOf="@id/guide_end"
-            app:layout_constraintTop_toTopOf="@id/tv_subs_name" />
+            app:layout_constraintTop_toTopOf="@id/tv_subs_name"
+            tools:text="@string/purchase_ticket" />
 
         <View
             android:id="@+id/divider"
@@ -113,6 +114,17 @@
             app:layout_constraintEnd_toEndOf="@id/guide_end"
             app:layout_constraintTop_toTopOf="@id/tv_subs_period_label"
             tools:text="2023.10.05 ~ 2023.11.05" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

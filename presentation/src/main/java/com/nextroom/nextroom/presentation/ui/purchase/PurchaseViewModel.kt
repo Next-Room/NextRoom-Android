@@ -40,32 +40,5 @@ class PurchaseViewModel @Inject constructor(
         billingRepository.getTickets().onSuccess { tickets ->
             reduce { state.copy(tickets = tickets) }
         }
-        /*reduce {
-            state.copy(
-                tickets = listOf(
-                    Ticket(
-                        id = 1,
-                        plan = "미니",
-                        description = "2개의 테마를 등록할 수 있어요.",
-                        originPrice = 19900,
-                        sellPrice = 9900,
-                    ),
-                    Ticket(
-                        id = 2,
-                        plan = "미디움",
-                        description = "5개의 테마를 등록할 수 있어요.",
-                        originPrice = 29900,
-                        sellPrice = 14900,
-                    ),
-                    Ticket(
-                        id = 3,
-                        plan = "라지",
-                        description = "8개의 테마를 등록할 수 있어요.",
-                        originPrice = 39900,
-                        sellPrice = 19900,
-                    ),
-                ),
-            )
-        }*/
     }
 }

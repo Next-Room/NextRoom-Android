@@ -43,12 +43,6 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus> {
         return subscriptionDataSource.getUserSubscriptionStatus()
-        /*return Result.Success(
-            UserSubscribeStatus(
-                subscribeStatus = SubscribeStatus.Free,
-                expiryDate = "2023.10.28",
-            ),
-        ) // FIXME FAKE DATA*/
     }
 
     override suspend fun getUserSubscribe(): Result<UserSubscription> {

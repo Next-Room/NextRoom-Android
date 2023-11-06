@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.mypage
 
+import com.nextroom.nextroom.domain.model.onFinally
 import com.nextroom.nextroom.domain.model.suspendConcatMap
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
@@ -15,7 +16,7 @@ class MypageViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
 ) : BaseViewModel<MypageState, Nothing>() {
 
-    override val container: Container<MypageState, Nothing> = container(MypageState())
+    override val container: Container<MypageState, Nothing> = container(MypageState(loading = true))
 
     init {
         fetchShopName()
@@ -33,24 +34,20 @@ class MypageViewModel @Inject constructor(
     }
 
     private fun fetchSubsInfo() = intent {
-        /*adminRepository.getUserSubscribeStatus().onSuccess {
-            reduce {
-                state.copy(
-                    userSubscribeStatus = it,
-                    userSubscribe = UserSubscribe(
-                        type = SubscribeItem(id = 1, name = "미니"),
-                    ),
-                )
-            }
-        }*/
+        reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribeStatus().suspendConcatMap(
             other = adminRepository.getUserSubscribe(),
         ) { subsStatus, mypageInfo ->
             reduce {
                 state.copy(
+                    loading = false,
                     userSubscribeStatus = subsStatus,
                     userSubscription = mypageInfo,
                 )
+            }
+        }.onFinally {
+            reduce {
+                state.copy(loading = false)
             }
         }
     }

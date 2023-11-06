@@ -38,6 +38,13 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     }
 
     private fun render(state: MypageState) = with(binding) {
+        pbLoading.isVisible = state.loading
+        tvShopName.isVisible = !state.loading
+        tvPurchaseTicketButton.isVisible = !state.loading
+        tvShopName.isVisible = !state.loading
+        tvShopNameLabel.isVisible = !state.loading
+        tvSubsPeriodLabel.isVisible = !state.loading
+
         tvShopName.text = state.shopName
         tvPurchaseTicketButton.text = if (state.userSubscribeStatus.subscribeStatus == SubscribeStatus.Subscription) {
             getString(R.string.purchase_change_ticket)
