@@ -11,8 +11,10 @@ data class MypageState(
     val period: String
         get() = run {
             userSubscription?.let { subs ->
-                subs.createdAt.substringBefore(' ').replace("-", ".") +
-                    subs.expiryDate.replace("-", ".")
+                StringBuilder(subs.createdAt.substringBefore(' ').replace("-", "."))
+                    .append(" ~ ")
+                    .append(subs.expiryDate.replace("-", "."))
+                    .toString()
             } ?: ""
         }
 }
