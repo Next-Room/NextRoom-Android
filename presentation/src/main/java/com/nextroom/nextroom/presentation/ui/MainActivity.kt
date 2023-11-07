@@ -10,6 +10,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ActivityMainBinding
 import com.nextroom.nextroom.presentation.extension.repeatOn
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

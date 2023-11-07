@@ -1,10 +1,11 @@
-package com.nextroom.nextroom.presentation.ui
+package com.nextroom.nextroom.presentation.ui.billing
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
+import com.nextroom.nextroom.presentation.ui.Constants
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,14 +30,14 @@ class BillingViewModel
     private val _buyEvent = MutableSharedFlow<BillingFlowParams>()
     val buyEvent = _buyEvent.asSharedFlow()
 
-    private val _uiEvent = MutableSharedFlow<UIEvent>()
+    private val _uiEvent = MutableSharedFlow<BillingEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
     init {
         viewModelScope.launch {
             billingClientLifecycle.uiEvent.collect {
                 when (it) {
-                    BillingClientLifecycle.UIEvent.PurchaseAcknowledged -> _uiEvent.emit(UIEvent.PurchaseAcknowledged)
+                    BillingClientLifecycle.UIEvent.PurchaseAcknowledged -> _uiEvent.emit(BillingEvent.PurchaseAcknowledged)
                 }
             }
         }
@@ -46,7 +47,7 @@ class BillingViewModel
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
                         billingClientLifecycle.acknowledgePurchase(purchase.purchaseToken)
                     } else {
-                        _uiEvent.emit(UIEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
+                        _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
                     }
                 }
             }
@@ -238,11 +239,6 @@ class BillingViewModel
         viewModelScope.launch {
             _buyEvent.emit(billingParams)
         }
-    }
-
-    sealed interface UIEvent {
-        data object PurchaseAcknowledged : UIEvent
-        data class PurchaseFailed(val purchaseState: Int) : UIEvent
     }
 
     companion object {

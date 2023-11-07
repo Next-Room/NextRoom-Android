@@ -16,7 +16,8 @@ import com.nextroom.nextroom.presentation.extension.dp
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toast
-import com.nextroom.nextroom.presentation.ui.BillingViewModel
+import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
+import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -86,14 +87,14 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         viewLifecycleOwner.repeatOnStarted {
             billingViewModel.uiEvent.collect { event ->
                 when (event) {
-                    BillingViewModel.UIEvent.PurchaseAcknowledged -> {
+                    BillingEvent.PurchaseAcknowledged -> {
                         PurchaseFragmentDirections
                             .actionPurchaseFragmentToPurchaseSuccessFragment()
                             .also {
                                 findNavController().safeNavigate(it)
                             }
                     }
-                    is BillingViewModel.UIEvent.PurchaseFailed -> toast(getString(R.string.purchase_error_message, event.purchaseState))
+                    is BillingEvent.PurchaseFailed -> toast(getString(R.string.purchase_error_message, event.purchaseState))
                 }
             }
         }
