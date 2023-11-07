@@ -3,7 +3,7 @@ package com.nextroom.nextroom.presentation.ui.purchase
 import com.nextroom.nextroom.domain.model.Ticket
 
 data class TicketUiModel(
-    val id: Long,
+    val id: String,
     val plan: String,
     val description: String,
     val originPrice: Int?,

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import com.nextroom.nextroom.domain.model.Ticket
 
 data class TicketDto(
-    @SerializedName("id") val id: Long,
+    @SerializedName("id") val id: String,
     @SerializedName("plan") val plan: String,
     @SerializedName("description") val description: String,
     @SerializedName("originPrice") val originPrice: Int?,

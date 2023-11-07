@@ -17,7 +17,7 @@ data class UserSubscription(
  * 구독 아이템 정보
  */
 data class SubscribeItem(
-    val id: Long = 0,
+    val id: String = "",
     val name: String = "",
 )
 
