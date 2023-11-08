@@ -1,44 +1,60 @@
-package com.nextroom.nextroom.presentation.ui
+package com.nextroom.nextroom.presentation.ui.billing
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
+import com.nextroom.nextroom.presentation.ui.Constants
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-
 @HiltViewModel
-class BillingViewModel @Inject constructor() : ViewModel() {
+class BillingViewModel
+@Inject constructor(
+    billingClientLifecycle: BillingClientLifecycle,
+) : ViewModel() {
 
-    private lateinit var billingClientLifecycle: BillingClientLifecycle
-    private lateinit var purchases: StateFlow<List<Purchase>>
-    private lateinit var premiumSubProductWithProductDetails: MutableLiveData<ProductDetails?>
-    private lateinit var basicSubProductWithProductDetails: MutableLiveData<ProductDetails?>
-    private lateinit var oneTimeProductWithProductDetails: MutableLiveData<ProductDetails?>
+    // 사용자의 현재 구독 상품 구매 정보
+    private val purchases = billingClientLifecycle.subscriptionPurchases
 
-    fun setBillingClientLifecycle(billingClientLifecycle: BillingClientLifecycle) {
-        this.billingClientLifecycle = billingClientLifecycle
-        purchases = billingClientLifecycle.subscriptionPurchases
-        premiumSubProductWithProductDetails = billingClientLifecycle.premiumSubProductWithProductDetails
-        basicSubProductWithProductDetails = billingClientLifecycle.basicSubProductWithProductDetails
-        oneTimeProductWithProductDetails = billingClientLifecycle.oneTimeProductWithProductDetails
-    }
+    // 콘솔에 등록된 상품들 정보
+    private val premiumSubProductWithProductDetails = billingClientLifecycle.premiumSubProductWithProductDetails
+    private val basicSubProductWithProductDetails = billingClientLifecycle.basicSubProductWithProductDetails
 
     private val _buyEvent = MutableSharedFlow<BillingFlowParams>()
     val buyEvent = _buyEvent.asSharedFlow()
 
+    private val _uiEvent = MutableSharedFlow<BillingEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
+    init {
+        viewModelScope.launch {
+            billingClientLifecycle.uiEvent.collect {
+                when (it) {
+                    BillingClientLifecycle.UIEvent.PurchaseAcknowledged -> _uiEvent.emit(BillingEvent.PurchaseAcknowledged)
+                }
+            }
+        }
+        viewModelScope.launch {
+            purchases.collect {
+                it.forEach { purchase ->
+                    if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        billingClientLifecycle.acknowledgePurchase(purchase.purchaseToken)
+                    } else {
+                        _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
+                    }
+                }
+            }
+        }
+    }
+
     /**
-     * BillingFlowParams Builder for normal purchases.
-     *
      * @param productDetails ProductDetails object returned by the library.
      * @param offerToken the least priced offer's offer id token returned by
      * [leastPricedOfferToken].
@@ -46,14 +62,14 @@ class BillingViewModel @Inject constructor() : ViewModel() {
      * @return [BillingFlowParams] builder.
      */
     private fun billingFlowParamsBuilder(productDetails: ProductDetails, offerToken: String):
-            BillingFlowParams {
+        BillingFlowParams {
         return BillingFlowParams.newBuilder().setProductDetailsParamsList(
             listOf(
                 BillingFlowParams.ProductDetailsParams.newBuilder()
                     .setProductDetails(productDetails)
                     .setOfferToken(offerToken)
-                    .build()
-            )
+                    .build(),
+            ),
         ).build()
     }
 
@@ -68,24 +84,25 @@ class BillingViewModel @Inject constructor() : ViewModel() {
      * @return [BillingFlowParams] builder.
      */
     private fun upDowngradeBillingFlowParamsBuilder(
-        productDetails: ProductDetails, offerToken: String, oldToken: String
+        productDetails: ProductDetails,
+        offerToken: String,
+        oldToken: String,
     ): BillingFlowParams {
         return BillingFlowParams.newBuilder().setProductDetailsParamsList(
             listOf(
                 BillingFlowParams.ProductDetailsParams.newBuilder()
                     .setProductDetails(productDetails)
                     .setOfferToken(offerToken)
-                    .build()
-            )
+                    .build(),
+            ),
         ).setSubscriptionUpdateParams(
             BillingFlowParams.SubscriptionUpdateParams.newBuilder()
                 .setOldPurchaseToken(oldToken)
                 .setSubscriptionReplacementMode(
-                    BillingFlowParams.SubscriptionUpdateParams.ReplacementMode.CHARGE_FULL_PRICE
-                ).build()
+                    BillingFlowParams.SubscriptionUpdateParams.ReplacementMode.CHARGE_FULL_PRICE,
+                ).build(),
         ).build()
     }
-
 
     /**
      * Calculates the lowest priced offer amongst all eligible offers.
@@ -99,7 +116,7 @@ class BillingViewModel @Inject constructor() : ViewModel() {
      *
      */
     private fun leastPricedOfferToken(
-        offerDetails: List<ProductDetails.SubscriptionOfferDetails>
+        offerDetails: List<ProductDetails.SubscriptionOfferDetails>,
     ): String {
         var offerToken = String()
         var leastPricedOffer: ProductDetails.SubscriptionOfferDetails
@@ -131,9 +148,10 @@ class BillingViewModel @Inject constructor() : ViewModel() {
      *
      */
     private fun retrieveEligibleOffers(
-        offerDetails: MutableList<ProductDetails.SubscriptionOfferDetails>, tag: String
+        offerDetails: MutableList<ProductDetails.SubscriptionOfferDetails>,
+        tag: String,
     ):
-            List<ProductDetails.SubscriptionOfferDetails> {
+        List<ProductDetails.SubscriptionOfferDetails> {
         val eligibleOffers = emptyList<ProductDetails.SubscriptionOfferDetails>().toMutableList()
         offerDetails.forEach { offerDetail ->
             if (offerDetail.offerTags.contains(tag)) {
@@ -143,33 +161,27 @@ class BillingViewModel @Inject constructor() : ViewModel() {
         return eligibleOffers
     }
 
-    private fun purchaseForProduct(purchases: List<Purchase>?, product: String): Purchase? {
-        purchases?.let {
-            for (purchase in it) {
-                if (purchase.products[0] == product) {
-                    return purchase
-                }
-            }
-        }
-        return null
-    }
+    // 이미 구독 중인 상품이 있는지 체크
+    private fun purchaseForProduct(purchases: List<Purchase>?, product: String) =
+        purchases?.firstOrNull { it.products.first() == product }
 
+    // 이미 구독 중인 상품이 있는지 리턴 (로컬)
     fun deviceHasGooglePlaySubscription(purchases: List<Purchase>?, product: String) =
         purchaseForProduct(purchases, product) != null
 
     /**
-     * Use the Google Play Billing Library to make a purchase.
+     * 요금제 구매
      *
-     * @param tag String representing tags associated with offers and base plans.
-     * @param product Product being purchased.
-     * @param upDowngrade Boolean indicating if the purchase is an upgrade or downgrade and
-     * when converting from one base plan to another.
-     *
+     * @param tag: 요금제와 관련된 태그를 나타내는 문자열
+     * @param product: 구매 하려는 상품
+     * @param upDowngrade: 구매가 업그레이드 또는 다운그레이드인지, 요금제를 전환하려는 경우에 true
      */
     fun buyBasePlans(tag: String, product: String, upDowngrade: Boolean) {
-        // TODO JH: 내부 테스트 후 삭제 검토
-       // val isProductOnDevice = deviceHasGooglePlaySubscription(purchases.value, product)
-       // if (!isProductOnDevice) return
+        val isProductOnDevice = deviceHasGooglePlaySubscription(purchases.value, product)
+        if (isProductOnDevice) {
+            Timber.d("The user already owns this item: $product")
+            return
+        }
         val basicSubProductDetails = basicSubProductWithProductDetails.value ?: run {
             Timber.e("Could not find Basic product details.")
             return
@@ -179,7 +191,7 @@ class BillingViewModel @Inject constructor() : ViewModel() {
             basicSubProductDetails.subscriptionOfferDetails?.let { offerDetailsList ->
                 retrieveEligibleOffers(
                     offerDetails = offerDetailsList,
-                    tag = tag
+                    tag = tag,
                 )
             }
 
@@ -190,11 +202,11 @@ class BillingViewModel @Inject constructor() : ViewModel() {
     private fun launchFlow(
         upDowngrade: Boolean,
         offerToken: String,
-        productDetails: ProductDetails
+        productDetails: ProductDetails,
     ) {
         val currentSubscriptionPurchaseCount = purchases.value.count {
             it.products.contains(Constants.BASIC_PRODUCT) ||
-                    it.products.contains(Constants.PREMIUM_PRODUCT)
+                it.products.contains(Constants.PREMIUM_PRODUCT)
         }
         if (currentSubscriptionPurchaseCount > EXPECTED_SUBSCRIPTION_PURCHASE_LIST_SIZE) {
             Timber.e("There are more than one subscription purchases on the device.")
@@ -202,26 +214,25 @@ class BillingViewModel @Inject constructor() : ViewModel() {
 
             TODO(
                 "Handle this case better, such as by showing a dialog to the user or by " +
-                        "programmatically getting the correct purchase token."
+                    "programmatically getting the correct purchase token.",
             )
         }
 
         val oldToken = purchases.value.filter {
             it.products.contains(Constants.BASIC_PRODUCT) ||
-                    it.products.contains(Constants.PREMIUM_PRODUCT)
+                it.products.contains(Constants.PREMIUM_PRODUCT)
         }.firstOrNull { it.purchaseToken.isNotEmpty() }?.purchaseToken ?: ""
-
 
         val billingParams: BillingFlowParams = if (upDowngrade) {
             upDowngradeBillingFlowParamsBuilder(
                 productDetails = productDetails,
                 offerToken = offerToken,
-                oldToken = oldToken
+                oldToken = oldToken,
             )
         } else {
             billingFlowParamsBuilder(
                 productDetails = productDetails,
-                offerToken = offerToken
+                offerToken = offerToken,
             )
         }
 
@@ -232,6 +243,6 @@ class BillingViewModel @Inject constructor() : ViewModel() {
 
     companion object {
         const val TAG = "BillingViewModel"
-        const val EXPECTED_SUBSCRIPTION_PURCHASE_LIST_SIZE = 1
+        const val EXPECTED_SUBSCRIPTION_PURCHASE_LIST_SIZE = 1 // 가질 수 있는 최대 상품 개수
     }
 }

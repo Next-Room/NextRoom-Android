@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
@@ -12,7 +13,11 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.LinearSpaceDecoration
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
 import com.nextroom.nextroom.presentation.extension.dp
+import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
+import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -20,6 +25,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseBinding::inflate) {
 
     private val viewModel: PurchaseViewModel by viewModels()
+    private val billingViewModel: BillingViewModel by activityViewModels()
     private val adapter: TicketAdapter by lazy { TicketAdapter(viewModel::startPurchase) }
     private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
 
@@ -28,6 +34,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
 
         initViews()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+        initObserve()
     }
 
     private fun initViews() = with(binding) {
@@ -67,8 +74,28 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
     private fun handleEvent(event: PurchaseEvent) {
         when (event) {
             is PurchaseEvent.StartPurchase -> {
-                val action = PurchaseFragmentDirections.actionPurchaseFragmentToPurchaseSuccessFragment()
-                findNavController().safeNavigate(action)
+                billingViewModel.buyBasePlans(
+                    product = event.productId,
+                    tag = event.tag,
+                    upDowngrade = event.upDowngrade,
+                )
+            }
+        }
+    }
+
+    private fun initObserve() {
+        viewLifecycleOwner.repeatOnStarted {
+            billingViewModel.uiEvent.collect { event ->
+                when (event) {
+                    BillingEvent.PurchaseAcknowledged -> {
+                        PurchaseFragmentDirections
+                            .actionPurchaseFragmentToPurchaseSuccessFragment()
+                            .also {
+                                findNavController().safeNavigate(it)
+                            }
+                    }
+                    is BillingEvent.PurchaseFailed -> toast(getString(R.string.purchase_error_message, event.purchaseState))
+                }
             }
         }
     }

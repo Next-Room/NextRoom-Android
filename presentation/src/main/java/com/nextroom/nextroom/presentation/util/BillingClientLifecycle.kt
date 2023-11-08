@@ -22,40 +22,49 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.math.pow
 
 class BillingClientLifecycle private constructor(
     private val applicationContext: Context,
     private val externalScope: CoroutineScope =
-        CoroutineScope(SupervisorJob() + Dispatchers.Default)
-) : DefaultLifecycleObserver, PurchasesUpdatedListener, BillingClientStateListener,
-    ProductDetailsResponseListener, PurchasesResponseListener {
+        CoroutineScope(SupervisorJob() + Dispatchers.Default),
+) : DefaultLifecycleObserver,
+    /*
+     * PurchasesUpdatedListener: 결제 상태가 업데이트될 때 감지
+     * BillingClientStateListener: Billing Client의 상태 변화 감지
+     * ProductDetailsResponseListener: 상품 정보를 검색하고 수신
+     * PurchasesResponseListener: 사용자의 인앱 구매 및 구독 상태 감지
+     */
+    PurchasesUpdatedListener,
+    BillingClientStateListener,
+    ProductDetailsResponseListener,
+    PurchasesResponseListener {
 
+    // 사용자의 현재 구독 상품 구매 정보
     private val _subscriptionPurchases = MutableStateFlow<List<Purchase>>(emptyList())
     val subscriptionPurchases = _subscriptionPurchases.asStateFlow()
 
-
-    /**
-     * Cached in-app product purchases details.
-     */
+    // 상품 정보 캐싱
     private var cachedPurchasesList: List<Purchase>? = null
 
-    /**
-     * ProductDetails for all known products.
-     */
+    // 콘솔에 등록된 상품들 정보
     val premiumSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
     val basicSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
-    val oneTimeProductWithProductDetails = MutableLiveData<ProductDetails?>()
 
-    /**
-     * Instantiate a new BillingClient instance.
-     */
+    private val _uiEvent = MutableSharedFlow<UIEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
+
     private lateinit var billingClient: BillingClient
 
+    // onCreate때 billingClient를 생성하고 연결
     override fun onCreate(owner: LifecycleOwner) {
         billingClient = BillingClient.newBuilder(applicationContext)
             .setListener(this)
@@ -66,12 +75,18 @@ class BillingClientLifecycle private constructor(
         }
     }
 
+    // onDestroy때 billingClient 연결 해제
     override fun onDestroy(owner: LifecycleOwner) {
         if (billingClient.isReady) {
             billingClient.endConnection()
         }
     }
 
+    /*
+     * onBillingSetupFinished: billingClient 연결이 완료되면 호출됨
+     * querySubscriptionProductDetails: 구독 상품 정보 조회
+     * querySubscriptionPurchases: 사용자의 현재 구독 상품 구매 내역을 조회
+     */
     override fun onBillingSetupFinished(billingResult: BillingResult) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
@@ -84,17 +99,13 @@ class BillingClientLifecycle private constructor(
 
     override fun onBillingServiceDisconnected() {
         Timber.d("onBillingServiceDisconnected")
-        // TODO: Try connecting again with exponential backoff.
     }
 
     /**
-     * In order to make purchases, you need the [ProductDetails] for the item or subscription.
-     * This is an asynchronous call that will receive a result in [onProductDetailsResponse].
+     * 구매를 하려면 일회성 결제 또는 구독을 위한 [ProductDetails]가 필요
+     * 상품 정보 조회가 완료되면 [onProductDetailsResponse]가 호출됨
      *
-     * querySubscriptionProductDetails uses method calls from GPBL 5.0.0. PBL5, released in May 2022,
-     * is backwards compatible with previous versions.
-     * To learn more about this you can read:
-     * https://developer.android.com/google/play/billing/compatibility
+     * queryProductDetailsAsync: 상품 정보 조회
      */
     private fun querySubscriptionProductDetails() {
         val params = QueryProductDetailsParams.newBuilder()
@@ -105,7 +116,7 @@ class BillingClientLifecycle private constructor(
                 QueryProductDetailsParams.Product.newBuilder()
                     .setProductId(product)
                     .setProductType(BillingClient.ProductType.SUBS)
-                    .build()
+                    .build(),
             )
         }
 
@@ -114,12 +125,14 @@ class BillingClientLifecycle private constructor(
         }
     }
 
+    // 상품 정보 조회 완료시 호출됨
     override fun onProductDetailsResponse(
         billingResult: BillingResult,
-        productDetailsList: MutableList<ProductDetails>
+        productDetailsList: MutableList<ProductDetails>,
     ) {
         val response = BillingResponse(billingResult.responseCode)
         val debugMessage = billingResult.debugMessage
+
         when {
             response.isOk -> {
                 processProductDetails(productDetailsList)
@@ -133,29 +146,23 @@ class BillingClientLifecycle private constructor(
             else -> {
                 Timber.e("onProductDetailsResponse: " + response.code + " " + debugMessage)
             }
-
         }
     }
 
-    /**
-     * This method is used to process the product details list returned by the [BillingClient]and
-     * post the details to the [basicSubProductWithProductDetails] and
-     * [premiumSubProductWithProductDetails] live data.
-     *
-     * @param productDetailsList The list of product details.
-     *
-     */
     private fun processProductDetails(productDetailsList: MutableList<ProductDetails>) {
         val expectedProductDetailsCount = LIST_OF_SUBSCRIPTION_PRODUCTS.size
         if (productDetailsList.isEmpty()) {
-            Timber.e("processProductDetails: Expected $expectedProductDetailsCount, Found null ProductDetails. " +
-                    "Check to see if the products you requested are correctly published in the Google Play Console.")
+            Timber.e(
+                "processProductDetails: Expected $expectedProductDetailsCount, Found null ProductDetails. " +
+                    "Check to see if the products you requested are correctly published in the Google Play Console.",
+            )
             postProductDetails(emptyList())
         } else {
             postProductDetails(productDetailsList)
         }
     }
 
+    // 구글 콘솔에서 받아온 상품 정보를 저장
     private fun postProductDetails(productDetailsList: List<ProductDetails>) {
         productDetailsList.forEach { productDetails ->
             when (productDetails.productType) {
@@ -170,40 +177,33 @@ class BillingClientLifecycle private constructor(
         }
     }
 
-    /**
-     * Query Google Play Billing for existing subscription purchases.
-     *
-     * New purchases will be provided to the PurchasesUpdatedListener.
-     * You still need to check the Google Play Billing API to know when purchase tokens are removed.
-     */
+    // 사용자의 현재 구독 상품 구매 내역을 조회
     private fun querySubscriptionPurchases() {
         if (!billingClient.isReady) {
             Timber.e("querySubscriptionPurchases: BillingClient is not ready")
             billingClient.startConnection(this)
+        } else {
+            billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder()
+                    .setProductType(BillingClient.ProductType.SUBS)
+                    .build(),
+                this,
+            )
         }
-        billingClient.queryPurchasesAsync(
-            QueryPurchasesParams.newBuilder()
-                .setProductType(BillingClient.ProductType.SUBS)
-                .build(), this
-        )
     }
 
-    /**
-     * Callback from the billing library when queryPurchasesAsync is called.
-     */
+    // queryPurchasesAsync를 호출하여 사용자의 구독 상품 구매 내역을 조회가 끝나면 onQueryPurchasesResponse가 호출됨
     override fun onQueryPurchasesResponse(
         billingResult: BillingResult,
-        purchasesList: MutableList<Purchase>
+        purchasesList: MutableList<Purchase>,
     ) {
         processPurchases(purchasesList)
     }
 
-    /**
-     * Called by the Billing Library when new purchases are detected.
-     */
+    // 새로운 구매가 감지 되었을 때 콜백
     override fun onPurchasesUpdated(
         billingResult: BillingResult,
-        purchases: MutableList<Purchase>?
+        purchases: MutableList<Purchase>?,
     ) {
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
@@ -227,21 +227,22 @@ class BillingClientLifecycle private constructor(
             }
 
             BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
-                Timber.e("onPurchasesUpdated: Developer error means that Google Play does "
-                        + "not recognize the configuration. If you are just getting started, "
-                        + "make sure you have configured the application correctly in the "
-                        + "Google Play Console. The product ID must match and the APK you "
-                        + "are using must be signed with release keys.")
+                Timber.e(
+                    "onPurchasesUpdated: Developer error means that Google Play does " +
+                        "not recognize the configuration. If you are just getting started, " +
+                        "make sure you have configured the application correctly in the " +
+                        "Google Play Console. The product ID must match and the APK you " +
+                        "are using must be signed with release keys.",
+                )
             }
         }
     }
 
     /**
-     * Send purchase to StateFlow, which will trigger network call to verify the subscriptions
-     * on the sever.
+     * stateFlow로 사용자가 구매한 상품 목록을 방출
+     * observe 하는 곳에서 구독에 대한 자격 부여 처리(구글에 전송)
      */
     private fun processPurchases(purchasesList: List<Purchase>?) {
-        Timber.d("processPurchases: " + purchasesList?.size + " purchase(s)")
         purchasesList?.let { list ->
             if (isUnchangedPurchaseList(list)) {
                 Timber.d("processPurchases: Purchase list has not changed")
@@ -260,9 +261,7 @@ class BillingClientLifecycle private constructor(
         }
     }
 
-    /**
-     * Check whether the purchases have changed before posting changes.
-     */
+    // 상품 구매 내용이 이전과 다른지 체크
     private fun isUnchangedPurchaseList(purchasesList: List<Purchase>): Boolean {
         val isUnchanged = purchasesList == cachedPurchasesList
         if (!isUnchanged) {
@@ -272,14 +271,10 @@ class BillingClientLifecycle private constructor(
     }
 
     /**
-     * Log the number of purchases that are acknowledge and not acknowledged.
+     * 조회한 구매 목록 중에서 어떤 구매가 이미 확인(acknowledged)되었고
+     * 아직 확인되지 않은(unacknowledged) 구매가 있는지를 로그로 출력
      *
      * https://developer.android.com/google/play/billing/billing_library_releases_notes#2_0_acknowledge
-     *
-     * When the purchase is first received, it will not be acknowledge.
-     * This application sends the purchase token to the server for registration. After the
-     * purchase token is registered to an account, the Android app acknowledges the purchase token.
-     * The next time the purchase list is updated, it will contain acknowledged purchases.
      */
     private fun logAcknowledgementStatus(purchasesList: List<Purchase>) {
         var acknowledgedCounter = 0
@@ -294,11 +289,7 @@ class BillingClientLifecycle private constructor(
         Timber.d("logAcknowledgementStatus: acknowledged=$acknowledgedCounter unacknowledged=$unacknowledgedCounter")
     }
 
-    /**
-     * Launching the billing flow.
-     *
-     * Launching the UI to make a purchase requires a reference to the Activity.
-     */
+    // 결제 플로우 실행
     fun launchBillingFlow(activity: Activity, params: BillingFlowParams): Int {
         if (!billingClient.isReady) {
             Timber.e("launchBillingFlow: BillingClient is not ready")
@@ -310,80 +301,70 @@ class BillingClientLifecycle private constructor(
         return responseCode
     }
 
-    /**
-     * Acknowledge a purchase.
-     *
-     * https://developer.android.com/google/play/billing/billing_library_releases_notes#2_0_acknowledge
-     *
-     * Apps should acknowledge the purchase after confirming that the purchase token
-     * has been associated with a user. This app only acknowledges purchases after
-     * successfully receiving the subscription data back from the server.
-     *
-     * Developers can choose to acknowledge purchases from a server using the
-     * Google Play Developer API. The server has direct access to the user database,
-     * so using the Google Play Developer API for acknowledgement might be more reliable.
-     * TODO(134506821): Acknowledge purchases on the server.
-     * TODO: Remove client side purchase acknowledgement after removing the associated tests.
-     * If the purchase token is not acknowledged within 3 days,
-     * then Google Play will automatically refund and revoke the purchase.
-     * This behavior helps ensure that users are not charged for subscriptions unless the
-     * user has successfully received access to the content.
-     * This eliminates a category of issues where users complain to developers
-     * that they paid for something that the app is not giving to them.
-     */
-    suspend fun acknowledgePurchase(purchaseToken: String): Boolean {
+    // 구매 승인
+    suspend fun acknowledgePurchase(purchaseToken: String): Boolean = suspendCoroutine { continuation ->
         val params = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchaseToken)
             .build()
 
-        for (trial in 1..MAX_RETRY_ATTEMPT) {
-            var response = BillingResponse(500)
-            var bResult: BillingResult? = null
+        val maxRetryAttempt = MAX_RETRY_ATTEMPT
+        var currentTrial = 0
+
+        fun acknowledge() {
             billingClient.acknowledgePurchase(params) { billingResult ->
-                response = BillingResponse(billingResult.responseCode)
-                bResult = billingResult
-            }
+                val response = BillingResponse(billingResult.responseCode)
 
-            when {
-                response.isOk -> {
-                    Timber.i("Acknowledge success - token: $purchaseToken")
-                    return true
-                }
-
-                response.canFailGracefully -> {
-                    // Ignore the error
-                    Timber.i("Token $purchaseToken is already owned.")
-                    return true
-                }
-
-                response.isRecoverableError -> {
-                    // Retry to ack because these errors may be recoverable.
-                    val duration = 500L * 2.0.pow(trial).toLong()
-                    delay(duration)
-                    if (trial < MAX_RETRY_ATTEMPT) {
-                        Timber.w("Retrying(" + trial + ") to acknowledge for token "
-                                + purchaseToken
-                                + " - "
-                                + "code: "
-                                + bResult!!.responseCode
-                                + ", message: "
-                                + bResult!!.debugMessage)
+                when {
+                    response.isOk -> {
+                        Timber.i("Acknowledge success - token: $purchaseToken")
+                        externalScope.launch {
+                            _uiEvent.emit(UIEvent.PurchaseAcknowledged)
+                        }
+                        continuation.resume(true)
                     }
-                }
 
-                response.isNonrecoverableError || response.isTerribleFailure -> {
-                    Timber.e("Failed to acknowledge for token "
-                            + purchaseToken
-                            + " - "
-                            + "code: "
-                            + bResult!!.responseCode
-                            + ", message: "
-                            + bResult!!.debugMessage)
-                    break
+                    response.canFailGracefully -> {
+                        Timber.i("Token $purchaseToken is already owned.")
+                        continuation.resume(true)
+                    }
+
+                    response.isRecoverableError -> {
+                        if (currentTrial < maxRetryAttempt) {
+                            val duration = 500L * 2.0.pow(currentTrial).toLong()
+                            Timber.w(
+                                "Retrying($currentTrial) to acknowledge for token $purchaseToken - " +
+                                    "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
+                            )
+                            externalScope.launch {
+                                delay(duration)
+                                currentTrial++
+                                acknowledge()
+                            }
+                        } else {
+                            Timber.e(
+                                "Failed to acknowledge for token $purchaseToken - " +
+                                    "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
+                            )
+                            continuation.resume(false)
+                        }
+                    }
+
+                    response.isNonrecoverableError || response.isTerribleFailure -> {
+                        Timber.e(
+                            "Failed to acknowledge for token $purchaseToken - " +
+                                "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
+                        )
+                        continuation.resume(false)
+                    }
                 }
             }
         }
-        throw Exception("Failed to acknowledge the purchase!")
+
+        acknowledge()
+    }
+
+    sealed interface UIEvent {
+        data object PurchaseAcknowledged : UIEvent
     }
 
     companion object {
@@ -391,7 +372,8 @@ class BillingClientLifecycle private constructor(
         private const val MAX_RETRY_ATTEMPT = 3
 
         private val LIST_OF_SUBSCRIPTION_PRODUCTS = listOf(
-            Constants.BASIC_PRODUCT, Constants.PREMIUM_PRODUCT
+            Constants.BASIC_PRODUCT,
+            Constants.PREMIUM_PRODUCT,
         )
 
         @Volatile
