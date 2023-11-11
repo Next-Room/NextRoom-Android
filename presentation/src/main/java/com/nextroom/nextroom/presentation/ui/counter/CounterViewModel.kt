@@ -12,9 +12,17 @@ import org.orbitmvi.orbit.viewmodel.container
 class CounterViewModel : BaseViewModel<CounterState, Nothing>() {
     override val container: Container<CounterState, Nothing> = container(CounterState())
 
+    private var leaveTime: Long? = null
+
     init {
         startCounter(if (BuildConfig.DEBUG) 3 else 10)
     }
+
+    fun onLeave() {
+        leaveTime = System.currentTimeMillis()
+    }
+
+    fun getOverflowTimeMillis(): Long = leaveTime?.let { System.currentTimeMillis() - it } ?: 0
 
     private fun startCounter(startSeconds: Int = 10) = intent {
         reduce { state.copy(timerState = TimerState.Running, lastSeconds = startSeconds) }

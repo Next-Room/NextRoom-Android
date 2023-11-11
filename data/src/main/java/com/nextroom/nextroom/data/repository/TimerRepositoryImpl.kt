@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -55,6 +56,11 @@ class TimerRepositoryImpl @Inject constructor(
     override fun stopTimer() {
         timerJob?.cancel()
         setTimerState(TimerState.Finished)
+    }
+
+    override fun correctTime(milliseconds: Long) {
+        Timber.tag("MANGBAAM-TimerRepositoryImpl(correctTime)").d("$milliseconds")
+        _lastMillis.update { (it + milliseconds).coerceAtLeast(0) }
     }
 
     private fun setTimerState(newState: TimerState) {

@@ -51,8 +51,7 @@ class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::infl
                 tvButton.isVisible = true
                 tvButton.text = getString(R.string.common_hint_eng)
                 tvButton.setOnClickListener {
-                    val action = MemoFragmentDirections.actionMemoFragmentToHintFragment()
-                    findNavController().safeNavigate(action)
+                    findNavController().popBackStack(R.id.hintFragment, false)
                 }
             } else {
                 tvButton.isVisible = false

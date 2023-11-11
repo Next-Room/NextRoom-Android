@@ -40,6 +40,10 @@
         <action
             android:id="@+id/action_mainFragment_to_hintFragment"
             app:destination="@id/hintFragment" />
+        <argument
+            android:name="overflowTime"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/verifyFragment"
@@ -70,17 +74,15 @@
             app:destination="@id/mainFragment"
             app:popUpTo="@id/mainFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="hint"
+            app:argType="com.nextroom.nextroom.presentation.model.Hint" />
     </fragment>
     <fragment
         android:id="@+id/memoFragment"
         android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
         android:label="MemoFragment"
         tools:layout="@layout/fragment_memo">
-        <action
-            android:id="@+id/action_memoFragment_to_hintFragment"
-            app:destination="@id/hintFragment"
-            app:popUpTo="@id/hintFragment"
-            app:popUpToInclusive="true" />
         <argument
             android:name="fromHint"
             android:defaultValue="false"
