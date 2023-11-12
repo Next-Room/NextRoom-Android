@@ -42,10 +42,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:tag="remote"
             android:text="@string/admin_main_shop_name_label"
             android:textColor="@color/Gray01"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_remote_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_tags="remote" />
 
         <TextView
             android:id="@+id/tv_shop_name"
@@ -53,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:tag="remote"
             android:textColor="@color/White"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toBottomOf="@id/tv_shop_name_label"
@@ -64,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:tag="remote"
             android:textColor="@color/White"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toBottomOf="@id/tv_shop_name"
@@ -76,6 +85,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_secondary_button"
             android:padding="10dp"
+            android:tag="remote"
             android:textColor="@color/Gray01"
             app:layout_constraintBottom_toBottomOf="@id/tv_subs_name"
             app:layout_constraintEnd_toEndOf="@id/guide_end"
@@ -109,6 +119,7 @@
             android:id="@+id/tv_subs_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="remote"
             android:textColor="@color/Gray01"
             app:layout_constraintBottom_toBottomOf="@id/tv_subs_period_label"
             app:layout_constraintEnd_toEndOf="@id/guide_end"
