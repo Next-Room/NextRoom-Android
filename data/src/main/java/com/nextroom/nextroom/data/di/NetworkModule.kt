@@ -1,7 +1,11 @@
 package com.nextroom.nextroom.data.di
 
 import com.nextroom.nextroom.data.BuildConfig
+import com.nextroom.nextroom.data.datasource.AuthDataSource
+import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.network.ApiService
+import com.nextroom.nextroom.data.network.AuthAuthenticator
+import com.nextroom.nextroom.data.network.AuthInterceptor
 import com.nextroom.nextroom.data.network.ResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -11,6 +15,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -19,7 +25,10 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    @Named("authRetrofit")
+    fun provideAuthRetrofit(
+        @Named("authOkHttpClient") okHttpClient: OkHttpClient,
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
@@ -30,13 +39,39 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiService {
+    @Named("defaultRetrofit")
+    fun provideDefaultRetrofit(
+        @Named("defaultOkHttpClient") okHttpClient: OkHttpClient,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(ResultCallAdapterFactory())
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    @Named("defaultApiService")
+    fun provideDefaultApiService(
+        @Named("defaultRetrofit") retrofit: Retrofit,
+    ): ApiService {
         return retrofit.create(ApiService::class.java)
     }
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideAuthApiService(
+        @Named("authRetrofit") retrofit: Retrofit,
+    ): ApiService {
+        return retrofit.create(ApiService::class.java)
+    }
+
+    @Singleton
+    @Provides
+    @Named("authOkHttpClient")
+    fun provideAuthOkHttpClient(authInterceptor: AuthInterceptor, authAuthenticator: AuthAuthenticator): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
@@ -45,7 +80,45 @@ object NetworkModule {
             }
         }
         return OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .authenticator(authAuthenticator)
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
             .build()
+    }
+
+    @Singleton
+    @Provides
+    @Named("defaultOkHttpClient")
+    fun provideDefaultOkHttpClient(): OkHttpClient {
+        val loggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+        }
+        return OkHttpClient.Builder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .addInterceptor(loggingInterceptor)
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthInterceptor(tokenDataSource: TokenDataSource): AuthInterceptor {
+        return AuthInterceptor(tokenDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAuthAuthenticator(
+        tokenDataSource: TokenDataSource,
+        authDataSource: AuthDataSource,
+        @Named("defaultApiService") apiService: ApiService,
+    ): AuthAuthenticator {
+        return AuthAuthenticator(tokenDataSource, authDataSource, apiService)
     }
 }
