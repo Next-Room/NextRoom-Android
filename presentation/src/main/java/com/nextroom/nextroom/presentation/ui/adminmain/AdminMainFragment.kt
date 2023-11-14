@@ -71,11 +71,11 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
 
-        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.구독중
+        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.Subscription
         when (state.userSubscribeStatus.subscribeStatus) {
-            SubscribeStatus.None, SubscribeStatus.유예기간만료 -> logout()
-            SubscribeStatus.무료체험끝, SubscribeStatus.구독만료 -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
-            SubscribeStatus.무료체험중 -> {
+            SubscribeStatus.Expiration -> logout()
+            SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
+            SubscribeStatus.Free -> {
                 if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
                     state.calculateDday().let { dday ->
                         if (dday >= 0) showDialog(dday)
@@ -83,7 +83,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
                 }
             }
 
-            SubscribeStatus.구독중 -> Unit
+            SubscribeStatus.None, SubscribeStatus.Subscription -> Unit
         }
         tvShopName.text = state.showName
         adapter.submitList(state.themes)

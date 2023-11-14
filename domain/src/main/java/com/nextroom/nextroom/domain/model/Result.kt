@@ -14,6 +14,7 @@ sealed interface Result<out T> {
             data class NotFound(override val message: String) : HttpError {
                 override val code = 404
             }
+
             data class ServerError(override val message: String) : HttpError {
                 override val code = 500
             }
@@ -34,8 +35,10 @@ sealed interface Result<out T> {
                 }
             }
         }
+
         data class NetworkError(val throwable: Throwable) : Failure
         data class UnknownError(val throwable: Throwable) : Failure
+        data class OperationError(val throwable: Throwable) : Failure
     }
 
     val isSuccessful
@@ -79,4 +82,32 @@ inline fun <T> Result<T>.onFinally(action: (Result<T>) -> Unit): Result<T> {
 
 fun <T, R> Result<T>.mapOnSuccess(map: (T) -> R): Result<R> {
     return if (isSuccessful) Result.Success(map(getOrThrow)) else failureOrThrow
+}
+
+suspend fun <T, R> Result<T>.suspendMapOnSuccess(map: suspend (T) -> R): Result<R> {
+    return if (isSuccessful) Result.Success(map(getOrThrow)) else failureOrThrow
+}
+
+fun <A, B, R> Result<A>.concatMap(other: Result<B>, transform: (A, B) -> R): Result<R> {
+    return try {
+        mapOnSuccess { a ->
+            other.mapOnSuccess { b ->
+                transform(a, b)
+            }.getOrThrow
+        }
+    } catch (e: Exception) {
+        Result.Failure.OperationError(e)
+    }
+}
+
+suspend fun <A, B, R> Result<A>.suspendConcatMap(other: Result<B>, transform: suspend (A, B) -> R): Result<R> {
+    return try {
+        suspendMapOnSuccess { a ->
+            other.suspendMapOnSuccess { b ->
+                transform(a, b)
+            }.getOrThrow
+        }
+    } catch (e: Exception) {
+        Result.Failure.OperationError(e)
+    }
 }

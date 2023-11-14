@@ -1,10 +1,19 @@
 package com.nextroom.nextroom.presentation.ui.mypage
 
-import com.nextroom.nextroom.domain.model.UserSubscribe
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
+import com.nextroom.nextroom.domain.model.UserSubscription
 
 data class MypageState(
+    val loading: Boolean = false,
     val shopName: String = "",
     val userSubscribeStatus: UserSubscribeStatus = UserSubscribeStatus(),
-    val userSubscribe: UserSubscribe? = null,
-)
+    val userSubscription: UserSubscription? = null,
+) {
+    val period: String
+        get() = userSubscription?.let { subs ->
+            StringBuilder(subs.createdAt.substringBefore(' ').replace("-", "."))
+                .append(" ~ ")
+                .append(subs.expiryDate.replace("-", "."))
+                .toString()
+        } ?: ""
+}

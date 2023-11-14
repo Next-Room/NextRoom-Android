@@ -155,8 +155,9 @@ object RepositoryModule {
     @Provides
     fun provideBillingRepository(
         billingDataSource: BillingDataSource,
+        subscriptionDataSource: SubscriptionDataSource,
     ): BillingRepository {
-        return BillingRepositoryImpl(billingDataSource)
+        return BillingRepositoryImpl(billingDataSource, subscriptionDataSource)
     }
 
     @Singleton

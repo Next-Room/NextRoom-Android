@@ -6,7 +6,9 @@ import com.nextroom.nextroom.data.network.response.BaseListResponse
 import com.nextroom.nextroom.data.network.response.BaseResponse
 import com.nextroom.nextroom.data.network.response.HintDto
 import com.nextroom.nextroom.data.network.response.LoginDto
+import com.nextroom.nextroom.data.network.response.MypageDto
 import com.nextroom.nextroom.data.network.response.ThemeDto
+import com.nextroom.nextroom.data.network.response.TicketDto
 import com.nextroom.nextroom.data.network.response.UserSubscriptionStatusDto
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.request.TokenRefreshRequest
@@ -20,8 +22,8 @@ interface ApiService {
     @POST("api/v1/auth/login")
     suspend fun login(@Body loginRequest: LoginRequest): Result<BaseResponse<LoginDto>>
 
-    @GET("api/v1/auth/reissue")
-    suspend fun refreshToken(refreshRequest: TokenRefreshRequest): Result<BaseResponse<TokenDto>>
+    @POST("api/v1/auth/reissue")
+    suspend fun refreshToken(@Body refreshRequest: TokenRefreshRequest): Result<BaseResponse<TokenDto>>
 
     @GET("api/v1/theme")
     suspend fun getThemes(): Result<BaseListResponse<ThemeDto>>
@@ -31,4 +33,10 @@ interface ApiService {
 
     @GET("api/v1/subscription/status")
     suspend fun getUserSubscriptionStatus(): Result<BaseResponse<UserSubscriptionStatusDto>>
+
+    @GET("api/v1/subscription/mypage")
+    suspend fun getMypageInfo(): Result<BaseResponse<MypageDto>>
+
+    @GET("api/v1/subscription/plan")
+    suspend fun getSubscriptionPlans(): Result<BaseListResponse<TicketDto>>
 }

@@ -17,6 +17,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/bg_my_subscription"
+        android:minHeight="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tb_mypage">
@@ -41,10 +42,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:tag="remote"
             android:text="@string/admin_main_shop_name_label"
             android:textColor="@color/Gray01"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_remote_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_tags="remote" />
 
         <TextView
             android:id="@+id/tv_shop_name"
@@ -52,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:tag="remote"
             android:textColor="@color/White"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toBottomOf="@id/tv_shop_name_label"
@@ -63,6 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            android:tag="remote"
             android:textColor="@color/White"
             app:layout_constraintStart_toStartOf="@id/guide_start"
             app:layout_constraintTop_toBottomOf="@id/tv_shop_name"
@@ -75,11 +85,12 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_secondary_button"
             android:padding="10dp"
-            android:text="@string/purchase_ticket"
+            android:tag="remote"
             android:textColor="@color/Gray01"
             app:layout_constraintBottom_toBottomOf="@id/tv_subs_name"
             app:layout_constraintEnd_toEndOf="@id/guide_end"
-            app:layout_constraintTop_toTopOf="@id/tv_subs_name" />
+            app:layout_constraintTop_toTopOf="@id/tv_subs_name"
+            tools:text="@string/purchase_ticket" />
 
         <View
             android:id="@+id/divider"
@@ -108,11 +119,23 @@
             android:id="@+id/tv_subs_period"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tag="remote"
             android:textColor="@color/Gray01"
             app:layout_constraintBottom_toBottomOf="@id/tv_subs_period_label"
             app:layout_constraintEnd_toEndOf="@id/guide_end"
             app:layout_constraintTop_toTopOf="@id/tv_subs_period_label"
             tools:text="2023.10.05 ~ 2023.11.05" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
