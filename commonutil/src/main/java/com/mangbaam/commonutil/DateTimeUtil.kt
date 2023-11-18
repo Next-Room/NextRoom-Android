@@ -48,6 +48,10 @@ class DateTimeUtil(private val locale: Locale = Locale.getDefault()) {
         return (timeDiff / (1000 * 60 * 60 * 24)).toInt()
     }
 
+    fun currentTime(
+        pattern: String = dateFormatString,
+    ) = longToDateString(System.currentTimeMillis(), pattern)
+
     private fun SimpleDateFormat.safeParse(pattern: String): Date? {
         return try {
             parse(pattern)

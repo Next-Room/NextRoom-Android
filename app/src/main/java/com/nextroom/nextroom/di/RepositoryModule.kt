@@ -6,12 +6,14 @@ import com.nextroom.nextroom.data.datasource.BillingDataSource
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
 import com.nextroom.nextroom.data.datasource.HintRemoteDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
+import com.nextroom.nextroom.data.datasource.StatisticsDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.ThemeLocalDataSource
 import com.nextroom.nextroom.data.datasource.ThemeRemoteDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
+import com.nextroom.nextroom.data.db.StatisticsDao
 import com.nextroom.nextroom.data.db.ThemeDao
 import com.nextroom.nextroom.data.db.ThemeTimeDao
 import com.nextroom.nextroom.data.network.ApiService
@@ -20,6 +22,7 @@ import com.nextroom.nextroom.data.repository.BillingRepositoryImpl
 import com.nextroom.nextroom.data.repository.DataStoreRepositoryImpl
 import com.nextroom.nextroom.data.repository.GameStateRepositoryImpl
 import com.nextroom.nextroom.data.repository.HintRepositoryImpl
+import com.nextroom.nextroom.data.repository.StatisticsRepositoryImpl
 import com.nextroom.nextroom.data.repository.ThemeRepositoryImpl
 import com.nextroom.nextroom.data.repository.TimerRepositoryImpl
 import com.nextroom.nextroom.domain.repository.AdminRepository
@@ -27,6 +30,7 @@ import com.nextroom.nextroom.domain.repository.BillingRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
+import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import dagger.Module
@@ -168,5 +172,12 @@ object RepositoryModule {
         return DataStoreRepositoryImpl(
             settingDataSource,
         )
+    }
+
+    @Provides
+    fun provideStatisticsRepository(
+        dataSource: StatisticsDataSource,
+    ): StatisticsRepository {
+        return StatisticsRepositoryImpl(dataSource)
     }
 }

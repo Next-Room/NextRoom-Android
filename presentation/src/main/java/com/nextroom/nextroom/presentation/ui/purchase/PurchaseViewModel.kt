@@ -35,9 +35,9 @@ class PurchaseViewModel @Inject constructor(
     fun startPurchase(ticket: Ticket) = intent {
         postSideEffect(
             PurchaseEvent.StartPurchase(
-                productId = ticket.id.toString(),
+                productId = ticket.id,
                 tag = "",
-                upDowngrade = (ticket.id == container.stateFlow.value.userSubscribe?.type?.id),
+                upDowngrade = (ticket.id == container.stateFlow.value.userSubscription?.type?.id),
             ),
         )
     }
