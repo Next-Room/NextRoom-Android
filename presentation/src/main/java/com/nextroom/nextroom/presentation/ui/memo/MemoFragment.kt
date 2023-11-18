@@ -13,7 +13,6 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentMemoBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
-import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -51,8 +50,7 @@ class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::infl
                 tvButton.isVisible = true
                 tvButton.text = getString(R.string.common_hint_eng)
                 tvButton.setOnClickListener {
-                    val action = MemoFragmentDirections.actionMemoFragmentToHintFragment()
-                    findNavController().safeNavigate(action)
+                    findNavController().popBackStack(R.id.hintFragment, false)
                 }
             } else {
                 tvButton.isVisible = false

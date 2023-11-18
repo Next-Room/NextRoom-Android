@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.main
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
@@ -8,14 +9,15 @@ import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
+import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.model.InputState
-import com.nextroom.nextroom.presentation.ui.hint.HintState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
@@ -23,28 +25,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GameViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle,
     private val themeRepository: ThemeRepository,
     private val timerRepository: TimerRepository,
     private val gameStateRepository: GameStateRepository,
     private val hintRepository: HintRepository,
-) : BaseViewModel<GameScreenState, Nothing>() {
+) : BaseViewModel<GameScreenState, GameEvent>() {
 
-    override val container: Container<GameScreenState, Nothing> = container(GameScreenState())
+    override val container: Container<GameScreenState, GameEvent> = container(GameScreenState())
 
     init {
-        viewModelScope.launch {
-            // 강제 종료된 게임 가져오기
-            gameStateRepository.getGameState()?.let { gameState ->
-                setTimeLimit(gameState.timeLimit)
-                setHintLimit(gameState.hintLimit)
-                recoverUsedHints(gameState.usedHints)
-                startGame(gameState.lastSeconds)
-            } ?: themeRepository.getLatestTheme().collect { // 정상 종료된 경우
-                setTimeLimit(it.timeLimit)
-                setHintLimit(it.hintLimit)
-                startGame(it.timeLimit)
-            }
-        }
+        startOrResumeGame()
 
         viewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
@@ -52,9 +43,30 @@ class GameViewModel @Inject constructor(
 
         viewModelScope.launch {
             timerRepository.timerState.collect {
+                Timber.tag("MANGBAAM-GameViewModel)").d("timer state: $it")
                 if (it == TimerState.Finished) {
                     finishGame()
                 }
+            }
+        }
+    }
+
+    private fun startOrResumeGame() {
+        viewModelScope.launch {
+            gameStateRepository.getGameState()?.let { gameState -> // 강제 종료된 게임 가져오기
+                Timber.tag("MANGBAAM-GameViewModel(startGame)").d("강제종료 게임 다시 시작")
+                setTimeLimit(gameState.timeLimit)
+                setHintLimit(gameState.hintLimit)
+                recoverUsedHints(gameState.usedHints)
+                startGame(gameState.lastSeconds)
+            } ?: themeRepository.getLatestTheme().collect { // 정상 종료된 경우
+                Timber.tag("MANGBAAM-GameViewModel(startGame)").d("정상종료 게임 시작")
+                setTimeLimit(it.timeLimit)
+                setHintLimit(it.hintLimit)
+                val overflowTime = ((savedStateHandle.get<Long>("overflowTime") ?: 0L) / 1000L).toInt().also {
+                    Timber.tag("MANGBAAM-GameViewModel(startGame)").d("overflow: $it")
+                }
+                startGame(it.timeLimit - overflowTime)
             }
         }
     }
@@ -94,15 +106,20 @@ class GameViewModel @Inject constructor(
             reduce {
                 state.copy(
                     usedHints = state.usedHints + hint.id,
-                    currentHint = HintState(
-                        hintId = hint.id,
-                        progress = hint.progress,
-                        hint = hint.description,
-                        answer = hint.answer,
-                    ),
                     inputState = InputState.Ok,
                 )
             }
+            postSideEffect(
+                GameEvent.OnOpenHint(
+                    Hint(
+                        id = hint.id,
+                        progress = hint.progress,
+                        hint = hint.description,
+                        answer = hint.answer,
+                        answerOpened = state.answerOpenedHints.contains(hint.id),
+                    ),
+                ),
+            )
         } ?: run {
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
@@ -162,10 +179,6 @@ class GameViewModel @Inject constructor(
 
     private fun recoverUsedHints(usedHints: Set<Int>) = intent {
         reduce { state.copy(usedHints = usedHints) }
-    }
-
-    fun openAnswer(hintId: Int) = intent {
-        reduce { state.copy(answerOpenedHints = state.answerOpenedHints + hintId) }
     }
 
     override fun onCleared() {

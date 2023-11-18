@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -16,6 +17,7 @@ import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.toTimeUnit
 import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
+import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -23,7 +25,8 @@ import org.orbitmvi.orbit.viewmodel.observe
 class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
     private lateinit var backCallback: OnBackPressedCallback
 
-    private val viewModel: GameViewModel by activityViewModels()
+    private val viewModel: GameViewModel by viewModels()
+    private val painterViewModel: PainterViewModel by activityViewModels()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -38,7 +41,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        viewModel.observe(viewLifecycleOwner, state = ::render)
+        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
     private fun initViews() = with(binding) {
@@ -81,13 +84,17 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                 vibrate()
             }
 
-            is InputState.Ok -> {
-                val action = GameFragmentDirections.actionMainFragmentToHintFragment()
+            else -> {}
+        }
+    }
+
+    private fun handleEvent(event: GameEvent) {
+        when (event) {
+            is GameEvent.OnOpenHint -> {
+                val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint)
                 findNavController().safeNavigate(action)
                 clearHintCode()
             }
-
-            else -> {}
         }
     }
 
@@ -96,6 +103,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             .setTitle(R.string.game_main_exit_dialog)
             .setMessage(R.string.game_main_exit_dialog_message)
             .setPositiveButton(R.string.dialog_yes) { _, _ ->
+                painterViewModel.clear()
                 viewModel.finishGame { findNavController().popBackStack() }
             }
             .setNegativeButton(R.string.dialog_no) { dialog, _ ->

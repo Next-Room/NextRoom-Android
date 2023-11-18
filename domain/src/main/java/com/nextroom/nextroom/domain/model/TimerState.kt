@@ -1,8 +1,8 @@
 package com.nextroom.nextroom.domain.model
 
 sealed interface TimerState {
-    object UnInitialized : TimerState
-    object Ready : TimerState
-    object Running : TimerState
-    object Finished : TimerState
+    data object UnInitialized : TimerState
+    data object Ready : TimerState
+    data object Running : TimerState
+    data object Finished : TimerState
 }

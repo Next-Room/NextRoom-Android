@@ -11,6 +11,11 @@ abstract class BaseViewModel<STATE : Any, SIDE_EFFECT : Any> :
     abstract override val container: Container<STATE, SIDE_EFFECT>
 
     init {
-        Timber.d("${this::class.simpleName} generated")
+        Timber.tag("MANGBAAM-BaseViewModel()").d("${this::class.simpleName} generated")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.tag("MANGBAAM-BaseViewModel(onCleared)").d("${this::class.simpleName} cleared")
     }
 }

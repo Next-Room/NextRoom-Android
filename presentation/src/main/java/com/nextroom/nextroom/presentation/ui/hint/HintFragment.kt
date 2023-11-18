@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -13,8 +13,6 @@ import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
-import com.nextroom.nextroom.presentation.ui.main.GameScreenState
-import com.nextroom.nextroom.presentation.ui.main.GameViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.viewmodel.observe
@@ -23,7 +21,10 @@ import timber.log.Timber
 @AndroidEntryPoint
 class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::inflate) {
 
-    private val gameViewModel: GameViewModel by activityViewModels()
+    private val viewModel: HintViewModel by viewModels()
+    private val state: HintState
+        get() = viewModel.container.stateFlow.value
+
     private var scrolled: Boolean = false
 
     override fun onAttach(context: Context) {
@@ -35,7 +36,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        gameViewModel.observe(viewLifecycleOwner, state = ::render)
+        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
     private fun initViews() = with(binding) {
@@ -49,32 +50,28 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         }
 
         btnAction.setOnClickListener {
-            val state = gameViewModel.container.stateFlow.value
-            if (state.answerOpened) {
+            if (state.hint.answerOpened) {
                 gotoHome()
             } else {
                 // 정답 보기
-                state.currentHint?.hintId?.let { id -> gameViewModel.openAnswer(id) }
+                viewModel.openAnswer()
             }
         }
     }
 
-    private fun render(gameScreenState: GameScreenState) = with(binding) {
-        // 타이머 렌더링
-        tbHint.tvTitle.text = gameScreenState.lastSeconds.toTimerFormat()
-
-        val state = gameScreenState.currentHint ?: return@with
-        groupAnswer.isVisible = gameScreenState.answerOpened
-        btnAction.text = if (!gameScreenState.answerOpened) {
+    private fun render(state: HintState) = with(binding) {
+        tbHint.tvTitle.text = state.lastSeconds.toTimerFormat()
+        groupAnswer.isVisible = state.hint.answerOpened
+        btnAction.text = if (!state.hint.answerOpened) {
             getString(R.string.game_hint_button_show_answer)
         } else {
             getString(R.string.game_hint_button_goto_home)
         }
 
-        tvProgress.text = String.format("%d%%", state.progress)
-        tvHint.text = state.hint
-        if (gameScreenState.answerOpened) {
-            tvAnswer.text = state.answer
+        tvProgress.text = String.format("%d%%", state.hint.progress)
+        tvHint.text = state.hint.hint
+        if (state.hint.answerOpened) {
+            tvAnswer.text = state.hint.answer
             if (!scrolled) {
                 scrolled = true
 
@@ -83,6 +80,12 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                     svContents.smoothScrollTo(0, tvAnswerLabel.top)
                 }
             }
+        }
+    }
+
+    private fun handleEvent(event: HintEvent) {
+        when (event) {
+            HintEvent.OpenAnswer -> viewModel.openAnswer()
         }
     }
 

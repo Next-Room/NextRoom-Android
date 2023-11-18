@@ -6,7 +6,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.TimerState
-import com.nextroom.nextroom.presentation.BuildConfig
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentStartTimerBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
@@ -27,16 +26,17 @@ class CounterFragment : BaseFragment<FragmentStartTimerBinding>(FragmentStartTim
         viewModel.observe(viewLifecycleOwner, state = ::render)
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.startCounter(if (BuildConfig.DEBUG) 3 else 10)
+    override fun onStop() {
+        super.onStop()
+        viewModel.onLeave() // 화면 이탈 시간 체크
     }
 
     private fun render(state: CounterState) = with(binding) {
         tvLastSeconds.text = state.lastSeconds.toString()
 
         if (state.timerState is TimerState.Finished) {
-            val action = CounterFragmentDirections.actionStartTimerFragmentToMainFragment()
+            val overflowTime = viewModel.getOverflowTimeMillis()
+            val action = CounterFragmentDirections.actionStartTimerFragmentToMainFragment(overflowTime)
             findNavController().navigate(action)
         }
     }
