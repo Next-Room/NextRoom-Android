@@ -31,6 +31,9 @@ interface StatisticsDao {
     @Query("SELECT * FROM $GAME_STATS_TABLE ORDER BY id")
     suspend fun getAllGameStats(): List<GameStatsEntity>
 
+    @Query("SELECT * FROM $HINT_STATS_TABLE WHERE statsId = :statsId ORDER BY id")
+    suspend fun getHintStatsForGame(statsId: Long): List<HintStatsEntity>
+
     @Query("DELETE FROM $GAME_STATS_TABLE")
     suspend fun deleteAllGameStats()
 

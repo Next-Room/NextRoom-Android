@@ -6,6 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.nextroom.nextroom.data.model.GameStatsEntity.Companion.GAME_STATS_TABLE
 import com.nextroom.nextroom.data.model.HintStatsEntity.Companion.HINT_STATS_TABLE
+import com.nextroom.nextroom.data.network.request.StatisticsRequest
 import com.nextroom.nextroom.domain.model.statistics.GameStats
 import com.nextroom.nextroom.domain.model.statistics.HintStats
 
@@ -60,4 +61,8 @@ fun HintStats.toEntity(): HintStatsEntity {
         hintOpenTime = hintOpenTime,
         answerOpenTime = answerOpenTime,
     )
+}
+
+fun HintStatsEntity.toRequest(): StatisticsRequest.HintRequest {
+    return StatisticsRequest.HintRequest(id = hintId, entryTime = hintOpenTime, answerOpenTime = answerOpenTime)
 }
