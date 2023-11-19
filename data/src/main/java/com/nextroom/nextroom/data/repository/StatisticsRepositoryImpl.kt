@@ -4,6 +4,7 @@ import com.nextroom.nextroom.data.datasource.StatisticsDataSource
 import com.nextroom.nextroom.domain.model.statistics.GameStats
 import com.nextroom.nextroom.domain.model.statistics.HintStats
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
+import timber.log.Timber
 import javax.inject.Inject
 
 class StatisticsRepositoryImpl @Inject constructor(
@@ -23,6 +24,7 @@ class StatisticsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun postGameStats() {
+        Timber.tag("MANGBAAM-StatisticsRepositoryImpl(postGameStats)").d("게임 통계 전송 시도")
         dataSource.postGameStats()
     }
 }
