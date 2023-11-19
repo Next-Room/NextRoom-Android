@@ -18,6 +18,10 @@ class StatisticsRepositoryImpl @Inject constructor(
         dataSource.recordHintStats(hintStats)
     }
 
+    override suspend fun recordAnswerOpenTime(hintId: Int, answerOpenTime: String) {
+        dataSource.updateAnswerOpenTime(hintId, answerOpenTime)
+    }
+
     override suspend fun postGameStats() {
         dataSource.postGameStats()
     }

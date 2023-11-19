@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.data.datasource
 
+import androidx.room.Transaction
 import com.nextroom.nextroom.data.db.StatisticsDao
 import com.nextroom.nextroom.data.model.toEntity
 import com.nextroom.nextroom.data.network.ApiService
@@ -15,8 +16,23 @@ class StatisticsDataSource @Inject constructor(
         statsDao.insertGameStats(gameStats.toEntity())
     }
 
+    @Transaction
     suspend fun recordHintStats(hintStats: HintStats) {
-        statsDao.insertHintStatsForLastGame(hintStats.toEntity())
+        statsDao.getLastGameStats()?.let { lastGameStats ->
+            statsDao.insertHintStats(
+                hintStats.toEntity().apply {
+                    statsId = lastGameStats.id
+                },
+            )
+        }
+    }
+
+    @Transaction
+    suspend fun updateAnswerOpenTime(hintId: Int, answerOpenTime: String) {
+        val lastGameStats = statsDao.getLastGameStats() ?: return
+        val lastHintStats = statsDao.getLastHintStats(lastGameStats.id, hintId) ?: return
+
+        statsDao.updateHintStats(lastHintStats.copy(answerOpenTime = answerOpenTime).apply { statsId = lastGameStats.id })
     }
 
     suspend fun postGameStats() {

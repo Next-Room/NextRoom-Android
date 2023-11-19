@@ -2,6 +2,7 @@ package com.nextroom.nextroom.data.model
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.nextroom.nextroom.data.model.GameStatsEntity.Companion.GAME_STATS_TABLE
 import com.nextroom.nextroom.data.model.HintStatsEntity.Companion.HINT_STATS_TABLE
@@ -37,6 +38,7 @@ fun GameStats.toEntity(): GameStatsEntity {
             onDelete = ForeignKey.CASCADE,
         ),
     ],
+    indices = [Index(value = ["statsId", "hintId"], unique = true)],
 )
 data class HintStatsEntity(
     @PrimaryKey(autoGenerate = true)
