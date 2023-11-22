@@ -2,6 +2,7 @@ package com.nextroom.nextroom.data.network
 
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
+import com.nextroom.nextroom.data.network.request.StatisticsRequest
 import com.nextroom.nextroom.data.network.response.BaseListResponse
 import com.nextroom.nextroom.data.network.response.BaseResponse
 import com.nextroom.nextroom.data.network.response.HintDto
@@ -39,4 +40,7 @@ interface ApiService {
 
     @GET("api/v1/subscription/plan")
     suspend fun getSubscriptionPlans(): Result<BaseListResponse<TicketDto>>
+
+    @POST("api/v1/history")
+    suspend fun postGameStats(@Body statsRequest: StatisticsRequest): Result<Unit>
 }

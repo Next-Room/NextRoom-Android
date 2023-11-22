@@ -3,12 +3,15 @@ package com.nextroom.nextroom.data.di
 import android.content.Context
 import androidx.room.Room
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
+import com.nextroom.nextroom.data.datasource.StatisticsDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
 import com.nextroom.nextroom.data.db.NextRoomDatabase
 import com.nextroom.nextroom.data.db.NextRoomDatabase.Companion.DB_NAME
+import com.nextroom.nextroom.data.db.StatisticsDao
 import com.nextroom.nextroom.data.db.ThemeDao
 import com.nextroom.nextroom.data.db.ThemeTimeDao
+import com.nextroom.nextroom.data.network.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -58,4 +61,16 @@ object LocalDataModule {
     fun provideHintLocalDataSource(hintDao: HintDao): HintLocalDataSource {
         return HintLocalDataSource(hintDao)
     }
+
+    @Singleton
+    @Provides
+    fun provideStatisticsDao(nextRoomDatabase: NextRoomDatabase): StatisticsDao {
+        return nextRoomDatabase.statisticsDao()
+    }
+
+    @Provides
+    fun provideStatisticsDataSource(
+        statsDao: StatisticsDao,
+        apiService: ApiService,
+    ): StatisticsDataSource = StatisticsDataSource(statsDao, apiService)
 }

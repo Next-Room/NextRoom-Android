@@ -6,8 +6,10 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRImageDialog
@@ -16,12 +18,17 @@ import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
+
+    @Inject
+    lateinit var statisticsRepository: StatisticsRepository
 
     private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
@@ -49,6 +56,15 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 
         initViews()
         viewModel.observe(viewLifecycleOwner, state = ::render)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        lifecycleScope.launch {
+            // 통계 정보 서버에 전송
+            statisticsRepository.postGameStats()
+        }
     }
 
     private fun startGame(code: Int) {
