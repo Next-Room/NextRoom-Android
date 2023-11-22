@@ -37,20 +37,8 @@ class AdminMainViewModel @Inject constructor(
         loadData()
 
         viewModelScope.launch {
-            launch {
-                adminRepository.shopName.collect {
-                    updateShopInfo(it)
-                }
-            }
-            launch {
-                themeRepository.getLocalThemes().collect { themes ->
-                    updateThemes(
-                        themes.map { themeInfo ->
-                            val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                            themeInfo.toPresentation(updatedAt)
-                        },
-                    )
-                }
+            adminRepository.shopName.collect {
+                updateShopInfo(it)
             }
         }
     }
@@ -81,7 +69,14 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribeStatus().suspendOnSuccess {
             reduce { state.copy(userSubscribeStatus = it) }
-            themeRepository.getThemes()
+            themeRepository.getThemes().onSuccess {
+                updateThemes(
+                    it.map { themeInfo ->
+                        val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
+                        themeInfo.toPresentation(updatedAt)
+                    },
+                )
+            }
         }
         reduce { state.copy(loading = false) }
     }
