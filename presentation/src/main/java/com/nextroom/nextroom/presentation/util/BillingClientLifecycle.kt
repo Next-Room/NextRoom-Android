@@ -56,8 +56,9 @@ class BillingClientLifecycle private constructor(
     private var cachedPurchasesList: List<Purchase>? = null
 
     // 콘솔에 등록된 상품들 정보
-    val premiumSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
-    val basicSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
+    val largeSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
+    val mediumSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
+    val miniSubProductWithProductDetails = MutableLiveData<ProductDetails?>()
 
     private val _uiEvent = MutableSharedFlow<UIEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -167,10 +168,10 @@ class BillingClientLifecycle private constructor(
         productDetailsList.forEach { productDetails ->
             when (productDetails.productType) {
                 BillingClient.ProductType.SUBS -> {
-                    if (productDetails.productId == Constants.PREMIUM_PRODUCT) {
-                        premiumSubProductWithProductDetails.postValue(productDetails)
-                    } else if (productDetails.productId == Constants.BASIC_PRODUCT) {
-                        basicSubProductWithProductDetails.postValue(productDetails)
+                    when (productDetails.productId) {
+                        Constants.LARGE_PRODUCT -> largeSubProductWithProductDetails.postValue(productDetails)
+                        Constants.MEDIUM_PRODUCT -> mediumSubProductWithProductDetails.postValue(productDetails)
+                        Constants.MINI_PRODUCT -> miniSubProductWithProductDetails.postValue(productDetails)
                     }
                 }
             }
@@ -251,7 +252,7 @@ class BillingClientLifecycle private constructor(
             externalScope.launch {
                 val subscriptionPurchaseList = list.filter { purchase ->
                     purchase.products.any { product ->
-                        product in listOf(Constants.PREMIUM_PRODUCT, Constants.BASIC_PRODUCT)
+                        product in listOf(Constants.LARGE_PRODUCT, Constants.MEDIUM_PRODUCT, Constants.MINI_PRODUCT)
                     }
                 }
 
@@ -372,8 +373,9 @@ class BillingClientLifecycle private constructor(
         private const val MAX_RETRY_ATTEMPT = 3
 
         private val LIST_OF_SUBSCRIPTION_PRODUCTS = listOf(
-            Constants.BASIC_PRODUCT,
-            Constants.PREMIUM_PRODUCT,
+            Constants.MINI_PRODUCT,
+            Constants.MEDIUM_PRODUCT,
+            Constants.LARGE_PRODUCT,
         )
 
         @Volatile

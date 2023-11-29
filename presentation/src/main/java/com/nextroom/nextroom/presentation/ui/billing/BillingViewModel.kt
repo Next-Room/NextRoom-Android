@@ -24,8 +24,9 @@ class BillingViewModel
     private val purchases = billingClientLifecycle.subscriptionPurchases
 
     // 콘솔에 등록된 상품들 정보
-    private val premiumSubProductWithProductDetails = billingClientLifecycle.premiumSubProductWithProductDetails
-    private val basicSubProductWithProductDetails = billingClientLifecycle.basicSubProductWithProductDetails
+    private val largeSubProductWithProductDetails = billingClientLifecycle.largeSubProductWithProductDetails
+    private val mediumSubProductWithProductDetails = billingClientLifecycle.mediumSubProductWithProductDetails
+    private val miniSubProductWithProductDetails = billingClientLifecycle.miniSubProductWithProductDetails
 
     private val _buyEvent = MutableSharedFlow<BillingFlowParams>()
     val buyEvent = _buyEvent.asSharedFlow()
@@ -173,30 +174,35 @@ class BillingViewModel
      * 요금제 구매
      *
      * @param tag: 요금제와 관련된 태그를 나타내는 문자열
-     * @param product: 구매 하려는 상품
+     * @param productId: 구매 하려는 상품의 id
      * @param upDowngrade: 구매가 업그레이드 또는 다운그레이드인지, 요금제를 전환하려는 경우에 true
      */
-    fun buyBasePlans(tag: String, product: String, upDowngrade: Boolean) {
-        val isProductOnDevice = deviceHasGooglePlaySubscription(purchases.value, product)
+    fun buyPlans(tag: String, productId: String, upDowngrade: Boolean) {
+        val isProductOnDevice = deviceHasGooglePlaySubscription(purchases.value, productId)
         if (isProductOnDevice) {
-            Timber.d("The user already owns this item: $product")
-            return
-        }
-        val basicSubProductDetails = basicSubProductWithProductDetails.value ?: run {
-            Timber.e("Could not find Basic product details.")
+            Timber.d("The user already owns this item: $productId")
             return
         }
 
-        val basicOffers =
-            basicSubProductDetails.subscriptionOfferDetails?.let { offerDetailsList ->
+        when (productId) {
+            Constants.LARGE_PRODUCT -> largeSubProductWithProductDetails.value
+            Constants.MEDIUM_PRODUCT -> mediumSubProductWithProductDetails.value
+            Constants.MINI_PRODUCT -> miniSubProductWithProductDetails.value
+            else -> null
+        }?.also { productDetails ->
+            productDetails.subscriptionOfferDetails?.let { offerDetailsList ->
                 retrieveEligibleOffers(
                     offerDetails = offerDetailsList,
                     tag = tag,
                 )
+            }.let { offers ->
+                offers?.let { leastPricedOfferToken(it) }.toString()
+            }.also { offerToken ->
+                launchFlow(upDowngrade, offerToken, productDetails)
             }
-
-        val offerToken = basicOffers?.let { leastPricedOfferToken(it) }.toString()
-        launchFlow(upDowngrade, offerToken, basicSubProductDetails)
+        } ?: run {
+            Timber.e("Could not find product details.")
+        }
     }
 
     private fun launchFlow(
@@ -205,8 +211,9 @@ class BillingViewModel
         productDetails: ProductDetails,
     ) {
         val currentSubscriptionPurchaseCount = purchases.value.count {
-            it.products.contains(Constants.BASIC_PRODUCT) ||
-                it.products.contains(Constants.PREMIUM_PRODUCT)
+            it.products.contains(Constants.MINI_PRODUCT) ||
+                it.products.contains(Constants.MEDIUM_PRODUCT) ||
+                it.products.contains(Constants.LARGE_PRODUCT)
         }
         if (currentSubscriptionPurchaseCount > EXPECTED_SUBSCRIPTION_PURCHASE_LIST_SIZE) {
             Timber.e("There are more than one subscription purchases on the device.")
@@ -219,8 +226,9 @@ class BillingViewModel
         }
 
         val oldToken = purchases.value.filter {
-            it.products.contains(Constants.BASIC_PRODUCT) ||
-                it.products.contains(Constants.PREMIUM_PRODUCT)
+            it.products.contains(Constants.MINI_PRODUCT) ||
+                it.products.contains(Constants.MEDIUM_PRODUCT) ||
+                it.products.contains(Constants.LARGE_PRODUCT)
         }.firstOrNull { it.purchaseToken.isNotEmpty() }?.purchaseToken ?: ""
 
         val billingParams: BillingFlowParams = if (upDowngrade) {
