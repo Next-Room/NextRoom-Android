@@ -46,6 +46,7 @@ class BillingViewModel
             purchases.collect {
                 it.forEach { purchase ->
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        // TODO JH: 서버에서 ack 로직 구현 완료시 제거 + purchaseToken 보내는 API 호출
                         billingClientLifecycle.acknowledgePurchase(purchase.purchaseToken)
                     } else {
                         _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
