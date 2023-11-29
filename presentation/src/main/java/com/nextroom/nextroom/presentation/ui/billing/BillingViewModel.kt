@@ -100,7 +100,7 @@ class BillingViewModel
             BillingFlowParams.SubscriptionUpdateParams.newBuilder()
                 .setOldPurchaseToken(oldToken)
                 .setSubscriptionReplacementMode(
-                    BillingFlowParams.SubscriptionUpdateParams.ReplacementMode.CHARGE_FULL_PRICE,
+                    BillingFlowParams.SubscriptionUpdateParams.ReplacementMode.DEFERRED,
                 ).build(),
         ).build()
     }
