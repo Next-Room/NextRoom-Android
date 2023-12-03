@@ -2,9 +2,7 @@ package com.nextroom.nextroom.presentation.ui.main
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.model.TimerState
-import com.nextroom.nextroom.domain.model.statistics.GameStats
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
@@ -73,7 +71,7 @@ class GameViewModel @Inject constructor(
                 startGame(it.timeLimit - overflowTime)
 
                 // 게임 시작 통계 집계 시작
-                statsRepository.recordGameStartStats(GameStats(it.id, DateTimeUtil().currentTime() ?: ""))
+//                statsRepository.recordGameStartStats(GameStats(it.id, DateTimeUtil().currentTime() ?: ""))
             }
         }
     }
