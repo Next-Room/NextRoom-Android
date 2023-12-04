@@ -64,7 +64,8 @@
     <string name="game_backspace_description">지우기</string>
 
     <string name="onboarding_title">힌트폰 서비스 넥스트룸</string>
-    <string name="onboarding_apply_free_trial">첫 달 무료 체험 신청하기</string>
+<!--    <string name="onboarding_apply_free_trial">첫 달 무료 체험 신청하기</string>-->
+    <string name="onboarding_apply_free_trial">계정 신청하기</string>
     <string name="onboarding_existing_user_guide">이미 기존 회원이라면? <font color='#FFFFFF'><b>로그인</b></font></string>
 
     <string name="purchase_ticket">이용권 구매</string>
