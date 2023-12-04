@@ -16,6 +16,10 @@
     <string name="dialog_free_plan_message">만료된 계정은 유예기간 후 초기화 됩니다.</string>
     <string name="dialog_free_plan_title">무료 체험기간이 %d일 남았어요</string>
     <string name="dialog_subscribe_button">구독하기</string>
+    <string name="dialog_noti">안내</string>
+    <string name="dialog_update_message">원활한 서비스 이용을 위해\n업데이트가 필요합니다.</string>
+    <string name="dialog_app_finish">종료</string>
+    <string name="dialog_update">업데이트</string>
 
     <string name="privacy_policy">개인정보처리방침</string>
 
