@@ -24,6 +24,7 @@ class NRDialog : DialogFragment() {
 
     private var title: String? = null
     private var message: String = ""
+    private var isCancelable: Boolean = false
     private var posBtnText: String? = null
     private var negBtnText: String? = null
     private var posListener: OnClickListener? = null
@@ -31,10 +32,11 @@ class NRDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isCancelable = true
+
         arguments?.let {
             title = it.getString(ARG_TITLE)
             message = it.getString(ARG_MESSAGE, "")
+            isCancelable = it.getBoolean(ARG_IS_CANCELABLE)
             posBtnText = it.getString(ARG_POS_BTN)
             negBtnText = it.getString(ARG_NEG_BTN)
         }
@@ -54,6 +56,7 @@ class NRDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        dialog?.setCancelable(isCancelable)
         binding.tvTitle.isVisible = title != null
         title?.let { title -> binding.tvTitle.text = title }
 
@@ -118,6 +121,11 @@ class NRDialog : DialogFragment() {
             return setMessage(context.getString(messageId))
         }
 
+        fun setCancelable(isCancelable: Boolean): Builder {
+            params.isCancelable = isCancelable
+            return this
+        }
+
         fun setPositiveButton(text: String, onClickListener: OnClickListener): Builder {
             params.posBtnText = text
             params.posListener = onClickListener
@@ -158,12 +166,14 @@ class NRDialog : DialogFragment() {
     companion object {
         private const val ARG_TITLE = "argTitle"
         private const val ARG_MESSAGE = "argMessage"
+        private const val ARG_IS_CANCELABLE = "argIsCancelable"
         private const val ARG_POS_BTN = "argPositiveButtonText"
         private const val ARG_NEG_BTN = "argNegativeButtonText"
 
         private data class Params(
             var title: String? = null,
             var message: String? = null,
+            var isCancelable: Boolean? = true,
             var posBtnText: String? = null,
             var posListener: OnClickListener? = null,
             var negBtnText: String? = null,
@@ -174,6 +184,7 @@ class NRDialog : DialogFragment() {
                     arguments = Bundle().apply {
                         this@Params.title?.let { title -> putString(ARG_TITLE, title) }
                         this@Params.message?.let { message -> putString(ARG_MESSAGE, message) }
+                        this@Params.isCancelable?.let { isCancelable -> putBoolean(ARG_IS_CANCELABLE, isCancelable) }
                         this@Params.posBtnText?.let { text -> putString(ARG_POS_BTN, text) }
                         this@Params.negBtnText?.let { text -> putString(ARG_NEG_BTN, text) }
                     }
