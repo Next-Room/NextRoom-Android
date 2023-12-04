@@ -4,6 +4,6 @@ import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.Ticket
 
 interface BillingRepository {
-
     suspend fun getTickets(): Result<List<Ticket>>
+    suspend fun postPurchaseToken(purchaseToken: String): Result<Unit>
 }

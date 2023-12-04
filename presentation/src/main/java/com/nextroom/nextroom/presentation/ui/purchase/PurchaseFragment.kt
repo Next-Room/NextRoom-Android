@@ -74,8 +74,8 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
     private fun handleEvent(event: PurchaseEvent) {
         when (event) {
             is PurchaseEvent.StartPurchase -> {
-                billingViewModel.buyBasePlans(
-                    product = event.productId,
+                billingViewModel.buyPlans(
+                    productId = event.productId,
                     tag = event.tag,
                     upDowngrade = event.upDowngrade,
                 )

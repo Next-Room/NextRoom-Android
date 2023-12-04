@@ -2,6 +2,7 @@ package com.nextroom.nextroom.data.network
 
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
+import com.nextroom.nextroom.data.network.request.PurchaseToken
 import com.nextroom.nextroom.data.network.request.StatisticsRequest
 import com.nextroom.nextroom.data.network.response.BaseListResponse
 import com.nextroom.nextroom.data.network.response.BaseResponse
@@ -43,4 +44,7 @@ interface ApiService {
 
     @POST("api/v1/history")
     suspend fun postGameStats(@Body statsRequest: StatisticsRequest): Result<Unit>
+
+    @POST("api/v1/payment/purchase")
+    suspend fun postPurchaseToken(@Body purchaseToken: PurchaseToken): Result<Unit>
 }
