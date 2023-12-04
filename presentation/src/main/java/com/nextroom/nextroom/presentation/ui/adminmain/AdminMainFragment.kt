@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -14,9 +13,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRImageDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
-import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
-import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
@@ -74,33 +71,33 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun initViews() = with(binding) {
-        ivMyButton.addMargin(top = requireContext().statusBarHeight)
+//        ivMyButton.addMargin(top = requireContext().statusBarHeight)
         rvThemes.adapter = adapter
-        tvPurchaseTicketButton.setOnClickListener {
-            goToPurchase()
-        }
-        ivMyButton.setOnClickListener {
-            goToMyPage()
-        }
+//        tvPurchaseTicketButton.setOnClickListener {
+//            goToPurchase()
+//        }
+//        ivMyButton.setOnClickListener {
+//            goToMyPage()
+//        }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
 
-        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.Subscription
-        when (state.userSubscribeStatus.subscribeStatus) {
-            SubscribeStatus.Expiration -> logout()
-            SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
-            SubscribeStatus.Free -> {
-                if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
-                    state.calculateDday().let { dday ->
-                        if (dday >= 0) showDialog(dday)
-                    }
-                }
-            }
-
-            SubscribeStatus.None, SubscribeStatus.Subscription -> Unit
-        }
+//        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.Subscription
+//        when (state.userSubscribeStatus.subscribeStatus) {
+//            SubscribeStatus.Expiration -> logout()
+//            SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
+//            SubscribeStatus.Free -> {
+//                if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
+//                    state.calculateDday().let { dday ->
+//                        if (dday >= 0) showDialog(dday)
+//                    }
+//                }
+//            }
+//
+//            SubscribeStatus.None, SubscribeStatus.Subscription -> Unit
+//        }
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
     }

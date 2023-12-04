@@ -13,7 +13,6 @@ import com.nextroom.nextroom.data.datasource.ThemeRemoteDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
-import com.nextroom.nextroom.data.db.StatisticsDao
 import com.nextroom.nextroom.data.db.ThemeDao
 import com.nextroom.nextroom.data.db.ThemeTimeDao
 import com.nextroom.nextroom.data.network.ApiService
@@ -151,9 +150,9 @@ object RepositoryModule {
         )
     }
 
-    @Singleton
-    @Provides
-    fun provideBillingDataSource(): BillingDataSource = BillingDataSource()
+//    @Singleton
+//    @Provides
+//    fun provideBillingDataSource(): BillingDataSource = BillingDataSource()
 
     @Singleton
     @Provides
