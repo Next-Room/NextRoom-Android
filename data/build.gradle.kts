@@ -65,6 +65,8 @@ dependencies {
 
     implementation(libs.bundles.network)
 
+    implementation(libs.bundles.firebaseRemote)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 }
