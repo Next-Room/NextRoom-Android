@@ -7,13 +7,12 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
-import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.NRImageDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
+import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
@@ -79,6 +78,10 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 //        ivMyButton.setOnClickListener {
 //            goToMyPage()
 //        }
+        tvLogoutButton.apply {
+            addMargin(top = requireContext().statusBarHeight)
+            setOnClickListener { logout() }
+        }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
@@ -102,10 +105,10 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         adapter.submitList(state.themes)
     }
 
-    private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
+    /*private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment(subscribeStatus)
         findNavController().safeNavigate(action)
-    }
+    }*/
 
     private fun goToMyPage() {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment()
@@ -117,7 +120,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         findNavController().safeNavigate(action)
     }
 
-    private fun showDialog(dDay: Int) {
+    /*private fun showDialog(dDay: Int) {
         NRImageDialog.Builder(requireContext())
             .setTitle(getString(R.string.dialog_free_plan_title, dDay))
             .setMessage(getString(R.string.dialog_free_plan_message))
@@ -129,7 +132,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
                 goToPurchase()
             }
             .show(childFragmentManager)
-    }
+    }*/
 
     private fun logout() {
         viewModel.logout()
