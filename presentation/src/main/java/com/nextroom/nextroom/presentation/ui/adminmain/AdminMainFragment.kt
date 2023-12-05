@@ -6,7 +6,6 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
@@ -18,7 +17,6 @@ import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import javax.inject.Inject
 
@@ -58,14 +56,14 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         viewModel.observe(viewLifecycleOwner, state = ::render)
     }
 
-    override fun onStart() {
+    /*override fun onStart() {
         super.onStart()
 
         lifecycleScope.launch {
             // 통계 정보 서버에 전송
             statisticsRepository.postGameStats()
         }
-    }
+    }*/
 
     private fun startGame(code: Int) {
         viewModel.start(code) {
