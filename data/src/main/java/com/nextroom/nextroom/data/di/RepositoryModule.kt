@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.di
+package com.nextroom.nextroom.data.di
 
 import android.content.Context
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig

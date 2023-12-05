@@ -64,7 +64,6 @@ dependencies {
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
-    implementation(libs.bundles.firebaseRemote)
     implementation(libs.timber)
     implementation(libs.billing)
 
