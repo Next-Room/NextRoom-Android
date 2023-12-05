@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.di
+package com.nextroom.nextroom.data.di
 
 import dagger.Module
 import dagger.Provides
