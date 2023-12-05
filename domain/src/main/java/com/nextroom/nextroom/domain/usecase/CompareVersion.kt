@@ -1,13 +1,15 @@
 package com.nextroom.nextroom.domain.usecase
 
 import javax.inject.Inject
+import javax.inject.Named
 
-class CompareVersion @Inject constructor() {
+class CompareVersion @Inject constructor(
+    @Named("app_version") private val appVersion: String,
+) {
     operator fun invoke(
-        appVersion: String,
         minVersion: String,
     ): UpdateStatus {
-        fun isValidateVersionForm(version: String): Boolean {
+        fun isValidVersionForm(version: String): Boolean {
             if (version.isEmpty()) {
                 return false
             }
@@ -30,7 +32,7 @@ class CompareVersion @Inject constructor() {
             return thisVersion.isAtLeast(o[0], o[1], o[2])
         }
 
-        if (!isValidateVersionForm(appVersion) || !isValidateVersionForm(minVersion)) {
+        if (!isValidVersionForm(appVersion) || !isValidVersionForm(minVersion)) {
             return UpdateStatus.NOT_NEED_UPDATE // 업데이트 X
         }
 

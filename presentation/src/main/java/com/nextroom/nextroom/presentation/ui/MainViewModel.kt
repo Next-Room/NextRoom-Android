@@ -41,6 +41,13 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+        viewModelScope.launch {
+            firebaseRemoteConfigRepository
+                .getFirebaseRemoteConfigValue(REMOTE_KEY_APP_MIN_VERSION)
+                .collect { minVersion ->
+                    compareVersion(minVersion = minVersion)
+                }
+        }
     }
 
     fun logout() {
@@ -53,12 +60,9 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    suspend fun minVersionFlow() = firebaseRemoteConfigRepository
-        .getFirebaseRemoteConfigValue(REMOTE_KEY_APP_MIN_VERSION)
-
-    fun compareVersion(appVersion: String, minVersion: String) {
+    private fun compareVersion(minVersion: String) {
         compareVersion
-            .invoke(appVersion, minVersion)
+            .invoke(minVersion)
             .also { updateStatus ->
                 if (updateStatus == CompareVersion.UpdateStatus.NEED_FORCE_UPDATE) {
                     event(MainEvent.ShowForceUpdateDialog)

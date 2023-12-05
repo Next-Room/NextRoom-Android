@@ -50,14 +50,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
         repeatOnStarted {
-            viewModel.minVersionFlow().collect {
-                viewModel.compareVersion(
-                    appVersion = getAppVersion(),
-                    minVersion = it,
-                )
-            }
-        }
-        repeatOnStarted {
             billingViewModel.buyEvent.collect {
                 billingClientLifecycle.launchBillingFlow(this@MainActivity, it)
             }
@@ -79,12 +71,6 @@ class MainActivity : AppCompatActivity() {
 
             MainEvent.ShowForceUpdateDialog -> showForceUpdateDialog()
         }
-    }
-
-    private fun getAppVersion(): String {
-        return packageManager
-            .getPackageInfo(packageName, 0)
-            .versionName
     }
 
     private fun showForceUpdateDialog() {
