@@ -19,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildConfigField("String", "APP_VERSION", "\"${libs.versions.versionName.get()}\"")
     }
 
     buildTypes {
@@ -64,6 +65,8 @@ dependencies {
     kapt(libs.hilt.compiler)
 
     implementation(libs.bundles.network)
+
+    implementation(libs.firebase.config.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)

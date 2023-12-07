@@ -3,7 +3,6 @@ package com.nextroom.nextroom.presentation.ui.hint
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mangbaam.commonutil.DateTimeUtil
-import com.nextroom.nextroom.domain.model.statistics.HintStats
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
@@ -35,16 +34,16 @@ class HintViewModel @Inject constructor(
         viewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             // 힌트 오픈 시간 통계 집계
             statsRepository.recordHintStats(HintStats(state.hint.id, DateTimeUtil().currentTime() ?: "", ""))
-        }
+        }*/
     }
 
     fun openAnswer() = intent {
         reduce { state.copy(hint = state.hint.copy(answerOpened = true)) }
         // 정답 오픈 시간 통계 집계
-        statsRepository.recordAnswerOpenTime(state.hint.id, dateTimeUtil.currentTime() ?: "")
+//        statsRepository.recordAnswerOpenTime(state.hint.id, dateTimeUtil.currentTime() ?: "")
     }
 
     private fun tick(lastSeconds: Int) = intent {

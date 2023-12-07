@@ -1,5 +1,7 @@
 package com.nextroom.nextroom.presentation.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -7,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
+import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.databinding.ActivityMainBinding
 import com.nextroom.nextroom.presentation.extension.repeatOn
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
@@ -62,6 +65,23 @@ class MainActivity : AppCompatActivity() {
             MainEvent.GoToLoginScreen -> {
                 navController?.navigate(R.id.action_global_loginFragment)
             }
+
+            MainEvent.ShowForceUpdateDialog -> showForceUpdateDialog()
         }
+    }
+
+    private fun showForceUpdateDialog() {
+        NRDialog.Builder(this)
+            .setTitle(R.string.dialog_noti)
+            .setMessage(R.string.dialog_update_message)
+            .setCancelable(false)
+            .setPositiveButton(R.string.dialog_update) { _, _ ->
+                Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")).also {
+                    startActivity(it)
+                }
+            }
+            .setNegativeButton(R.string.dialog_app_finish) { _, _ ->
+                finish()
+            }.show(supportFragmentManager, "MainActivity")
     }
 }

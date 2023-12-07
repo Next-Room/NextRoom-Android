@@ -2,6 +2,7 @@ package com.nextroom.nextroom.data.di
 
 import android.content.Context
 import androidx.room.Room
+import com.nextroom.nextroom.data.BuildConfig
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
 import com.nextroom.nextroom.data.datasource.StatisticsDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
@@ -17,6 +18,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -73,4 +75,10 @@ object LocalDataModule {
         statsDao: StatisticsDao,
         apiService: ApiService,
     ): StatisticsDataSource = StatisticsDataSource(statsDao, apiService)
+
+    @Provides
+    @Named("app_version")
+    fun provideAppVersion(): String {
+        return BuildConfig.APP_VERSION
+    }
 }
