@@ -2,7 +2,6 @@ package com.nextroom.nextroom.presentation.ui.adminmain
 
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.onSuccess
-import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -67,7 +66,7 @@ class AdminMainViewModel @Inject constructor(
 
     private fun loadData() = intent {
         reduce { state.copy(loading = true) }
-        adminRepository.getUserSubscribeStatus().suspendOnSuccess {
+        /*adminRepository.getUserSubscribeStatus().suspendOnSuccess {
             reduce { state.copy(userSubscribeStatus = it) }
             themeRepository.getThemes().onSuccess {
                 updateThemes(
@@ -77,6 +76,14 @@ class AdminMainViewModel @Inject constructor(
                     },
                 )
             }
+        }*/
+        themeRepository.getThemes().onSuccess {
+            updateThemes(
+                it.map { themeInfo ->
+                    val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
+                    themeInfo.toPresentation(updatedAt)
+                },
+            )
         }
         reduce { state.copy(loading = false) }
     }

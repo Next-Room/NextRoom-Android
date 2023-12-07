@@ -154,9 +154,9 @@ object RepositoryModule {
         )
     }
 
-    @Singleton
-    @Provides
-    fun provideBillingDataSource(): BillingDataSource = BillingDataSource()
+//    @Singleton
+//    @Provides
+//    fun provideBillingDataSource(): BillingDataSource = BillingDataSource()
 
     @Singleton
     @Provides

@@ -20,7 +20,7 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
     private fun initViews() {
         binding.tvApplyFreeTrial.setOnClickListener {
             val action =
-                OnboardingFragmentDirections.actionGlobalWebViewFragment("https://m.naver.com/") // TODO: 홈페이지 주소 확정시 변경
+                OnboardingFragmentDirections.actionGlobalWebViewFragment("https://nextroom-escape.vercel.app/")
             findNavController().safeNavigate(action)
         }
         binding.tvExistingUserGuide.setOnClickListener {
