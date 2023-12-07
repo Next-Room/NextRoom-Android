@@ -10,9 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
-import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
-import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
@@ -78,10 +76,10 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 //        ivMyButton.setOnClickListener {
 //            goToMyPage()
 //        }
-        tvLogoutButton.apply {
-            addMargin(top = requireContext().statusBarHeight)
-            setOnClickListener { logout() }
-        }
+//        tvLogoutButton.apply {
+//            addMargin(top = requireContext().statusBarHeight)
+//            setOnClickListener { logout() }
+//        }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
