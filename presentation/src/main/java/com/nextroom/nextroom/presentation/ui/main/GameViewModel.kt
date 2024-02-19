@@ -107,33 +107,42 @@ class GameViewModel @Inject constructor(
     }
 
     private fun validateHintCode() = intent {
-        if (state.usedHintsCount < state.totalHintCount) {
-            hintRepository.getHint(state.currentInput)?.let { hint ->
+        suspend fun emitOpenHintEffect(hint: com.nextroom.nextroom.domain.model.Hint) {
+            postSideEffect(
+                GameEvent.OnOpenHint(
+                    Hint(
+                        id = hint.id,
+                        progress = hint.progress,
+                        hint = hint.description,
+                        answer = hint.answer,
+                        answerOpened = state.answerOpenedHints.contains(hint.id),
+                    ),
+                ),
+            )
+        }
+
+        hintRepository.getHint(state.currentInput)?.let { hint ->
+            if (state.usedHints.contains(hint.id)) {
+                reduce {
+                    state.copy(inputState = InputState.Ok)
+                }
+                emitOpenHintEffect(hint)
+            } else if (state.usedHintsCount < state.totalHintCount) {
                 reduce {
                     state.copy(
                         usedHints = state.usedHints + hint.id,
                         inputState = InputState.Ok,
                     )
                 }
-                postSideEffect(
-                    GameEvent.OnOpenHint(
-                        Hint(
-                            id = hint.id,
-                            progress = hint.progress,
-                            hint = hint.description,
-                            answer = hint.answer,
-                            answerOpened = state.answerOpenedHints.contains(hint.id),
-                        ),
-                    ),
-                )
-            } ?: run {
-                // TODO: 현재는 사용하는 곳이 없어 문제가 없지만, state가 중복으로 수집되어 사용될 수 있음. 수정 필요
-                reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
-                delay(500)
+                emitOpenHintEffect(hint)
+            } else {
+                postSideEffect(GameEvent.ShowAvailableHintExceedError)
                 reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
             }
-        } else {
-            postSideEffect(GameEvent.ShowAvailableHintExceedError)
+        } ?: run {
+            // TODO: 현재는 사용하는 곳이 없어 문제가 없지만, state가 중복으로 수집되어 사용될 수 있음. 수정 필요
+            reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
+            delay(500)
             reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
         }
     }
