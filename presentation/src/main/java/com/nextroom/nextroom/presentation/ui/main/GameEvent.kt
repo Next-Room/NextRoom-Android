@@ -6,4 +6,6 @@ sealed interface GameEvent {
     data class OnOpenHint(
         val hint: Hint,
     ) : GameEvent
+
+    data object ShowAvailableHintExceedError : GameEvent
 }

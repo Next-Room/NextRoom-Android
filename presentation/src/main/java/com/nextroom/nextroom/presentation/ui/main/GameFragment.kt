@@ -14,6 +14,7 @@ import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
+import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toTimeUnit
 import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
@@ -95,6 +96,8 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                 findNavController().safeNavigate(action)
                 clearHintCode()
             }
+
+            GameEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
         }
     }
 
