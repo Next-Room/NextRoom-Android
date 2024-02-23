@@ -107,7 +107,13 @@ class GameViewModel @Inject constructor(
     }
 
     private fun validateHintCode() = intent {
-        suspend fun emitOpenHintEffect(hint: com.nextroom.nextroom.domain.model.Hint) {
+        suspend fun openHint(hint: com.nextroom.nextroom.domain.model.Hint) {
+            reduce {
+                state.copy(
+                    usedHints = state.usedHints + hint.id,
+                    inputState = InputState.Ok,
+                )
+            }
             postSideEffect(
                 GameEvent.OnOpenHint(
                     Hint(
@@ -123,18 +129,9 @@ class GameViewModel @Inject constructor(
 
         hintRepository.getHint(state.currentInput)?.let { hint ->
             if (state.usedHints.contains(hint.id)) {
-                reduce {
-                    state.copy(inputState = InputState.Ok)
-                }
-                emitOpenHintEffect(hint)
+                openHint(hint)
             } else if (state.usedHintsCount < state.totalHintCount) {
-                reduce {
-                    state.copy(
-                        usedHints = state.usedHints + hint.id,
-                        inputState = InputState.Ok,
-                    )
-                }
-                emitOpenHintEffect(hint)
+                openHint(hint)
             } else {
                 postSideEffect(GameEvent.ShowAvailableHintExceedError)
                 reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
