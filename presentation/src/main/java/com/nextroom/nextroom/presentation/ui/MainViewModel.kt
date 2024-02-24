@@ -36,9 +36,7 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             gameStateRepository.getGameState()?.let { gameState ->
-                if (gameState.playing) {
-                    event(MainEvent.GoToGameScreen(gameState))
-                }
+                event(MainEvent.GoToGameScreen(gameState))
             }
         }
         viewModelScope.launch {

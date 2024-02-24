@@ -69,7 +69,7 @@ class ArcProgressView @JvmOverloads constructor(
     private val defaultStrokeWidth: Float = 6.dp.toFloat()
     private val defaultTextSize: Float = 56.dp.toFloat()
 
-    var timeLimit = 3600
+    var timeLimit = 0
         set(value) {
             if (value > 0) {
                 field = value

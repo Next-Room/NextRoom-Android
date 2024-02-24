@@ -31,9 +31,9 @@ class TimerRepositoryImpl @Inject constructor(
     private var _lastMillis = MutableStateFlow(0L)
     override val lastSeconds: Flow<Int> = _lastMillis.map { (it / 1000).toInt() }
 
-    override fun initTimer(initSeconds: Int) {
-        Timber.d("initTimer")
-        _lastMillis.value = initSeconds * 1000L
+    override fun setTimer(seconds: Int) {
+        Timber.d("setTimer")
+        _lastMillis.value = seconds * 1000L
         setTimerState(TimerState.Ready)
     }
 

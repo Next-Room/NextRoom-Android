@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface TimerRepository {
     val lastSeconds: Flow<Int>
     val timerState: StateFlow<TimerState>
-    fun initTimer(initSeconds: Int)
+    fun setTimer(seconds: Int)
     fun startTimer()
     fun stopTimer()
 
