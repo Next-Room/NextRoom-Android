@@ -24,7 +24,12 @@
         tools:layout="@layout/fragment_admin_main">
         <action
             android:id="@+id/action_adminMainFragment_to_verifyFragment"
-            app:destination="@id/verifyFragment" />
+            app:destination="@id/verifyFragment">
+
+            <argument
+                android:name="themeId"
+                app:argType="integer"/>
+        </action>
         <action
             android:id="@+id/action_adminMainFragment_to_mypageFragment"
             app:destination="@id/mypageFragment" />
@@ -50,12 +55,17 @@
         android:name="com.nextroom.nextroom.presentation.ui.verity.VerifyFragment"
         android:label="VerifyFragment"
         tools:layout="@layout/fragment_admin_code">
+
+        <argument
+            android:name="themeId"
+            app:argType="integer"/>
 <!--        <action-->
 <!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
 <!--            app:destination="@id/startTimerFragment" />-->
         <action
             android:id="@+id/action_verifyFragment_to_mainFragment"
-            app:destination="@id/mainFragment" />
+            app:destination="@id/mainFragment"
+            app:popUpTo="@id/adminMainFragment" />
     </fragment>
 <!--    <fragment-->
 <!--        android:id="@+id/startTimerFragment"-->

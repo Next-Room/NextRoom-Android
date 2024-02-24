@@ -61,7 +61,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 
     private fun startGame(themeId: Int) {
         viewModel.start(themeId) {
-            goToMain()
+            goToMain(themeId)
         }
     }
 
@@ -111,8 +111,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         findNavController().safeNavigate(action)
     }
 
-    private fun goToMain() {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment()
+    private fun goToMain(themeId: Int) {
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(themeId = themeId)
         findNavController().safeNavigate(action)
     }
 

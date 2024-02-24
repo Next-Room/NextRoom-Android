@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
-import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
@@ -26,7 +25,6 @@ class AdminMainViewModel @Inject constructor(
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
-    private val gameStateRepository: GameStateRepository,
 ) : BaseViewModel<AdminMainState, Nothing>() {
 
     override val container: Container<AdminMainState, Nothing> = container(AdminMainState(loading = true))
@@ -57,18 +55,6 @@ class AdminMainViewModel @Inject constructor(
 
     fun start(themeId: Int, readyToStart: () -> Unit) = intent {
         themeRepository.updateLatestTheme(themeId)
-
-        state
-            .themes
-            .find { it.id == themeId }
-            ?.also {
-                gameStateRepository.saveGameState(
-                    timeLimit = it.timeLimit,
-                    hintLimit = it.hintLimit,
-                    usedHints = emptySet(),
-                    startTime = System.currentTimeMillis(),
-                )
-            }
         withContext(Dispatchers.Main) {
             readyToStart()
         }

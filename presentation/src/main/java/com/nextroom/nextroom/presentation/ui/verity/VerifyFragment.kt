@@ -6,6 +6,7 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminCodeBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -21,6 +22,7 @@ import org.orbitmvi.orbit.viewmodel.observe
 class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeBinding::inflate) {
 
     private val viewModel: VerifyViewModel by viewModels()
+    private val args: VerifyFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,8 +58,7 @@ class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeB
 
     private fun render(state: VerifyState) = with(binding) {
         if (state.inputState is InputState.Ok) {
-            val action = VerifyFragmentDirections.actionVerifyFragmentToMainFragment()
-            findNavController().safeNavigate(action)
+            viewModel.startGame(themeId = args.themeId)
         }
         btnInput.isEnabled = state.currentInput.length == 5
     }
@@ -67,6 +68,10 @@ class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeB
             is LoginEvent.LoginFailed -> snackbar(event.message)
             is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
             LoginEvent.GoToOnboardingScreen -> Unit
+            LoginEvent.GoToMainScreen -> {
+                val action = VerifyFragmentDirections.actionVerifyFragmentToMainFragment()
+                findNavController().safeNavigate(action)
+            }
         }
     }
 }
