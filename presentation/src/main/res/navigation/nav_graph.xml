@@ -50,20 +50,23 @@
         android:name="com.nextroom.nextroom.presentation.ui.verity.VerifyFragment"
         android:label="VerifyFragment"
         tools:layout="@layout/fragment_admin_code">
+<!--        <action-->
+<!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
+<!--            app:destination="@id/startTimerFragment" />-->
         <action
-            android:id="@+id/action_verifyFragment_to_startTimerFragment"
-            app:destination="@id/startTimerFragment" />
+            android:id="@+id/action_verifyFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/startTimerFragment"
-        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"
-        android:label="StartTimerFragment"
-        tools:layout="@layout/fragment_start_timer">
-        <action
-            android:id="@+id/action_startTimerFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/adminMainFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/startTimerFragment"-->
+<!--        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"-->
+<!--        android:label="StartTimerFragment"-->
+<!--        tools:layout="@layout/fragment_start_timer">-->
+<!--        <action-->
+<!--            android:id="@+id/action_startTimerFragment_to_mainFragment"-->
+<!--            app:destination="@id/mainFragment"-->
+<!--            app:popUpTo="@id/adminMainFragment" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/hintFragment"
         android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
