@@ -107,6 +107,11 @@ class GameViewModel @Inject constructor(
     }
 
     private fun validateHintCode() = intent {
+        if (timerRepository.timerState.value is TimerState.Finished) {
+            postSideEffect(GameEvent.GameFinish)
+            return@intent
+        }
+
         hintRepository.getHint(state.currentInput)?.let { hint ->
             reduce {
                 state.copy(

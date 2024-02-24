@@ -95,6 +95,8 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
                 findNavController().safeNavigate(action)
                 clearHintCode()
             }
+
+            GameEvent.GameFinish -> snackbar("게임이 종료되었습니다")
         }
     }
 
