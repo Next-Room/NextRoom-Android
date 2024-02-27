@@ -99,6 +99,8 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             }
 
             is GameEvent.GameFinish -> snackbar(R.string.game_finished)
+
+            GameEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
         }
     }
 

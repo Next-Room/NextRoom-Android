@@ -9,4 +9,6 @@ sealed interface GameEvent {
 
     data object GameFinish : GameEvent
     data object ClearHintCode : GameEvent
+
+    data object ShowAvailableHintExceedError : GameEvent
 }

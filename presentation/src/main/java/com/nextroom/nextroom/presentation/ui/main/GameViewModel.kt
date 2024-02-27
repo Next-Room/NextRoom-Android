@@ -109,14 +109,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun validateHintCode() = intent {
-        if (timerRepository.timerState.value is TimerState.Finished) {
-            postSideEffect(GameEvent.GameFinish)
-            delay(500)
-            clearHintCode()
-            return@intent
-        }
-
-        hintRepository.getHint(state.currentInput)?.let { hint ->
+        suspend fun openHint(hint: com.nextroom.nextroom.domain.model.Hint) {
             reduce {
                 state.copy(
                     usedHints = state.usedHints + hint.id,
@@ -135,6 +128,24 @@ class GameViewModel @Inject constructor(
                 ),
             )
             setGameState()
+        }
+
+        if (timerRepository.timerState.value is TimerState.Finished) {
+            postSideEffect(GameEvent.GameFinish)
+            delay(500)
+            clearHintCode()
+            return@intent
+        }
+
+        hintRepository.getHint(state.currentInput)?.let { hint ->
+            if (state.usedHints.contains(hint.id)) {
+                openHint(hint)
+            } else if (state.usedHintsCount < state.totalHintCount) {
+                openHint(hint)
+            } else {
+                postSideEffect(GameEvent.ShowAvailableHintExceedError)
+                reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
+            }
         } ?: run {
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
