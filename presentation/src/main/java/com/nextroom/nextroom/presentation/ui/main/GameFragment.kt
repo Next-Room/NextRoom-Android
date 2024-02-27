@@ -45,12 +45,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.startOrResumeGame()
-    }
-
     private fun initViews() = with(binding) {
         tbGame.apply {
             root.setBackgroundColor(resources.getColor(android.R.color.transparent, null))
@@ -141,11 +135,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     private fun vibrate() {
         requireContext().vibrator.vibrate(longArrayOf(100, 100, 100, 100), -1)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewModel.setGameState()
     }
 
     override fun onDetach() {

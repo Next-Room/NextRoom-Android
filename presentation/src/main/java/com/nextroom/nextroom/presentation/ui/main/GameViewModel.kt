@@ -15,6 +15,7 @@ import com.nextroom.nextroom.presentation.model.InputState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -37,22 +38,15 @@ class GameViewModel @Inject constructor(
     override val container: Container<GameScreenState, GameEvent> = container(GameScreenState())
 
     init {
+        startOrResumeGame()
+
         viewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
-
-        viewModelScope.launch {
-            timerRepository.timerState.collect {
-                Timber.tag("MANGBAAM-GameViewModel)").d("timer state: $it")
-                if (it == TimerState.Finished) {
-                    finishGame()
-                }
-            }
-        }
     }
 
-    fun startOrResumeGame() = intent {
-        gameStateRepository.getGameState()?.let { gameState -> // 정상적으로 게임 시작
+    private fun startOrResumeGame() = intent {
+        gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
             with(gameState) {
                 setGameScreenState(
                     seconds = timeLimitInMinute * 60,
@@ -63,9 +57,16 @@ class GameViewModel @Inject constructor(
                 )
             }
             startGame(gameState.lastSeconds)
-        } ?: { // 게임 정보가 없는 경우 (= 게임 종료)
+        } ?: { // 새로운 게임을 시작하는 경우
             viewModelScope.launch {
-                postSideEffect(GameEvent.GameFinish)
+                val game = themeRepository.getLatestTheme().first()
+                setGameScreenState(
+                    seconds = game.timeLimitInMinute * 60,
+                    hintLimit = game.hintLimit,
+                    usedHints = emptySet(),
+                    lastSeconds = game.timeLimitInMinute * 60,
+                    startTime = System.currentTimeMillis(),
+                )
             }
         }
 
@@ -135,10 +136,10 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun setGameState() = intent {
+    private fun setGameState() = intent {
         if (timerRepository.timerState.value !is TimerState.Finished) {
             gameStateRepository.saveGameState(
-                timeLimit = state.totalSeconds / 60,
+                timeLimitInMinute = state.totalSeconds / 60,
                 hintLimit = state.totalHintCount,
                 usedHints = state.usedHints,
                 startTime = state.startTime,

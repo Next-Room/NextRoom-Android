@@ -74,7 +74,7 @@ class VerifyViewModel @Inject constructor(
                 .find { it.id == themeId }
                 ?.also {
                     gameStateRepository.saveGameState(
-                        timeLimit = it.timeLimit,
+                        timeLimitInMinute = it.timeLimit,
                         hintLimit = it.hintLimit,
                         usedHints = emptySet(),
                         startTime = System.currentTimeMillis(),

@@ -5,7 +5,7 @@ import com.nextroom.nextroom.domain.model.GameState
 interface GameStateRepository {
 
     suspend fun saveGameState(
-        timeLimit: Int,
+        timeLimitInMinute: Int,
         hintLimit: Int,
         usedHints: Set<Int>,
         startTime: Long,
