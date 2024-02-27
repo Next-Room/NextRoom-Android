@@ -17,7 +17,7 @@ interface ThemeDao {
     @Query("SELECT * FROM $THEME_TABLE_NAME WHERE themeId = :themeId LIMIT 1")
     fun getTheme(themeId: Int): Flow<ThemeEntity>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertThemes(vararg themes: ThemeEntity)
 
     @Query("DELETE FROM $THEME_TABLE_NAME WHERE adminCode = :adminCode")
