@@ -53,6 +53,7 @@
 
     <string name="game_main_exit_dialog">방탈출을 종료하시겠습니까?</string>
     <string name="game_main_exit_dialog_message">종료하시면 모든 기록은 초기화됩니다.</string>
+    <string name="game_finished">게임이 종료되었습니다</string>
     <string name="game_view_hint">힌트 보기</string>
     <string name="game_wrong_hint_code">힌트 코드를 잘못 입력했습니다</string>
     <string name="game_hint_code_label">Hint Code</string>

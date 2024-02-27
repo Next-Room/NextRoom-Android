@@ -45,28 +45,31 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun startOrResumeGame() = intent {
-        gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
-            with(gameState) {
-                setGameScreenState(
-                    seconds = timeLimitInMinute * 60,
-                    hintLimit = hintLimit,
-                    usedHints = usedHints,
-                    lastSeconds = lastSeconds,
-                    startTime = startTime,
-                )
-            }
-            startGame(gameState.lastSeconds)
-        } ?: { // 새로운 게임을 시작하는 경우
-            viewModelScope.launch {
-                val game = themeRepository.getLatestTheme().first()
-                setGameScreenState(
-                    seconds = game.timeLimitInMinute * 60,
-                    hintLimit = game.hintLimit,
-                    usedHints = emptySet(),
-                    lastSeconds = game.timeLimitInMinute * 60,
-                    startTime = System.currentTimeMillis(),
-                )
+    private fun startOrResumeGame() {
+        viewModelScope.launch {
+            gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
+                with(gameState) {
+                    setGameScreenState(
+                        seconds = timeLimitInMinute * 60,
+                        hintLimit = hintLimit,
+                        usedHints = usedHints,
+                        lastSeconds = lastSeconds,
+                        startTime = startTime,
+                    )
+                    startGame(startTime + timeLimitInMinute * 60 * 1000)
+                }
+            } ?: run { // 새로운 게임을 시작하는 경우
+                with(themeRepository.getLatestTheme().first()) {
+                    val startTime = System.currentTimeMillis()
+                    setGameScreenState(
+                        seconds = timeLimitInMinute * 60,
+                        hintLimit = hintLimit,
+                        usedHints = emptySet(),
+                        lastSeconds = timeLimitInMinute * 60,
+                        startTime = startTime,
+                    )
+                    startGame(startTime + timeLimitInMinute * 60 * 1000)
+                }
             }
         }
 
@@ -102,11 +105,14 @@ class GameViewModel @Inject constructor(
 
     fun clearHintCode() = intent {
         reduce { state.copy(currentInput = "", inputState = InputState.Empty) }
+        postSideEffect(GameEvent.ClearHintCode)
     }
 
     private fun validateHintCode() = intent {
         if (timerRepository.timerState.value is TimerState.Finished) {
             postSideEffect(GameEvent.GameFinish)
+            delay(500)
+            clearHintCode()
             return@intent
         }
 
@@ -132,7 +138,7 @@ class GameViewModel @Inject constructor(
         } ?: run {
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
-            reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
+            clearHintCode()
         }
     }
 
@@ -147,9 +153,8 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    private fun startGame(seconds: Int) = intent {
-        timerRepository.setTimer(seconds)
-        startTimer()
+    private fun startGame(endTimeMillis: Long) = intent {
+        timerRepository.startTimerUntil(endTimeMillis)
     }
 
     fun finishGame(onFinished: () -> Unit = {}) = intent {
@@ -160,12 +165,6 @@ class GameViewModel @Inject constructor(
 
     private fun tick(lastSeconds: Int) = intent {
         reduce { state.copy(lastSeconds = lastSeconds) }
-    }
-
-    private fun startTimer() {
-        if (timerRepository.timerState.value == TimerState.Ready) {
-            timerRepository.startTimer()
-        }
     }
 
     private fun setGameScreenState(

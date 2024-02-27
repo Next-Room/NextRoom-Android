@@ -8,4 +8,5 @@ sealed interface GameEvent {
     ) : GameEvent
 
     data object GameFinish : GameEvent
+    data object ClearHintCode : GameEvent
 }

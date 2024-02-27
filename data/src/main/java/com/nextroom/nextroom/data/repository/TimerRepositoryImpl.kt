@@ -5,12 +5,12 @@ import com.nextroom.nextroom.domain.repository.TimerRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -26,30 +26,19 @@ class TimerRepositoryImpl @Inject constructor(
         MutableStateFlow(TimerState.UnInitialized)
     override val timerState: StateFlow<TimerState> = _timerState.asStateFlow()
 
-    private var lastTimeMillis: Long = 0
-
     private var _lastMillis = MutableStateFlow(0L)
-    override val lastSeconds: Flow<Int> = _lastMillis.map { (it / 1000).toInt() }
+    override val lastSeconds: Flow<Int> = _lastMillis.map { (it / 1000).coerceAtLeast(0).toInt() }
 
-    override fun setTimer(seconds: Int) {
-        Timber.d("setTimer")
-        _lastMillis.value = seconds * 1000L
-        setTimerState(TimerState.Ready)
-    }
-
-    override fun startTimer() {
-        Timber.d("startTimer")
+    override fun startTimerUntil(endTimeMillis: Long) {
+        Timber.d("timerUntil $endTimeMillis")
         timerJob = CoroutineScope(defaultDispatcher).launch {
             setTimerState(TimerState.Running)
-            lastTimeMillis = System.currentTimeMillis()
-            while (isActive && _lastMillis.value > 0) {
-                val delayMillis = System.currentTimeMillis() - lastTimeMillis
-                if (delayMillis >= TICK) {
-                    _lastMillis.value = (_lastMillis.value - TICK).coerceAtLeast(0) // 시간 감소
-                    lastTimeMillis = System.currentTimeMillis()
-                }
-            }
-            setTimerState(TimerState.Finished)
+            _lastMillis.value = endTimeMillis - System.currentTimeMillis()
+            do {
+                delay(950) // 숫자가 클수록 간헐적으로 시간 지연이 발생할 수 있으나 리소스 낭비는 줄어듦
+                _lastMillis.value = endTimeMillis - System.currentTimeMillis()
+            } while (isActive && _lastMillis.value > 0)
+            stopTimer()
         }
     }
 
@@ -58,16 +47,7 @@ class TimerRepositoryImpl @Inject constructor(
         setTimerState(TimerState.Finished)
     }
 
-    override fun correctTime(milliseconds: Long) {
-        Timber.tag("MANGBAAM-TimerRepositoryImpl(correctTime)").d("$milliseconds")
-        _lastMillis.update { (it + milliseconds).coerceAtLeast(0) }
-    }
-
     private fun setTimerState(newState: TimerState) {
         _timerState.value = newState
-    }
-
-    companion object {
-        const val TICK = 1000L
     }
 }

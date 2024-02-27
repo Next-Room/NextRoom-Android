@@ -7,14 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 interface TimerRepository {
     val lastSeconds: Flow<Int>
     val timerState: StateFlow<TimerState>
-    fun setTimer(seconds: Int)
-    fun startTimer()
-    fun stopTimer()
 
     /**
-     * 시간 보정
+     * 시스템 시간을 기반으로 하는 타이머
      *
-     * @param milliseconds 보정할 시간(밀리초). 양수이면 남은 시간에 더해지고, 음수이면 남은 시간에서 차감됨.
+     * @param endTimeMillis 종료될 시각의 밀리초 (시작 시각 밀리초 + 플레이 시간(분) * 60 * 1000)
      */
-    fun correctTime(milliseconds: Long)
+    fun startTimerUntil(endTimeMillis: Long)
+
+    fun stopTimer()
 }
