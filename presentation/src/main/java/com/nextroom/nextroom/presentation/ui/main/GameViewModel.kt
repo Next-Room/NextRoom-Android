@@ -107,7 +107,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun validateHintCode() = intent {
-        hintRepository.getHint(state.currentInput)?.let { hint ->
+        suspend fun openHint(hint: com.nextroom.nextroom.domain.model.Hint) {
             reduce {
                 state.copy(
                     usedHints = state.usedHints + hint.id,
@@ -125,7 +125,19 @@ class GameViewModel @Inject constructor(
                     ),
                 ),
             )
+        }
+
+        hintRepository.getHint(state.currentInput)?.let { hint ->
+            if (state.usedHints.contains(hint.id)) {
+                openHint(hint)
+            } else if (state.usedHintsCount < state.totalHintCount) {
+                openHint(hint)
+            } else {
+                postSideEffect(GameEvent.ShowAvailableHintExceedError)
+                reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
+            }
         } ?: run {
+            // TODO: 현재는 사용하는 곳이 없어 문제가 없지만, state가 중복으로 수집되어 사용될 수 있음. 수정 필요
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
             reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
