@@ -48,7 +48,7 @@
         android:layout_marginTop="32dp"
         android:hint="@string/admin_code_hint"
         android:importantForAutofill="no"
-        android:inputType="numberDecimal"
+        android:inputType="numberPassword"
         android:maxLength="5"
         android:textAppearance="@style/Pretendard.16"
         android:textColor="@color/White"
