@@ -5,11 +5,10 @@ import com.nextroom.nextroom.domain.model.GameState
 interface GameStateRepository {
 
     suspend fun saveGameState(
-        playing: Boolean,
-        timeLimit: Int,
-        lastSeconds: Int,
+        timeLimitInMinute: Int,
         hintLimit: Int,
         usedHints: Set<Int>,
+        startTime: Long,
     )
 
     suspend fun finishGame(onFinished: () -> Unit = {})

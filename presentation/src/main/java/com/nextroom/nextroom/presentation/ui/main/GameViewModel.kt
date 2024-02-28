@@ -15,6 +15,7 @@ import com.nextroom.nextroom.presentation.model.InputState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -42,38 +43,38 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
-
-        viewModelScope.launch {
-            timerRepository.timerState.collect {
-                Timber.tag("MANGBAAM-GameViewModel)").d("timer state: $it")
-                if (it == TimerState.Finished) {
-                    finishGame()
-                }
-            }
-        }
     }
 
     private fun startOrResumeGame() {
         viewModelScope.launch {
-            gameStateRepository.getGameState()?.let { gameState -> // 강제 종료된 게임 가져오기
-                Timber.tag("MANGBAAM-GameViewModel(startGame)").d("강제종료 게임 다시 시작")
-                setTimeLimit(gameState.timeLimit)
-                setHintLimit(gameState.hintLimit)
-                recoverUsedHints(gameState.usedHints)
-                startGame(gameState.lastSeconds)
-            } ?: themeRepository.getLatestTheme().collect { // 정상 종료된 경우
-                Timber.tag("MANGBAAM-GameViewModel(startGame)").d("정상종료 게임 시작")
-                setTimeLimit(it.timeLimit)
-                setHintLimit(it.hintLimit)
-                val overflowTime = ((savedStateHandle.get<Long>("overflowTime") ?: 0L) / 1000L).toInt().also {
-                    Timber.tag("MANGBAAM-GameViewModel(startGame)").d("overflow: $it")
+            gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
+                with(gameState) {
+                    setGameScreenState(
+                        seconds = timeLimitInMinute * 60,
+                        hintLimit = hintLimit,
+                        usedHints = usedHints,
+                        lastSeconds = lastSeconds,
+                        startTime = startTime,
+                    )
+                    startGame(startTime + timeLimitInMinute * 60 * 1000)
                 }
-                startGame(it.timeLimit - overflowTime)
-
-                // 게임 시작 통계 집계 시작
-//                statsRepository.recordGameStartStats(GameStats(it.id, DateTimeUtil().currentTime() ?: ""))
+            } ?: run { // 새로운 게임을 시작하는 경우
+                with(themeRepository.getLatestTheme().first()) {
+                    val startTime = System.currentTimeMillis()
+                    setGameScreenState(
+                        seconds = timeLimitInMinute * 60,
+                        hintLimit = hintLimit,
+                        usedHints = emptySet(),
+                        lastSeconds = timeLimitInMinute * 60,
+                        startTime = startTime,
+                    )
+                    startGame(startTime + timeLimitInMinute * 60 * 1000)
+                }
             }
         }
+
+        // 게임 시작 통계 집계 시작
+//                statsRepository.recordGameStartStats(GameStats(it.id, DateTimeUtil().currentTime() ?: ""))
     }
 
     fun inputHintCode(key: Int) = intent {
@@ -104,6 +105,7 @@ class GameViewModel @Inject constructor(
 
     fun clearHintCode() = intent {
         reduce { state.copy(currentInput = "", inputState = InputState.Empty) }
+        postSideEffect(GameEvent.ClearHintCode)
     }
 
     private fun validateHintCode() = intent {
@@ -125,6 +127,14 @@ class GameViewModel @Inject constructor(
                     ),
                 ),
             )
+            setGameState()
+        }
+
+        if (timerRepository.timerState.value is TimerState.Finished) {
+            postSideEffect(GameEvent.GameFinish)
+            delay(500)
+            clearHintCode()
+            return@intent
         }
 
         hintRepository.getHint(state.currentInput)?.let { hint ->
@@ -137,31 +147,25 @@ class GameViewModel @Inject constructor(
                 reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
             }
         } ?: run {
-            // TODO: 현재는 사용하는 곳이 없어 문제가 없지만, state가 중복으로 수집되어 사용될 수 있음. 수정 필요
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
-            reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
+            clearHintCode()
         }
     }
 
-    private fun setGameState(
-        timeLimit: Int,
-        lastSeconds: Int,
-        hintLimit: Int,
-        usedHints: Set<Int>,
-    ) = intent {
-        gameStateRepository.saveGameState(
-            playing = true,
-            timeLimit = timeLimit,
-            lastSeconds = lastSeconds,
-            hintLimit = hintLimit,
-            usedHints = usedHints,
-        )
+    private fun setGameState() = intent {
+        if (timerRepository.timerState.value !is TimerState.Finished) {
+            gameStateRepository.saveGameState(
+                timeLimitInMinute = state.totalSeconds / 60,
+                hintLimit = state.totalHintCount,
+                usedHints = state.usedHints,
+                startTime = state.startTime,
+            )
+        }
     }
 
-    private fun startGame(initSeconds: Int) = intent {
-        timerRepository.initTimer(initSeconds)
-        startTimer()
+    private fun startGame(endTimeMillis: Long) = intent {
+        timerRepository.startTimerUntil(endTimeMillis)
     }
 
     fun finishGame(onFinished: () -> Unit = {}) = intent {
@@ -171,31 +175,25 @@ class GameViewModel @Inject constructor(
     }
 
     private fun tick(lastSeconds: Int) = intent {
-        setGameState(
-            state.totalSeconds,
-            lastSeconds,
-            state.totalHintCount,
-            state.usedHints,
-        )
         reduce { state.copy(lastSeconds = lastSeconds) }
     }
 
-    private fun startTimer() {
-        if (timerRepository.timerState.value == TimerState.Ready) {
-            timerRepository.startTimer()
+    private fun setGameScreenState(
+        seconds: Int,
+        hintLimit: Int,
+        usedHints: Set<Int>,
+        lastSeconds: Int,
+        startTime: Long,
+    ) = intent {
+        reduce {
+            state.copy(
+                totalSeconds = seconds,
+                totalHintCount = hintLimit,
+                usedHints = usedHints,
+                lastSeconds = lastSeconds,
+                startTime = startTime,
+            )
         }
-    }
-
-    private fun setTimeLimit(timeLimit: Int = 0) = intent {
-        reduce { state.copy(totalSeconds = timeLimit) }
-    }
-
-    private fun setHintLimit(hintLimit: Int = -1) = intent {
-        reduce { state.copy(totalHintCount = hintLimit) }
-    }
-
-    private fun recoverUsedHints(usedHints: Set<Int>) = intent {
-        reduce { state.copy(usedHints = usedHints) }
     }
 
     override fun onCleared() {

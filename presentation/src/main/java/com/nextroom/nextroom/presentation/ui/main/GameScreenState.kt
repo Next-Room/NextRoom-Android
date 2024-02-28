@@ -10,6 +10,7 @@ data class GameScreenState(
     val usedHints: Set<Int> = emptySet(),
     val answerOpenedHints: Set<Int> = emptySet(),
     val totalHintCount: Int = -1,
+    val startTime: Long = -1,
 ) {
     val usedHintsCount: Int
         get() = usedHints.size

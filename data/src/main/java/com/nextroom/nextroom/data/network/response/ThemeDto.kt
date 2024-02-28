@@ -23,7 +23,7 @@ fun ThemeDto.toDomain(hints: List<Hint> = emptyList()): ThemeInfo {
     return ThemeInfo(
         id = id,
         title = title,
-        timeLimit = timeLimit,
+        timeLimitInMinute = timeLimit,
         hintLimit = hintLimit,
         hints = hints,
     )

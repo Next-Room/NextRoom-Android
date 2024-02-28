@@ -14,23 +14,22 @@ class GameStateRepositoryImpl @Inject constructor(
     private val timerRepository: TimerRepository,
     private val gameStateDao: GameStateDao,
 ) : GameStateRepository {
-    override suspend fun saveGameState(playing: Boolean, timeLimit: Int, lastSeconds: Int, hintLimit: Int, usedHints: Set<Int>) {
+    override suspend fun saveGameState(
+        timeLimitInMinute: Int,
+        hintLimit: Int,
+        usedHints: Set<Int>,
+        startTime: Long,
+    ) {
         val themeId = settingDataSource.getLatestGameCode()
-        if (playing) {
-            gameStateDao.insertGameState(
-                GameStateEntity(
-                    playingThemeId = themeId,
-                    playing = true,
-                    timeLimit = timeLimit,
-                    lastSeconds = lastSeconds,
-                    hintLimit = hintLimit,
-                    usedHints = usedHints,
-                    stoppedTime = System.currentTimeMillis(),
-                ),
-            )
-        } else {
-            finishGame()
-        }
+        gameStateDao.insertGameState(
+            GameStateEntity(
+                playingThemeId = themeId,
+                timeLimitInMinute = timeLimitInMinute,
+                hintLimit = hintLimit,
+                usedHints = usedHints,
+                startTime = startTime,
+            ),
+        )
     }
 
     override suspend fun finishGame(onFinished: () -> Unit) {

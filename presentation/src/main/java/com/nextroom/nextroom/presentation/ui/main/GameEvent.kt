@@ -7,5 +7,8 @@ sealed interface GameEvent {
         val hint: Hint,
     ) : GameEvent
 
+    data object GameFinish : GameEvent
+    data object ClearHintCode : GameEvent
+
     data object ShowAvailableHintExceedError : GameEvent
 }

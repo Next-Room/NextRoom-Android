@@ -91,11 +91,14 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     private fun handleEvent(event: GameEvent) {
         when (event) {
+            is GameEvent.ClearHintCode -> binding.customCodeInput.setCode("")
             is GameEvent.OnOpenHint -> {
                 val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint)
                 findNavController().safeNavigate(action)
-                clearHintCode()
+                viewModel.clearHintCode()
             }
+
+            is GameEvent.GameFinish -> snackbar(R.string.game_finished)
 
             GameEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
         }
@@ -126,11 +129,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         tvKey9.setOnClickListener { viewModel.inputHintCode(9) }
         tvKey0.setOnClickListener { viewModel.inputHintCode(0) }
         keyBackspace.setOnClickListener { viewModel.backspaceHintCode() }
-    }
-
-    private fun clearHintCode() {
-        viewModel.clearHintCode()
-        binding.customCodeInput.setCode("")
     }
 
     private fun vibrate() {
