@@ -30,6 +30,10 @@ class ThemeLocalDataSource @Inject constructor(
         themeDao.insertThemes(*newData)
     }
 
+    suspend fun upsertTheme(adminCode: String, themeInfo: ThemeInfo) {
+        themeDao.insertTheme(themeInfo.toEntity(adminCode))
+    }
+
     suspend fun getTheme(themeId: Int): Flow<ThemeInfo> {
         return themeDao.getTheme(themeId).map {
             val hints = hintDao.getHints(it.themeId)

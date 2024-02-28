@@ -42,7 +42,15 @@ class AdminMainViewModel @Inject constructor(
         }
     }
 
-    fun updateHints(themeId: Int) = intent {
+    fun updateTheme(themeId: Int) = intent {
+        themeRepository
+            .getThemes()
+            .onSuccess { themes ->
+                themes
+                    .find { it.id == themeId }
+                    ?.let { themeRepository.upsertTheme(it) }
+            }
+
         hintRepository.saveHints(themeId).onSuccess { updatedAt ->
             reduce {
                 state.copy(

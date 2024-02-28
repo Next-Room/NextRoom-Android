@@ -31,6 +31,13 @@ class ThemeRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun upsertTheme(themeInfo: ThemeInfo) {
+        themeLocalDataSource.upsertTheme(
+            adminCode = settingDataSource.getAdminCode(),
+            themeInfo = themeInfo,
+        )
+    }
+
     override suspend fun updateLatestTheme(themeId: Int) {
         settingDataSource.setLatestGameCode(themeId)
         themeLocalDataSource.updatePlayedInfo(themeId, System.currentTimeMillis())
