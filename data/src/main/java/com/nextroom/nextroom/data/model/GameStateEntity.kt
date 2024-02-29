@@ -13,7 +13,7 @@ import com.nextroom.nextroom.domain.model.GameState
             entity = ThemeEntity::class,
             parentColumns = arrayOf("themeId"),
             childColumns = arrayOf("playingThemeId"),
-            onDelete = ForeignKey.CASCADE,
+            onDelete = ForeignKey.NO_ACTION,
         ),
     ],
 )

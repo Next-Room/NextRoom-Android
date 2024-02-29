@@ -61,6 +61,12 @@ class GameViewModel @Inject constructor(
             } ?: run { // 새로운 게임을 시작하는 경우
                 with(themeRepository.getLatestTheme().first()) {
                     val startTime = System.currentTimeMillis()
+                    gameStateRepository.saveGameState(
+                        timeLimitInMinute = timeLimitInMinute,
+                        hintLimit = hintLimit,
+                        usedHints = emptySet(),
+                        startTime = System.currentTimeMillis(),
+                    )
                     setGameScreenState(
                         seconds = timeLimitInMinute * 60,
                         hintLimit = hintLimit,
