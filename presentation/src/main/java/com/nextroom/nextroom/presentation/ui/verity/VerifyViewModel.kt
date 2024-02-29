@@ -35,7 +35,7 @@ class VerifyViewModel @Inject constructor(
     private val themes = MutableStateFlow<List<ThemeInfoPresentation>>(emptyList())
     val _themes = themes.asStateFlow()
 
-    init {
+    /*init {
         fetchThemes()
     }
 
@@ -45,7 +45,7 @@ class VerifyViewModel @Inject constructor(
                 themes.emit(it.map { it.toPresentation(System.currentTimeMillis()) })
             }
         }
-    }
+    }*/
 
     fun inputCode(code: String) = intent {
         reduce {
@@ -67,7 +67,7 @@ class VerifyViewModel @Inject constructor(
         }
     }
 
-    fun startGame(themeId: Int) = intent {
+    /*fun startGame(themeId: Int) = intent {
         viewModelScope.launch {
             themes
                 .value
@@ -82,7 +82,7 @@ class VerifyViewModel @Inject constructor(
                     postSideEffect(LoginEvent.GoToMainScreen)
                 }
         }
-    }
+    }*/
 
     private fun showMessage(message: String) = intent {
         postSideEffect(LoginEvent.ShowMessage(UiText(message)))

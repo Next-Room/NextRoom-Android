@@ -58,7 +58,8 @@ class VerifyFragment : BaseFragment<FragmentAdminCodeBinding>(FragmentAdminCodeB
 
     private fun render(state: VerifyState) = with(binding) {
         if (state.inputState is InputState.Ok) {
-            viewModel.startGame(themeId = args.themeId)
+            val action = VerifyFragmentDirections.actionVerifyFragmentToMainFragment()
+            findNavController().safeNavigate(action)
         }
         btnInput.isEnabled = state.currentInput.length == 5
     }
