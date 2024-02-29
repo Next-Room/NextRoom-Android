@@ -11,7 +11,7 @@ import com.nextroom.nextroom.data.model.ThemeTimeEntity.Companion.THEME_TIME_TAB
             entity = ThemeEntity::class,
             parentColumns = arrayOf("themeId"),
             childColumns = arrayOf("themeId"),
-            onDelete = ForeignKey.CASCADE,
+            onDelete = ForeignKey.NO_ACTION,
         ),
     ],
     primaryKeys = ["themeId", "recentUpdated"],

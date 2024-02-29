@@ -26,7 +26,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
             onStartGame = ::startGame,
-            onClickUpdate = viewModel::updateHints,
+            onClickUpdate = viewModel::updateTheme,
         )
     }
 
