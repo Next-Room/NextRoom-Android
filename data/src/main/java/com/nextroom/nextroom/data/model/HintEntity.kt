@@ -13,7 +13,7 @@ import com.nextroom.nextroom.domain.model.Hint
             entity = ThemeEntity::class,
             parentColumns = arrayOf("themeId"),
             childColumns = arrayOf("themeId"),
-            onDelete = ForeignKey.CASCADE,
+            onDelete = ForeignKey.NO_ACTION,
         ),
     ],
 )

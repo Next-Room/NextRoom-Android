@@ -43,13 +43,13 @@ class AdminMainViewModel @Inject constructor(
     }
 
     fun updateTheme(themeId: Int) = intent {
-        /*themeRepository
+        themeRepository
             .getThemes()
             .onSuccess { themes ->
                 themes
                     .find { it.id == themeId }
                     ?.let { themeRepository.upsertTheme(it) }
-            }*/
+            }
 
         hintRepository.saveHints(themeId).onSuccess { updatedAt ->
             reduce {
