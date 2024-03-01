@@ -35,7 +35,7 @@ class TimerRepositoryImpl @Inject constructor(
             setTimerState(TimerState.Running)
             _lastMillis.value = endTimeMillis - System.currentTimeMillis()
             do {
-                delay(950) // 숫자가 클수록 간헐적으로 시간 지연이 발생할 수 있으나 리소스 낭비는 줄어듦
+                delay(300) // 숫자가 클수록 간헐적으로 시간 지연이 발생할 수 있으나 리소스 낭비는 줄어듦
                 _lastMillis.value = endTimeMillis - System.currentTimeMillis()
             } while (isActive && _lastMillis.value > 0)
             stopTimer()
