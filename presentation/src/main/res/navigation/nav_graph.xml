@@ -28,7 +28,7 @@
 
             <argument
                 android:name="themeId"
-                app:argType="integer"/>
+                app:argType="integer" />
         </action>
         <action
             android:id="@+id/action_adminMainFragment_to_mypageFragment"
@@ -47,8 +47,8 @@
             app:destination="@id/hintFragment" />
         <argument
             android:name="overflowTime"
-            app:argType="long"
-            android:defaultValue="0L" />
+            android:defaultValue="0L"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/verifyFragment"
@@ -58,35 +58,31 @@
 
         <argument
             android:name="themeId"
-            app:argType="integer"/>
-<!--        <action-->
-<!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
-<!--            app:destination="@id/startTimerFragment" />-->
+            app:argType="integer" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
+        <!--            app:destination="@id/startTimerFragment" />-->
         <action
             android:id="@+id/action_verifyFragment_to_mainFragment"
             app:destination="@id/mainFragment"
+            app:launchSingleTop="true"
             app:popUpTo="@id/adminMainFragment" />
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/startTimerFragment"-->
-<!--        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"-->
-<!--        android:label="StartTimerFragment"-->
-<!--        tools:layout="@layout/fragment_start_timer">-->
-<!--        <action-->
-<!--            android:id="@+id/action_startTimerFragment_to_mainFragment"-->
-<!--            app:destination="@id/mainFragment"-->
-<!--            app:popUpTo="@id/adminMainFragment" />-->
-<!--    </fragment>-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/startTimerFragment"-->
+    <!--        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"-->
+    <!--        android:label="StartTimerFragment"-->
+    <!--        tools:layout="@layout/fragment_start_timer">-->
+    <!--        <action-->
+    <!--            android:id="@+id/action_startTimerFragment_to_mainFragment"-->
+    <!--            app:destination="@id/mainFragment"-->
+    <!--            app:popUpTo="@id/adminMainFragment" />-->
+    <!--    </fragment>-->
     <fragment
         android:id="@+id/hintFragment"
         android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
         android:label="HintFragment"
         tools:layout="@layout/fragment_hint">
-        <action
-            android:id="@+id/action_hintFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
-            app:popUpTo="@id/mainFragment"
-            app:popUpToInclusive="true" />
         <argument
             android:name="hint"
             app:argType="com.nextroom.nextroom.presentation.model.Hint" />
@@ -153,7 +149,7 @@
         android:id="@+id/purchaseSuccessFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
         android:label="PurchaseSuccessFragment"
-        tools:layout="@layout/fragment_purchase_success" >
+        tools:layout="@layout/fragment_purchase_success">
         <action
             android:id="@+id/action_to_home"
             app:destination="@id/adminMainFragment" />

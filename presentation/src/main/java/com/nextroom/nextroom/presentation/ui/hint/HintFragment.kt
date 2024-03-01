@@ -91,7 +91,6 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     private fun gotoHome() {
         Timber.d("gotoHome")
-        val action = HintFragmentDirections.actionHintFragmentToMainFragment()
-        findNavController().safeNavigate(action)
+        findNavController().popBackStack(R.id.mainFragment, false)
     }
 }
