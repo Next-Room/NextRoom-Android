@@ -1,8 +1,8 @@
 [versions]
 minSdk = "24"
 targetSdk = "34"
-versionCode = "35"
-versionName = "1.1.2"
+versionCode = "37"
+versionName = "1.1.4"
 compileSdk = "34"
 targetJvm = "17"
 kotlin = "1.9.10"
