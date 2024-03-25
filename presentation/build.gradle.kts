@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.bundles.coroutines)
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.swiperefreshlayout)
     kapt(libs.hilt.compiler)
 
     implementation(libs.glide)
