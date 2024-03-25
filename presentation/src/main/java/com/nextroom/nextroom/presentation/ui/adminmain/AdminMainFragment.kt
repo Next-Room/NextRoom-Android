@@ -78,6 +78,9 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 //            addMargin(top = requireContext().statusBarHeight)
 //            setOnClickListener { logout() }
 //        }
+        srlTheme.setOnRefreshListener {
+            viewModel.loadData()
+        }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
@@ -97,6 +100,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 //
 //            SubscribeStatus.None, SubscribeStatus.Subscription -> Unit
 //        }
+        srlTheme.isRefreshing = false
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
     }

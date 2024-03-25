@@ -72,7 +72,7 @@ class AdminMainViewModel @Inject constructor(
         viewModelScope.launch { adminRepository.logout() }
     }
 
-    private fun loadData() = intent {
+    fun loadData() = intent {
         reduce { state.copy(loading = true) }
         /*adminRepository.getUserSubscribeStatus().suspendOnSuccess {
             reduce { state.copy(userSubscribeStatus = it) }
