@@ -39,6 +39,7 @@ google-services = "4.4.0"
 firebase-crashlytics = "2.9.9"
 billing = "6.0.1"
 firebase-config = "21.6.0"
+swiperefreshlayout = "1.1.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -85,6 +86,7 @@ firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebase-config" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
+androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
