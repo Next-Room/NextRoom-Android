@@ -15,7 +15,7 @@ import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.snackbar
-import com.nextroom.nextroom.presentation.extension.toTimeUnit
+import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
 import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
@@ -63,10 +63,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     private fun render(state: GameScreenState) = with(binding) {
         // 타이머 렌더링
-        val (hours, minutes, seconds) = state.lastSeconds.toTimeUnit()
-        tvHours.text = hours.toString()
-        tvMinutes.text = String.format("%02d", minutes)
-        tvSeconds.text = String.format("%02d", seconds)
+        tvTimer.text = state.lastSeconds.toTimerFormat()
         customTimer.timeLimit = state.totalSeconds
         customTimer.lastSeconds = state.lastSeconds
 
