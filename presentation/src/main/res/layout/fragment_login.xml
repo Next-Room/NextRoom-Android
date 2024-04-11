@@ -64,22 +64,24 @@
         android:textColorHint="@color/Gray01"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_login_description" />
+        app:layout_constraintTop_toBottomOf="@id/tv_login_description"
+        tools:targetApi="o" />
 
     <EditText
         android:id="@+id/et_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:autofillHints="password"
         android:hint="@string/login_password_hint"
-        android:importantForAutofill="no"
         android:inputType="textPassword"
         android:textAppearance="@style/Pretendard.16"
         android:textColor="@color/White"
         android:textColorHint="@color/Gray01"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
         app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/et_admin_code" />
+        app:layout_constraintTop_toBottomOf="@id/et_admin_code"
+        tools:targetApi="o" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_login"
