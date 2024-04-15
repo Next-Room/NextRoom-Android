@@ -33,7 +33,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun initViews() = with(binding) {
-        etAdminCode.apply {
+        etEmail.apply {
             setStateListener()
             doAfterTextChanged {
                 viewModel.inputCode(it.toString())
@@ -84,7 +84,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private fun render(state: LoginState) = with(binding) {
         pbLoading.isVisible = state.loading
-        etAdminCode.isEnabled = !state.loading
+        etEmail.isEnabled = !state.loading
         etPassword.isEnabled = !state.loading
         btnLogin.isEnabled = !state.loading
         tvPrivacyPolicy.isEnabled = !state.loading
@@ -95,7 +95,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         when (event) {
             is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
             is LoginEvent.LoginFailed -> {
-                binding.etAdminCode.setError()
+                binding.etEmail.setError()
                 binding.etPassword.setError()
                 snackbar(event.message)
             }
@@ -114,7 +114,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun clearInputs() {
-        binding.etAdminCode.setText("")
+        binding.etEmail.setText("")
         binding.etPassword.setText("")
         viewModel.initState()
     }

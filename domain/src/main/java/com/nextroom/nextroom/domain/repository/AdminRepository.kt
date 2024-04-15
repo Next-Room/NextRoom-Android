@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.domain.repository
 
+import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.domain.model.UserSubscription
@@ -13,7 +14,7 @@ interface AdminRepository {
     /**
      * @return shopName
      * */
-    suspend fun login(adminCode: String, password: String): Result<String>
+    suspend fun login(adminCode: String, password: String): Result<LoginInfo>
     suspend fun logout()
     suspend fun verifyAdminCode(code: String): Boolean
     suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus>

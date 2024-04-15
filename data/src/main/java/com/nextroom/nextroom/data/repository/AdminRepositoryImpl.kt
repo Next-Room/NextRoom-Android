@@ -4,10 +4,10 @@ import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
+import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.domain.model.UserSubscription
-import com.nextroom.nextroom.domain.model.mapOnSuccess
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import kotlinx.coroutines.flow.Flow
@@ -24,12 +24,10 @@ class AdminRepositoryImpl @Inject constructor(
 
     override val shopName: Flow<String> = settingDataSource.shopName
 
-    override suspend fun login(adminCode: String, password: String): Result<String> {
+    override suspend fun login(adminCode: String, password: String): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
+            settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
-            settingDataSource.saveAdminInfo(adminCode, it.shopName)
-        }.mapOnSuccess {
-            it.shopName
         }
     }
 

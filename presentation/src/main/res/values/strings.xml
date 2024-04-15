@@ -36,6 +36,8 @@
     <string name="admin_code_input_hint">5자리 숫자를 입력해주세요</string>
     <string name="admin_code_id_hint">ID</string>
     <string name="admin_code_pw_hint">PASSWORD</string>
+    <string name="admin_code_invalid">관리자 코드가 일치하지 않습니다.</string>
+    <string name="admin_code_required">관리자 코드를 입력해주세요</string>
 
     <string name="admin_main_update_hint">관리자페이지에서 힌트를 업데이트 했다면 반드시 업데이트 버튼을 눌러주세요!</string>
     <string name="admin_main_themes_label">우리 지점의 테마 목록</string>
@@ -43,8 +45,8 @@
     <string name="admin_main_updated_at">최근 업데이트 일 : %s</string>
 
     <string name="login_title">안녕하세요 사장님\n넥스트룸입니다</string>
-    <string name="login_description">메일을 통해 전달받은 관리자코드와 비밀번호를\n입력해주세요</string>
-    <string name="login_admin_code_hint">관리자 코드</string>
+    <string name="login_description">이메일과 비밀번호를 입력해주세요</string>
+    <string name="login_admin_email_hint">이메일</string>
     <string name="login_password_hint">비밀번호</string>
     <string name="login_button">Login</string>
     <string name="logout_button">로그아웃</string>

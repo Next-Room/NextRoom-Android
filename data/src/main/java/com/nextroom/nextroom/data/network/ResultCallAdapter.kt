@@ -65,10 +65,14 @@ private class ApiResultCall<R>(
                     } catch (_: Exception) {
                         null
                     }
+                    val code = (errorBody?.getInt("code") ?: code()).toString()
                     val message = errorBody?.getString("message") ?: ""
-                    when ((errorBody?.getInt("code") ?: code()).toString().first()) {
-                        '4' -> Result.Failure.HttpError.NotFound(message)
-                        '5' -> Result.Failure.HttpError.ServerError(message)
+                    when (code) {
+                        "400" -> Result.Failure.HttpError.BadRequest(message)
+                        "403" -> Result.Failure.HttpError.Forbidden(message)
+                        "404" -> Result.Failure.HttpError.NotFound(message)
+                        "409" -> Result.Failure.HttpError.Conflict(message)
+                        "500" -> Result.Failure.HttpError.ServerError(message)
                         else -> Result.Failure.UnknownError(
                             IllegalStateException(
                                 "Response code is ${code()} but body is null." +

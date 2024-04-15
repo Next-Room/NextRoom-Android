@@ -1,6 +1,8 @@
 package com.nextroom.nextroom.presentation.ui.adminmain
 
 import androidx.lifecycle.viewModelScope
+import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -25,9 +28,9 @@ class AdminMainViewModel @Inject constructor(
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
-) : BaseViewModel<AdminMainState, Nothing>() {
+) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
-    override val container: Container<AdminMainState, Nothing> = container(AdminMainState(loading = true))
+    override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
 
     val isFirstLaunchOfDay: Boolean
         get() = dataStoreRepository.isFirstInitOfDay
@@ -49,6 +52,9 @@ class AdminMainViewModel @Inject constructor(
                 themes
                     .find { it.id == themeId }
                     ?.let { themeRepository.upsertTheme(it) }
+            }.onFailure {
+                handleError(it)
+                return@intent
             }
 
         hintRepository.saveHints(themeId).onSuccess { updatedAt ->
@@ -58,7 +64,7 @@ class AdminMainViewModel @Inject constructor(
                         .map { if (it.id == themeId) it.copy(recentUpdated = updatedAt) else it },
                 )
             }
-        }
+        }.onFailure(::handleError)
     }
 
     fun start(themeId: Int, readyToStart: () -> Unit) = intent {
@@ -92,7 +98,7 @@ class AdminMainViewModel @Inject constructor(
                     themeInfo.toPresentation(updatedAt)
                 },
             )
-        }
+        }.onFailure(::handleError)
         reduce { state.copy(loading = false) }
     }
 
@@ -102,5 +108,13 @@ class AdminMainViewModel @Inject constructor(
 
     private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {
         reduce { state.copy(themes = themes) }
+    }
+
+    private fun handleError(error: Result.Failure) = intent {
+        when (error) {
+            is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
+            is Result.Failure.HttpError -> postSideEffect(AdminMainEvent.ClientError(error.message))
+            else -> postSideEffect(AdminMainEvent.UnknownError)
+        }
     }
 }

@@ -7,9 +7,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import javax.inject.Inject
@@ -47,7 +49,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        viewModel.observe(viewLifecycleOwner, state = ::render)
+        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
     /*override fun onStart() {
@@ -103,6 +105,14 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         srlTheme.isRefreshing = false
         tvShopName.text = state.showName
         adapter.submitList(state.themes)
+    }
+
+    private fun handleEvent(event: AdminMainEvent) {
+        when (event) {
+            is AdminMainEvent.NetworkError -> snackbar(R.string.error_network)
+            is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
+            is AdminMainEvent.ClientError -> snackbar(event.message)
+        }
     }
 
     /*private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
