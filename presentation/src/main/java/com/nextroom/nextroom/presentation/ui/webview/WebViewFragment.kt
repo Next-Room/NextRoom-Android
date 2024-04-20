@@ -55,6 +55,7 @@ class WebViewFragment : Fragment() {
                 builtInZoomControls = false
                 domStorageEnabled = true
                 javaScriptEnabled = true
+                userAgentString = "$userAgentString APP_NEXTROOM_ANDROID"
                 setSupportZoom(false)
             }
             loadUrl(args.url)
