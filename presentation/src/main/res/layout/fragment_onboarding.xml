@@ -7,42 +7,48 @@
     tools:background="@color/Dark01"
     tools:context=".ui.onboarding.OnboardingFragment">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/gl_bg_top"
+    <TextView
+        android:id="@+id/tv_description"
+        style="@style/Pretendard.20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
-
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:importantForAccessibility="no"
-        android:src="@drawable/bg_onboarding"
+        android:layout_marginTop="92dp"
+        android:text="@string/onboarding_description"
+        android:textColor="@color/Gray01"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gl_bg_top" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_title"
         style="@style/Pretendard.32.bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/onboarding_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/tv_description" />
 
-    <TextView
-        android:id="@+id/tv_apply_free_trial"
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="74dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/bg_onboarding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_sign_up"
         style="@style/Button.Kor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="@string/onboarding_apply_free_trial"
+        android:layout_margin="20dp"
+        android:text="@string/sign_up"
+        android:textColor="@color/Dark01"
         app:layout_constraintBottom_toTopOf="@id/tv_existing_user_guide"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
