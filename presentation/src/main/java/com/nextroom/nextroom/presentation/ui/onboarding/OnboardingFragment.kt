@@ -19,7 +19,7 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
     }
 
     private fun initViews() {
-        binding.tvApplyFreeTrial.setOnClickListener {
+        binding.btnSignUp.setOnClickListener {
             val url = if (BuildConfig.DEBUG) "https://dev.nextroom.co.kr/signup" else "https://nextroom.co.kr/signup"
             val action =
                 OnboardingFragmentDirections.actionGlobalWebViewFragment(url)
