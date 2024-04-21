@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.onboarding
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.presentation.BuildConfig
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentOnboardingBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -19,8 +20,9 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
 
     private fun initViews() {
         binding.tvApplyFreeTrial.setOnClickListener {
+            val url = if (BuildConfig.DEBUG) "https://dev.nextroom.co.kr/signup" else "https://nextroom.co.kr/signup"
             val action =
-                OnboardingFragmentDirections.actionGlobalWebViewFragment("https://nextroom.co.kr/")
+                OnboardingFragmentDirections.actionGlobalWebViewFragment(url)
             findNavController().safeNavigate(action)
         }
         binding.tvExistingUserGuide.setOnClickListener {
