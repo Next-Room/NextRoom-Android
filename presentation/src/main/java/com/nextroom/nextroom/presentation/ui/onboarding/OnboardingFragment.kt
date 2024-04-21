@@ -18,9 +18,9 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
     }
 
     private fun initViews() {
-        binding.tvApplyFreeTrial.setOnClickListener {
+        binding.btnSignUp.setOnClickListener {
             val action =
-                OnboardingFragmentDirections.actionGlobalWebViewFragment("https://nextroom.co.kr/")
+                OnboardingFragmentDirections.actionGlobalWebViewFragment("https://nextroom.co.kr/") // TODO 회원가입 주소로 변경
             findNavController().safeNavigate(action)
         }
         binding.tvExistingUserGuide.setOnClickListener {
