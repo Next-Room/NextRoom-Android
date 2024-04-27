@@ -22,7 +22,7 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
         binding.btnSignUp.setOnClickListener {
             val url = if (BuildConfig.DEBUG) "https://dev.nextroom.co.kr/signup" else "https://nextroom.co.kr/signup"
             val action =
-                OnboardingFragmentDirections.actionGlobalWebViewFragment(url)
+                OnboardingFragmentDirections.actionGlobalWebViewFragment(url = url, showToolbar = true)
             findNavController().safeNavigate(action)
         }
         binding.tvExistingUserGuide.setOnClickListener {
