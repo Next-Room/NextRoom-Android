@@ -50,6 +50,23 @@
             android:defaultValue="0L"
             app:argType="long" />
     </fragment>
+    <dialog
+        android:id="@+id/nrTwoButtonDialog"
+        android:name="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog"
+        tools:layout="@layout/dialog_fragment_nr_two_button">
+
+        <argument
+            android:name="nrTwoButtonArgument"
+            app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
+    </dialog>
+    <action
+        android:id="@+id/action_global_nrTwoButtonDialog"
+        app:destination="@id/nrTwoButtonDialog">
+        <argument
+
+            android:name="nrTwoButtonArgument"
+            app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
+    </action>
     <fragment
         android:id="@+id/verifyFragment"
         android:name="com.nextroom.nextroom.presentation.ui.verity.VerifyFragment"
