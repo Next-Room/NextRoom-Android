@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.NRDialog
+import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -42,7 +43,15 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+    }
+
+    private fun setFragmentResultListeners() {
+        setFragmentResultListener(REQUEST_KEY_FINISH_GAME) { _, _ ->
+            painterViewModel.clear()
+            viewModel.finishGame { findNavController().popBackStack() }
+        }
     }
 
     private fun initViews() = with(binding) {
@@ -102,16 +111,17 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     private fun showExitDialog() {
-        NRDialog.Builder(requireContext())
-            .setTitle(R.string.game_main_exit_dialog)
-            .setMessage(R.string.game_main_exit_dialog_message)
-            .setPositiveButton(R.string.dialog_yes) { _, _ ->
-                painterViewModel.clear()
-                viewModel.finishGame { findNavController().popBackStack() }
-            }
-            .setNegativeButton(R.string.dialog_no) { dialog, _ ->
-                dialog.dismiss()
-            }.show(childFragmentManager, "ExitGameDialog")
+        GameFragmentDirections
+            .actionGlobalNrTwoButtonDialog(
+                NRTwoButtonDialog.NRTwoButtonArgument(
+                    title = getString(R.string.game_main_exit_dialog),
+                    message = getString(R.string.game_main_exit_dialog_message),
+                    posBtnText = getString(R.string.dialog_yes),
+                    negBtnText = getString(R.string.dialog_no),
+                    dialogKey = REQUEST_KEY_FINISH_GAME,
+                ),
+            )
+            .also { findNavController().safeNavigate(it) }
     }
 
     private fun initKeypad() = with(binding) {
@@ -135,5 +145,9 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
+    }
+
+    companion object {
+        const val REQUEST_KEY_FINISH_GAME = "REQUEST_KEY_FINISH_GAME"
     }
 }
