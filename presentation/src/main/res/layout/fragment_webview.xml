@@ -10,7 +10,7 @@
         android:id="@+id/tb_webview"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="0xFF000000"
+        android:background="#FF000000"
         app:contentInsetStart="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
