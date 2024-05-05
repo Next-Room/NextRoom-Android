@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">넥스트룸(Debug)</string>
+    <string name="link_signup">https://dev.nextroom.co.kr/signup</string>
 </resources>
