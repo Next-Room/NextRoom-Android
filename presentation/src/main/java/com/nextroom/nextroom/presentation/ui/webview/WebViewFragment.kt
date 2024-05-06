@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -50,11 +51,14 @@ class WebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.tbWebview.isVisible = args.showToolbar
+        binding.ivClose.setOnClickListener { findNavController().popBackStack() }
         binding.webview.apply {
             settings.apply {
                 builtInZoomControls = false
                 domStorageEnabled = true
                 javaScriptEnabled = true
+                userAgentString = "$userAgentString APP_NEXTROOM_ANDROID"
                 setSupportZoom(false)
             }
             loadUrl(args.url)

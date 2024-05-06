@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentLoginBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
@@ -61,9 +62,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         btnLogin.setOnClickListener { viewModel.complete() }
 
         tvPrivacyPolicy.setOnClickListener {
-            val action = LoginFragmentDirections.actionGlobalWebViewFragment(
-                "https://basalt-cathedral-c81.notion.site/fbb1f04ae70d473380e64d12ed013df8?pvs=4",
-            )
+            val action = LoginFragmentDirections.actionGlobalWebViewFragment(getString(R.string.link_privacy_policy))
             findNavController().safeNavigate(action)
         }
     }
