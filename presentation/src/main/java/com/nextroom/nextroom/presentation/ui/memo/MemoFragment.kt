@@ -14,6 +14,7 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentMemoBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -44,6 +45,8 @@ class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        updateSystemPadding(false)
+
         tbMemo.apply {
             ivBack.setOnClickListener { findNavController().popBackStack() }
             if (args.fromHint) {

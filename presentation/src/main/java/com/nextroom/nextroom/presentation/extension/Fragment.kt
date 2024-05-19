@@ -2,6 +2,9 @@ package com.nextroom.nextroom.presentation.extension
 
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -25,20 +28,74 @@ fun Fragment.snackbar(@StringRes messageId: Int, duration: Int = Snackbar.LENGTH
 }
 
 /**
+ * ## 시스템 영역 확보
+ *
+ * 상태바와 하단 내비게이션바가 노출되는 경우 [systemBar]를 `true`로 설정하여 컨텐츠와 겹치지 않도록 시스템 영역을 확보한다.
+ *
+ * 반면 상태바와 하단 내비게이션바가 노출되지 않는 경우 [systemBar]를 `false`로 설정하여 컨텐츠를 표시할 공간을 확보한다.
+ *
+ * _[systemBar]가 `true`인 경우 `WindowCompat.setDecorFitsSystemWindows(window, true)`와 비슷한 동작을 한다._
+ * @param systemBar 상태바와 하단 내비게이션바 영역 확보 여부
+ */
+fun Fragment.updateSystemPadding(
+    systemBar: Boolean = true,
+) {
+    updateSystemPadding(systemBar, systemBar)
+}
+
+/**
+ * ## 시스템 영역 확보
+ *
+ * 상태바나 하단 내비게이션바가 노출되는 경우 [statusBar]나 [navigationBar]를 `true`로 설정하여 컨텐츠와 겹치지 않도록 시스템 영역을 확보한다.
+ *
+ * 반면 상태바나 하단 내비게이션바가 노출되지 않는 경우 [statusBar]나 [navigationBar]를 `false`로 설정하여 컨텐츠를 표시할 공간을 확보한다.
+ *
+ * @param statusBar 상태바 영역 확보 여부
+ * @param navigationBar 하단 내비게이션바 영역 확보 여부
+ */
+fun Fragment.updateSystemPadding(
+    statusBar: Boolean = true,
+    navigationBar: Boolean = true,
+) {
+    ViewCompat.setOnApplyWindowInsetsListener(requireView()) { view, windowInsets ->
+        val typeMask = when {
+            statusBar && navigationBar -> WindowInsetsCompat.Type.systemBars()
+            statusBar -> WindowInsetsCompat.Type.statusBars()
+            navigationBar -> WindowInsetsCompat.Type.navigationBars()
+            else -> return@setOnApplyWindowInsetsListener windowInsets
+        }
+        val insets = windowInsets.getInsets(typeMask)
+        view.updatePadding(
+            left = insets.left,
+            top = insets.top,
+            right = insets.right,
+            bottom = insets.bottom,
+        )
+        WindowInsetsCompat.CONSUMED
+    }
+}
+
+/**
  * 현재 프래그먼트를 전체 화면으로 설정한다. [Fragment.onAttach] 에서 호출.
  *
  */
-fun Fragment.enableFullScreen() {
+fun Fragment.enableFullScreen(
+    hideStatusBar: Boolean = true,
+    hideNavigationBar: Boolean = true,
+) {
     lifecycle.addObserver(object : DefaultLifecycleObserver {
         override fun onCreate(owner: LifecycleOwner) {
             viewLifecycleOwnerLiveData.observe(this@enableFullScreen) { viewLifecycleOwner ->
                 viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
                     override fun onStart(owner: LifecycleOwner) {
-                        requireActivity().setFullScreen()
+                        requireActivity().enableFullScreen(
+                            hideStatusBar = hideStatusBar,
+                            hideNavigationBar = hideNavigationBar,
+                        )
                     }
 
                     override fun onStop(owner: LifecycleOwner) {
-                        requireActivity().exitFullScreen()
+                        requireActivity().disableFullScreen()
                     }
 
                     override fun onDestroy(owner: LifecycleOwner) {

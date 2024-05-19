@@ -17,11 +17,13 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
 import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import java.util.Locale
 
 @AndroidEntryPoint
 class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
@@ -55,6 +57,8 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        updateSystemPadding(false)
+
         tbGame.apply {
             root.setBackgroundColor(resources.getColor(android.R.color.transparent, null))
             tvButton.text = getString(R.string.memo_button)
@@ -78,6 +82,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
         // 힌트 렌더링
         tvHintCount.text = String.format(
+            Locale.getDefault(),
             "%d/%s",
             state.usedHintsCount,
             if (state.totalHintCount == -1) "∞" else state.totalHintCount.toString(),

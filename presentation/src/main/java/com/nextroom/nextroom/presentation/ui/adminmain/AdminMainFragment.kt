@@ -12,6 +12,7 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import javax.inject.Inject
@@ -31,9 +32,6 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
             onClickUpdate = viewModel::updateTheme,
         )
     }
-
-    private val state: AdminMainState
-        get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -68,7 +66,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun initViews() = with(binding) {
-//        ivMyButton.addMargin(top = requireContext().statusBarHeight)
+        updateSystemPadding(statusBar = false, navigationBar = true)
+
         rvThemes.adapter = adapter
 //        tvPurchaseTicketButton.setOnClickListener {
 //            goToPurchase()

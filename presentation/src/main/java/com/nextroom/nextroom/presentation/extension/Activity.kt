@@ -1,19 +1,30 @@
 package com.nextroom.nextroom.presentation.extension
 
 import android.app.Activity
-import android.view.View
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
-fun Activity.setFullScreen() {
-    var flags = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_FULLSCREEN
+val Activity.windowInsetsController: WindowInsetsControllerCompat
+    get() = WindowCompat.getInsetsController(window, window.decorView)
 
-    flags = flags or (
-        View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        )
-
-    window.decorView.systemUiVisibility = flags
+fun Activity.enableFullScreen(
+    hideStatusBar: Boolean = true,
+    hideNavigationBar: Boolean = true,
+) {
+    when {
+        hideStatusBar && hideNavigationBar -> WindowInsetsCompat.Type.systemBars()
+        hideStatusBar -> WindowInsetsCompat.Type.statusBars()
+        hideNavigationBar -> WindowInsetsCompat.Type.navigationBars()
+        else -> null
+    }?.let { types ->
+        windowInsetsController.apply {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(types)
+        }
+    } ?: disableFullScreen()
 }
 
-fun Activity.exitFullScreen() {
-    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+fun Activity.disableFullScreen() {
+    windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
 }
