@@ -52,7 +52,7 @@ class WebViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        updateSystemPadding(false)
+        updateSystemPadding(true)
 
         binding.tbWebview.isVisible = args.showToolbar
         binding.ivClose.setOnClickListener { findNavController().popBackStack() }
