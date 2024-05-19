@@ -31,7 +31,7 @@ class ArcProgressView @JvmOverloads constructor(
     private val endTextRect = Rect()
     private var leftText: String = DEFAULT_LEFT_TEXT
     private var rightText: String = DEFAULT_RIGHT_TEXT
-    private val textSpace: Float = 10.dp.toFloat()
+    private val textSpace: Float = 16.dp.toFloat()
 
     private var strokeWidth = 0f
         set(value) {
