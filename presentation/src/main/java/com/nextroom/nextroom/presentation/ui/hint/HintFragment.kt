@@ -13,6 +13,7 @@ import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.viewmodel.observe
@@ -40,6 +41,8 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        updateSystemPadding(false)
+
         tbHint.apply {
             tvButton.text = getString(R.string.memo_button)
             tvButton.setOnClickListener {

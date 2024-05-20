@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.util.FragmentLifecycleLogger
 import com.nextroom.nextroom.presentation.util.FragmentLifecycleLoggerImpl
 
@@ -31,6 +32,7 @@ abstract class BaseFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         registerViewLifecycleOwner(this)
+        updateSystemPadding()
     }
 
     override fun onDestroyView() {
