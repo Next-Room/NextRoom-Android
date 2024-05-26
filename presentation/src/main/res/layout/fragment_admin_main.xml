@@ -27,51 +27,51 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-<!-- 결제 관련 -->
-<!--            <TextView-->
-<!--                android:id="@+id/tv_purchase_ticket_button"-->
-<!--                style="@style/Pretendard.14.SemiBold"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="16dp"-->
-<!--                android:background="@drawable/bg_secondary_button"-->
-<!--                android:paddingHorizontal="16dp"-->
-<!--                android:paddingVertical="6dp"-->
-<!--                android:text="@string/purchase_ticket"-->
-<!--                android:textColor="@color/White"-->
-<!--                android:visibility="gone"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/iv_my_button"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/iv_my_button"-->
-<!--                app:layout_constraintTop_toTopOf="@id/iv_my_button"-->
-<!--                tools:visibility="visible" />-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/tv_logout_button"-->
-<!--                style="@style/Pretendard.14.SemiBold"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="16dp"-->
-<!--                android:background="@drawable/bg_secondary_button"-->
-<!--                android:paddingHorizontal="16dp"-->
-<!--                android:paddingVertical="6dp"-->
-<!--                android:text="@string/logout_button"-->
-<!--                android:textColor="@color/White"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/iv_my_button"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/iv_my_button"-->
-<!--                app:layout_constraintTop_toTopOf="@id/iv_my_button"-->
-<!--                tools:visibility="visible" />-->
+            <TextView
+                android:id="@+id/tv_resign_button"
+                style="@style/Pretendard.14.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_secondary_button"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp"
+                android:text="@string/resign"
+                android:textColor="@color/White"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-<!--            <ImageView-->
-<!--                android:id="@+id/iv_my_button"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="12dp"-->
-<!--                android:layout_marginEnd="20dp"-->
-<!--                android:contentDescription="@string/mypage_button_description"-->
-<!--                android:src="@drawable/ic_my"-->
-<!--                android:visibility="gone"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
+            <!-- 결제 관련 -->
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/tv_logout_button"-->
+            <!--                style="@style/Pretendard.14.SemiBold"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginEnd="16dp"-->
+            <!--                android:background="@drawable/bg_secondary_button"-->
+            <!--                android:paddingHorizontal="16dp"-->
+            <!--                android:paddingVertical="6dp"-->
+            <!--                android:text="@string/logout_button"-->
+            <!--                android:textColor="@color/White"-->
+            <!--                app:layout_constraintBottom_toBottomOf="@id/iv_my_button"-->
+            <!--                app:layout_constraintEnd_toStartOf="@id/iv_my_button"-->
+            <!--                app:layout_constraintTop_toTopOf="@id/iv_my_button"-->
+            <!--                tools:visibility="visible" />-->
+
+            <!--            <ImageView-->
+            <!--                android:id="@+id/iv_my_button"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="12dp"-->
+            <!--                android:layout_marginEnd="20dp"-->
+            <!--                android:contentDescription="@string/mypage_button_description"-->
+            <!--                android:src="@drawable/ic_my"-->
+            <!--                android:visibility="gone"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/tv_shop_name_label"
@@ -83,7 +83,7 @@
                 android:text="@string/admin_main_shop_name_label"
                 android:textAppearance="@style/Pretendard.32"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_shop_name"

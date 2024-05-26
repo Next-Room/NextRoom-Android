@@ -58,6 +58,10 @@
     <string name="logout_button">로그아웃</string>
     <string name="logout_button_description">로그아웃</string>
     <string name="update_button_description">테마 업데이트</string>
+    <string name="resign_dialog_title">탈퇴하시겠습니까?</string>
+    <string name="resign_dialog_message">계정을 삭제하면 회원님의 테마 정보는 즉시 삭제되며, 삭제된 정보는 복구할 수 없습니다. 정말 탈퇴하시겠습니까?</string>
+    <string name="resign">탈퇴</string>
+    <string name="resign_success_message">탈퇴가 완료되었습니다</string>
 
     <string name="game_main_exit_dialog">방탈출을 종료하시겠습니까?</string>
     <string name="game_main_exit_dialog_message">종료하시면 모든 기록은 초기화됩니다.</string>
