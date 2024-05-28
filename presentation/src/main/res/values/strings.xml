@@ -49,6 +49,7 @@
     <string name="admin_main_themes_label">우리 지점의 테마 목록</string>
     <string name="admin_main_shop_name_label">우리 지점은</string>
     <string name="admin_main_updated_at">최근 업데이트 일 : %s</string>
+    <string name="admin_main_empty_theme_guide">관리자 페이지에서\n테마를 추가해주세요!</string>
 
     <string name="login_title">안녕하세요 사장님\n넥스트룸입니다</string>
     <string name="login_description">이메일과 비밀번호를 입력해주세요</string>
