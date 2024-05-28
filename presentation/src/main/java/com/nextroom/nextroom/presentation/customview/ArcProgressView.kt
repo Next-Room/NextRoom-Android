@@ -6,6 +6,7 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.text.TextPaint
@@ -27,6 +28,10 @@ class ArcProgressView @JvmOverloads constructor(
     private var handlePaint: Paint? = null
     private var textPaint: Paint? = null
     private val rectF = RectF()
+    private val endTextRect = Rect()
+    private var leftText: String = DEFAULT_LEFT_TEXT
+    private var rightText: String = DEFAULT_RIGHT_TEXT
+    private val textSpace: Float = 16.dp.toFloat()
 
     private var strokeWidth = 0f
         set(value) {
@@ -130,39 +135,28 @@ class ArcProgressView @JvmOverloads constructor(
 
             val edgeStartAngle = Math.toRadians(startAngle.toDouble()).toFloat()
             val edgeEndAngle = Math.toRadians(endAngle.toDouble()).toFloat()
-            val edgeTextY = rectF.centerY() + sin(edgeStartAngle) * radius + 30
+
+            getTextBounds(rightText, 0, rightText.length, endTextRect) // 글자 크기 측정
+            val edgeTextY = rectF.centerY() + sin(edgeStartAngle) * radius + endTextRect.height()
             val edgeStartX = rectF.centerX() + cos(edgeStartAngle) * radius
             val edgeEndX = rectF.centerX() + cos(edgeEndAngle) * radius
+
+            // 왼쪽 글자 (Start)
             canvas.drawText(
-                "Start",
-                edgeStartX + 30,
+                leftText,
+                edgeStartX + textSpace,
                 edgeTextY,
                 this,
-            ) // TODO Hard coding refactoring
-            canvas.drawText("End", edgeEndX - 120, edgeTextY, this) // TODO Hard coding refactoring
+            )
+
+            // 오른쪽 글자 (End)
+            canvas.drawText(
+                rightText,
+                edgeEndX - endTextRect.width() - textSpace,
+                edgeTextY,
+                this,
+            )
         }
-
-        /*val text = lastSeconds.toTimerFormat()
-
-        if (text.isNotBlank()) {
-            textPaint?.let {
-                it.color = progressTextColor
-                it.textSize = progressTextSize
-                try {
-                    it.typeface = Typeface.defaultFromStyle(R.style.Poppins_14)
-                } catch (_: ArrayIndexOutOfBoundsException) {
-                }
-                val textHeight = it.descent() + it.ascent()
-                val textBaseline = (height - textHeight) / 2.0f - 26.dp
-
-                canvas.drawText(
-                    text,
-                    (width - it.measureText(text)) / 2.0f,
-                    textBaseline,
-                    it,
-                )
-            }
-        }*/
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -226,6 +220,8 @@ class ArcProgressView @JvmOverloads constructor(
                 R.styleable.ArcProgress_arc_stroke_width,
                 defaultStrokeWidth,
             )
+            leftText = attributes.getString(R.styleable.ArcProgress_arc_left_text) ?: DEFAULT_LEFT_TEXT
+            rightText = attributes.getString(R.styleable.ArcProgress_arc_right_text) ?: DEFAULT_RIGHT_TEXT
         } finally {
             attributes.recycle()
         }
@@ -286,5 +282,7 @@ class ArcProgressView @JvmOverloads constructor(
         private const val DURATION = 500
         private const val DEFAULT_MAX = 100
         private const val DEFAULT_ARC_ANGLE = 270F
+        private const val DEFAULT_LEFT_TEXT = "Start"
+        private const val DEFAULT_RIGHT_TEXT = "End"
     }
 }
