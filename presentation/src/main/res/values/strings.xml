@@ -11,7 +11,7 @@
     <string name="link_privacy_policy">https://basalt-cathedral-c81.notion.site/fbb1f04ae70d473380e64d12ed013df8?pvs=4</string>
 
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
-    <string name="error_something">알 수 없는 문제가 발생했습니다. 잠시 후 다시 시도해주세요</string>
+    <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
 
     <string name="sign_up">회원가입</string>
 

@@ -82,6 +82,8 @@ class AdminMainViewModel @Inject constructor(
         viewModelScope.launch {
             adminRepository.resign().onSuccess {
                 postSideEffect(AdminMainEvent.OnResign)
+            }.onFailure {
+                postSideEffect(AdminMainEvent.UnknownError)
             }
         }
     }
