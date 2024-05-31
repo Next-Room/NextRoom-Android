@@ -16,6 +16,7 @@ interface AdminRepository {
      * */
     suspend fun login(adminCode: String, password: String): Result<LoginInfo>
     suspend fun logout()
+    suspend fun resign(): Result<Unit>
     suspend fun verifyAdminCode(code: String): Boolean
     suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus>
     suspend fun getUserSubscribe(): Result<UserSubscription>
