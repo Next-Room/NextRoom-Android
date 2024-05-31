@@ -78,6 +78,16 @@ class AdminMainViewModel @Inject constructor(
         viewModelScope.launch { adminRepository.logout() }
     }
 
+    fun resign() = intent {
+        viewModelScope.launch {
+            adminRepository.resign().onSuccess {
+                postSideEffect(AdminMainEvent.OnResign)
+            }.onFailure {
+                postSideEffect(AdminMainEvent.UnknownError)
+            }
+        }
+    }
+
     fun loadData() = intent {
         reduce { state.copy(loading = true) }
         /*adminRepository.getUserSubscribeStatus().suspendOnSuccess {
