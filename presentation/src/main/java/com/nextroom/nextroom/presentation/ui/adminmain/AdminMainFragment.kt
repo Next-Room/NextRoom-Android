@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -127,6 +128,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 //        }
         srlTheme.isRefreshing = false
         tvShopName.text = state.showName
+        llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
     }
 
