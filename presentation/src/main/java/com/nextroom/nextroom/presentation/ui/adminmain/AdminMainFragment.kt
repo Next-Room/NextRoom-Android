@@ -4,21 +4,26 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
+class AdminMainFragment :
+    BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
 
@@ -47,6 +52,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
@@ -82,6 +88,25 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
         }
+        tvResignButton.setOnClickListener {
+            AdminMainFragmentDirections
+                .actionGlobalNrTwoButtonDialog(
+                    NRTwoButtonDialog.NRTwoButtonArgument(
+                        title = getString(R.string.resign_dialog_title),
+                        message = getString(R.string.resign_dialog_message),
+                        posBtnText = getString(R.string.resign),
+                        negBtnText = getString(R.string.dialog_no),
+                        dialogKey = REQUEST_KEY_RESIGN,
+                    )
+                )
+                .also { findNavController().safeNavigate(it) }
+        }
+    }
+
+    private fun setFragmentResultListeners() {
+        setFragmentResultListener(REQUEST_KEY_RESIGN) { _, _ ->
+            viewModel.resign()
+        }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
@@ -103,6 +128,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
 //        }
         srlTheme.isRefreshing = false
         tvShopName.text = state.showName
+        llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
     }
 
@@ -111,6 +137,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
             is AdminMainEvent.NetworkError -> snackbar(R.string.error_network)
             is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
             is AdminMainEvent.ClientError -> snackbar(event.message)
+            is AdminMainEvent.OnResign -> toast(R.string.resign_success_message)
         }
     }
 
@@ -125,7 +152,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun goToMain(themeId: Int) {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(themeId = themeId)
+        val action =
+            AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(themeId = themeId)
         findNavController().safeNavigate(action)
     }
 
@@ -155,5 +183,9 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
+    }
+
+    companion object {
+        const val REQUEST_KEY_RESIGN = "REQUEST_KEY_RESIGN"
     }
 }

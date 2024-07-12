@@ -13,6 +13,7 @@ import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.ThemeLocalDataSource
 import com.nextroom.nextroom.data.datasource.ThemeRemoteDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
+import com.nextroom.nextroom.data.datasource.UserDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
 import com.nextroom.nextroom.data.db.ThemeDao
@@ -110,10 +111,17 @@ object RepositoryModule {
     @Provides
     fun provideAdminRepository(
         authDataSource: AuthDataSource,
+        userDataSource: UserDataSource,
         settingDataSource: SettingDataSource,
         tokenDataSource: TokenDataSource,
         subscriptionDataSource: SubscriptionDataSource,
-    ): AdminRepository = AdminRepositoryImpl(authDataSource, settingDataSource, tokenDataSource, subscriptionDataSource)
+    ): AdminRepository = AdminRepositoryImpl(
+        authDataSource = authDataSource,
+        userDataSource = userDataSource,
+        settingDataSource = settingDataSource,
+        tokenDataSource = tokenDataSource,
+        subscriptionDataSource = subscriptionDataSource,
+    )
 
     @Singleton
     @Provides
@@ -121,6 +129,11 @@ object RepositoryModule {
         @ApplicationContext context: Context,
         @Named("defaultApiService") apiSource: ApiService,
     ): AuthDataSource = AuthDataSource(context, apiSource)
+
+    @Provides
+    fun provideUserDataSource(
+        apiService: ApiService,
+    ): UserDataSource = UserDataSource(apiService)
 
     @Singleton
     @Provides

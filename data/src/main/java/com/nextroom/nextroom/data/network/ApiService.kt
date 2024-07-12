@@ -15,6 +15,7 @@ import com.nextroom.nextroom.data.network.response.UserSubscriptionStatusDto
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.request.TokenRefreshRequest
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -23,6 +24,9 @@ interface ApiService {
 
     @POST("api/v1/auth/login")
     suspend fun login(@Body loginRequest: LoginRequest): Result<BaseResponse<LoginDto>>
+
+    @DELETE("api/v1/auth/unregister")
+    suspend fun resign(): Result<Unit>
 
     @POST("api/v1/auth/reissue")
     suspend fun refreshToken(@Body refreshRequest: TokenRefreshRequest): Result<BaseResponse<TokenDto>>
