@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.counter
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -13,13 +12,9 @@ class CounterFragment : BaseFragment<FragmentStartTimerBinding>(FragmentStartTim
 
     private val viewModel: CounterViewModel by viewModels()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        enableFullScreen()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        enableFullScreen()
 
         viewModel.observe(viewLifecycleOwner, state = ::render)
     }
@@ -31,11 +26,5 @@ class CounterFragment : BaseFragment<FragmentStartTimerBinding>(FragmentStartTim
 
     private fun render(state: CounterState) = with(binding) {
         tvLastSeconds.text = state.lastSeconds.toString()
-
-//        if (state.timerState is TimerState.Finished) {
-//            val overflowTime = viewModel.getOverflowTimeMillis()
-//            val action = CounterFragmentDirections.actionStartTimerFragmentToMainFragment(overflowTime)
-//            findNavController().navigate(action)
-//        }
     }
 }

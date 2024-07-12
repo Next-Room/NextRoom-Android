@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -28,11 +27,6 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     private var scrolled: Boolean = false
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        enableFullScreen()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -41,6 +35,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        enableFullScreen()
         updateSystemPadding(false)
 
         tbHint.apply {

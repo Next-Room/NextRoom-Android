@@ -33,7 +33,6 @@ class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::infl
             override fun handleOnBackPressed() {}
         }
         requireActivity().onBackPressedDispatcher.addCallback(backCallback)
-        enableFullScreen()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -45,6 +44,7 @@ class MemoFragment : BaseFragment<FragmentMemoBinding>(FragmentMemoBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        enableFullScreen()
         updateSystemPadding(false)
 
         tbMemo.apply {

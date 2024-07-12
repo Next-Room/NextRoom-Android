@@ -12,6 +12,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
+import com.nextroom.nextroom.presentation.extension.disableFullScreen
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
@@ -38,7 +39,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             override fun handleOnBackPressed() {}
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
-        enableFullScreen()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,6 +57,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        enableFullScreen()
         updateSystemPadding(false)
 
         tbGame.apply {
@@ -148,8 +149,9 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     override fun onDetach() {
-        super.onDetach()
+        disableFullScreen()
         backCallback.remove()
+        super.onDetach()
     }
 
     companion object {

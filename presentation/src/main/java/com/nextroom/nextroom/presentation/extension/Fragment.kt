@@ -6,10 +6,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.Snackbar
 import com.nextroom.nextroom.presentation.common.NRSnackbar
+import com.nextroom.nextroom.presentation.util.WindowInsetsManager
 
 fun Fragment.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(requireContext(), message, duration).show()
@@ -83,30 +82,14 @@ fun Fragment.enableFullScreen(
     hideStatusBar: Boolean = true,
     hideNavigationBar: Boolean = true,
 ) {
-    lifecycle.addObserver(object : DefaultLifecycleObserver {
-        override fun onCreate(owner: LifecycleOwner) {
-            viewLifecycleOwnerLiveData.observe(this@enableFullScreen) { viewLifecycleOwner ->
-                viewLifecycleOwner?.lifecycle?.addObserver(object : DefaultLifecycleObserver {
-                    override fun onStart(owner: LifecycleOwner) {
-                        requireActivity().enableFullScreen(
-                            hideStatusBar = hideStatusBar,
-                            hideNavigationBar = hideNavigationBar,
-                        )
-                    }
+    viewLifecycleOwner.repeatOnStarted {
+        (requireActivity() as? WindowInsetsManager)?.enableFullScreen(
+            hideStatusBar = hideStatusBar,
+            hideNavigationBar = hideNavigationBar,
+        )
+    }
+}
 
-                    override fun onStop(owner: LifecycleOwner) {
-                        requireActivity().disableFullScreen()
-                    }
-
-                    override fun onDestroy(owner: LifecycleOwner) {
-                        viewLifecycleOwner.lifecycle.removeObserver(this)
-                    }
-                })
-            }
-        }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            lifecycle.removeObserver(this)
-        }
-    })
+fun Fragment.disableFullScreen() {
+    (requireActivity() as? WindowInsetsManager)?.disableFullScreen()
 }

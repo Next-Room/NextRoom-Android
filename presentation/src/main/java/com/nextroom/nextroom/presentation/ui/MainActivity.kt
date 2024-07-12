@@ -15,10 +15,14 @@ import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.databinding.ActivityMainBinding
 import com.nextroom.nextroom.presentation.extension.repeatOn
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.util.WindowInsetsManager
+import com.nextroom.nextroom.presentation.util.WindowInsetsManagerImpl
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity :
+    AppCompatActivity(),
+    WindowInsetsManager by WindowInsetsManagerImpl() {
     private lateinit var binding: ActivityMainBinding
 
     private val viewModel: MainViewModel by viewModels()
@@ -32,6 +36,8 @@ class MainActivity : AppCompatActivity() {
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(getColor(R.color.Dark01)),
         )
+        setActivity(this)
+
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
