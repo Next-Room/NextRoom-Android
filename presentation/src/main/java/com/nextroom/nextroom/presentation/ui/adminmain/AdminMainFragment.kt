@@ -13,8 +13,10 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
+import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
@@ -88,6 +90,7 @@ class AdminMainFragment :
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
         }
+        tvResignButton.addMargin(top = requireContext().statusBarHeight)
         tvResignButton.setOnClickListener {
             AdminMainFragmentDirections
                 .actionGlobalNrTwoButtonDialog(
