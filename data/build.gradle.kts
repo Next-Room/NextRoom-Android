@@ -68,6 +68,11 @@ dependencies {
 
     implementation(libs.firebase.config.ktx)
 
+    debugImplementation("com.facebook.flipper:flipper:0.200.0")
+    debugImplementation("com.facebook.soloader:soloader:0.10.4")
+    releaseImplementation("com.facebook.flipper:flipper-noop:0.200.0")
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:0.200.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 }

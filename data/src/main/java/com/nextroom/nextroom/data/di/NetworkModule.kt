@@ -1,5 +1,7 @@
 package com.nextroom.nextroom.data.di
 
+import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
+import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.nextroom.nextroom.data.BuildConfig
 import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
@@ -71,7 +73,11 @@ object NetworkModule {
     @Singleton
     @Provides
     @Named("authOkHttpClient")
-    fun provideAuthOkHttpClient(authInterceptor: AuthInterceptor, authAuthenticator: AuthAuthenticator): OkHttpClient {
+    fun provideAuthOkHttpClient(
+        authInterceptor: AuthInterceptor,
+        authAuthenticator: AuthAuthenticator,
+        flipperPlugin: NetworkFlipperPlugin,
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
@@ -85,13 +91,16 @@ object NetworkModule {
             .authenticator(authAuthenticator)
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
+            .addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
             .build()
     }
 
     @Singleton
     @Provides
     @Named("defaultOkHttpClient")
-    fun provideDefaultOkHttpClient(): OkHttpClient {
+    fun provideDefaultOkHttpClient(
+        flipperPlugin: NetworkFlipperPlugin,
+    ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
@@ -103,6 +112,7 @@ object NetworkModule {
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
+            .addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin))
             .build()
     }
 
@@ -120,5 +130,11 @@ object NetworkModule {
         @Named("defaultApiService") apiService: ApiService,
     ): AuthAuthenticator {
         return AuthAuthenticator(tokenDataSource, authDataSource, apiService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNetworkFlipperPlugin(): NetworkFlipperPlugin {
+        return NetworkFlipperPlugin()
     }
 }

@@ -66,6 +66,10 @@ dependencies {
     implementation(libs.bundles.firebase)
     implementation(libs.timber)
     implementation(libs.billing)
+    debugImplementation("com.facebook.flipper:flipper:0.200.0")
+    debugImplementation("com.facebook.soloader:soloader:0.10.4")
+    releaseImplementation("com.facebook.flipper:flipper-noop:0.200.0")
+    debugImplementation("com.facebook.flipper:flipper-network-plugin:0.200.0")
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
