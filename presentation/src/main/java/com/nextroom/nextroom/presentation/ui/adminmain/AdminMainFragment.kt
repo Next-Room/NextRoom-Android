@@ -13,15 +13,19 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
+import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
+class AdminMainFragment :
+    BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
 
@@ -35,9 +39,6 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
             onClickUpdate = viewModel::updateTheme,
         )
     }
-
-    private val state: AdminMainState
-        get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -73,7 +74,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun initViews() = with(binding) {
-//        ivMyButton.addMargin(top = requireContext().statusBarHeight)
+        updateSystemPadding(statusBar = false, navigationBar = true)
+
         rvThemes.adapter = adapter
 //        tvPurchaseTicketButton.setOnClickListener {
 //            goToPurchase()
@@ -88,6 +90,7 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
         }
+        tvResignButton.addMargin(top = requireContext().statusBarHeight)
         tvResignButton.setOnClickListener {
             AdminMainFragmentDirections
                 .actionGlobalNrTwoButtonDialog(
@@ -152,7 +155,8 @@ class AdminMainFragment : BaseFragment<FragmentAdminMainBinding>(FragmentAdminMa
     }
 
     private fun goToMain(themeId: Int) {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(themeId = themeId)
+        val action =
+            AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(themeId = themeId)
         findNavController().safeNavigate(action)
     }
 

@@ -10,8 +10,8 @@
         android:id="@+id/sv_admin_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:background="@color/Dark01">
+        android:background="@color/Dark01"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -45,7 +45,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- 결제 관련 -->
-
             <!--            <TextView-->
             <!--                android:id="@+id/tv_logout_button"-->
             <!--                style="@style/Pretendard.14.SemiBold"-->
@@ -129,19 +128,19 @@
                 android:id="@+id/ll_empty_theme_guide"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginVertical="24dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:layout_marginVertical="24dp"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_update_description"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_update_description">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_empty"/>
+                    android:src="@drawable/ic_empty" />
 
                 <TextView
                     style="@style/Pretendard.20"
@@ -149,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:gravity="center"
-                    android:text="@string/admin_main_empty_theme_guide"/>
+                    android:text="@string/admin_main_empty_theme_guide" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

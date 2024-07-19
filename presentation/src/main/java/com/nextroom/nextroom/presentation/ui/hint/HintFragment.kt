@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -13,6 +12,7 @@ import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
+import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.viewmodel.observe
@@ -27,11 +27,6 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     private var scrolled: Boolean = false
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        enableFullScreen()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -40,6 +35,9 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun initViews() = with(binding) {
+        enableFullScreen()
+        updateSystemPadding(false)
+
         tbHint.apply {
             tvButton.text = getString(R.string.memo_button)
             tvButton.setOnClickListener {

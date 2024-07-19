@@ -73,9 +73,6 @@
         android:label="VerifyFragment"
         tools:layout="@layout/fragment_admin_code">
 
-        <argument
-            android:name="themeId"
-            app:argType="integer" />
         <!--        <action-->
         <!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
         <!--            app:destination="@id/startTimerFragment" />-->

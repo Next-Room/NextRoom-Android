@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/Dark01"
-    android:backgroundTintMode="add"
-    android:fitsSystemWindows="true">
+    android:backgroundTintMode="add">
 
     <ImageView
         android:layout_width="0dp"
