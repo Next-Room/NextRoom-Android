@@ -24,9 +24,7 @@ class BillingViewModel
     private val purchases = billingClientLifecycle.subscriptionPurchases
 
     // 콘솔에 등록된 상품들 정보
-    private val largeSubProductWithProductDetails = billingClientLifecycle.largeSubProductWithProductDetails
-    private val mediumSubProductWithProductDetails = billingClientLifecycle.mediumSubProductWithProductDetails
-    private val miniSubProductWithProductDetails = billingClientLifecycle.miniSubProductWithProductDetails
+    private val membershipProductWithProductDetails = billingClientLifecycle.membershipProductWithProductDetails
 
     private val _buyEvent = MutableSharedFlow<BillingFlowParams>()
     val buyEvent = _buyEvent.asSharedFlow()
@@ -186,9 +184,7 @@ class BillingViewModel
         }
 
         when (productId) {
-            Constants.LARGE_PRODUCT -> largeSubProductWithProductDetails.value
-            Constants.MEDIUM_PRODUCT -> mediumSubProductWithProductDetails.value
-            Constants.MINI_PRODUCT -> miniSubProductWithProductDetails.value
+            Constants.MEMBERSHIP_PRODUCT -> membershipProductWithProductDetails.value
             else -> null
         }?.also { productDetails ->
             productDetails.subscriptionOfferDetails?.let { offerDetailsList ->
@@ -212,9 +208,7 @@ class BillingViewModel
         productDetails: ProductDetails,
     ) {
         val currentSubscriptionPurchaseCount = purchases.value.count {
-            it.products.contains(Constants.MINI_PRODUCT) ||
-                it.products.contains(Constants.MEDIUM_PRODUCT) ||
-                it.products.contains(Constants.LARGE_PRODUCT)
+            it.products.contains(Constants.MEMBERSHIP_PRODUCT)
         }
         if (currentSubscriptionPurchaseCount > EXPECTED_SUBSCRIPTION_PURCHASE_LIST_SIZE) {
             Timber.e("There are more than one subscription purchases on the device.")
@@ -227,9 +221,7 @@ class BillingViewModel
         }
 
         val oldToken = purchases.value.filter {
-            it.products.contains(Constants.MINI_PRODUCT) ||
-                it.products.contains(Constants.MEDIUM_PRODUCT) ||
-                it.products.contains(Constants.LARGE_PRODUCT)
+            it.products.contains(Constants.MEMBERSHIP_PRODUCT)
         }.firstOrNull { it.purchaseToken.isNotEmpty() }?.purchaseToken ?: ""
 
         val billingParams: BillingFlowParams = if (upDowngrade) {
