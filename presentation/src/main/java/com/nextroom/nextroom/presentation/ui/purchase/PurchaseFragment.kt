@@ -50,24 +50,10 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
     }
 
     private fun render(state: PurchaseState) = with(binding) {
-        tbPurchase.root.isInvisible = state.subscribeStatus in listOf(SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration)
-        tbPurchase.tvTitle.text = when (state.subscribeStatus) {
-            SubscribeStatus.Free -> getString(R.string.purchase_ticket)
-            SubscribeStatus.Subscription -> getString(R.string.purchase_change_ticket)
-            else -> ""
-        }
-        tvMainLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.Free -> getString(R.string.purchase_main_label_normal)
-            SubscribeStatus.Hold -> getString(R.string.purchase_main_label_free_end)
-            SubscribeStatus.Subscription -> getString(R.string.purchase_main_label_normal)
-            SubscribeStatus.SubscriptionExpiration -> getString(R.string.purchase_main_label_subscribe_end)
-            else -> ""
-        }
-        tvSubLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.Hold -> getString(R.string.purchase_sub_label_free_end)
-            SubscribeStatus.SubscriptionExpiration -> getString(R.string.purchase_sub_label_subscribe_end)
-            else -> ""
-        }
+        tbPurchase.root.isInvisible = state.subscribeStatus != SubscribeStatus.Subscribed
+        tbPurchase.tvTitle.text = getString(R.string.purchase_ticket)
+        tvMainLabel.text = getString(R.string.purchase_title)
+        tvSubLabel.text = getString(R.string.purchase_description)
         adapter.submitList(state.ticketsForUi)
     }
 
@@ -94,7 +80,13 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                                 findNavController().safeNavigate(it)
                             }
                     }
-                    is BillingEvent.PurchaseFailed -> toast(getString(R.string.purchase_error_message, event.purchaseState))
+
+                    is BillingEvent.PurchaseFailed -> toast(
+                        getString(
+                            R.string.purchase_error_message,
+                            event.purchaseState
+                        )
+                    )
                 }
             }
         }

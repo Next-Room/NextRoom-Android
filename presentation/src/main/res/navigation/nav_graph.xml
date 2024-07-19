@@ -156,7 +156,7 @@
         tools:layout="@layout/fragment_purchase">
         <argument
             android:name="subscribeStatus"
-            android:defaultValue="None"
+            android:defaultValue="Default"
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
         <action
             android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"

@@ -42,11 +42,11 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         groupRemoteData.isVisible = !state.loading
 
         tvShopName.text = state.shopName
-        tvPurchaseTicketButton.text = if (state.userSubscribeStatus.subscribeStatus == SubscribeStatus.Subscription) {
+        /*tvPurchaseTicketButton.text = if (state.userSubscribeStatus.subscribeStatus == SubscribeStatus.Subscription) {
             getString(R.string.purchase_change_ticket)
         } else {
             getString(R.string.purchase_ticket)
-        }
+        }*/
         tvSubsName.text = state.userSubscription?.type?.name ?: ""
         tvSubsPeriod.text = state.period
     }

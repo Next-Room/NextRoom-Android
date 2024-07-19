@@ -31,19 +31,15 @@ data class SubscribeItem(
  */
 data class UserSubscribeStatus(
     val subscriptionId: Long = 0L,
-    val subscribeStatus: SubscribeStatus = SubscribeStatus.None,
+    val subscribeStatus: SubscribeStatus = SubscribeStatus.Default,
     val expiryDate: String = "",
     val createdAt: String = "",
 )
 
 /**
- * @property None 아무것도 아닌 상태 (현재 사용하지 않음)
- * @property Free 무료 체험
- * @property Hold 유예 기간 (무료 체험 끝)
- * @property Expiration 유예 기간 만료
- * @property Subscription 구독
- * @property SubscriptionExpiration 구독 만료
+ * @property Default 아무것도 구독하지 않은 상태
+ * @property Subscribed 구독 중 상태
  */
 enum class SubscribeStatus {
-    None, Free, Hold, Expiration, Subscription, SubscriptionExpiration
+    Default, Subscribed
 }

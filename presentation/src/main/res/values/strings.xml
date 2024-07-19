@@ -91,6 +91,8 @@
     <string name="purchase_ticket">이용권 구매</string>
     <string name="purchase_change_ticket">이용권 변경</string>
     <string name="purchase_main_label_normal">방탈출 1인 가격보다,\n최저시급보다 저렴하게</string>
+    <string name="purchase_title">멤버십 회원을 위한 기능이 업데이트 될 예정입니다</string>
+    <string name="purchase_description">새로운 기능이 생기기 전까지 넥스트룸 운영을 위해 후원해주세요</string>
     <string name="purchase_main_label_subscribe_end">구독이 만료되었어요</string>
     <string name="purchase_main_label_free_end">무료 체험기간이 끝났어요</string>
     <string name="purchase_sub_label_subscribe_end">다시 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>

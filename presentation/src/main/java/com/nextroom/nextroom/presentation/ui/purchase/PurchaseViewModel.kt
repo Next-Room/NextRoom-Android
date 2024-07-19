@@ -23,7 +23,7 @@ class PurchaseViewModel @Inject constructor(
 ) : BaseViewModel<PurchaseState, PurchaseEvent>() {
     override val container: Container<PurchaseState, PurchaseEvent> = container(
         PurchaseState(
-            subscribeStatus = savedStateHandle["subscribeStatus"] ?: SubscribeStatus.None,
+            subscribeStatus = savedStateHandle["subscribeStatus"] ?: SubscribeStatus.Default,
             userSubscription = UserSubscription(SubscribeItem(id = "", name = "미니")),
         ),
     )

@@ -5,7 +5,7 @@ import com.nextroom.nextroom.domain.model.Ticket
 import com.nextroom.nextroom.domain.model.UserSubscription
 
 data class PurchaseState(
-    val subscribeStatus: SubscribeStatus = SubscribeStatus.None,
+    val subscribeStatus: SubscribeStatus = SubscribeStatus.Default,
     val userSubscription: UserSubscription? = UserSubscription(),
     private val tickets: List<Ticket> = emptyList(),
 ) {

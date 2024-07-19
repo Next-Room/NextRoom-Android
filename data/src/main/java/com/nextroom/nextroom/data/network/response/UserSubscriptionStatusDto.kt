@@ -16,12 +16,13 @@ data class UserSubscriptionStatusDto(
 ) {
     fun toDomain(): UserSubscribeStatus {
         val subsStatus = when (status.trim().uppercase()) {
-            "FREE" -> SubscribeStatus.Free
-            "HOLD" -> SubscribeStatus.Hold
-            "EXPIRATION" -> SubscribeStatus.Expiration
-            "SUBSCRIPTION" -> SubscribeStatus.Subscription
-            "SUBSCRIPTION_EXPIRATION" -> SubscribeStatus.SubscriptionExpiration
-            else -> SubscribeStatus.None
+//            "FREE" -> SubscribeStatus.Free
+//            "HOLD" -> SubscribeStatus.Hold
+//            "EXPIRATION" -> SubscribeStatus.Expiration
+//            "SUBSCRIPTION" -> SubscribeStatus.Subscription
+//            "SUBSCRIPTION_EXPIRATION" -> SubscribeStatus.SubscriptionExpiration
+//            else -> SubscribeStatus.None
+            else -> SubscribeStatus.Default
         }
         return UserSubscribeStatus(
             subscriptionId = id,

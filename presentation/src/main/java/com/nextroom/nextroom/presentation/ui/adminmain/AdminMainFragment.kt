@@ -8,10 +8,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -39,6 +39,8 @@ class AdminMainFragment :
             onClickUpdate = viewModel::updateTheme,
         )
     }
+    private val state: AdminMainState
+        get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -76,13 +78,15 @@ class AdminMainFragment :
     private fun initViews() = with(binding) {
         updateSystemPadding(statusBar = false, navigationBar = true)
 
+        ivMyButton.addMargin(top = requireContext().statusBarHeight)
+
         rvThemes.adapter = adapter
-//        tvPurchaseTicketButton.setOnClickListener {
-//            goToPurchase()
-//        }
-//        ivMyButton.setOnClickListener {
-//            goToMyPage()
-//        }
+        tvPurchaseButton.setOnClickListener {
+            goToPurchase()
+        }
+        ivMyButton.setOnClickListener {
+            goToMyPage()
+        }
 //        tvLogoutButton.apply {
 //            addMargin(top = requireContext().statusBarHeight)
 //            setOnClickListener { logout() }
@@ -90,7 +94,7 @@ class AdminMainFragment :
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
         }
-        tvResignButton.addMargin(top = requireContext().statusBarHeight)
+        /*tvResignButton.addMargin(top = requireContext().statusBarHeight)
         tvResignButton.setOnClickListener {
             AdminMainFragmentDirections
                 .actionGlobalNrTwoButtonDialog(
@@ -103,7 +107,7 @@ class AdminMainFragment :
                     )
                 )
                 .also { findNavController().safeNavigate(it) }
-        }
+        }*/
     }
 
     private fun setFragmentResultListeners() {
@@ -144,10 +148,10 @@ class AdminMainFragment :
         }
     }
 
-    /*private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
+    private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment(subscribeStatus)
         findNavController().safeNavigate(action)
-    }*/
+    }
 
     private fun goToMyPage() {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment()
