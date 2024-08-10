@@ -33,7 +33,7 @@ class TicketAdapter(
         fun bind(ticket: TicketUiModel) = with(binding) {
             item = ticket
 
-            tvName.text = ticket.plan
+            tvName.text = ticket.productName
             tvDescription.text = ticket.description
             tvOriginPrice.isVisible = ticket.originPrice != null
             ticket.originPrice?.let {

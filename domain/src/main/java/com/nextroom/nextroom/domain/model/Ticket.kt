@@ -2,8 +2,12 @@ package com.nextroom.nextroom.domain.model
 
 data class Ticket(
     val id: String,
-    val plan: String,
+    val subscriptionProductId: String,
+    val planId: String,
+    val productName: String,
     val description: String,
+    val subDescription: String,
     val originPrice: Int?,
     val sellPrice: Int,
+    val discountRate: Int,
 )
