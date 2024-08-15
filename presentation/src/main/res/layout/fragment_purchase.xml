@@ -105,11 +105,21 @@
         style="@style/Pretendard.24"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
         android:textColor="@color/White"
         app:layout_constraintBottom_toBottomOf="@id/tv_name"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        tools:text="9,900원/월" />
+        app:layout_constraintEnd_toStartOf="@id/tv_month"
+        tools:text="9,900원" />
+
+    <TextView
+        android:id="@+id/tv_month"
+        style="@style/Pretendard.16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="@string/per_month"
+        android:textColor="@color/White"
+        app:layout_constraintBottom_toBottomOf="@id/tv_name"
+        app:layout_constraintEnd_toEndOf="@id/guide_end" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_subscribe"
@@ -118,10 +128,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="48dp"
+        android:text="@string/ticket_subscribe"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:text="구독하기" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ProgressBar
         android:id="@+id/pb_loading"
