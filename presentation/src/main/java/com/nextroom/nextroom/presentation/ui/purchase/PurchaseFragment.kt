@@ -2,17 +2,13 @@ package com.nextroom.nextroom.presentation.ui.purchase
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.LinearSpaceDecoration
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
-import com.nextroom.nextroom.presentation.extension.dp
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toast
@@ -26,8 +22,6 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
 
     private val viewModel: PurchaseViewModel by viewModels()
     private val billingViewModel: BillingViewModel by activityViewModels()
-    private val adapter: TicketAdapter by lazy { TicketAdapter(viewModel::startPurchase) }
-    private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,22 +33,15 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
 
     private fun initViews() = with(binding) {
         tbPurchase.apply {
-            root.isVisible = false
+            tvTitle.text = getString(R.string.purchase_ticket)
             tvButton.isVisible = false
             ivBack.setOnClickListener { findNavController().popBackStack() }
-        }
-        rvSubscribes.apply {
-            adapter = this@PurchaseFragment.adapter
-            addItemDecoration(spacer)
         }
     }
 
     private fun render(state: PurchaseState) = with(binding) {
-        tbPurchase.root.isInvisible = state.subscribeStatus != SubscribeStatus.Subscribed
-        tbPurchase.tvTitle.text = getString(R.string.purchase_ticket)
         tvMainLabel.text = getString(R.string.purchase_title)
         tvSubLabel.text = getString(R.string.purchase_description)
-        adapter.submitList(state.ticketsForUi)
     }
 
     private fun handleEvent(event: PurchaseEvent) {
@@ -84,17 +71,11 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                     is BillingEvent.PurchaseFailed -> toast(
                         getString(
                             R.string.purchase_error_message,
-                            event.purchaseState
-                        )
+                            event.purchaseState,
+                        ),
                     )
                 }
             }
         }
-    }
-
-    override fun onDestroyView() {
-        binding.rvSubscribes.removeItemDecoration(spacer)
-        binding.rvSubscribes.adapter = null
-        super.onDestroyView()
     }
 }
