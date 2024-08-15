@@ -1,50 +1,78 @@
 package com.nextroom.nextroom.presentation.ui.purchase
 
-import androidx.lifecycle.SavedStateHandle
-import com.nextroom.nextroom.domain.model.SubscribeItem
-import com.nextroom.nextroom.domain.model.SubscribeStatus
-import com.nextroom.nextroom.domain.model.Ticket
-import com.nextroom.nextroom.domain.model.UserSubscription
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.BillingRepository
-import com.nextroom.nextroom.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
-import org.orbitmvi.orbit.syntax.simple.reduce
-import org.orbitmvi.orbit.viewmodel.container
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
 class PurchaseViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val billingRepository: BillingRepository,
-) : BaseViewModel<PurchaseState, PurchaseEvent>() {
-    override val container: Container<PurchaseState, PurchaseEvent> = container(
-        PurchaseState(
-            subscribeStatus = savedStateHandle["subscribeStatus"] ?: SubscribeStatus.Default,
-            userSubscription = UserSubscription(SubscribeItem(id = "", name = "미니")),
-        ),
-    )
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
     init {
         fetchTickets()
     }
 
-    fun startPurchase(ticket: Ticket) = intent {
-        postSideEffect(
-            PurchaseEvent.StartPurchase(
-                productId = ticket.id,
-                tag = "",
-                upDowngrade = (ticket.id == container.stateFlow.value.userSubscription?.type?.id),
-            ),
-        )
+    // TODO JH: 수정
+//    fun startPurchase(ticket: Ticket) = intent {
+//        postSideEffect(
+//            PurchaseEvent.StartPurchase(
+//                productId = ticket.id,
+//                tag = "",
+//                upDowngrade = (ticket.id == container.stateFlow.value.userSubscription?.type?.id),
+//            ),
+//        )
+//    }
+
+    private fun fetchTickets() {
+        viewModelScope.launch {
+            billingRepository.getTickets().onSuccess { tickets ->
+                tickets.firstOrNull()?.let { ticket ->
+                    UiState.Loaded(
+                        id = ticket.id,
+                        subscriptionProductId = ticket.subscriptionProductId,
+                        planId = ticket.planId,
+                        productName = ticket.productName,
+                        description = ticket.description,
+                        subDescription = ticket.subDescription,
+                        originPrice = DecimalFormat("#,###원").format(ticket.originPrice),
+                        sellPrice = DecimalFormat("#,###원").format(ticket.sellPrice),
+                        discountRate = ticket.discountRate,
+                    )
+                }?.also {
+                    _uiState.emit(it)
+                }
+            }.onFailure {
+                _uiState.emit(UiState.Failure)
+            }
+        }
     }
 
-    private fun fetchTickets() = intent {
-        billingRepository.getTickets().onSuccess { tickets ->
-            reduce { state.copy(tickets = tickets) }
-        }
+    sealed interface UiState {
+        data object Loading : UiState
+        data class Loaded(
+            val id: String,
+            val subscriptionProductId: String,
+            val planId: String,
+            val productName: String,
+            val description: String,
+            val subDescription: String,
+            val originPrice: String,
+            val sellPrice: String,
+            val discountRate: Int,
+        ) : UiState
+
+        data object Failure : UiState
     }
 }

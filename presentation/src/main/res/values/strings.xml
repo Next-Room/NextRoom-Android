@@ -108,4 +108,5 @@
     <string name="ticket_origin_price">%d원</string>
     <string name="ticket_sell_price">%d원/월</string>
     <string name="ticket_subscribing">구독중</string>
+    <string name="discount_rate">%d%%</string>
 </resources>

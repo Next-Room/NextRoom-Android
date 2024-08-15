@@ -11,11 +11,12 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.strikeThrow
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.orbitmvi.orbit.viewmodel.observe
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseBinding::inflate) {
@@ -27,7 +28,6 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
         initObserve()
     }
 
@@ -37,11 +37,6 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
             tvButton.isVisible = false
             ivBack.setOnClickListener { findNavController().popBackStack() }
         }
-    }
-
-    private fun render(state: PurchaseState) = with(binding) {
-        tvMainLabel.text = getString(R.string.purchase_title)
-        tvSubLabel.text = getString(R.string.purchase_description)
     }
 
     private fun handleEvent(event: PurchaseEvent) {
@@ -58,23 +53,48 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
 
     private fun initObserve() {
         viewLifecycleOwner.repeatOnStarted {
-            billingViewModel.uiEvent.collect { event ->
-                when (event) {
-                    BillingEvent.PurchaseAcknowledged -> {
-                        PurchaseFragmentDirections
-                            .actionPurchaseFragmentToPurchaseSuccessFragment()
-                            .also {
-                                findNavController().safeNavigate(it)
-                            }
+            launch {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        PurchaseViewModel.UiState.Failure -> Unit // TODO JH: 처리 필요
+                        is PurchaseViewModel.UiState.Loaded -> updateUi(state)
+                        PurchaseViewModel.UiState.Loading -> Unit // TODO JH: 처리 필요
                     }
-
-                    is BillingEvent.PurchaseFailed -> toast(
-                        getString(
-                            R.string.purchase_error_message,
-                            event.purchaseState,
-                        ),
-                    )
                 }
+            }
+            launch {
+                billingViewModel.uiEvent.collect { event ->
+                    when (event) {
+                        BillingEvent.PurchaseAcknowledged -> {
+                            PurchaseFragmentDirections
+                                .actionPurchaseFragmentToPurchaseSuccessFragment()
+                                .also {
+                                    findNavController().safeNavigate(it)
+                                }
+                        }
+
+                        is BillingEvent.PurchaseFailed -> toast(
+                            getString(
+                                R.string.purchase_error_message,
+                                event.purchaseState,
+                            ),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateUi(loaded: PurchaseViewModel.UiState.Loaded) {
+        with(binding) {
+            with(loaded) {
+                tvMainLabel.text = description
+                tvSubLabel.text = subDescription
+                tvName.text = productName
+                tvDiscountRate.text = getString(R.string.discount_rate, discountRate)
+                tvOriginPrice.text = originPrice
+                tvOriginPrice.strikeThrow()
+                tvSellPrice.text = sellPrice
             }
         }
     }
