@@ -6,9 +6,9 @@ import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.datasource.UserDataSource
 import com.nextroom.nextroom.domain.model.LoginInfo
+import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
-import com.nextroom.nextroom.domain.model.UserSubscription
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import kotlinx.coroutines.flow.Flow
@@ -51,7 +51,7 @@ class AdminRepositoryImpl @Inject constructor(
         return subscriptionDataSource.getUserSubscriptionStatus()
     }
 
-    override suspend fun getUserSubscribe(): Result<UserSubscription> {
+    override suspend fun getUserSubscribe(): Result<Mypage> {
         return subscriptionDataSource.getUserSubscription()
     }
 }

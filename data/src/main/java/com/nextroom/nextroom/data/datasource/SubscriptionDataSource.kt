@@ -1,10 +1,10 @@
 package com.nextroom.nextroom.data.datasource
 
 import com.nextroom.nextroom.data.network.ApiService
+import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.Ticket
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
-import com.nextroom.nextroom.domain.model.UserSubscription
 import com.nextroom.nextroom.domain.model.mapOnSuccess
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ class SubscriptionDataSource @Inject constructor(
         }
     }
 
-    suspend fun getUserSubscription(): Result<UserSubscription> {
+    suspend fun getUserSubscription(): Result<Mypage> {
         return apiService.getMypageInfo().mapOnSuccess { it.data.toDomain() }
     }
 

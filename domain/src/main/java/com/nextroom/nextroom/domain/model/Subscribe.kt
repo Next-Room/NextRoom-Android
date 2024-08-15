@@ -40,6 +40,13 @@ data class UserSubscribeStatus(
  * @property Default 아무것도 구독하지 않은 상태
  * @property Subscribed 구독 중 상태
  */
-enum class SubscribeStatus {
-    Default, Subscribed
+enum class SubscribeStatus(val value: String) {
+    Default("FREE"),
+    Subscribed("SUBSCRIPTION");
+
+    companion object {
+        fun ofValue(value: String): SubscribeStatus {
+            return entries.find { it.value.uppercase() == value.uppercase() } ?: Default
+        }
+    }
 }
