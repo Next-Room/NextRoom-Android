@@ -1,53 +1,57 @@
 package com.nextroom.nextroom.presentation.ui.mypage
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.domain.model.onFailure
+import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
-import com.nextroom.nextroom.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.reduce
-import org.orbitmvi.orbit.viewmodel.container
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MypageViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
-) : BaseViewModel<MypageState, Nothing>() {
+) : ViewModel() {
 
-    override val container: Container<MypageState, Nothing> = container(MypageState(loading = true))
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
     init {
-        fetchShopName()
-        fetchSubsInfo()
+        fetchMyInfo()
     }
 
-    fun logout() = intent {
-        adminRepository.logout()
-    }
-
-    private fun fetchShopName() = intent {
-        adminRepository.shopName.collect {
-            reduce { state.copy(shopName = it) }
+    fun logout() {
+        viewModelScope.launch {
+            adminRepository.logout()
         }
     }
 
-    private fun fetchSubsInfo() = intent {
-        reduce { state.copy(loading = true) }
-        // TODO JH: 임시로 주석
-//        adminRepository.getUserSubscribeStatus().suspendConcatMap(
-//            other = adminRepository.geUserSubscribe(),
-//        ) { subsStatus, mypageInfo ->
-//            reduce {
-//                state.copy(
-//                    loading = false,
-//                    userSubscribeStatus = subsStatus,
-//                    userSubscription = mypageInfo,
-//                )
-//            }
-//        }.onFinally {
-//            reduce {
-//                state.copy(loading = false)
-//            }
-//        }
+    private fun fetchMyInfo() {
+        viewModelScope.launch {
+            adminRepository.getUserSubscribe().onSuccess { mypage ->
+                UiState.Loaded(
+                    shopName = mypage.name,
+                    status = mypage.status,
+                ).also {
+                    _uiState.emit(it)
+                }
+            }.onFailure {
+                _uiState.emit(UiState.Failure)
+            }
+        }
+    }
+
+    sealed interface UiState {
+        data object Loading : UiState
+        data class Loaded(
+            val shopName: String,
+            val status: SubscribeStatus,
+        ) : UiState
+
+        data object Failure : UiState
     }
 }

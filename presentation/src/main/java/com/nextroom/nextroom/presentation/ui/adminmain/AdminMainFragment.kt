@@ -8,7 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -148,8 +147,8 @@ class AdminMainFragment :
         }
     }
 
-    private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment(subscribeStatus)
+    private fun goToPurchase() {
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 
