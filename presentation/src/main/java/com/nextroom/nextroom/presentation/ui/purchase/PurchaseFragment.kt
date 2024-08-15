@@ -57,8 +57,12 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 viewModel.uiState.collect { state ->
                     when (state) {
                         PurchaseViewModel.UiState.Failure -> Unit // TODO JH: 처리 필요
-                        is PurchaseViewModel.UiState.Loaded -> updateUi(state)
-                        PurchaseViewModel.UiState.Loading -> Unit // TODO JH: 처리 필요
+                        is PurchaseViewModel.UiState.Loaded -> {
+                            binding.pbLoading.isVisible = false
+                            updateUi(state)
+                        }
+
+                        PurchaseViewModel.UiState.Loading -> binding.pbLoading.isVisible = true
                     }
                 }
             }
