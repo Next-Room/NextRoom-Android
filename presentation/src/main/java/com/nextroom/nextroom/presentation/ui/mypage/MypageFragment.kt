@@ -33,13 +33,15 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
             tvTitle.text = getString(R.string.mypage_title)
             ivBack.setOnClickListener { findNavController().popBackStack() }
         }
-        tvPurchaseTicketButton.setOnClickListener { goToPurchase(state.userSubscribeStatus.subscribeStatus) }
+        // TODO JH: 수정 예정
+//        tvPurchaseTicketButton.setOnClickListener { goToPurchase(state.userSubscribeStatus.subscribeStatus) }
         tvLogoutButton.setOnClickListener { viewModel.logout() }
     }
 
     private fun render(state: MypageState) = with(binding) {
         pbLoading.isVisible = state.loading
-        groupRemoteData.isVisible = !state.loading
+        // TODO JH: 수정 예정
+//        groupRemoteData.isVisible = !state.loading
 
         tvShopName.text = state.shopName
         /*tvPurchaseTicketButton.text = if (state.userSubscribeStatus.subscribeStatus == SubscribeStatus.Subscription) {
@@ -47,8 +49,9 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         } else {
             getString(R.string.purchase_ticket)
         }*/
-        tvSubsName.text = state.userSubscription?.type?.name ?: ""
-        tvSubsPeriod.text = state.period
+        // TODO JH: 수정 예정
+//        tvSubsName.text = state.userSubscription?.type?.name ?: ""
+//        tvSubsPeriod.text = state.period
     }
 
     private fun goToPurchase(subscribeStatus: SubscribeStatus) {
