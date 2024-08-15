@@ -24,17 +24,6 @@ class PurchaseViewModel @Inject constructor(
         fetchTickets()
     }
 
-    // TODO JH: 수정
-//    fun startPurchase(ticket: Ticket) = intent {
-//        postSideEffect(
-//            PurchaseEvent.StartPurchase(
-//                productId = ticket.id,
-//                tag = "",
-//                upDowngrade = (ticket.id == container.stateFlow.value.userSubscription?.type?.id),
-//            ),
-//        )
-//    }
-
     private fun fetchTickets() {
         viewModelScope.launch {
             billingRepository.getTickets().onSuccess { tickets ->

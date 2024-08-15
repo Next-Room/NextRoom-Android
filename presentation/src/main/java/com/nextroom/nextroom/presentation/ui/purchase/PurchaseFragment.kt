@@ -28,6 +28,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        initListeners()
         initObserve()
     }
 
@@ -35,17 +36,18 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         tbPurchase.apply {
             tvTitle.text = getString(R.string.purchase_ticket)
             tvButton.isVisible = false
-            ivBack.setOnClickListener { findNavController().popBackStack() }
         }
     }
 
-    private fun handleEvent(event: PurchaseEvent) {
-        when (event) {
-            is PurchaseEvent.StartPurchase -> {
+    private fun initListeners() {
+        binding.tbPurchase.ivBack.setOnClickListener { findNavController().popBackStack() }
+
+        binding.btnSubscribe.setOnClickListener {
+            (viewModel.uiState.value as? PurchaseViewModel.UiState.Loaded)?.let { loaded ->
                 billingViewModel.buyPlans(
-                    productId = event.productId,
-                    tag = event.tag,
-                    upDowngrade = event.upDowngrade,
+                    productId = loaded.id,
+                    tag = "",
+                    upDowngrade = false,
                 )
             }
         }
