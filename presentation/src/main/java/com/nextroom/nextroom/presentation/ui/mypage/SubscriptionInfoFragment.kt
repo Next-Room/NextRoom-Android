@@ -10,6 +10,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentSubscriptionInfoBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.extension.snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -40,7 +41,7 @@ class SubscriptionInfoFragment :
             launch {
                 viewModel.uiState.collect { state ->
                     when (state) {
-                        SubscriptionInfoViewModel.UiState.Failure -> Unit // TODO JH: 처리 어떻게 할지 결정
+                        SubscriptionInfoViewModel.UiState.Failure -> snackbar(R.string.error_something)
                         is SubscriptionInfoViewModel.UiState.Loaded -> {
                             binding.tvSubscriptionStatus.text = when (state.subscribeStatus) {
                                 SubscribeStatus.Default -> getString(R.string.ticket_subscribing)

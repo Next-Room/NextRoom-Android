@@ -11,6 +11,7 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.strikeThrow
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
@@ -58,7 +59,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
             launch {
                 viewModel.uiState.collect { state ->
                     when (state) {
-                        PurchaseViewModel.UiState.Failure -> Unit // TODO JH: 처리 필요
+                        PurchaseViewModel.UiState.Failure -> snackbar(R.string.error_something)
                         is PurchaseViewModel.UiState.Loaded -> {
                             binding.pbLoading.isVisible = false
                             updateUi(state)

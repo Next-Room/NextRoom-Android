@@ -58,7 +58,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
             launch {
                 viewModel.uiState.collect { state ->
                     when (state) {
-                        MypageViewModel.UiState.Failure -> Unit // TODO JH: 처리 어떻게 할지 결정
+                        MypageViewModel.UiState.Failure -> snackbar(R.string.error_something)
                         is MypageViewModel.UiState.Loaded -> {
                             binding.tvShopName.text = state.shopName
                             binding.pbLoading.isVisible = false
