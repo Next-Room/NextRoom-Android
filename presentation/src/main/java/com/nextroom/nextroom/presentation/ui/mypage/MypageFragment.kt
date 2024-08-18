@@ -3,14 +3,18 @@ package com.nextroom.nextroom.presentation.ui.mypage
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentMypageBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,6 +29,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         initViews()
         initListeners()
         initObserve()
+        setFragmentResultListeners()
     }
 
     private fun initViews() = with(binding) {
@@ -37,6 +42,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     private fun initListeners() = with(binding) {
         tbMypage.ivBack.setOnClickListener { findNavController().popBackStack() }
         tvLogoutButton.setOnClickListener { viewModel.logout() }
+        tvResignButton.setOnClickListener { showConfirmResignDialog() }
         clSubscribe.setOnClickListener {
             (viewModel.uiState.value as? MypageViewModel.UiState.Loaded)?.let { loaded ->
                 when (loaded.status) {
@@ -62,6 +68,20 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                     }
                 }
             }
+            launch {
+                viewModel.uiEvent.collect { event ->
+                    when (event) {
+                        MypageViewModel.UiEvent.ResignFail -> snackbar(R.string.error_something)
+                        MypageViewModel.UiEvent.ResignSuccess -> toast(R.string.resign_success_message)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setFragmentResultListeners() {
+        setFragmentResultListener(REQUEST_KEY_RESIGN) { _, _ ->
+            viewModel.resign()
         }
     }
 
@@ -73,5 +93,22 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     private fun goToSubscriptionInfo() {
         val action = MypageFragmentDirections.actionMypageFragmentToSubscriptionFragment()
         findNavController().safeNavigate(action)
+    }
+
+    private fun showConfirmResignDialog() {
+        MypageFragmentDirections
+            .actionGlobalNrTwoButtonDialog(
+                NRTwoButtonDialog.NRTwoButtonArgument(
+                    title = getString(R.string.resign_dialog_title),
+                    message = getString(R.string.resign_dialog_message),
+                    posBtnText = getString(R.string.resign),
+                    negBtnText = getString(R.string.dialog_no),
+                    dialogKey = REQUEST_KEY_RESIGN,
+                ),
+            ).also { findNavController().safeNavigate(it) }
+    }
+
+    companion object {
+        const val REQUEST_KEY_RESIGN = "REQUEST_KEY_RESIGN"
     }
 }

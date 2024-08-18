@@ -7,7 +7,9 @@ import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,9 @@ class MypageViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     init {
         fetchMyInfo()
@@ -45,6 +50,16 @@ class MypageViewModel @Inject constructor(
         }
     }
 
+    fun resign() {
+        viewModelScope.launch {
+            adminRepository.resign().onSuccess {
+                _uiEvent.emit(UiEvent.ResignSuccess)
+            }.onFailure {
+                _uiEvent.emit(UiEvent.ResignFail)
+            }
+        }
+    }
+
     sealed interface UiState {
         data object Loading : UiState
         data class Loaded(
@@ -53,5 +68,10 @@ class MypageViewModel @Inject constructor(
         ) : UiState
 
         data object Failure : UiState
+    }
+
+    sealed interface UiEvent {
+        data object ResignSuccess : UiEvent
+        data object ResignFail : UiEvent
     }
 }
