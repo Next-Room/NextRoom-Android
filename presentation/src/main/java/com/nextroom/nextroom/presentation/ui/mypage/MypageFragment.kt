@@ -41,7 +41,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
             (viewModel.uiState.value as? MypageViewModel.UiState.Loaded)?.let { loaded ->
                 when (loaded.status) {
                     SubscribeStatus.Default -> goToPurchase()
-                    SubscribeStatus.Subscribed -> Unit // TODO JH: 구독중일 때 처리 구현
+                    SubscribeStatus.Subscribed -> goToSubscriptionInfo()
                 }
             }
         }
@@ -67,6 +67,11 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private fun goToPurchase() {
         val action = MypageFragmentDirections.actionMypageFragmentToPurchaseFragment()
+        findNavController().safeNavigate(action)
+    }
+
+    private fun goToSubscriptionInfo() {
+        val action = MypageFragmentDirections.actionMypageFragmentToSubscriptionFragment()
         findNavController().safeNavigate(action)
     }
 }

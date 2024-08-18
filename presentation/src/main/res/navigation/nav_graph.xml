@@ -148,7 +148,14 @@
         <action
             android:id="@+id/action_mypageFragment_to_purchaseFragment"
             app:destination="@id/purchaseFragment" />
+        <action
+            android:id="@+id/action_mypageFragment_to_subscriptionFragment"
+            app:destination="@id/subscriptionFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/subscriptionFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.mypage.SubscriptionInfoFragment"
+        tools:layout="@layout/fragment_subscription_info" />
     <fragment
         android:id="@+id/purchaseFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
