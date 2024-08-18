@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
@@ -55,7 +54,6 @@ class AdminMainFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
@@ -86,32 +84,9 @@ class AdminMainFragment :
         ivMyButton.setOnClickListener {
             goToMyPage()
         }
-//        tvLogoutButton.apply {
-//            addMargin(top = requireContext().statusBarHeight)
-//            setOnClickListener { logout() }
-//        }
+
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
-        }
-        /*tvResignButton.addMargin(top = requireContext().statusBarHeight)
-        tvResignButton.setOnClickListener {
-            AdminMainFragmentDirections
-                .actionGlobalNrTwoButtonDialog(
-                    NRTwoButtonDialog.NRTwoButtonArgument(
-                        title = getString(R.string.resign_dialog_title),
-                        message = getString(R.string.resign_dialog_message),
-                        posBtnText = getString(R.string.resign),
-                        negBtnText = getString(R.string.dialog_no),
-                        dialogKey = REQUEST_KEY_RESIGN,
-                    )
-                )
-                .also { findNavController().safeNavigate(it) }
-        }*/
-    }
-
-    private fun setFragmentResultListeners() {
-        setFragmentResultListener(REQUEST_KEY_RESIGN) { _, _ ->
-            viewModel.resign()
         }
     }
 
@@ -119,19 +94,6 @@ class AdminMainFragment :
         if (state.loading) return@with
 
 //        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.Subscription
-//        when (state.userSubscribeStatus.subscribeStatus) {
-//            SubscribeStatus.Expiration -> logout()
-//            SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
-//            SubscribeStatus.Free -> {
-//                if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
-//                    state.calculateDday().let { dday ->
-//                        if (dday >= 0) showDialog(dday)
-//                    }
-//                }
-//            }
-//
-//            SubscribeStatus.None, SubscribeStatus.Subscription -> Unit
-//        }
         srlTheme.isRefreshing = false
         tvShopName.text = state.showName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
@@ -163,24 +125,6 @@ class AdminMainFragment :
         findNavController().safeNavigate(action)
     }
 
-    /*private fun showDialog(dDay: Int) {
-        NRImageDialog.Builder(requireContext())
-            .setTitle(getString(R.string.dialog_free_plan_title, dDay))
-            .setMessage(getString(R.string.dialog_free_plan_message))
-            .setImage(R.drawable.ticket)
-            .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
-                goToPurchase()
-            }
-            .show(childFragmentManager)
-    }*/
-
-    private fun logout() {
-        viewModel.logout()
-    }
-
     override fun onDestroyView() {
         binding.rvThemes.adapter = null
         super.onDestroyView()
@@ -189,9 +133,5 @@ class AdminMainFragment :
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
-    }
-
-    companion object {
-        const val REQUEST_KEY_RESIGN = "REQUEST_KEY_RESIGN"
     }
 }

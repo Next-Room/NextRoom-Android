@@ -32,9 +32,6 @@ class AdminMainViewModel @Inject constructor(
 
     override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
 
-    val isFirstLaunchOfDay: Boolean
-        get() = dataStoreRepository.isFirstInitOfDay
-
     init {
         loadData()
 
@@ -71,20 +68,6 @@ class AdminMainViewModel @Inject constructor(
         themeRepository.updateLatestTheme(themeId)
         withContext(Dispatchers.Main) {
             readyToStart()
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch { adminRepository.logout() }
-    }
-
-    fun resign() = intent {
-        viewModelScope.launch {
-            adminRepository.resign().onSuccess {
-                postSideEffect(AdminMainEvent.OnResign)
-            }.onFailure {
-                postSideEffect(AdminMainEvent.UnknownError)
-            }
         }
     }
 
