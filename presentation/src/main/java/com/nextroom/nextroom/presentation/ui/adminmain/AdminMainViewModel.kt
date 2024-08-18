@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -73,8 +74,8 @@ class AdminMainViewModel @Inject constructor(
 
     fun loadData() = intent {
         reduce { state.copy(loading = true) }
-        /*adminRepository.getUserSubscribeStatus().suspendOnSuccess {
-            reduce { state.copy(userSubscribeStatus = it) }
+        adminRepository.getUserSubscribe().suspendOnSuccess {
+            reduce { state.copy(subscribeStatus = it.status) }
             themeRepository.getThemes().onSuccess {
                 updateThemes(
                     it.map { themeInfo ->
@@ -83,7 +84,7 @@ class AdminMainViewModel @Inject constructor(
                     },
                 )
             }
-        }*/
+        }
         themeRepository.getThemes().onSuccess {
             updateThemes(
                 it.map { themeInfo ->

@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -92,7 +93,7 @@ class AdminMainFragment :
     private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
 
-//        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.Subscription
+        tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed
         srlTheme.isRefreshing = false
         tvShopName.text = state.showName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
