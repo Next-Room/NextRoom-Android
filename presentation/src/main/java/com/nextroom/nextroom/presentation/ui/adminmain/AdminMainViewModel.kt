@@ -97,7 +97,7 @@ class AdminMainViewModel @Inject constructor(
     }
 
     private fun updateShopInfo(shopName: String) = intent {
-        reduce { state.copy(showName = shopName) }
+        reduce { state.copy(shopName = shopName) }
     }
 
     private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {

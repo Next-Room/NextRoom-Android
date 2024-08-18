@@ -95,7 +95,7 @@ class AdminMainFragment :
 
         tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed
         srlTheme.isRefreshing = false
-        tvShopName.text = state.showName
+        tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
     }
