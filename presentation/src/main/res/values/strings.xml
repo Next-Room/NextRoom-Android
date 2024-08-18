@@ -103,13 +103,17 @@
     <string name="purchase_success_content">지금 바로 넥스트룸을 사용해보세요</string>
     <string name="purchase_error_message">일시적인 오류이거나 서비스 장애입니다. 다시 시도하여도 해당 메시지가 계속 보일 경우 상태 코드와 함께 문의 바랍니다.\n상태 코드: %d</string>
     <string name="expire_period">구독 기간</string>
+    <string name="subscription_status">구독 상태</string>
+    <string name="subscription_info">구독 정보</string>
     <string name="mypage_button_description">마이페이지 이동</string>
     <string name="mypage_title">My</string>
     <string name="ticket_origin_price">%d원</string>
     <string name="ticket_sell_price">%d원/월</string>
     <string name="ticket_subscribing">구독중</string>
+    <string name="ticket_not_subscribe">구독하지 않음</string>
     <string name="ticket_subscribe">구독하기</string>
     <string name="subscribe">구독</string>
     <string name="per_month">/월</string>
     <string name="discount_rate">%d%%</string>
+    <string name="date_range_format">%s ~ %s</string>
 </resources>
