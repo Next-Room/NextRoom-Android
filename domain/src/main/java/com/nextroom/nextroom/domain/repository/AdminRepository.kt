@@ -20,4 +20,8 @@ interface AdminRepository {
     suspend fun verifyAdminCode(code: String): Boolean
     suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus>
     suspend fun getUserSubscribe(): Result<Mypage>
+
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    fun setDeveloperMode()
+    fun getIsDeveloperMode(): Boolean
 }

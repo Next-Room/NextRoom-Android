@@ -29,6 +29,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <!-- 구독 서비스 정규 오픈시 삭제 -->
+            <TextView
+                android:id="@+id/tv_secret_button"
+                android:layout_width="40dp"
+                android:layout_height="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_my_button" />
+
             <!-- 결제 관련 -->
             <TextView
                 android:id="@+id/tv_purchase_button"
@@ -41,6 +49,7 @@
                 android:paddingVertical="6dp"
                 android:text="@string/purchase_ticket"
                 android:textColor="@color/White"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/iv_my_button"
                 app:layout_constraintEnd_toStartOf="@id/iv_my_button"
                 app:layout_constraintTop_toTopOf="@id/iv_my_button"

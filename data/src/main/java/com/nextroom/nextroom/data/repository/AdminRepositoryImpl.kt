@@ -26,6 +26,9 @@ class AdminRepositoryImpl @Inject constructor(
 
     override val shopName: Flow<String> = settingDataSource.shopName
 
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    var isDeveloperMode = false
+
     override suspend fun login(adminCode: String, password: String): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
@@ -54,4 +57,11 @@ class AdminRepositoryImpl @Inject constructor(
     override suspend fun getUserSubscribe(): Result<Mypage> {
         return subscriptionDataSource.getUserSubscription()
     }
+
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    override fun setDeveloperMode() {
+        isDeveloperMode = true
+    }
+
+    override fun getIsDeveloperMode() = isDeveloperMode
 }

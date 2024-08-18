@@ -77,6 +77,9 @@ class MypageViewModel @Inject constructor(
         }
     }
 
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    fun getIsDeveloperMode() = adminRepository.getIsDeveloperMode()
+
     sealed interface UiState {
         data object Loading : UiState
         data class Loaded(
