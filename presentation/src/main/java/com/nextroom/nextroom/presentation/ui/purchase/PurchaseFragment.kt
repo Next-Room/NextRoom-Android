@@ -46,7 +46,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         binding.btnSubscribe.setOnClickListener {
             (viewModel.uiState.value as? PurchaseViewModel.UiState.Loaded)?.let { loaded ->
                 billingViewModel.buyPlans(
-                    productId = loaded.id,
+                    productId = loaded.subscriptionProductId,
                     tag = "",
                     upDowngrade = false,
                 )
