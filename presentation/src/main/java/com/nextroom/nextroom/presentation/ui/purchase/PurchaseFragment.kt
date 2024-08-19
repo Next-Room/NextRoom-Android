@@ -45,6 +45,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
 
         binding.btnSubscribe.setOnClickListener {
             (viewModel.uiState.value as? PurchaseViewModel.UiState.Loaded)?.let { loaded ->
+                binding.pbLoading.isVisible = true // TODO JH: 개선
                 billingViewModel.buyPlans(
                     productId = loaded.subscriptionProductId,
                     tag = "",
@@ -80,12 +81,15 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                                 }
                         }
 
-                        is BillingEvent.PurchaseFailed -> toast(
-                            getString(
-                                R.string.purchase_error_message,
-                                event.purchaseState,
-                            ),
-                        )
+                        is BillingEvent.PurchaseFailed -> {
+                            toast(
+                                getString(
+                                    R.string.purchase_error_message,
+                                    event.purchaseState,
+                                ),
+                            )
+                            binding.pbLoading.isVisible = false // TODO JH: 개선
+                        }
                     }
                 }
             }
