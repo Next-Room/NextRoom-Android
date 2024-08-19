@@ -44,8 +44,8 @@ class SubscriptionInfoFragment :
                         SubscriptionInfoViewModel.UiState.Failure -> snackbar(R.string.error_something)
                         is SubscriptionInfoViewModel.UiState.Loaded -> {
                             binding.tvSubscriptionStatus.text = when (state.subscribeStatus) {
-                                SubscribeStatus.Default -> getString(R.string.ticket_subscribing)
-                                SubscribeStatus.Subscribed -> getString(R.string.ticket_not_subscribe)
+                                SubscribeStatus.Default -> getString(R.string.ticket_not_subscribe)
+                                SubscribeStatus.Subscribed -> getString(R.string.ticket_subscribing)
                             }
                             binding.tvSubscriptionPeriod.text = getSubscriptionPeriod(state.startDate, state.endDate)
                             binding.pbLoading.isVisible = false
