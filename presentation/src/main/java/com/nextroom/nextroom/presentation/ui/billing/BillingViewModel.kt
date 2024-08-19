@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
+import com.nextroom.nextroom.domain.model.onFailure
+import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.repository.BillingRepository
 import com.nextroom.nextroom.presentation.ui.Constants
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +21,7 @@ import javax.inject.Inject
 class BillingViewModel
 @Inject constructor(
     billingClientLifecycle: BillingClientLifecycle,
+    billingRepository: BillingRepository,
 ) : ViewModel() {
 
     // 사용자의 현재 구독 상품 구매 정보
@@ -44,8 +48,14 @@ class BillingViewModel
             purchases.collect {
                 it.forEach { purchase ->
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                        // TODO JH: 서버에서 ack 로직 구현 완료시 제거 + purchaseToken 보내는 API 호출
-                        billingClientLifecycle.acknowledgePurchase(purchase.purchaseToken)
+                        billingRepository
+                            .postPurchaseToken(purchase.purchaseToken)
+                            .onSuccess {
+                                _uiEvent.emit(BillingEvent.PurchaseAcknowledged)
+                            }
+                            .onFailure {
+                                _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
+                            }
                     } else {
                         _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
                     }
