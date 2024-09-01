@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.Purchase
+import com.nextroom.nextroom.domain.model.onFailure
+import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.repository.BillingRepository
 import com.nextroom.nextroom.presentation.ui.Constants
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,15 +21,14 @@ import javax.inject.Inject
 class BillingViewModel
 @Inject constructor(
     billingClientLifecycle: BillingClientLifecycle,
+    billingRepository: BillingRepository,
 ) : ViewModel() {
 
     // 사용자의 현재 구독 상품 구매 정보
     private val purchases = billingClientLifecycle.subscriptionPurchases
 
     // 콘솔에 등록된 상품들 정보
-    private val largeSubProductWithProductDetails = billingClientLifecycle.largeSubProductWithProductDetails
-    private val mediumSubProductWithProductDetails = billingClientLifecycle.mediumSubProductWithProductDetails
-    private val miniSubProductWithProductDetails = billingClientLifecycle.miniSubProductWithProductDetails
+    private val membershipProductWithProductDetails = billingClientLifecycle.membershipProductWithProductDetails
 
     private val _buyEvent = MutableSharedFlow<BillingFlowParams>()
     val buyEvent = _buyEvent.asSharedFlow()
@@ -46,8 +48,14 @@ class BillingViewModel
             purchases.collect {
                 it.forEach { purchase ->
                     if (purchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
-                        // TODO JH: 서버에서 ack 로직 구현 완료시 제거 + purchaseToken 보내는 API 호출
-                        billingClientLifecycle.acknowledgePurchase(purchase.purchaseToken)
+                        billingRepository
+                            .postPurchaseToken(purchase.purchaseToken)
+                            .onSuccess {
+                                _uiEvent.emit(BillingEvent.PurchaseAcknowledged)
+                            }
+                            .onFailure {
+                                _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
+                            }
                     } else {
                         _uiEvent.emit(BillingEvent.PurchaseFailed(purchaseState = purchase.purchaseState))
                     }
@@ -186,9 +194,7 @@ class BillingViewModel
         }
 
         when (productId) {
-            Constants.LARGE_PRODUCT -> largeSubProductWithProductDetails.value
-            Constants.MEDIUM_PRODUCT -> mediumSubProductWithProductDetails.value
-            Constants.MINI_PRODUCT -> miniSubProductWithProductDetails.value
+            Constants.MEMBERSHIP_PRODUCT -> membershipProductWithProductDetails.value
             else -> null
         }?.also { productDetails ->
             productDetails.subscriptionOfferDetails?.let { offerDetailsList ->
@@ -212,9 +218,7 @@ class BillingViewModel
         productDetails: ProductDetails,
     ) {
         val currentSubscriptionPurchaseCount = purchases.value.count {
-            it.products.contains(Constants.MINI_PRODUCT) ||
-                it.products.contains(Constants.MEDIUM_PRODUCT) ||
-                it.products.contains(Constants.LARGE_PRODUCT)
+            it.products.contains(Constants.MEMBERSHIP_PRODUCT)
         }
         if (currentSubscriptionPurchaseCount > EXPECTED_SUBSCRIPTION_PURCHASE_LIST_SIZE) {
             Timber.e("There are more than one subscription purchases on the device.")
@@ -227,9 +231,7 @@ class BillingViewModel
         }
 
         val oldToken = purchases.value.filter {
-            it.products.contains(Constants.MINI_PRODUCT) ||
-                it.products.contains(Constants.MEDIUM_PRODUCT) ||
-                it.products.contains(Constants.LARGE_PRODUCT)
+            it.products.contains(Constants.MEMBERSHIP_PRODUCT)
         }.firstOrNull { it.purchaseToken.isNotEmpty() }?.purchaseToken ?: ""
 
         val billingParams: BillingFlowParams = if (upDowngrade) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -31,9 +32,6 @@ class AdminMainViewModel @Inject constructor(
 ) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
     override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
-
-    val isFirstLaunchOfDay: Boolean
-        get() = dataStoreRepository.isFirstInitOfDay
 
     init {
         loadData()
@@ -74,24 +72,10 @@ class AdminMainViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
-        viewModelScope.launch { adminRepository.logout() }
-    }
-
-    fun resign() = intent {
-        viewModelScope.launch {
-            adminRepository.resign().onSuccess {
-                postSideEffect(AdminMainEvent.OnResign)
-            }.onFailure {
-                postSideEffect(AdminMainEvent.UnknownError)
-            }
-        }
-    }
-
     fun loadData() = intent {
         reduce { state.copy(loading = true) }
-        /*adminRepository.getUserSubscribeStatus().suspendOnSuccess {
-            reduce { state.copy(userSubscribeStatus = it) }
+        adminRepository.getUserSubscribe().suspendOnSuccess {
+            reduce { state.copy(subscribeStatus = it.status) }
             themeRepository.getThemes().onSuccess {
                 updateThemes(
                     it.map { themeInfo ->
@@ -100,7 +84,7 @@ class AdminMainViewModel @Inject constructor(
                     },
                 )
             }
-        }*/
+        }
         themeRepository.getThemes().onSuccess {
             updateThemes(
                 it.map { themeInfo ->
@@ -113,12 +97,19 @@ class AdminMainViewModel @Inject constructor(
     }
 
     private fun updateShopInfo(shopName: String) = intent {
-        reduce { state.copy(showName = shopName) }
+        reduce { state.copy(shopName = shopName) }
     }
 
     private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {
         reduce { state.copy(themes = themes) }
     }
+
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    fun setDeveloperMode() {
+        adminRepository.setDeveloperMode()
+    }
+
+    fun getIsDeveloperMode() = adminRepository.getIsDeveloperMode()
 
     private fun handleError(error: Result.Failure) = intent {
         when (error) {

@@ -5,16 +5,16 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.toast
@@ -39,6 +39,8 @@ class AdminMainFragment :
             onClickUpdate = viewModel::updateTheme,
         )
     }
+    private val state: AdminMainState
+        get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -54,7 +56,6 @@ class AdminMainFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
@@ -76,61 +77,34 @@ class AdminMainFragment :
     private fun initViews() = with(binding) {
         updateSystemPadding(statusBar = false, navigationBar = true)
 
+        ivMyButton.addMargin(top = requireContext().statusBarHeight)
+
         rvThemes.adapter = adapter
-//        tvPurchaseTicketButton.setOnClickListener {
-//            goToPurchase()
-//        }
-//        ivMyButton.setOnClickListener {
-//            goToMyPage()
-//        }
-//        tvLogoutButton.apply {
-//            addMargin(top = requireContext().statusBarHeight)
-//            setOnClickListener { logout() }
-//        }
+        tvPurchaseButton.setOnClickListener {
+            goToPurchase()
+        }
+        ivMyButton.setOnClickListener {
+            goToMyPage()
+        }
+
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
         }
-        tvResignButton.addMargin(top = requireContext().statusBarHeight)
-        tvResignButton.setOnClickListener {
-            AdminMainFragmentDirections
-                .actionGlobalNrTwoButtonDialog(
-                    NRTwoButtonDialog.NRTwoButtonArgument(
-                        title = getString(R.string.resign_dialog_title),
-                        message = getString(R.string.resign_dialog_message),
-                        posBtnText = getString(R.string.resign),
-                        negBtnText = getString(R.string.dialog_no),
-                        dialogKey = REQUEST_KEY_RESIGN,
-                    )
-                )
-                .also { findNavController().safeNavigate(it) }
-        }
-    }
-
-    private fun setFragmentResultListeners() {
-        setFragmentResultListener(REQUEST_KEY_RESIGN) { _, _ ->
-            viewModel.resign()
+        // TODO: 구독 서비스 정규 오픈시 삭제
+        tvSecretButton.setOnLongClickListener(1000L) {
+            toast("개발자 모드 활성화")
+            viewModel.setDeveloperMode()
         }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
 
-//        tvPurchaseTicketButton.isVisible = state.userSubscribeStatus.subscribeStatus != SubscribeStatus.Subscription
-//        when (state.userSubscribeStatus.subscribeStatus) {
-//            SubscribeStatus.Expiration -> logout()
-//            SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration -> goToPurchase(state.userSubscribeStatus.subscribeStatus)
-//            SubscribeStatus.Free -> {
-//                if (viewModel.isFirstLaunchOfDay) { // 하루 최초 한 번 다이얼로그 표시
-//                    state.calculateDday().let { dday ->
-//                        if (dday >= 0) showDialog(dday)
-//                    }
-//                }
-//            }
-//
-//            SubscribeStatus.None, SubscribeStatus.Subscription -> Unit
-//        }
+        // TODO: 구독 서비스 정규 오픈시 삭제
+        tvPurchaseButton.isVisible =
+            (viewModel.getIsDeveloperMode() && state.subscribeStatus != SubscribeStatus.Subscribed)
         srlTheme.isRefreshing = false
-        tvShopName.text = state.showName
+        tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
     }
@@ -140,14 +114,13 @@ class AdminMainFragment :
             is AdminMainEvent.NetworkError -> snackbar(R.string.error_network)
             is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
             is AdminMainEvent.ClientError -> snackbar(event.message)
-            is AdminMainEvent.OnResign -> toast(R.string.resign_success_message)
         }
     }
 
-    /*private fun goToPurchase(subscribeStatus: SubscribeStatus = state.userSubscribeStatus.subscribeStatus) {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment(subscribeStatus)
+    private fun goToPurchase() {
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment()
         findNavController().safeNavigate(action)
-    }*/
+    }
 
     private fun goToMyPage() {
         val action = AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment()
@@ -160,24 +133,6 @@ class AdminMainFragment :
         findNavController().safeNavigate(action)
     }
 
-    /*private fun showDialog(dDay: Int) {
-        NRImageDialog.Builder(requireContext())
-            .setTitle(getString(R.string.dialog_free_plan_title, dDay))
-            .setMessage(getString(R.string.dialog_free_plan_message))
-            .setImage(R.drawable.ticket)
-            .setNegativeButton(getString(R.string.dialog_close)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.dialog_subscribe_button)) { _, _ ->
-                goToPurchase()
-            }
-            .show(childFragmentManager)
-    }*/
-
-    private fun logout() {
-        viewModel.logout()
-    }
-
     override fun onDestroyView() {
         binding.rvThemes.adapter = null
         super.onDestroyView()
@@ -186,9 +141,5 @@ class AdminMainFragment :
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
-    }
-
-    companion object {
-        const val REQUEST_KEY_RESIGN = "REQUEST_KEY_RESIGN"
     }
 }

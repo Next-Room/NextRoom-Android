@@ -6,9 +6,9 @@ import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.datasource.UserDataSource
 import com.nextroom.nextroom.domain.model.LoginInfo
+import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
-import com.nextroom.nextroom.domain.model.UserSubscription
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +25,9 @@ class AdminRepositoryImpl @Inject constructor(
     override val loggedIn: Flow<Boolean> = authDataSource.loggedIn
 
     override val shopName: Flow<String> = settingDataSource.shopName
+
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    var isDeveloperMode = false
 
     override suspend fun login(adminCode: String, password: String): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
@@ -51,7 +54,14 @@ class AdminRepositoryImpl @Inject constructor(
         return subscriptionDataSource.getUserSubscriptionStatus()
     }
 
-    override suspend fun getUserSubscribe(): Result<UserSubscription> {
+    override suspend fun getUserSubscribe(): Result<Mypage> {
         return subscriptionDataSource.getUserSubscription()
     }
+
+    // TODO: 구독 서비스 정규 오픈시 삭제
+    override fun setDeveloperMode() {
+        isDeveloperMode = true
+    }
+
+    override fun getIsDeveloperMode() = isDeveloperMode
 }

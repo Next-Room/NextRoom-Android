@@ -2,82 +2,54 @@ package com.nextroom.nextroom.presentation.ui.purchase
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.LinearSpaceDecoration
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
-import com.nextroom.nextroom.presentation.extension.dp
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.strikeThrow
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.orbitmvi.orbit.viewmodel.observe
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseBinding::inflate) {
 
     private val viewModel: PurchaseViewModel by viewModels()
     private val billingViewModel: BillingViewModel by activityViewModels()
-    private val adapter: TicketAdapter by lazy { TicketAdapter(viewModel::startPurchase) }
-    private val spacer: LinearSpaceDecoration = LinearSpaceDecoration(spaceBetween = 12.dp)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+        initListeners()
         initObserve()
     }
 
     private fun initViews() = with(binding) {
         tbPurchase.apply {
-            root.isVisible = false
+            tvTitle.text = getString(R.string.purchase_ticket)
             tvButton.isVisible = false
-            ivBack.setOnClickListener { findNavController().popBackStack() }
-        }
-        rvSubscribes.apply {
-            adapter = this@PurchaseFragment.adapter
-            addItemDecoration(spacer)
         }
     }
 
-    private fun render(state: PurchaseState) = with(binding) {
-        tbPurchase.root.isInvisible = state.subscribeStatus in listOf(SubscribeStatus.Hold, SubscribeStatus.SubscriptionExpiration)
-        tbPurchase.tvTitle.text = when (state.subscribeStatus) {
-            SubscribeStatus.Free -> getString(R.string.purchase_ticket)
-            SubscribeStatus.Subscription -> getString(R.string.purchase_change_ticket)
-            else -> ""
-        }
-        tvMainLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.Free -> getString(R.string.purchase_main_label_normal)
-            SubscribeStatus.Hold -> getString(R.string.purchase_main_label_free_end)
-            SubscribeStatus.Subscription -> getString(R.string.purchase_main_label_normal)
-            SubscribeStatus.SubscriptionExpiration -> getString(R.string.purchase_main_label_subscribe_end)
-            else -> ""
-        }
-        tvSubLabel.text = when (state.subscribeStatus) {
-            SubscribeStatus.Hold -> getString(R.string.purchase_sub_label_free_end)
-            SubscribeStatus.SubscriptionExpiration -> getString(R.string.purchase_sub_label_subscribe_end)
-            else -> ""
-        }
-        adapter.submitList(state.ticketsForUi)
-    }
+    private fun initListeners() {
+        binding.tbPurchase.ivBack.setOnClickListener { findNavController().popBackStack() }
 
-    private fun handleEvent(event: PurchaseEvent) {
-        when (event) {
-            is PurchaseEvent.StartPurchase -> {
+        binding.btnSubscribe.setOnClickListener {
+            (viewModel.uiState.value as? PurchaseViewModel.UiState.Loaded)?.let { loaded ->
+                binding.pbLoading.isVisible = true // TODO JH: 개선
                 billingViewModel.buyPlans(
-                    productId = event.productId,
-                    tag = event.tag,
-                    upDowngrade = event.upDowngrade,
+                    productId = loaded.subscriptionProductId,
+                    tag = "",
+                    upDowngrade = false,
                 )
             }
         }
@@ -85,24 +57,56 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
 
     private fun initObserve() {
         viewLifecycleOwner.repeatOnStarted {
-            billingViewModel.uiEvent.collect { event ->
-                when (event) {
-                    BillingEvent.PurchaseAcknowledged -> {
-                        PurchaseFragmentDirections
-                            .actionPurchaseFragmentToPurchaseSuccessFragment()
-                            .also {
-                                findNavController().safeNavigate(it)
-                            }
+            launch {
+                viewModel.uiState.collect { state ->
+                    when (state) {
+                        PurchaseViewModel.UiState.Failure -> snackbar(R.string.error_something)
+                        is PurchaseViewModel.UiState.Loaded -> {
+                            binding.pbLoading.isVisible = false
+                            updateUi(state)
+                        }
+
+                        PurchaseViewModel.UiState.Loading -> binding.pbLoading.isVisible = true
                     }
-                    is BillingEvent.PurchaseFailed -> toast(getString(R.string.purchase_error_message, event.purchaseState))
+                }
+            }
+            launch {
+                billingViewModel.uiEvent.collect { event ->
+                    when (event) {
+                        BillingEvent.PurchaseAcknowledged -> {
+                            PurchaseFragmentDirections
+                                .actionPurchaseFragmentToPurchaseSuccessFragment()
+                                .also {
+                                    findNavController().safeNavigate(it)
+                                }
+                        }
+
+                        is BillingEvent.PurchaseFailed -> {
+                            toast(
+                                getString(
+                                    R.string.purchase_error_message,
+                                    event.purchaseState,
+                                ),
+                            )
+                            binding.pbLoading.isVisible = false // TODO JH: 개선
+                        }
+                    }
                 }
             }
         }
     }
 
-    override fun onDestroyView() {
-        binding.rvSubscribes.removeItemDecoration(spacer)
-        binding.rvSubscribes.adapter = null
-        super.onDestroyView()
+    private fun updateUi(loaded: PurchaseViewModel.UiState.Loaded) {
+        with(binding) {
+            with(loaded) {
+                tvMainLabel.text = description
+                tvSubLabel.text = subDescription
+                tvName.text = productName
+                tvDiscountRate.text = getString(R.string.discount_rate, discountRate)
+                tvOriginPrice.text = originPrice
+                tvOriginPrice.strikeThrow()
+                tvSellPrice.text = sellPrice
+            }
+        }
     }
 }
