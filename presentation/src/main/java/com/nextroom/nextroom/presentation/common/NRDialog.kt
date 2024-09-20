@@ -29,7 +29,7 @@ class NRDialog : DialogFragment() {
     private var negBtnText: String? = null
     private var posListener: OnClickListener? = null
     private var negListener: OnClickListener? = null
-
+    private val test = "test"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
