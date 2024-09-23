@@ -68,8 +68,8 @@ jobs:
       - name: Build assemble debug apk
         run: ./gradlew assembleDebug --stacktrace
 
-      #    - name: Build assemble release apk
-      #      run: ./gradlew assembleRelease --stacktrace
+      - name: Build assemble release apk
+        run: ./gradlew assembleRelease --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
@@ -77,11 +77,31 @@ jobs:
           name: debug
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
-#    - name: Upload Release APK
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: release
-#        path: ./app/build/outputs/apk/release/app-release-unsigned.apk
+      - name : Signing Release APK
+        uses: r0adkll/sign-android-release@v1
+        # ID used to access action output
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          # override default build-tools version (33.0.0) -- optional
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      # Example use of `signedReleaseFile` output -- not needed
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Signed app bundle
+          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+#      - name: Upload Release APK
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: release
+#          path: ./app/build/outputs/apk/release/app-release.apk
 #
 #    - name: Upload apk to Firebase App Distribution
 #      uses: wzieba/Firebase-Distribution-Github-Action@v1
