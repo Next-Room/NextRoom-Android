@@ -41,12 +41,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: '../nextroom_key'
-          encodedString: ${{ secrets.SIGNING_KEY }}
+#      - name: Decode Keystore
+#        id: decode_keystore
+#        uses: timheuer/base64-to-file@v1
+#        with:
+#          fileName: '../nextroom_key'
+#          encodedString: ${{ secrets.SIGNING_KEY }}
+
+      - name: Decode And Save Keystore Base64 # app.keystore.jks 키 값을 디코드 해서 app/ksystore.jks로 저장한다. (생략 가능)
+        run: |
+          echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > app/nextroom_key
+
 
       - name: Access Build Key
         run: |
