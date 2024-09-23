@@ -41,7 +41,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Access DEV_BASE_URL
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: '../nextroom_key'
+          encodedString: ${{ secrets.SIGNING_KEY }}
+
+      - name: Access Build Key
         run: |
           echo DEV_BASE_URL=\"DEV_BASE_URL\" > local.properties
           echo PROD_BASE_URL=\"PROD_BASE_URL\" >> local.properties
@@ -60,7 +67,6 @@ jobs:
         run: echo $DATA | base64 -di > app/google-services.json
         env:
           DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
-
 
       - name: Build clean
         run: ./gradlew clean
@@ -83,31 +89,32 @@ jobs:
           name: debug
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Signing Release APK
-        uses: r0adkll/sign-android-release@v1
-        # ID used to access action output
-        id: sign_app
-        with:
-          releaseDirectory: app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          # override default build-tools version (33.0.0) -- optional
-          BUILD_TOOLS_VERSION: "34.0.0"
+#      - name: Signing Release APK
+#        uses: r0adkll/sign-android-release@v1
+#        # ID used to access action output
+#        id: sign_app
+#        with:
+#          releaseDirectory: app/build/outputs/apk/release
+#          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+#          alias: ${{ secrets.ALIAS }}
+#          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+#          keyPassword: ${{ secrets.KEY_PASSWORD }}
+#        env:
+#          # override default build-tools version (33.0.0) -- optional
+#          BUILD_TOOLS_VERSION: "34.0.0"
 
       # Example use of `signedReleaseFile` output -- not needed
-      - uses: actions/upload-artifact@v3
-        with:
-          name: Signed app bundle
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
-
 #      - name: Upload Release APK
 #        uses: actions/upload-artifact@v3
 #        with:
-#          name: release
-#          path: ./app/build/outputs/apk/release/app-release.apk
+#          name: Signed app bundle
+#          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: ./app/build/outputs/apk/release/app-release.apk
 #
 #    - name: Upload apk to Firebase App Distribution
 #      uses: wzieba/Firebase-Distribution-Github-Action@v1
