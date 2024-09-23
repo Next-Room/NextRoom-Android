@@ -34,7 +34,7 @@ android {
         create("release") {
             keyAlias = getApiKey("key_alias")
             keyPassword = getApiKey("key_password")
-            storeFile = file(getApiKey("keystore"))
+            storeFile = file("../nextroom_key") //getApiKey("keystore")
             storePassword = getApiKey("store_password")
         }
     }
