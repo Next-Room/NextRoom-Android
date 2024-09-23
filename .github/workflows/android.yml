@@ -12,64 +12,70 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: gradle
-#
-#    - name: Run a one-line script
-#      run: echo Hello, world!
-#
-#    - name: Run a multi-line script
-#      run: |
-#        echo Add other actions to build,
-#        echo test, and deploy your project.
-
-    - name: Cache Gradle packages
-      uses: actions/cache@v2
-      with:
-        path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
-
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
-    - name: Access DEV_BASE_URL
-      run: |
-        echo DEV_BASE_URL=\"DEV_BASE_URL\" > local.properties
-        echo PROD_BASE_URL=\"PROD_BASE_URL\" >> local.properties
-      shell: bash
-      env:
-        DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
-        PROD_BASE_URL: ${ secrets.PROD_BASE_URL }}
-
-    - name: Build clean
-      run: ./gradlew clean
-
-      #    - name: Run ktlint
-      #      run: ./gradlew ktlintCheck
+      - uses: actions/checkout@v4
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
       #
-      #    - name: Run detekt
-      #      run: ./gradlew detekt
+      #    - name: Run a one-line script
+      #      run: echo Hello, world!
+      #
+      #    - name: Run a multi-line script
+      #      run: |
+      #        echo Add other actions to build,
+      #        echo test, and deploy your project.
 
-    - name: Build assemble debug apk
-      run: ./gradlew assembleDebug --stacktrace
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-#    - name: Build assemble release apk
-#      run: ./gradlew assembleRelease --stacktrace
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
 
-    - name: Upload Debug APK
-      uses: actions/upload-artifact@v3
-      with:
-        name: debug
-        path: ./app/build/outputs/apk/debug/app-debug.apk
+      - name: Access DEV_BASE_URL
+        run: |
+          echo DEV_BASE_URL=\"DEV_BASE_URL\" > local.properties
+          echo PROD_BASE_URL=\"PROD_BASE_URL\" >> local.properties
+        shell: bash
+        env:
+          DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
+          PROD_BASE_URL: ${ secrets.PROD_BASE_URL }}
+
+      - name: Load Google Service file
+        run: echo $DATA | base64 -di > app/google-services.json
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+
+
+      - name: Build clean
+        run: ./gradlew clean
+
+        #    - name: Run ktlint
+        #      run: ./gradlew ktlintCheck
+        #
+        #    - name: Run detekt
+        #      run: ./gradlew detekt
+
+      - name: Build assemble debug apk
+        run: ./gradlew assembleDebug --stacktrace
+
+      #    - name: Build assemble release apk
+      #      run: ./gradlew assembleRelease --stacktrace
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: debug
+          path: ./app/build/outputs/apk/debug/app-debug.apk
 
 #    - name: Upload Release APK
 #      uses: actions/upload-artifact@v3
