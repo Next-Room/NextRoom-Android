@@ -58,7 +58,7 @@ jobs:
         run: |
           echo $DATA | base64 --decode > nextroom_key
         env:
-          DATA: ${{ secrets.KEYSTORE_BASE64 }}
+          DATA: ${{ secrets.SIGNING_KEY }}
 
       - name: Access Build Key
         run: |
