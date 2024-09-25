@@ -56,7 +56,7 @@ jobs:
 
       - name: Decode And Save Keystore Base64 # app.keystore.jks 키 값을 디코드 해서 app/ksystore.jks로 저장한다. (생략 가능)
         run: |
-          echo $DATA | base64 --d > nextroom_key
+          echo $DATA | base64 -d > nextroom_key
         env:
           DATA: ${{ secrets.SIGNING_KEY }}
 
