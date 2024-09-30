@@ -41,32 +41,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-#      - name: Decode Keystore
-#        id: decode_keystore
-#        uses: timheuer/base64-to-file@v1
-#        with:
-#          fileName: '../nextroom_key'
-#          encodedString: ${{ secrets.SIGNING_KEY }}
-
-#      - name: Decode And Save Keystore Base64
-#        run: |
-#          echo $DATA | base64 -d > app/keystore.jks
-#        env:
-#          DATA: ${{ secrets.KEYSTORE_BASE64 }}
-
-      - name: Decode And Save Keystore Base64 # app.keystore.jks 키 값을 디코드 해서 app/ksystore.jks로 저장한다. (생략 가능)
+      - name: Create local.properties
         run: |
-          echo $DATA | base64 -d > nextroom_key
-        env:
-          DATA: ${{ secrets.SIGNING_KEY }}
-
-      - name: Access Build Key
-        run: |
-          echo DEV_BASE_URL=\"DEV_BASE_URL\" > local.properties
-          echo PROD_BASE_URL=\"PROD_BASE_URL\" >> local.properties
-          echo key_alias=\"key_alias\" >> local.properties
-          echo key_password=\"key_password\" >> local.properties
-          echo store_password=\"store_password\" >> local.properties
+          echo "DEV_BASE_URL=\"DEV_BASE_URL\"" > local.properties
+          echo "PROD_BASE_URL=\"PROD_BASE_URL\"" >> local.properties
+          echo "key_alias=$key_alias" >> local.properties
+          echo "key_password=$key_password" >> local.properties
+          echo "store_password=$store_password" >> local.properties
         shell: bash
         env:
           DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
@@ -74,6 +55,29 @@ jobs:
           key_alias: ${{ secrets.ALIAS }}
           key_password: ${{ secrets.KEY_PASSWORD }}
           store_password: ${{ secrets.KEY_STORE_PASSWORD }}
+
+      #      - name: Decode Keystore
+      #        id: decode_keystore
+      #        uses: timheuer/base64-to-file@v1
+      #        with:
+      #          fileName: '../nextroom_key'
+      #          encodedString: ${{ secrets.SIGNING_KEY }}
+
+      #      - name: Decode And Save Keystore Base64
+      #        run: |
+      #          echo $DATA | base64 -d > app/keystore.jks
+      #        env:
+      #          DATA: ${{ secrets.KEYSTORE_BASE64 }}
+
+#      - name: Decode And Save Keystore Base64 # app.keystore.jks 키 값을 디코드 해서 app/ksystore.jks로 저장한다. (생략 가능)
+#        run: |
+#          echo $DATA | base64 -d > nextroom_key
+#        env:
+#          DATA: ${{ secrets.SIGNING_KEY }}
+
+
+      - name: Decode keystore and create jks
+        run: echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > nextroom_key
 
       - name: Load Google Service file
         run: echo $DATA | base64 -di > app/google-services.json
@@ -101,26 +105,26 @@ jobs:
           name: debug
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
-#      - name: Signing Release APK
-#        uses: r0adkll/sign-android-release@v1
-#        # ID used to access action output
-#        id: sign_app
-#        with:
-#          releaseDirectory: app/build/outputs/apk/release
-#          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-#          alias: ${{ secrets.ALIAS }}
-#          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-#          keyPassword: ${{ secrets.KEY_PASSWORD }}
-#        env:
-#          # override default build-tools version (33.0.0) -- optional
-#          BUILD_TOOLS_VERSION: "34.0.0"
+      #      - name: Signing Release APK
+      #        uses: r0adkll/sign-android-release@v1
+      #        # ID used to access action output
+      #        id: sign_app
+      #        with:
+      #          releaseDirectory: app/build/outputs/apk/release
+      #          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+      #          alias: ${{ secrets.ALIAS }}
+      #          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+      #          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      #        env:
+      #          # override default build-tools version (33.0.0) -- optional
+      #          BUILD_TOOLS_VERSION: "34.0.0"
 
       # Example use of `signedReleaseFile` output -- not needed
-#      - name: Upload Release APK
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: Signed app bundle
-#          path: ${{steps.sign_app.outputs.signedReleaseFile}}
+      #      - name: Upload Release APK
+      #        uses: actions/upload-artifact@v3
+      #        with:
+      #          name: Signed app bundle
+      #          path: ${{steps.sign_app.outputs.signedReleaseFile}}
 
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
