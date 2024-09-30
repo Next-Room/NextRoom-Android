@@ -19,14 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-      #
-      #    - name: Run a one-line script
-      #      run: echo Hello, world!
-      #
-      #    - name: Run a multi-line script
-      #      run: |
-      #        echo Add other actions to build,
-      #        echo test, and deploy your project.
 
       - name: Cache Gradle packages
         uses: actions/cache@v2
@@ -55,26 +47,6 @@ jobs:
           key_alias: ${{ secrets.ALIAS }}
           key_password: ${{ secrets.KEY_PASSWORD }}
           store_password: ${{ secrets.KEY_STORE_PASSWORD }}
-
-      #      - name: Decode Keystore
-      #        id: decode_keystore
-      #        uses: timheuer/base64-to-file@v1
-      #        with:
-      #          fileName: '../nextroom_key'
-      #          encodedString: ${{ secrets.SIGNING_KEY }}
-
-      #      - name: Decode And Save Keystore Base64
-      #        run: |
-      #          echo $DATA | base64 -d > app/keystore.jks
-      #        env:
-      #          DATA: ${{ secrets.KEYSTORE_BASE64 }}
-
-#      - name: Decode And Save Keystore Base64 # app.keystore.jks 키 값을 디코드 해서 app/ksystore.jks로 저장한다. (생략 가능)
-#        run: |
-#          echo $DATA | base64 -d > nextroom_key
-#        env:
-#          DATA: ${{ secrets.SIGNING_KEY }}
-
 
       - name: Decode keystore and create jks
         run: echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > nextroom_key
@@ -105,38 +77,17 @@ jobs:
           name: debug
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
-      #      - name: Signing Release APK
-      #        uses: r0adkll/sign-android-release@v1
-      #        # ID used to access action output
-      #        id: sign_app
-      #        with:
-      #          releaseDirectory: app/build/outputs/apk/release
-      #          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-      #          alias: ${{ secrets.ALIAS }}
-      #          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-      #          keyPassword: ${{ secrets.KEY_PASSWORD }}
-      #        env:
-      #          # override default build-tools version (33.0.0) -- optional
-      #          BUILD_TOOLS_VERSION: "34.0.0"
-
-      # Example use of `signedReleaseFile` output -- not needed
-      #      - name: Upload Release APK
-      #        uses: actions/upload-artifact@v3
-      #        with:
-      #          name: Signed app bundle
-      #          path: ${{steps.sign_app.outputs.signedReleaseFile}}
-
       - name: Upload Release APK
         uses: actions/upload-artifact@v3
         with:
           name: release
           path: ./app/build/outputs/apk/release/app-release.apk
-#
-#    - name: Upload apk to Firebase App Distribution
-#      uses: wzieba/Firebase-Distribution-Github-Action@v1
-#      with:
-#        appId: ${{ secrets.FIREBASE_APP_ID }}
-#        serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
-#        groups: testers
-#        file: app/build/outputs/apk/release/app-release-unsigned.apk
+
+      - name: Upload apk to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: testers
+          file: app/build/outputs/apk/release/app-debug.apk
 
