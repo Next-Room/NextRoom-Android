@@ -91,6 +91,15 @@ jobs:
           groups: testers
           file: app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Check
+        run: |
+          if [ -f ./app/build/outputs/bundle/release/ ]; then
+            echo "File exists"
+          else
+            echo "File does not exist"
+            exit 1
+          fi
+
       - name: Publish to Play Store
         uses: r0adkll/upload-google-play@v1
         with:
