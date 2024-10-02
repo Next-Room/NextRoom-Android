@@ -69,7 +69,7 @@ jobs:
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Build assemble release apk
-        run: ./gradlew assembleRelease --stacktrace
+        run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v3
@@ -91,37 +91,28 @@ jobs:
           groups: testers
           file: app/build/outputs/apk/debug/app-debug.apk
 
-#      - name: Check
-#        run: |
-#          if [ -f ./app/build/outputs/bundle/release/ ]; then
-#            echo "File exists"
-#          else
-#            echo "File does not exist"
-#            exit 1
-#          fi
+      - name: Publish to Play Store
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
+          packageName: com.nextroom.nextroom
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: production
+
+#  deploy:
+#    name: Deploy aab to playstore
+#    needs: build
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download app bundle from artifact
+#        uses: actions/download-artifact@v3
+#        with:
+#          name: app-bundle
 #
 #      - name: Publish to Play Store
 #        uses: r0adkll/upload-google-play@v1
 #        with:
 #          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
 #          packageName: com.nextroom.nextroom
-#          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+#          releaseFiles: ${{ github.workspace }}/app-release.aab
 #          track: production
-
-  deploy:
-    name: Deploy aab to playstore
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download app bundle from artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: app-bundle
-
-      - name: Publish to Play Store
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
-          packageName: com.nextroom.nextroom
-          releaseFiles: ${{ github.workspace }}/app-release.aab
-          track: production
