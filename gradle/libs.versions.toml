@@ -1,7 +1,7 @@
 [versions]
 minSdk = "24"
 targetSdk = "34"
-versionCode = "39"
+versionCode = "100"
 versionName = "1.2.0"
 compileSdk = "34"
 targetJvm = "17"
