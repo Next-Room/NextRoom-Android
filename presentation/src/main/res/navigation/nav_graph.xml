@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_adminMainFragment_to_purchaseFragment"
             app:destination="@id/purchaseFragment" />
+        <action
+            android:id="@+id/action_admin_to_webview"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/mainFragment"

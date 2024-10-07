@@ -6,6 +6,7 @@ import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.domain.repository.BannerRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
@@ -29,18 +30,31 @@ class AdminMainViewModel @Inject constructor(
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
+    private val bannerRepository: BannerRepository
 ) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
     override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
 
     init {
         loadData()
+        fetchBanners()
 
         viewModelScope.launch {
             adminRepository.shopName.collect {
                 updateShopInfo(it)
             }
         }
+    }
+
+    private fun fetchBanners() = intent {
+        bannerRepository
+            .getBanners()
+            .onSuccess {
+                reduce { state.copy(banner = it.firstOrNull()) }
+            }
+            .onFailure {
+                handleError(it)
+            }
     }
 
     fun updateTheme(themeId: Int) = intent {

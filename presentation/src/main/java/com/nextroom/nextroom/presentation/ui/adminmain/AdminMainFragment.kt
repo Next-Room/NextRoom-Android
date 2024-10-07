@@ -95,10 +95,23 @@ class AdminMainFragment :
             toast("개발자 모드 활성화")
             viewModel.setDeveloperMode()
         }
+
+        llBanner.setOnClickListener {
+            viewModel.container.stateFlow.value.banner?.linkUrl?.let {
+                goToLink(it)
+            }
+        }
     }
 
     private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
+
+        state.banner?.let {
+            llBanner.isVisible = true
+            tvBanner.text = it.description
+        } ?: run {
+            llBanner.isVisible = false
+        }
 
         // TODO: 구독 서비스 정규 오픈시 삭제
         tvPurchaseButton.isVisible =
@@ -115,6 +128,10 @@ class AdminMainFragment :
             is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
             is AdminMainEvent.ClientError -> snackbar(event.message)
         }
+    }
+
+    private fun goToLink(linkUrl: String) {
+        findNavController().safeNavigate(AdminMainFragmentDirections.actionAdminToWebview(url = linkUrl))
     }
 
     private fun goToPurchase() {
