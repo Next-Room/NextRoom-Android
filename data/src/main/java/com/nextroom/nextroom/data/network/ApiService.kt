@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.data.network
 
+import com.nextroom.nextroom.data.network.response.BannerDto
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
 import com.nextroom.nextroom.data.network.request.PurchaseToken
@@ -51,4 +52,7 @@ interface ApiService {
 
     @POST("api/v1/payment/purchase")
     suspend fun postPurchaseToken(@Body purchaseToken: PurchaseToken): Result<Unit>
+
+    @GET("api/v1/banner")
+    suspend fun getBanners(): Result<BaseListResponse<BannerDto>>
 }

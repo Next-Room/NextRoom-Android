@@ -20,6 +20,7 @@ import com.nextroom.nextroom.data.db.ThemeDao
 import com.nextroom.nextroom.data.db.ThemeTimeDao
 import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.repository.AdminRepositoryImpl
+import com.nextroom.nextroom.data.repository.BannerRepositoryImpl
 import com.nextroom.nextroom.data.repository.BillingRepositoryImpl
 import com.nextroom.nextroom.data.repository.DataStoreRepositoryImpl
 import com.nextroom.nextroom.data.repository.FirebaseRemoteConfigRepositoryImpl
@@ -29,6 +30,7 @@ import com.nextroom.nextroom.data.repository.StatisticsRepositoryImpl
 import com.nextroom.nextroom.data.repository.ThemeRepositoryImpl
 import com.nextroom.nextroom.data.repository.TimerRepositoryImpl
 import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.domain.repository.BannerRepository
 import com.nextroom.nextroom.domain.repository.BillingRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
@@ -211,5 +213,13 @@ object RepositoryModule {
         dataSource: FirebaseRemoteConfigDataSource,
     ): FirebaseRemoteConfigRepository {
         return FirebaseRemoteConfigRepositoryImpl(dataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideBannerRepository(
+        apiService: ApiService
+    ) : BannerRepository {
+        return BannerRepositoryImpl(apiService)
     }
 }
