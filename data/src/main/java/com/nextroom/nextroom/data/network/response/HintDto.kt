@@ -16,6 +16,10 @@ data class HintDto(
     val id: Int,
     @SerializedName("progress")
     val progress: Int,
+    @SerializedName("hintImageUrlList")
+    val hintImageUrlList: List<String>,
+    @SerializedName("answerImageUrlList")
+    val answerImageUrlList: List<String>,
     @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("modifiedAt")
@@ -29,6 +33,8 @@ fun HintDto.toDomain(): Hint {
         progress = progress,
         description = contents,
         answer = answer,
+        hintImageUrlList = hintImageUrlList.toList(),
+        answerImageUrlList = answerImageUrlList.toList()
     )
 }
 
