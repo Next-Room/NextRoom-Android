@@ -18,7 +18,7 @@ class ImageFragment(
     }
 
     private fun initListener() {
-        binding.imgHint.setOnClickListener {
+        binding.ivHint.setOnClickListener {
             onImageClicked?.invoke()
         }
     }
@@ -26,6 +26,6 @@ class ImageFragment(
     private fun initView() {
         Glide.with(requireContext())
             .load(imageUrl)
-            .into(binding.imgHint)
+            .into(binding.ivHint)
     }
 }
