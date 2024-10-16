@@ -33,7 +33,7 @@ class ImageViewerFragment : BaseFragment<FragmentImageViewerBinding>(FragmentIma
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 binding.toolbar.tvTitle.text = String.format(
-                    getString(R.string.text_image_size),
+                    getString(R.string.image_viewer_title_format),
                     (position + 1).toString(),
                     (args.imageUrlList.size).toString()
                 )
@@ -58,7 +58,7 @@ class ImageViewerFragment : BaseFragment<FragmentImageViewerBinding>(FragmentIma
         binding.toolbar.ivBack.setImageResource(R.drawable.ic_exit24)
         binding.toolbar.ivBack.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
         binding.toolbar.tvTitle.text = String.format(
-            getString(R.string.text_image_size),
+            getString(R.string.image_viewer_title_format),
             (args.position + 1).toString(),
             (args.imageUrlList.size).toString()
         )
