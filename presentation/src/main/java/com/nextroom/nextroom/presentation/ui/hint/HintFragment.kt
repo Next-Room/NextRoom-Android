@@ -2,12 +2,14 @@ package com.nextroom.nextroom.presentation.ui.hint
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -39,7 +41,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        FirebaseAnalytics.getInstance(requireContext()).logEvent("screen_view", bundleOf("screen_name" to "hint"))
         initViews()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
@@ -119,6 +121,8 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                         ).also {
                             findNavController().safeNavigate(it)
                         }
+
+                        FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "hint_image"))
                     }
                 )
             }
@@ -150,6 +154,8 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                         ).also {
                             findNavController().safeNavigate(it)
                         }
+
+                        FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "answer_image"))
                     }
                 )
             }
