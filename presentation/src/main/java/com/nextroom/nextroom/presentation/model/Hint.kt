@@ -8,4 +8,6 @@ data class Hint(
     val hint: String = "",
     val answer: String = "",
     val answerOpened: Boolean = false,
+    val hintImageUrlList: List<String> = emptyList(),
+    val answerImageUrlList: List<String> = emptyList()
 ) : Serializable

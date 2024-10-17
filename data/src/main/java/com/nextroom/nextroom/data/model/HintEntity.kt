@@ -24,6 +24,8 @@ data class HintEntity(
     val progress: Int = 0, // 진행률
     val description: String = "", // 힌트
     val answer: String = "", // 정답
+    val hintImageUrlList: List<String>,
+    val answerImageUrlList: List<String>,
 ) {
     companion object {
         const val HINT_TABLE_NAME = "Hint"
@@ -37,6 +39,8 @@ fun HintEntity.toDomain(): Hint {
         progress = this.progress,
         description = this.description,
         answer = this.answer,
+        hintImageUrlList = this.hintImageUrlList.toList(),
+        answerImageUrlList = this.answerImageUrlList.toList()
     )
 }
 
@@ -54,5 +58,7 @@ fun Hint.toHintEntity(themeId: Int): HintEntity {
         description = this.description,
         answer = this.answer,
         progress = this.progress,
+        hintImageUrlList = this.hintImageUrlList.toList(),
+        answerImageUrlList = this.answerImageUrlList.toList()
     )
 }

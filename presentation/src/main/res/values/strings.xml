@@ -116,4 +116,5 @@
     <string name="per_month">/월</string>
     <string name="discount_rate">%d%%</string>
     <string name="date_range_format">%s ~ %s</string>
+    <string name="image_viewer_title_format">사진(%s / %s)</string>
 </resources>
