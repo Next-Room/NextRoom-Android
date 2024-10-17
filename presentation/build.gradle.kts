@@ -69,7 +69,8 @@ dependencies {
     implementation(libs.bundles.navigation)
     implementation(libs.timber)
     implementation(libs.billing)
-
+    implementation(libs.photoview)
+    
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics.ktx)
 
