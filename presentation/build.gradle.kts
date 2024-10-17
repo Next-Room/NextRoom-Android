@@ -70,6 +70,9 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.billing)
 
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 }
