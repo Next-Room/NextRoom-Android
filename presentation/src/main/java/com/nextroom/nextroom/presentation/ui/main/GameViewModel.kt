@@ -130,6 +130,8 @@ class GameViewModel @Inject constructor(
                         hint = hint.description,
                         answer = hint.answer,
                         answerOpened = state.answerOpenedHints.contains(hint.id),
+                        hintImageUrlList = hint.hintImageUrlList.toList(),
+                        answerImageUrlList = hint.answerImageUrlList.toList()
                     ),
                 ),
             )

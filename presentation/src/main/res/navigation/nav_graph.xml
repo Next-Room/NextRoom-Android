@@ -104,6 +104,25 @@
             android:name="hint"
             app:argType="com.nextroom.nextroom.presentation.model.Hint" />
     </fragment>
+
+    <action
+        android:id="@+id/action_global_imageViewerFragment"
+        app:destination="@id/imageViewerFragment" />
+
+    <fragment
+        android:id="@+id/imageViewerFragment"
+        android:name="com.nextroom.nextroom.presentation.common.ImageViewerFragment">
+
+        <argument
+            android:name="position"
+            android:defaultValue="0"
+            app:argType="integer" />
+
+        <argument
+            android:name="imageUrlList"
+            app:argType="string[]" />
+    </fragment>
+
     <fragment
         android:id="@+id/memoFragment"
         android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
@@ -127,8 +146,8 @@
             app:argType="string" />
         <argument
             android:name="showToolbar"
-            app:argType="boolean"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/onboardingFragment"

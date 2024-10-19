@@ -89,6 +89,24 @@
                 app:layout_constraintStart_toStartOf="@id/guide_start"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
 
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vp_hint_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_hint_label" />
+
+            <com.nextroom.nextroom.presentation.customview.IndicatorDotView
+                android:id="@+id/indicator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                app:layout_constraintTop_toBottomOf="@+id/vp_hint_image" />
+
             <TextView
                 android:id="@+id/tv_hint"
                 android:layout_width="0dp"
@@ -99,7 +117,7 @@
                 android:textColor="@color/Gray01"
                 app:layout_constraintEnd_toEndOf="@id/guide_end"
                 app:layout_constraintStart_toStartOf="@id/guide_start"
-                app:layout_constraintTop_toBottomOf="@id/tv_hint_label"
+                app:layout_constraintTop_toBottomOf="@id/indicator"
                 tools:text="침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요.
             침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면
             침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. " />
@@ -130,6 +148,27 @@
                 app:layout_constraintStart_toStartOf="@id/guide_start"
                 app:layout_constraintTop_toBottomOf="@id/divider2" />
 
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vp_hint_answer_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_answer_label" />
+
+            <com.nextroom.nextroom.presentation.customview.IndicatorDotView
+                android:id="@+id/indicator_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/vp_hint_answer_image" />
+
             <TextView
                 android:id="@+id/tv_answer"
                 android:layout_width="0dp"
@@ -140,7 +179,7 @@
                 android:textColor="@color/Gray01"
                 app:layout_constraintEnd_toEndOf="@id/guide_end"
                 app:layout_constraintStart_toStartOf="@id/guide_start"
-                app:layout_constraintTop_toBottomOf="@id/tv_answer_label"
+                app:layout_constraintTop_toBottomOf="@id/indicator_answer"
                 tools:text="침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요.
             침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면
             침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. 침대 옆 공간을 보시면 숫자와 카드 조합이 몇 가지 나와있는데 그걸 해답일지의 풀이법에 대입하면 정답이 나옵니다. 액자에 적힌 정보도 잘 체크해 보세요. " />

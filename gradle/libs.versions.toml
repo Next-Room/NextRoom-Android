@@ -39,7 +39,10 @@ google-services = "4.4.0"
 firebase-crashlytics = "2.9.9"
 billing = "6.0.1"
 firebase-config = "21.6.0"
+firebase-analytics="22.1.2"
 swiperefreshlayout = "1.1.0"
+firebaseCommonKtx = "21.0.0"
+photoview = "2.3.0"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -79,14 +82,16 @@ lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
 orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
+photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
-firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.require = "false" }
+firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.require = "firebase-analytics" }
 firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.require = "false" }
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebase-config" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
