@@ -45,7 +45,7 @@ interface ApiService {
     suspend fun getMypageInfo(): Result<BaseResponse<MypageDto>>
 
     @GET("api/v1/subscription/plan")
-    suspend fun getSubscriptionPlans(): Result<BaseListResponse<TicketDto>>
+    suspend fun getSubscriptionPlans(): Result<BaseResponse<TicketDto>>
 
     @POST("api/v1/history")
     suspend fun postGameStats(@Body statsRequest: StatisticsRequest): Result<Unit>

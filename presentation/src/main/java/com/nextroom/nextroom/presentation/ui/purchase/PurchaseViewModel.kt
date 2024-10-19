@@ -21,13 +21,13 @@ class PurchaseViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        fetchTickets()
+        fetchPlans()
     }
 
-    private fun fetchTickets() {
+    private fun fetchPlans() {
         viewModelScope.launch {
-            billingRepository.getTickets().onSuccess { tickets ->
-                tickets.firstOrNull()?.let { ticket ->
+            billingRepository.getPlans().onSuccess { plans ->
+                plans.firstOrNull()?.let { ticket ->
                     UiState.Loaded(
                         id = ticket.id,
                         subscriptionProductId = ticket.subscriptionProductId,
