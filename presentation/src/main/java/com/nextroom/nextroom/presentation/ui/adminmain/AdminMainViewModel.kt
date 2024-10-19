@@ -118,13 +118,6 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(themes = themes) }
     }
 
-    // TODO: 구독 서비스 정규 오픈시 삭제
-    fun setDeveloperMode() {
-        adminRepository.setDeveloperMode()
-    }
-
-    fun getIsDeveloperMode() = adminRepository.getIsDeveloperMode()
-
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
             is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)

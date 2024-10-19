@@ -16,10 +16,8 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
-import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
-import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -92,11 +90,6 @@ class AdminMainFragment :
         srlTheme.setOnRefreshListener {
             viewModel.loadData()
         }
-        // TODO: 구독 서비스 정규 오픈시 삭제
-        tvSecretButton.setOnLongClickListener(1000L) {
-            toast("개발자 모드 활성화")
-            viewModel.setDeveloperMode()
-        }
 
         llBanner.setOnClickListener {
             viewModel.container.stateFlow.value.banner?.linkUrl?.let {
@@ -116,9 +109,7 @@ class AdminMainFragment :
             llBanner.isVisible = false
         }
 
-        // TODO: 구독 서비스 정규 오픈시 삭제
-        tvPurchaseButton.isVisible =
-            (viewModel.getIsDeveloperMode() && state.subscribeStatus != SubscribeStatus.Subscribed)
+        tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed
         srlTheme.isRefreshing = false
         tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()

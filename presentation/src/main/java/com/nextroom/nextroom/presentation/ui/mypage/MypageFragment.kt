@@ -62,7 +62,6 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                         is MypageViewModel.UiState.Loaded -> {
                             binding.tvShopName.text = state.shopName
                             binding.pbLoading.isVisible = false
-                            binding.clSubscribe.isVisible = viewModel.getIsDeveloperMode() // TODO: 구독 서비스 정규 오픈시 삭제
                         }
 
                         MypageViewModel.UiState.Loading -> binding.pbLoading.isVisible = true
