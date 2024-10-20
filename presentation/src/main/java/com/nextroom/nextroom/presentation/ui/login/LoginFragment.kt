@@ -65,6 +65,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             val action = LoginFragmentDirections.actionGlobalWebViewFragment(getString(R.string.link_privacy_policy))
             findNavController().safeNavigate(action)
         }
+
+        cbIdSave.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onIdSaveChecked(isChecked)
+        }
     }
 
     private fun observe() {
@@ -85,6 +89,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         pbLoading.isVisible = state.loading
         etEmail.isEnabled = !state.loading
         etPassword.isEnabled = !state.loading
+        cbIdSave.isChecked = state.idSaveChecked
         btnLogin.isEnabled = !state.loading
         tvPrivacyPolicy.isEnabled = !state.loading
         tvNoAccountGuide.isEnabled = !state.loading

@@ -8,4 +8,5 @@ data class LoginState(
     val idInputState: InputState = InputState.Empty,
     val currentPasswordInput: String = "",
     val passwordInputState: InputState = InputState.Empty,
+    val idSaveChecked: Boolean = false
 )

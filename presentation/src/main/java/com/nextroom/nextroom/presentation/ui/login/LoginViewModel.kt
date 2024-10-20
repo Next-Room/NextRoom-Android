@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.login
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
@@ -37,6 +38,8 @@ class LoginViewModel @Inject constructor(
         false,
     )
 
+    private var idSaveChecked = false
+
     init {
         viewModelScope.launch {
             adminRepository.loggedIn.collect {
@@ -47,6 +50,15 @@ class LoginViewModel @Inject constructor(
             if (dataStoreRepository.getIsInitLaunch()) {
                 event(LoginEvent.GoToOnboardingScreen)
             }
+        }
+        viewModelScope.launch {
+            intent {
+                val idSaveChecked = adminRepository.getIdSaveChecked()
+                reduce {
+                    state.copy(idSaveChecked = idSaveChecked)
+                }
+            }
+
         }
     }
 
@@ -68,9 +80,14 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun onIdSaveChecked(checked: Boolean) {
+        Log.d("MY_LOG","checked:$checked")
+        idSaveChecked = checked
+    }
+
     fun complete() = intent {
         reduce { state.copy(loading = true) }
-        adminRepository.login(state.currentIdInput, state.currentPasswordInput)
+        adminRepository.login(state.currentIdInput, state.currentPasswordInput, idSaveChecked)
             .onSuccess {
                 verifySuccess()
             }.onFailure {

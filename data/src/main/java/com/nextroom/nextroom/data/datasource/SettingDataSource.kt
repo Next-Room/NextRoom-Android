@@ -73,4 +73,15 @@ class SettingDataSource @Inject constructor(
             )
         }
     }
+
+
+    fun setIdSaveChecked(idSaveChecked: Boolean) = runBlocking {
+        dataStore.updateData {
+            it.copy(idSaveChecked = idSaveChecked)
+        }
+    }
+
+    fun getIdSaveChecked() = runBlocking {
+        data.first().idSaveChecked
+    }
 }
