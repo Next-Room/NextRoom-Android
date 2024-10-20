@@ -73,7 +73,8 @@ dependencies {
     
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics.ktx)
-
+    implementation(libs.review)
+    implementation(libs.play.review.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 }
