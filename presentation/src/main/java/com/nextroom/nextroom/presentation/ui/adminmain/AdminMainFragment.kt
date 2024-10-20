@@ -8,6 +8,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
@@ -21,6 +22,7 @@ import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -121,7 +123,26 @@ class AdminMainFragment :
             is AdminMainEvent.NetworkError -> snackbar(R.string.error_network)
             is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
             is AdminMainEvent.ClientError -> snackbar(event.message)
+            AdminMainEvent.InAppReview -> showInAppReview()
         }
+    }
+
+    private fun showInAppReview() {
+        val manager = ReviewManagerFactory.create(context ?: return)
+        manager
+            .requestReviewFlow()
+            .addOnCompleteListener { request ->
+                try {
+                    if (request.isSuccessful) {
+                        manager.launchReviewFlow(
+                            activity ?: return@addOnCompleteListener,
+                            request.result
+                        )
+                    }
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+                }
+            }
     }
 
     private fun goToLink(linkUrl: String) {
