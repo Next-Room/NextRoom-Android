@@ -50,6 +50,9 @@ class LoginViewModel @Inject constructor(
                 event(LoginEvent.GoToOnboardingScreen)
             }
         }
+    }
+
+    fun checkEmailSaved() {
         viewModelScope.launch {
             intent {
                 val idSaveChecked = adminRepository.getIdSaveChecked()
