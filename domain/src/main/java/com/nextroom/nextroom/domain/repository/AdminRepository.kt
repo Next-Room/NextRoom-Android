@@ -21,4 +21,5 @@ interface AdminRepository {
     suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus>
     suspend fun getUserSubscribe(): Result<Mypage>
     suspend fun getIdSaveChecked(): Boolean
+    suspend fun getUserEmail(): String
 }

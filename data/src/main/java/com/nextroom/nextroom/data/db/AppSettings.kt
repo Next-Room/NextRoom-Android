@@ -12,5 +12,6 @@ data class AppSettings(
     val refreshToken: String = "",
     val isInitLaunch: Boolean = true,
     val lastLaunchDate: Long = 0L,
-    val idSaveChecked: Boolean = false
+    val idSaveChecked: Boolean = false,
+    val userEmail: String = ""
 )

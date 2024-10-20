@@ -24,6 +24,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private val viewModel: LoginViewModel by viewModels()
 
+    private var emailInitialised = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -89,7 +91,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         pbLoading.isVisible = state.loading
         etEmail.isEnabled = !state.loading
         etPassword.isEnabled = !state.loading
-        cbIdSave.isChecked = state.idSaveChecked
+        if (!emailInitialised) {
+            emailInitialised = true
+            etEmail.setText(state.userEmail)
+            cbIdSave.isChecked = state.idSaveChecked
+        }
         btnLogin.isEnabled = !state.loading
         tvPrivacyPolicy.isEnabled = !state.loading
         tvNoAccountGuide.isEnabled = !state.loading

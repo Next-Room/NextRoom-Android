@@ -28,6 +28,9 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun login(adminCode: String, password: String, idSaveChecked: Boolean): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
+            if (idSaveChecked) {
+                settingDataSource.saveUserEmail(adminCode)
+            }
             settingDataSource.setIdSaveChecked(idSaveChecked)
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
@@ -58,5 +61,9 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun getIdSaveChecked(): Boolean {
         return settingDataSource.getIdSaveChecked()
+    }
+
+    override suspend fun getUserEmail(): String {
+        return settingDataSource.getUserEmail()
     }
 }

@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.login
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
@@ -54,11 +53,14 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             intent {
                 val idSaveChecked = adminRepository.getIdSaveChecked()
+                val userEmail = if (idSaveChecked) adminRepository.getUserEmail() else ""
                 reduce {
-                    state.copy(idSaveChecked = idSaveChecked)
+                    state.copy(
+                        idSaveChecked = idSaveChecked,
+                        userEmail = userEmail
+                    )
                 }
             }
-
         }
     }
 
@@ -81,7 +83,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun onIdSaveChecked(checked: Boolean) {
-        Log.d("MY_LOG","checked:$checked")
         idSaveChecked = checked
     }
 

@@ -84,4 +84,14 @@ class SettingDataSource @Inject constructor(
     fun getIdSaveChecked() = runBlocking {
         data.first().idSaveChecked
     }
+
+    fun saveUserEmail(userEmail: String) = runBlocking {
+        dataStore.updateData {
+            it.copy(userEmail= userEmail)
+        }
+    }
+
+    fun getUserEmail() = runBlocking {
+        data.first().userEmail
+    }
 }
