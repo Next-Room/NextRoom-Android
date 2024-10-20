@@ -75,14 +75,14 @@ class SettingDataSource @Inject constructor(
     }
 
 
-    fun setIdSaveChecked(idSaveChecked: Boolean) = runBlocking {
+    fun setEmailSaveChecked(emailSaveChecked: Boolean) = runBlocking {
         dataStore.updateData {
-            it.copy(idSaveChecked = idSaveChecked)
+            it.copy(emailSaveChecked = emailSaveChecked)
         }
     }
 
-    fun getIdSaveChecked() = runBlocking {
-        data.first().idSaveChecked
+    fun getEmailSaveChecked() = runBlocking {
+        data.first().emailSaveChecked
     }
 
     fun saveUserEmail(userEmail: String) = runBlocking {

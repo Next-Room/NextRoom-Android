@@ -55,7 +55,7 @@ class LoginViewModel @Inject constructor(
     fun checkEmailSaved() {
         viewModelScope.launch {
             intent {
-                val idSaveChecked = adminRepository.getIdSaveChecked()
+                val idSaveChecked = adminRepository.getEmailSaveChecked()
                 val userEmail = if (idSaveChecked) adminRepository.getUserEmail() else ""
                 reduce {
                     state.copy(
