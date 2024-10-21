@@ -73,4 +73,25 @@ class SettingDataSource @Inject constructor(
             )
         }
     }
+
+
+    fun setEmailSaveChecked(emailSaveChecked: Boolean) = runBlocking {
+        dataStore.updateData {
+            it.copy(emailSaveChecked = emailSaveChecked)
+        }
+    }
+
+    fun getEmailSaveChecked() = runBlocking {
+        data.first().emailSaveChecked
+    }
+
+    fun saveUserEmail(userEmail: String) = runBlocking {
+        dataStore.updateData {
+            it.copy(userEmail= userEmail)
+        }
+    }
+
+    fun getUserEmail() = runBlocking {
+        data.first().userEmail
+    }
 }

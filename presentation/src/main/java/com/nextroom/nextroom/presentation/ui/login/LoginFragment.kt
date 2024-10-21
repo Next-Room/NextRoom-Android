@@ -24,9 +24,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
     private val viewModel: LoginViewModel by viewModels()
 
+    private var emailInitialised = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.checkEmailSaved()
         initViews()
         observe()
 
@@ -65,6 +67,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             val action = LoginFragmentDirections.actionGlobalWebViewFragment(getString(R.string.link_privacy_policy))
             findNavController().safeNavigate(action)
         }
+
+        cbIdSave.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onIdSaveChecked(isChecked)
+        }
     }
 
     private fun observe() {
@@ -85,6 +91,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         pbLoading.isVisible = state.loading
         etEmail.isEnabled = !state.loading
         etPassword.isEnabled = !state.loading
+        if (!emailInitialised) {
+            emailInitialised = true
+            etEmail.setText(state.userEmail)
+            cbIdSave.isChecked = state.idSaveChecked
+        }
         btnLogin.isEnabled = !state.loading
         tvPrivacyPolicy.isEnabled = !state.loading
         tvNoAccountGuide.isEnabled = !state.loading

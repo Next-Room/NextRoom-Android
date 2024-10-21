@@ -37,6 +37,8 @@ class LoginViewModel @Inject constructor(
         false,
     )
 
+    private var idSaveChecked = false
+
     init {
         viewModelScope.launch {
             adminRepository.loggedIn.collect {
@@ -46,6 +48,21 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (dataStoreRepository.getIsInitLaunch()) {
                 event(LoginEvent.GoToOnboardingScreen)
+            }
+        }
+    }
+
+    fun checkEmailSaved() {
+        viewModelScope.launch {
+            intent {
+                val idSaveChecked = adminRepository.getEmailSaveChecked()
+                val userEmail = if (idSaveChecked) adminRepository.getUserEmail() else ""
+                reduce {
+                    state.copy(
+                        idSaveChecked = idSaveChecked,
+                        userEmail = userEmail
+                    )
+                }
             }
         }
     }
@@ -68,9 +85,13 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun onIdSaveChecked(checked: Boolean) {
+        idSaveChecked = checked
+    }
+
     fun complete() = intent {
         reduce { state.copy(loading = true) }
-        adminRepository.login(state.currentIdInput, state.currentPasswordInput)
+        adminRepository.login(state.currentIdInput, state.currentPasswordInput, idSaveChecked)
             .onSuccess {
                 verifySuccess()
             }.onFailure {

@@ -26,8 +26,12 @@ class AdminRepositoryImpl @Inject constructor(
 
     override val shopName: Flow<String> = settingDataSource.shopName
 
-    override suspend fun login(adminCode: String, password: String): Result<LoginInfo> {
+    override suspend fun login(adminCode: String, password: String, emailSaveChecked: Boolean): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
+            if (emailSaveChecked) {
+                settingDataSource.saveUserEmail(adminCode)
+            }
+            settingDataSource.setEmailSaveChecked(emailSaveChecked)
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
         }
@@ -53,5 +57,13 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun getUserSubscribe(): Result<Mypage> {
         return subscriptionDataSource.getUserSubscription()
+    }
+
+    override suspend fun getEmailSaveChecked(): Boolean {
+        return settingDataSource.getEmailSaveChecked()
+    }
+
+    override suspend fun getUserEmail(): String {
+        return settingDataSource.getUserEmail()
     }
 }
