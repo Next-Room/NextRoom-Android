@@ -1,5 +1,7 @@
 [versions]
 minSdk = "24"
+review = "2.0.1"
+reviewKtx = "2.0.1"
 targetSdk = "34"
 versionCode = "39"
 versionName = "1.2.0"
@@ -83,11 +85,13 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
 orbit-viewmodel = { module = "org.orbit-mvi:orbit-viewmodel", version.ref = "orbit" }
 photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoview" }
+play-review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "reviewKtx" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.require = "firebase-analytics" }
 firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.require = "false" }
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebase-config" }
+review = { module = "com.google.android.play:review", version.ref = "review" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }

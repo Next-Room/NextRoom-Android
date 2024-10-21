@@ -15,6 +15,7 @@ import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
@@ -38,11 +39,19 @@ class AdminMainViewModel @Inject constructor(
     init {
         loadData()
         fetchBanners()
+        showInAppReview()
 
         viewModelScope.launch {
             adminRepository.shopName.collect {
                 updateShopInfo(it)
             }
+        }
+    }
+
+    private fun showInAppReview() = intent {
+        viewModelScope.launch {
+            delay(200)
+            postSideEffect(AdminMainEvent.InAppReview)
         }
     }
 
