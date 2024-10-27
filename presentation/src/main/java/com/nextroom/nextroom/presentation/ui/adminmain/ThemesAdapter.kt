@@ -11,14 +11,12 @@ import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemesAdapter(
-    private val onStartGame: (Int) -> Unit,
-    private val onClickUpdate: (Int) -> Unit,
+    private val onStartGame: (Int) -> Unit
 ) : ListAdapter<ThemeInfoPresentation, ThemesAdapter.ThemeViewHolder>(diffUtil) {
 
     class ThemeViewHolder(
         private val binding: ItemThemeBinding,
-        onStartGame: (Int) -> Unit,
-        onClickUpdate: (Int) -> Unit,
+        onStartGame: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var item: ThemeInfoPresentation
@@ -26,7 +24,6 @@ class ThemesAdapter(
 
         init {
             binding.root.setOnClickListener { onStartGame(item.id) }
-            binding.btnUpdate.setOnClickListener { onClickUpdate(item.id) }
         }
 
         fun bind(themeInfo: ThemeInfoPresentation) = with(binding) {
@@ -44,8 +41,7 @@ class ThemesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
         return ThemeViewHolder(
             ItemThemeBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onStartGame,
-            onClickUpdate,
+            onStartGame
         )
     }
 

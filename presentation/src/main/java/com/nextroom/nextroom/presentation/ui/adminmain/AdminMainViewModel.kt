@@ -57,28 +57,6 @@ class AdminMainViewModel @Inject constructor(
             }
     }
 
-    fun updateTheme(themeId: Int) = intent {
-        themeRepository
-            .getThemes()
-            .onSuccess { themes ->
-                themes
-                    .find { it.id == themeId }
-                    ?.let { themeRepository.upsertTheme(it) }
-            }.onFailure {
-                handleError(it)
-                return@intent
-            }
-
-        hintRepository.saveHints(themeId).onSuccess { updatedAt ->
-            reduce {
-                state.copy(
-                    themes = state.themes.toMutableList()
-                        .map { if (it.id == themeId) it.copy(recentUpdated = updatedAt) else it },
-                )
-            }
-        }.onFailure(::handleError)
-    }
-
     fun start(themeId: Int, readyToStart: () -> Unit) = intent {
         themeRepository.updateLatestTheme(themeId)
         withContext(Dispatchers.Main) {

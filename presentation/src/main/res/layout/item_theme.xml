@@ -36,28 +36,6 @@
         tools:text="최근 업데이트 : 2023.01.02" />
 
     <View
-        android:id="@+id/btn_update"
-        android:layout_width="48dp"
-        android:layout_height="34dp"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_recent_update"
-        app:layout_constraintStart_toEndOf="@id/tv_recent_update"
-        app:layout_constraintTop_toTopOf="@id/tv_recent_update" />
-
-    <ImageView
-        android:id="@+id/iv_update"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="12dp"
-        android:background="@drawable/bg_update_button"
-        android:contentDescription="@string/update_button_description"
-        android:padding="2.5dp"
-        android:src="@drawable/ic_update24"
-        app:layout_constraintBottom_toBottomOf="@id/btn_update"
-        app:layout_constraintStart_toStartOf="@id/btn_update"
-        app:layout_constraintTop_toTopOf="@id/btn_update" />
-
-    <View
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="#1FFFFFFF"
