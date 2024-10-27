@@ -24,12 +24,13 @@ class HintRepositoryImpl @Inject constructor(
         return hintLocalDataSource.getHint(themeId, hintCode)?.toDomain()
     }
 
-    override suspend fun saveHints(themeId: Int): Result<Long> {
+    //TODO : 리팩토링 필요. hint를 저장하는데, 최신의 updatedTime이 나올거라고 예상할수가 없고 그래서도 안됨
+    override suspend fun saveHints(themeId: Int): Result<Pair<Int, Long>> {
         val updatedTime = System.currentTimeMillis()
         return hintRemoteDataSource.getHints(themeId)
             .suspendOnSuccess {
                 themeLocalDataSource.updateUpdatedInfo(themeId, updatedTime)
                 hintLocalDataSource.saveHints(themeId, it)
-            }.mapOnSuccess { updatedTime }
+            }.mapOnSuccess { Pair(themeId, updatedTime) }
     }
 }

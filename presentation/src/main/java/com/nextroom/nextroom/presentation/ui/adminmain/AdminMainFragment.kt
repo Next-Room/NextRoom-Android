@@ -34,10 +34,7 @@ class AdminMainFragment :
 
     private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
-        ThemesAdapter(
-            onStartGame = ::startGame,
-            onClickUpdate = viewModel::updateTheme,
-        )
+        ThemesAdapter(onStartGame = ::startGame)
     }
     private val state: AdminMainState
         get() = viewModel.container.stateFlow.value
@@ -88,7 +85,7 @@ class AdminMainFragment :
         }
 
         srlTheme.setOnRefreshListener {
-            viewModel.loadData()
+            viewModel.fetchData()
         }
 
         llBanner.setOnClickListener {

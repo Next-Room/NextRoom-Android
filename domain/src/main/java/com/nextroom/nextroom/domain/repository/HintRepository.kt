@@ -5,5 +5,5 @@ import com.nextroom.nextroom.domain.model.Result
 
 interface HintRepository {
     suspend fun getHint(hintCode: String): Hint?
-    suspend fun saveHints(themeId: Int): Result<Long>
+    suspend fun saveHints(themeId: Int): Result<Pair<Int, Long>>
 }
