@@ -38,11 +38,13 @@ class GameViewModel @Inject constructor(
     override val container: Container<GameScreenState, GameEvent> = container(GameScreenState())
 
     init {
-        startOrResumeGame()
-
         viewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
+    }
+
+    fun onGameStartClicked() {
+        startOrResumeGame()
     }
 
     private fun startOrResumeGame() {
