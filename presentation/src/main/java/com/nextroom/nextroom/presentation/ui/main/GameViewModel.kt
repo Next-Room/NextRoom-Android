@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.main
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.nextroom.nextroom.domain.model.GameState
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -41,6 +42,19 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
+        viewModelScope.launch {
+            val latestGame = gameStateRepository.getGameState()
+            fun isNewGame() = latestGame == null
+            if (isNewGame()) {
+                showGameStartConfirmDialog()
+            } else {
+                resumeGame(latestGame ?: return@launch)
+            }
+        }
+    }
+
+    private fun showGameStartConfirmDialog() = intent {
+        postSideEffect(GameEvent.NewGame)
     }
 
     fun onGameStartClicked() {
@@ -50,16 +64,7 @@ class GameViewModel @Inject constructor(
     private fun startOrResumeGame() {
         viewModelScope.launch {
             gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
-                with(gameState) {
-                    setGameScreenState(
-                        seconds = timeLimitInMinute * 60,
-                        hintLimit = hintLimit,
-                        usedHints = usedHints,
-                        lastSeconds = lastSeconds,
-                        startTime = startTime,
-                    )
-                    startGame(startTime + timeLimitInMinute * 60 * 1000)
-                }
+                resumeGame(gameState)
             } ?: run { // 새로운 게임을 시작하는 경우
                 with(themeRepository.getLatestTheme().first()) {
                     val startTime = System.currentTimeMillis()
@@ -83,6 +88,19 @@ class GameViewModel @Inject constructor(
 
         // 게임 시작 통계 집계 시작
 //                statsRepository.recordGameStartStats(GameStats(it.id, DateTimeUtil().currentTime() ?: ""))
+    }
+
+    private fun resumeGame(gameState: GameState) {
+        with(gameState) {
+            setGameScreenState(
+                seconds = timeLimitInMinute * 60,
+                hintLimit = hintLimit,
+                usedHints = usedHints,
+                lastSeconds = lastSeconds,
+                startTime = startTime,
+            )
+            startGame(startTime + timeLimitInMinute * 60 * 1000)
+        }
     }
 
     fun inputHintCode(key: Int) = intent {

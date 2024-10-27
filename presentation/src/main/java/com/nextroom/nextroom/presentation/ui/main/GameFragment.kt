@@ -59,14 +59,9 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        showGameStartConfirmDialog()
         initViews()
         setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
-    }
-
-    private fun showGameStartConfirmDialog() {
-        gameStartConfirmDialog.show(parentFragmentManager, "GameStartConfirmDialog")
     }
 
     private fun setFragmentResultListeners() {
@@ -133,6 +128,9 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             is GameEvent.GameFinish -> snackbar(R.string.game_finished)
 
             GameEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
+            GameEvent.NewGame -> {
+                gameStartConfirmDialog.show(parentFragmentManager, "GameStartConfirmDialog")
+            }
         }
     }
 
@@ -172,11 +170,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         disableFullScreen()
         backCallback.remove()
         super.onDetach()
-    }
-
-    override fun onDestroyView() {
-        gameStartConfirmDialog.dismiss()
-        super.onDestroyView()
     }
 
     companion object {
