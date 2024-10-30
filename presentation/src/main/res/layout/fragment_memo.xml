@@ -9,14 +9,19 @@
         android:id="@+id/tb_memo"
         layout="@layout/common_toolbar" />
 
-    <com.nextroom.nextroom.presentation.customview.PainterView
-        android:id="@+id/custom_painter_view"
+    <com.nextroom.nextroom.presentation.customview.ZoomLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tb_memo" />
+        app:layout_constraintTop_toBottomOf="@id/tb_memo">
+
+        <com.nextroom.nextroom.presentation.customview.PainterView
+            android:id="@+id/custom_painter_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.nextroom.nextroom.presentation.customview.ZoomLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_end"
