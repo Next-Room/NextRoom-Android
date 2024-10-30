@@ -118,4 +118,7 @@
     <string name="date_range_format">%s ~ %s</string>
     <string name="image_viewer_title_format">사진(%s / %s)</string>
     <string name="email_save_title">이메일 저장</string>
+    <string name="start">시작</string>
+    <string name="dialog_title_game_start_confirm">게임을 시작하시겠습니까?</string>
+    <string name="dialog_message_game_start_confirm">버튼을 클릭하면 타이머가 시작됩니다</string>
 </resources>

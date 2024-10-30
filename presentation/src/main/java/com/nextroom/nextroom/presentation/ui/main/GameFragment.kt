@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
 import com.nextroom.nextroom.presentation.extension.disableFullScreen
@@ -33,6 +34,21 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     private val viewModel: GameViewModel by viewModels()
     private val painterViewModel: PainterViewModel by activityViewModels()
 
+    private val gameStartConfirmDialog by lazy {
+        NRDialog.Builder(requireContext())
+            .setTitle(R.string.dialog_title_game_start_confirm)
+            .setMessage(R.string.dialog_message_game_start_confirm)
+            .setCancelable(false)
+            .setPositiveButton(R.string.start) { _, _ ->
+                viewModel.onGameStartClicked()
+                dismissStartConfirmDialog()
+            }.create()
+    }
+
+    private fun dismissStartConfirmDialog() {
+        gameStartConfirmDialog.dismiss()
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         backCallback = object : OnBackPressedCallback(true) {
@@ -43,7 +59,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
         setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
@@ -113,6 +128,9 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             is GameEvent.GameFinish -> snackbar(R.string.game_finished)
 
             GameEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
+            GameEvent.NewGame -> {
+                gameStartConfirmDialog.show(parentFragmentManager, "GameStartConfirmDialog")
+            }
         }
     }
 
