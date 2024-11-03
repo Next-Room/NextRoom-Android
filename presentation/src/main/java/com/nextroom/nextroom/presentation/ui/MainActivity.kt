@@ -63,21 +63,20 @@ class MainActivity :
     }
 
     private fun observe(event: MainEvent) {
-        val navController =
-            supportFragmentManager.findFragmentById(R.id.fcv_nav_host)?.findNavController()
-
         when (event) {
             is MainEvent.GoToGameScreen -> {
-                navController?.navigate(R.id.mainFragment)
+                getFindNavController()?.navigate(R.id.mainFragment)
             }
 
             MainEvent.GoToLoginScreen -> {
-                navController?.navigate(R.id.action_global_loginFragment)
+                getFindNavController()?.navigate(R.id.action_global_loginFragment)
             }
 
             MainEvent.ShowForceUpdateDialog -> showForceUpdateDialog()
         }
     }
+
+    private fun getFindNavController() = supportFragmentManager.findFragmentById(R.id.fcv_nav_host)?.findNavController()
 
     private fun showForceUpdateDialog() {
         NRDialog.Builder(this)
