@@ -62,6 +62,11 @@ class MainActivity :
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        getFindNavController()?.handleDeepLink(intent)
+    }
+
     private fun observe(event: MainEvent) {
         when (event) {
             is MainEvent.GoToGameScreen -> {
