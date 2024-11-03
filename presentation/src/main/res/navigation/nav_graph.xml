@@ -187,6 +187,10 @@
             android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"
             app:destination="@id/purchaseSuccessFragment"
             app:popUpTo="@id/adminMainFragment" />
+
+        <deepLink
+            app:action="android.intent.action.VIEW"
+            app:uri="@string/deeplink_purchase" />
     </fragment>
     <fragment
         android:id="@+id/purchaseSuccessFragment"

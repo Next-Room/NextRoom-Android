@@ -1,4 +1,7 @@
 <resources>
+    <!-- start deeplink -->
+    <string name="deeplink_purchase">next://room/purchase</string>
+    <!-- end deeplink -->
     <string name="app_name">넥스트룸</string>
     <string name="blank"> </string>
     <string name="common_input">입력</string>
