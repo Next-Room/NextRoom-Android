@@ -1,6 +1,8 @@
 package com.nextroom.nextroom.presentation.ui.adminmain
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -95,9 +97,21 @@ class AdminMainFragment :
 
         llBanner.setOnClickListener {
             viewModel.container.stateFlow.value.banner?.linkUrl?.let {
-                goToLink(it)
+                navByDeepLink(it)
             }
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
+        }
+    }
+
+    private fun navByDeepLink(deeplinkUrl: String) {
+        try {
+            Intent(Intent.ACTION_VIEW)
+                .setData(Uri.parse(deeplinkUrl))
+                .let {
+                    startActivity(it)
+                }
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
     }
 
