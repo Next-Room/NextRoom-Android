@@ -64,7 +64,18 @@ class MainActivity :
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        getFindNavController()?.handleDeepLink(intent)
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        intent?.data?.let { deepLinkUri ->
+            getFindNavController()?.graph?.forEach { navDestination ->
+                if (navDestination.hasDeepLink(deepLinkUri)) {
+                    getFindNavController()?.navigate(navDestination.id)
+                    return@let
+                }
+            }
+        }
     }
 
     private fun observe(event: MainEvent) {
