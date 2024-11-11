@@ -33,4 +33,9 @@ google-services.json
 *.hprof
 
 /app/release/*
+
 /keystore
+
+
+nextroom_key
+
