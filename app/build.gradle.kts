@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.application)
@@ -26,11 +28,19 @@ android {
         versionName = libs.versions.versionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig = signingConfigs.getByName("debug")
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = getApiKey("key_alias")
+            keyPassword = getApiKey("key_password")
+            storeFile = file("../nextroom_key")
+            storePassword = getApiKey("store_password")
+        }
+    }
     buildTypes {
         getByName("release") {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -38,6 +48,7 @@ android {
             )
         }
         getByName("debug") {
+            signingConfig = signingConfigs.getByName("debug")
             isDebuggable = true
             applicationIdSuffix = ".debug"
         }
@@ -69,4 +80,8 @@ dependencies {
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+}
+
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
