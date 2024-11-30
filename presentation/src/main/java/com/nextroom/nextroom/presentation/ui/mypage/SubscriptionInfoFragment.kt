@@ -44,6 +44,7 @@ class SubscriptionInfoFragment :
                         SubscriptionInfoViewModel.UiState.Failure -> snackbar(R.string.error_something)
                         is SubscriptionInfoViewModel.UiState.Loaded -> {
                             binding.tvSubscriptionStatus.text = when (state.subscribeStatus) {
+                                SubscribeStatus.SUBSCRIPTION_EXPIRATION,
                                 SubscribeStatus.Default -> getString(R.string.ticket_not_subscribe)
                                 SubscribeStatus.Subscribed -> getString(R.string.ticket_subscribing)
                             }

@@ -118,11 +118,18 @@ class AdminMainFragment :
     private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
 
-        state.banner?.let {
-            llBanner.isVisible = true
-            tvBanner.text = it.description
-        } ?: run {
-            llBanner.isVisible = false
+        when (state.subscribeStatus) {
+            SubscribeStatus.Default,
+            SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
+                state.banner?.let {
+                    llBanner.isVisible = true
+                    tvBanner.text = it.description
+                } ?: run {
+                    llBanner.isVisible = false
+                }
+            }
+
+            SubscribeStatus.Subscribed -> llBanner.isVisible = false
         }
 
         tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed

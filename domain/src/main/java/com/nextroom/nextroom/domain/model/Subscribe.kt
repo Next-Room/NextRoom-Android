@@ -39,10 +39,13 @@ data class UserSubscribeStatus(
 /**
  * @property Default 아무것도 구독하지 않은 상태
  * @property Subscribed 구독 중 상태
+ * @property SUBSCRIPTION_EXPIRATION 구독한 적이 있으나 만료된 상태
  */
 enum class SubscribeStatus(val value: String) {
     Default("FREE"),
-    Subscribed("SUBSCRIPTION");
+    Subscribed("SUBSCRIPTION"),
+    SUBSCRIPTION_EXPIRATION("SUBSCRIPTION_EXPIRATION")
+    ;
 
     companion object {
         fun ofValue(value: String): SubscribeStatus {

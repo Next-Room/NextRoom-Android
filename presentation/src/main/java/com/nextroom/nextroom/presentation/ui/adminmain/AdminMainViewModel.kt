@@ -38,7 +38,6 @@ class AdminMainViewModel @Inject constructor(
 
     init {
         loadData()
-        fetchBanners()
         showInAppReview()
 
         viewModelScope.launch {
@@ -97,8 +96,8 @@ class AdminMainViewModel @Inject constructor(
 
     fun loadData() = intent {
         reduce { state.copy(loading = true) }
-        adminRepository.getUserSubscribe().suspendOnSuccess {
-            reduce { state.copy(subscribeStatus = it.status) }
+        adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
+            reduce { state.copy(subscribeStatus = myPage.status) }
             themeRepository.getThemes().onSuccess {
                 updateThemes(
                     it.map { themeInfo ->
@@ -107,6 +106,12 @@ class AdminMainViewModel @Inject constructor(
                     },
                 )
             }
+
+            bannerRepository
+                .getBanners()
+                .onSuccess {
+                    reduce { state.copy(banner = it.firstOrNull()) }
+                }
         }
         themeRepository.getThemes().onSuccess {
             updateThemes(

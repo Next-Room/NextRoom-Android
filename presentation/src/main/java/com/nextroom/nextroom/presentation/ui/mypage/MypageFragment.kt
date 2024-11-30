@@ -46,6 +46,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         clSubscribe.setOnClickListener {
             (viewModel.uiState.value as? MypageViewModel.UiState.Loaded)?.let { loaded ->
                 when (loaded.status) {
+                    SubscribeStatus.SUBSCRIPTION_EXPIRATION,
                     SubscribeStatus.Default -> goToPurchase()
                     SubscribeStatus.Subscribed -> goToSubscriptionInfo()
                 }
