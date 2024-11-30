@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.domain.model.UserSubscription
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -18,9 +20,9 @@ import com.nextroom.nextroom.presentation.databinding.FragmentHintBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
-import com.nextroom.nextroom.presentation.model.Hint
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import org.orbitmvi.orbit.viewmodel.observe
@@ -70,6 +72,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun render(state: HintState) = with(binding) {
+        pbLoading.isVisible = state.loading
         tbHint.tvTitle.text = state.lastSeconds.toTimerFormat()
         groupAnswer.isVisible = state.hint.answerOpened
         btnAction.text = if (!state.hint.answerOpened) {
@@ -91,32 +94,34 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 }
             }
 
-            if (!hintAnswerPagerInitialised) {
+            if (!hintAnswerPagerInitialised && state.userSubscribeStatus == SubscribeStatus.Subscribed) {
                 hintAnswerPagerInitialised = true
-                setUpHintAnswerImage(binding, state.hint)
+                setUpHintAnswerImage(binding, state)
             }
         }
 
-        if (!hintPagerInitialised) {
+        if (!hintPagerInitialised && state.userSubscribeStatus == SubscribeStatus.Subscribed) {
             hintPagerInitialised = true
-            setUpHintImage(binding, state.hint)
+            setUpHintImage(binding, state)
         }
     }
 
-    private fun setUpHintImage(binding: FragmentHintBinding, hint: Hint) = with(binding) {
-        vpHintImage.isVisible = hint.hintImageUrlList.isNotEmpty()
-        indicator.isVisible = hint.hintImageUrlList.isNotEmpty()
+    private fun setUpHintImage(binding: FragmentHintBinding, hintState: HintState) = with(binding) {
+        vpHintImage.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
+                && hintState.hint.hintImageUrlList.isNotEmpty()
+        indicator.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
+                && hintState.hint.hintImageUrlList.isNotEmpty()
         vpHintImage.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
-                return hint.hintImageUrlList.size
+                return hintState.hint.hintImageUrlList.size
             }
 
             override fun createFragment(position: Int): Fragment {
                 return ImageFragment(
-                    imageUrl = hint.hintImageUrlList[position],
+                    imageUrl = hintState.hint.hintImageUrlList[position],
                     onImageClicked = {
                         NavGraphDirections.actionGlobalImageViewerFragment(
-                            imageUrlList = hint.hintImageUrlList.toTypedArray(),
+                            imageUrlList = hintState.hint.hintImageUrlList.toTypedArray(),
                             position = position
                         ).also {
                             findNavController().safeNavigate(it)
@@ -136,20 +141,22 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         indicator.withViewPager(vpHintImage)
     }
 
-    private fun setUpHintAnswerImage(binding: FragmentHintBinding, hint: Hint) = with(binding) {
-        vpHintAnswerImage.isVisible = hint.answerImageUrlList.isNotEmpty()
-        indicatorAnswer.isVisible = hint.answerImageUrlList.isNotEmpty()
+    private fun setUpHintAnswerImage(binding: FragmentHintBinding, hintState: HintState) = with(binding) {
+        vpHintAnswerImage.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
+                && hintState.hint.answerImageUrlList.isNotEmpty()
+        indicatorAnswer.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
+                && hintState.hint.answerImageUrlList.isNotEmpty()
         vpHintAnswerImage.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
-                return hint.answerImageUrlList.size
+                return hintState.hint.answerImageUrlList.size
             }
 
             override fun createFragment(position: Int): Fragment {
                 return ImageFragment(
-                    imageUrl = hint.answerImageUrlList[position],
+                    imageUrl = hintState.hint.answerImageUrlList[position],
                     onImageClicked = {
                         NavGraphDirections.actionGlobalImageViewerFragment(
-                            imageUrlList = hint.answerImageUrlList.toTypedArray(),
+                            imageUrlList = hintState.hint.answerImageUrlList.toTypedArray(),
                             position = position
                         ).also {
                             findNavController().safeNavigate(it)
@@ -172,6 +179,9 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     private fun handleEvent(event: HintEvent) {
         when (event) {
             HintEvent.OpenAnswer -> viewModel.openAnswer()
+            is HintEvent.NetworkError -> snackbar(R.string.error_network)
+            is HintEvent.UnknownError -> snackbar(R.string.error_something)
+            is HintEvent.ClientError -> snackbar(event.message)
         }
     }
 
