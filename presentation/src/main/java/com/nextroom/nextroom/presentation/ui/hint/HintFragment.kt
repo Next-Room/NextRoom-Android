@@ -141,15 +141,15 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         indicatorAnswer.isVisible = hint.answerImageUrlList.isNotEmpty()
         vpHintAnswerImage.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
-                return hint.hintImageUrlList.size
+                return hint.answerImageUrlList.size
             }
 
             override fun createFragment(position: Int): Fragment {
                 return ImageFragment(
-                    imageUrl = hint.hintImageUrlList[position],
+                    imageUrl = hint.answerImageUrlList[position],
                     onImageClicked = {
                         NavGraphDirections.actionGlobalImageViewerFragment(
-                            imageUrlList = hint.hintImageUrlList.toTypedArray(),
+                            imageUrlList = hint.answerImageUrlList.toTypedArray(),
                             position = position
                         ).also {
                             findNavController().safeNavigate(it)
