@@ -57,17 +57,6 @@ class AdminMainViewModel @Inject constructor(
         }
     }
 
-    private fun fetchBanners() = intent {
-        bannerRepository
-            .getBanners()
-            .onSuccess {
-                reduce { state.copy(banner = it.firstOrNull()) }
-            }
-            .onFailure {
-                handleError(it)
-            }
-    }
-
     fun updateTheme(themeId: Int) = intent {
         themeRepository
             .getThemes()
