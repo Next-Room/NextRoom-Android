@@ -37,7 +37,6 @@ class AdminMainViewModel @Inject constructor(
     override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
 
     init {
-        loadData()
         showInAppReview()
 
         viewModelScope.launch {
@@ -45,6 +44,10 @@ class AdminMainViewModel @Inject constructor(
                 updateShopInfo(it)
             }
         }
+    }
+
+    fun onResume() {
+        loadData()
     }
 
     private fun showInAppReview() = intent {

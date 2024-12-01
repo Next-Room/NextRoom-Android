@@ -63,6 +63,11 @@ class AdminMainFragment :
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
     /*override fun onStart() {
         super.onStart()
 
