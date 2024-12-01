@@ -97,7 +97,7 @@ class AdminMainViewModel @Inject constructor(
                         themeInfo.toPresentation(updatedAt)
                     },
                 )
-            }
+            }.onFailure(::handleError)
 
             bannerRepository
                 .getBanners()
@@ -105,14 +105,6 @@ class AdminMainViewModel @Inject constructor(
                     reduce { state.copy(banner = it.firstOrNull()) }
                 }
         }
-        themeRepository.getThemes().onSuccess {
-            updateThemes(
-                it.map { themeInfo ->
-                    val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                    themeInfo.toPresentation(updatedAt)
-                },
-            )
-        }.onFailure(::handleError)
         reduce { state.copy(loading = false) }
     }
 
