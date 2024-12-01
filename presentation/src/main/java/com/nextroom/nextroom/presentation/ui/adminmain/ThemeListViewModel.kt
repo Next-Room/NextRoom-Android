@@ -26,15 +26,15 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminMainViewModel @Inject constructor(
+class ThemeListViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val bannerRepository: BannerRepository
-) : BaseViewModel<AdminMainState, AdminMainEvent>() {
+) : BaseViewModel<ThemeListState, ThemeListEvent>() {
 
-    override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
+    override val container: Container<ThemeListState, ThemeListEvent> = container(ThemeListState(loading = true))
 
     init {
         showInAppReview()
@@ -53,7 +53,7 @@ class AdminMainViewModel @Inject constructor(
     private fun showInAppReview() = intent {
         viewModelScope.launch {
             delay(200)
-            postSideEffect(AdminMainEvent.InAppReview)
+            postSideEffect(ThemeListEvent.InAppReview)
         }
     }
 
@@ -118,9 +118,9 @@ class AdminMainViewModel @Inject constructor(
 
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
-            is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
-            is Result.Failure.HttpError -> postSideEffect(AdminMainEvent.ClientError(error.message))
-            else -> postSideEffect(AdminMainEvent.UnknownError)
+            is Result.Failure.NetworkError -> postSideEffect(ThemeListEvent.NetworkError)
+            is Result.Failure.HttpError -> postSideEffect(ThemeListEvent.ClientError(error.message))
+            else -> postSideEffect(ThemeListEvent.UnknownError)
         }
     }
 }
