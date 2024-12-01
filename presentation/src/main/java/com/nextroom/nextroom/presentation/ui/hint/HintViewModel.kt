@@ -3,8 +3,6 @@ package com.nextroom.nextroom.presentation.ui.hint
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.mangbaam.commonutil.DateTimeUtil
-import com.nextroom.nextroom.domain.model.Result
-import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
@@ -15,7 +13,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -50,9 +47,9 @@ class HintViewModel @Inject constructor(
     private fun fetchUserSubscribe() = intent {
         reduce { state.copy(loading = true) }
 
-        adminRepository.getUserSubscribe()
+        adminRepository
+            .getUserSubscribe()
             .suspendOnSuccess { reduce { state.copy(userSubscribeStatus = it.status) } }
-            .onFailure { handleError(it) }
 
         reduce { state.copy(loading = false) }
     }
@@ -65,13 +62,5 @@ class HintViewModel @Inject constructor(
 
     private fun tick(lastSeconds: Int) = intent {
         reduce { state.copy(lastSeconds = lastSeconds) }
-    }
-
-    private fun handleError(error: Result.Failure) = intent {
-        when (error) {
-            is Result.Failure.NetworkError -> postSideEffect(HintEvent.NetworkError)
-            is Result.Failure.HttpError -> postSideEffect(HintEvent.ClientError(error.message))
-            else -> postSideEffect(HintEvent.UnknownError)
-        }
     }
 }
