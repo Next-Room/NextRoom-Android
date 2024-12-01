@@ -150,7 +150,12 @@ class ThemeListFragment :
             is ThemeListEvent.UnknownError -> snackbar(R.string.error_something)
             is ThemeListEvent.ClientError -> snackbar(event.message)
             ThemeListEvent.InAppReview -> showInAppReview()
+            ThemeListEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
         }
+    }
+
+    private fun showRecommendBackgroundCustomBottomSheet() {
+        findNavController().safeNavigate(ThemeListFragmentDirections.moveToRecommendBackgroundCustom())
     }
 
     private fun showInAppReview() {

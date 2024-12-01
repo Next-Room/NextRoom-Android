@@ -39,7 +39,15 @@
         <action
             android:id="@+id/action_admin_to_webview"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/move_to_recommend_background_custom"
+            app:destination="@+id/recommend_background_custom_bottom_sheet"/>
     </fragment>
+
+    <dialog
+        android:id="@+id/recommend_background_custom_bottom_sheet"
+        android:name="com.nextroom.nextroom.presentation.ui.adminmain.RecommendBackgroundCustomBottomSheet"/>
+
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.nextroom.nextroom.presentation.ui.main.GameFragment"

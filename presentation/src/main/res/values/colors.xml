@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+
     <color name="black">#1D1B20</color>
     <color name="onSurface">#1D1B20</color>
     <color name="surface">#FEF7FF</color>
@@ -18,6 +20,9 @@
     <color name="Gray05">#46454a</color>
     <color name="White">#FFFFFF</color>
     <color name="Red">#FF5065</color>
+
+    <color name="sub1">#1f2023</color>
+    <color name="sub2">#3a3b3d</color>
 
     <drawable name="drawable_White">@color/White</drawable>
     <drawable name="drawable_Gray02">@color/Gray02</drawable>

@@ -104,6 +104,9 @@ class ThemeListViewModel @Inject constructor(
                 .onSuccess {
                     reduce { state.copy(banner = it.firstOrNull()) }
                 }
+
+            //TODO : test
+            postSideEffect(ThemeListEvent.RecommendBackgroundCustom)
         }
         reduce { state.copy(loading = false) }
     }
