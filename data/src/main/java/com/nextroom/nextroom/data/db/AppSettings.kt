@@ -13,5 +13,6 @@ data class AppSettings(
     val isInitLaunch: Boolean = true,
     val lastLaunchDate: Long = 0L,
     val emailSaveChecked: Boolean = false,
-    val userEmail: String = ""
+    val userEmail: String = "",
+    val backgroundCustomDialogHideUntil: Long = 0L
 )

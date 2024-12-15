@@ -105,10 +105,16 @@ class ThemeListViewModel @Inject constructor(
                     reduce { state.copy(banner = it.firstOrNull()) }
                 }
 
-            //TODO : test
-            postSideEffect(ThemeListEvent.RecommendBackgroundCustom)
+            if (!shouldHideRecommendBackgroundCustomDialog()) {
+                postSideEffect(ThemeListEvent.RecommendBackgroundCustom)
+            }
         }
         reduce { state.copy(loading = false) }
+    }
+
+    private fun shouldHideRecommendBackgroundCustomDialog(): Boolean {
+        val hideUntil = dataStoreRepository.getRecommendBackgroundCustomDialogHidden()
+        return System.currentTimeMillis() < hideUntil
     }
 
     private fun updateShopInfo(shopName: String) = intent {
