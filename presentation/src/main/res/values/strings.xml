@@ -128,4 +128,7 @@
     <string name="text_confirm">확인</string>
     <string name="text_background_custom_recommend_title">타이머 배경 커스텀 기능 출시 ✨</string>
     <string name="text_recommend_background_custom_desc">테마 포스터로 타이머 배경을 커스텀 할 수 있습니다. 각 테마의 독특한 분위기를 더해 몰입감을 높여보세요.</string>
+    <string name="tv_theme">테마</string>
+    <string name="text_background_setting">배경 설정</string>
+    <string name="text_last_hint_update">최근 힌트 업데이트 %s</string>
 </resources>

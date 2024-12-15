@@ -79,17 +79,78 @@
                 android:paddingHorizontal="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_shop_name" />
 
+            <TextView
+                android:id="@+id/tv_theme"
+                style="@style/Pretendard.18.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="43dp"
+                android:text="@string/tv_theme"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rv_banner" />
+
+            <TextView
+                android:id="@+id/tv_theme_count"
+                style="@style/Pretendard.16.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/white_50"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_theme"
+                app:layout_constraintStart_toEndOf="@+id/tv_theme"
+                app:layout_constraintTop_toTopOf="@+id/tv_theme"
+                tools:text="2" />
+
+            <TextView
+                android:id="@+id/tv_bacground_setting"
+                style="@style/Pretendard.14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/text_background_setting"
+                android:textColor="@color/white_70"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_theme_count"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_theme_count" />
+
+            <TextView
+                android:id="@+id/tv_last_update"
+                style="@style/Pretendard.14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/white_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_theme"
+                tools:text="최근 힌트 업데이트 2023.01.02 00:00" />
+
+            <ImageView
+                android:id="@+id/iv_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:padding="3dp"
+                android:src="@drawable/icon_refrash"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_last_update"
+                app:layout_constraintStart_toEndOf="@+id/tv_last_update"
+                app:layout_constraintTop_toTopOf="@+id/tv_last_update" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_themes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rv_banner"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_update"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_theme" />
 
@@ -104,7 +165,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_update_description">
+                app:layout_constraintTop_toBottomOf="@id/rv_banner"
+                tools:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"

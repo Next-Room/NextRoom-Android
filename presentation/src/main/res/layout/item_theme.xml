@@ -4,64 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_theme_item">
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginVertical="6dp"
+    android:background="@drawable/bg_white_5_r_16">
+
+    <ImageView
+        android:id="@+id/img_theme"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_white_12_b_1_r_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_theme_name"
+        style="@style/Pretendard.14"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="28dp"
-        android:textAppearance="@style/Pretendard.18"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="start"
+        android:maxLines="2"
         android:textColor="@color/White"
-        app:layout_constraintBottom_toTopOf="@id/tv_recent_update"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_arrow_right"
+        app:layout_constraintStart_toEndOf="@+id/img_theme"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="로스트 킹덤2 : 잃어버린 세계를 찾아서" />
 
-    <TextView
-        android:id="@+id/tv_recent_update"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="28dp"
-        android:textAppearance="@style/Pretendard.14.SemiBold"
-        android:textColor="#919098"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/tv_theme_name"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="@id/tv_theme_name"
-        app:layout_constraintTop_toBottomOf="@id/tv_theme_name"
-        tools:text="최근 업데이트 : 2023.01.02" />
-
-    <View
-        android:id="@+id/btn_update"
-        android:layout_width="48dp"
-        android:layout_height="34dp"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_recent_update"
-        app:layout_constraintStart_toEndOf="@id/tv_recent_update"
-        app:layout_constraintTop_toTopOf="@id/tv_recent_update" />
-
     <ImageView
-        android:id="@+id/iv_update"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="12dp"
-        android:background="@drawable/bg_update_button"
-        android:contentDescription="@string/update_button_description"
-        android:padding="2.5dp"
-        android:src="@drawable/ic_update24"
-        app:layout_constraintBottom_toBottomOf="@id/btn_update"
-        app:layout_constraintStart_toStartOf="@id/btn_update"
-        app:layout_constraintTop_toTopOf="@id/btn_update" />
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="#1FFFFFFF"
+        android:id="@+id/iv_arrow_right"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_arrow_right_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_recent_update"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:layout_marginBottom="28dp"-->
+    <!--        android:textAppearance="@style/Pretendard.14.SemiBold"-->
+    <!--        android:textColor="#919098"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="@id/tv_theme_name"-->
+    <!--        app:layout_constraintHorizontal_bias="0"-->
+    <!--        app:layout_constraintStart_toStartOf="@id/tv_theme_name"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/tv_theme_name"-->
+    <!--        tools:text="최근 업데이트 : 2023.01.02" />-->
+
+    <!--    <View-->
+    <!--        android:id="@+id/btn_update"-->
+    <!--        android:layout_width="48dp"-->
+    <!--        android:layout_height="34dp"-->
+    <!--        android:padding="10dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/tv_recent_update"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/tv_recent_update"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/tv_recent_update" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/iv_update"-->
+    <!--        android:layout_width="24dp"-->
+    <!--        android:layout_height="24dp"-->
+    <!--        android:layout_marginStart="12dp"-->
+    <!--        android:background="@drawable/bg_update_button"-->
+    <!--        android:contentDescription="@string/update_button_description"-->
+    <!--        android:padding="2.5dp"-->
+    <!--        android:src="@drawable/ic_update24"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@id/btn_update"-->
+    <!--        app:layout_constraintStart_toStartOf="@id/btn_update"-->
+    <!--        app:layout_constraintTop_toTopOf="@id/btn_update" />-->
+
+    <!--    <View-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="1dp"-->
+    <!--        android:background="#1FFFFFFF"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

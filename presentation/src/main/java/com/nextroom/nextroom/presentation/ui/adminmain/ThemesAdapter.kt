@@ -5,20 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mangbaam.commonutil.DateTimeUtil
-import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemesAdapter(
-    private val onStartGame: (Int) -> Unit,
-    private val onClickUpdate: (Int) -> Unit,
+    private val onStartGame: (Int) -> Unit
 ) : ListAdapter<ThemeInfoPresentation, ThemesAdapter.ThemeViewHolder>(diffUtil) {
 
     class ThemeViewHolder(
         private val binding: ItemThemeBinding,
-        onStartGame: (Int) -> Unit,
-        onClickUpdate: (Int) -> Unit,
+        onStartGame: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private lateinit var item: ThemeInfoPresentation
@@ -26,26 +22,19 @@ class ThemesAdapter(
 
         init {
             binding.root.setOnClickListener { onStartGame(item.id) }
-            binding.btnUpdate.setOnClickListener { onClickUpdate(item.id) }
         }
 
         fun bind(themeInfo: ThemeInfoPresentation) = with(binding) {
             item = themeInfo
             tvThemeName.text = themeInfo.title
-            val updatedAt = if (themeInfo.recentUpdated != 0L) {
-                DateTimeUtil().longToDateString(themeInfo.recentUpdated, pattern = "yyyy-MM-dd")
-            } else {
-                context.getString(R.string.common_not_exists)
-            }
-            tvRecentUpdate.text = context.getString(R.string.admin_main_updated_at, updatedAt)
+            //TODO : 이미지처리
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
         return ThemeViewHolder(
             ItemThemeBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onStartGame,
-            onClickUpdate,
+            onStartGame
         )
     }
 

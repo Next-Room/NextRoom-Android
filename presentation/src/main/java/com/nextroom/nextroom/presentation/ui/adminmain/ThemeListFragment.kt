@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
@@ -40,8 +41,7 @@ class ThemeListFragment :
     private val viewModel: ThemeListViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
-            onStartGame = ::startGame,
-            onClickUpdate = viewModel::updateTheme,
+            onStartGame = ::startGame
         )
     }
     private val state: ThemeListState
@@ -142,6 +142,11 @@ class ThemeListFragment :
         tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
+        tvThemeCount.text = state.themes.size.toString()
+        tvLastUpdate.text = getString(
+            R.string.text_last_hint_update,
+            DateTimeUtil().longToDateString(System.currentTimeMillis(), pattern = "yyyy.MM.dd HH:mm")
+        )
     }
 
     private fun handleEvent(event: ThemeListEvent) {
