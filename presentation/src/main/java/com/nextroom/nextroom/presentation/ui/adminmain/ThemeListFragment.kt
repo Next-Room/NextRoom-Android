@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.model.SubscribeStatus
@@ -100,10 +101,9 @@ class ThemeListFragment :
             viewModel.loadData()
         }
 
-        llBanner.setOnClickListener {
-            viewModel.container.stateFlow.value.banner?.linkUrl?.let {
-                navByDeepLink(it)
-            }
+        rvBanner.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvBanner.adapter = BannerAdapter {
+            navByDeepLink(it.linkUrl)
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
         }
     }
@@ -126,15 +126,15 @@ class ThemeListFragment :
         when (state.subscribeStatus) {
             SubscribeStatus.Default,
             SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
-                state.banner?.let {
-                    llBanner.isVisible = true
-                    tvBanner.text = it.description
-                } ?: run {
-                    llBanner.isVisible = false
+                if (state.banners.isEmpty()) {
+                    rvBanner.isVisible = false
+                } else {
+                    rvBanner.isVisible = true
+                    (rvBanner.adapter as? BannerAdapter)?.submitList(state.banners)
                 }
             }
 
-            SubscribeStatus.Subscribed -> llBanner.isVisible = false
+            SubscribeStatus.Subscribed -> rvBanner.isVisible = false
         }
 
         tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed

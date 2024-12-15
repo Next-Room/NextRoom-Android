@@ -102,7 +102,7 @@ class ThemeListViewModel @Inject constructor(
             bannerRepository
                 .getBanners()
                 .onSuccess {
-                    reduce { state.copy(banner = it.firstOrNull()) }
+                    reduce { state.copy(banners = it) }
                 }
 
             if (!shouldHideRecommendBackgroundCustomDialog()) {
