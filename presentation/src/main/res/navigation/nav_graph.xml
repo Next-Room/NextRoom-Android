@@ -29,6 +29,10 @@
             <argument
                 android:name="themeId"
                 app:argType="integer" />
+
+            <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
         </action>
         <action
             android:id="@+id/action_adminMainFragment_to_mypageFragment"
@@ -41,17 +45,27 @@
             app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
-        android:id="@+id/mainFragment"
+        android:id="@+id/gameFragment"
         android:name="com.nextroom.nextroom.presentation.ui.main.GameFragment"
         android:label="MainFragment"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_hintFragment"
-            app:destination="@id/hintFragment" />
+            app:destination="@id/hintFragment">
+            <argument
+                android:name="hint"
+                app:argType="com.nextroom.nextroom.presentation.model.Hint" />
+            <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        </action>
         <argument
             android:name="overflowTime"
             android:defaultValue="0L"
             app:argType="long" />
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
     </fragment>
     <dialog
         android:id="@+id/nrTwoButtonDialog"
@@ -76,14 +90,27 @@
         android:label="VerifyFragment"
         tools:layout="@layout/fragment_admin_code">
 
+        <argument
+            android:name="themeId"
+            app:argType="integer" />
+
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+
         <!--        <action-->
         <!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
         <!--            app:destination="@id/startTimerFragment" />-->
         <action
-            android:id="@+id/action_verifyFragment_to_mainFragment"
-            app:destination="@id/mainFragment"
+            android:id="@+id/action_verifyFragment_to_gameFragment"
+            app:destination="@id/gameFragment"
             app:launchSingleTop="true"
-            app:popUpTo="@id/adminMainFragment" />
+            app:popUpTo="@id/adminMainFragment">
+
+            <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        </action>
     </fragment>
     <!--    <fragment-->
     <!--        android:id="@+id/startTimerFragment"-->
@@ -100,6 +127,9 @@
         android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
         android:label="HintFragment"
         tools:layout="@layout/fragment_hint">
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
         <argument
             android:name="hint"
             app:argType="com.nextroom.nextroom.presentation.model.Hint" />

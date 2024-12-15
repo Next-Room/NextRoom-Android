@@ -31,7 +31,7 @@ class AdminMainViewModel @Inject constructor(
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
-    private val bannerRepository: BannerRepository
+    private val bannerRepository: BannerRepository,
 ) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
     override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
@@ -48,6 +48,17 @@ class AdminMainViewModel @Inject constructor(
 
     fun onResume() {
         loadData()
+    }
+
+    fun incrementNetworkDisconnectedCount() {
+        viewModelScope.launch {
+            val count = dataStoreRepository.getNetworkDisconnectedCount()
+            updateNetworkDisconnectedCount(count + 1)
+        }
+    }
+
+    private fun updateNetworkDisconnectedCount(count: Int) {
+        dataStoreRepository.setNetworkDisconnectedCount(count)
     }
 
     private fun showInAppReview() = intent {
@@ -97,6 +108,7 @@ class AdminMainViewModel @Inject constructor(
                         themeInfo.toPresentation(updatedAt)
                     },
                 )
+                updateNetworkDisconnectedCount(0)
             }.onFailure(::handleError)
 
             bannerRepository

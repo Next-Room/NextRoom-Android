@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.GameState
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -153,6 +154,8 @@ class GameViewModel @Inject constructor(
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     ),
+                    SubscribeStatus.Subscribed
+//                    GameFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
                 ),
             )
             setGameState()
@@ -165,20 +168,29 @@ class GameViewModel @Inject constructor(
             return@intent
         }
 
-        hintRepository.getHint(state.currentInput)?.let { hint ->
-            if (state.usedHints.contains(hint.id)) {
-                openHint(hint)
-            } else if (state.usedHintsCount < state.totalHintCount) {
-                openHint(hint)
-            } else {
-                postSideEffect(GameEvent.ShowAvailableHintExceedError)
-                reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
-            }
-        } ?: run {
-            reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
-            delay(500)
-            clearHintCode()
-        }
+        openHint(
+            com.nextroom.nextroom.domain.model.Hint(
+                id = 10, hintImageUrlList = listOf(
+                    "https://picsum.photos/id/237/200/300"
+                ), answerImageUrlList = listOf(
+                    "https://picsum.photos/seed/picsum/200/300"
+                )
+            )
+        )
+//        hintRepository.getHint(state.currentInput)?.let { hint ->
+//            if (state.usedHints.contains(hint.id)) {
+//                openHint(hint)
+//            } else if (state.usedHintsCount < state.totalHintCount) {
+//                openHint(hint)
+//            } else {
+//                postSideEffect(GameEvent.ShowAvailableHintExceedError)
+//                reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
+//            }
+//        } ?: run {
+//            reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
+//            delay(500)
+//            clearHintCode()
+//        }
     }
 
     private fun setGameState() = intent {

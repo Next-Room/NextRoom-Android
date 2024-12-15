@@ -11,7 +11,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.model.SubscribeStatus
-import com.nextroom.nextroom.domain.model.UserSubscription
+import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -94,23 +94,32 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 }
             }
 
-            if (!hintAnswerPagerInitialised && state.userSubscribeStatus == SubscribeStatus.Subscribed) {
+            if (!hintAnswerPagerInitialised) {
                 hintAnswerPagerInitialised = true
                 setUpHintAnswerImage(binding, state)
             }
         }
 
-        if (!hintPagerInitialised && state.userSubscribeStatus == SubscribeStatus.Subscribed) {
+        if (!hintPagerInitialised) {
             hintPagerInitialised = true
             setUpHintImage(binding, state)
         }
     }
 
     private fun setUpHintImage(binding: FragmentHintBinding, hintState: HintState) = with(binding) {
-        vpHintImage.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
-                && hintState.hint.hintImageUrlList.isNotEmpty()
-        indicator.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
-                && hintState.hint.hintImageUrlList.isNotEmpty()
+        when (hintState.userSubscribeStatus) {
+            SubscribeStatus.Default -> {
+                vpHintImage.isVisible = false
+                indicator.isVisible = false
+            }
+
+            SubscribeStatus.SUBSCRIPTION_EXPIRATION,
+            SubscribeStatus.Subscribed -> {
+                vpHintImage.isVisible = hintState.hint.hintImageUrlList.isNotEmpty()
+                indicator.isVisible = hintState.hint.hintImageUrlList.isNotEmpty()
+            }
+        }
+
         vpHintImage.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
                 return hintState.hint.hintImageUrlList.size
@@ -118,16 +127,28 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
             override fun createFragment(position: Int): Fragment {
                 return ImageFragment(
-                    imageUrl = hintState.hint.hintImageUrlList[position],
-                    onImageClicked = {
-                        NavGraphDirections.actionGlobalImageViewerFragment(
-                            imageUrlList = hintState.hint.hintImageUrlList.toTypedArray(),
-                            position = position
-                        ).also {
-                            findNavController().safeNavigate(it)
+                    image = when (hintState.userSubscribeStatus) {
+                        SubscribeStatus.Default -> ImageFragment.Image.None
+                        SubscribeStatus.Subscribed -> {
+                            if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
+                                ImageFragment.Image.Drawable(R.drawable.img_placeholder)
+                            } else {
+                                ImageFragment.Image.Url(hintState.hint.hintImageUrlList[position])
+                            }
                         }
+                        SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageFragment.Image.Drawable(R.drawable.img_placeholder)
+                    },
+                    onImageClicked = {
+                        if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
+                            NavGraphDirections.actionGlobalImageViewerFragment(
+                                imageUrlList = hintState.hint.hintImageUrlList.toTypedArray(),
+                                position = position
+                            ).also {
+                                findNavController().safeNavigate(it)
+                            }
 
-                        FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "hint_image"))
+                            FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "hint_image"))
+                        }
                     }
                 )
             }
@@ -142,10 +163,19 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun setUpHintAnswerImage(binding: FragmentHintBinding, hintState: HintState) = with(binding) {
-        vpHintAnswerImage.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
-                && hintState.hint.answerImageUrlList.isNotEmpty()
-        indicatorAnswer.isVisible = hintState.userSubscribeStatus == SubscribeStatus.Subscribed
-                && hintState.hint.answerImageUrlList.isNotEmpty()
+        when (hintState.userSubscribeStatus) {
+            SubscribeStatus.Default -> {
+                vpHintAnswerImage.isVisible = false
+                indicatorAnswer.isVisible = false
+            }
+
+            SubscribeStatus.SUBSCRIPTION_EXPIRATION,
+            SubscribeStatus.Subscribed -> {
+                vpHintAnswerImage.isVisible = hintState.hint.answerImageUrlList.isNotEmpty()
+                indicatorAnswer.isVisible = hintState.hint.answerImageUrlList.isNotEmpty()
+            }
+        }
+
         vpHintAnswerImage.adapter = object : FragmentStateAdapter(requireActivity()) {
             override fun getItemCount(): Int {
                 return hintState.hint.answerImageUrlList.size
@@ -153,16 +183,28 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
             override fun createFragment(position: Int): Fragment {
                 return ImageFragment(
-                    imageUrl = hintState.hint.answerImageUrlList[position],
-                    onImageClicked = {
-                        NavGraphDirections.actionGlobalImageViewerFragment(
-                            imageUrlList = hintState.hint.answerImageUrlList.toTypedArray(),
-                            position = position
-                        ).also {
-                            findNavController().safeNavigate(it)
+                    image = when (hintState.userSubscribeStatus) {
+                        SubscribeStatus.Default -> ImageFragment.Image.None
+                        SubscribeStatus.Subscribed -> {
+                            if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
+                                ImageFragment.Image.Drawable(R.drawable.img_placeholder)
+                            } else {
+                                ImageFragment.Image.Url(hintState.hint.hintImageUrlList[position])
+                            }
                         }
+                        SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageFragment.Image.Drawable(R.drawable.img_placeholder)
+                    },
+                    onImageClicked = {
+                        if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
+                            NavGraphDirections.actionGlobalImageViewerFragment(
+                                imageUrlList = hintState.hint.answerImageUrlList.toTypedArray(),
+                                position = position
+                            ).also {
+                                findNavController().safeNavigate(it)
+                            }
 
-                        FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "answer_image"))
+                            FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "answer_image"))
+                        }
                     }
                 )
             }
@@ -187,12 +229,16 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     private fun gotoHome() {
         Timber.d("gotoHome")
-        findNavController().popBackStack(R.id.mainFragment, false)
+        findNavController().popBackStack(R.id.gameFragment, false)
     }
 
     override fun onDestroyView() {
         hintPagerInitialised = false
         hintAnswerPagerInitialised = false
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val NETWORK_DISCONNECT_LIMIT = 3
     }
 }

@@ -114,7 +114,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 goToOnboardingScreen()
             }
 
-            LoginEvent.GoToMainScreen -> Unit
+            LoginEvent.GoToGameScreen -> Unit
         }
     }
 

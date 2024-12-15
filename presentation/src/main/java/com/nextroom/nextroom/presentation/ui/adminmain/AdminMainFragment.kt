@@ -22,6 +22,7 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
+import com.nextroom.nextroom.presentation.util.isOnline
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import timber.log.Timber
@@ -66,6 +67,9 @@ class AdminMainFragment :
     override fun onResume() {
         super.onResume()
         viewModel.onResume()
+        if (isOnline(context ?: return).not()) {
+            viewModel.incrementNetworkDisconnectedCount()
+        }
     }
 
     /*override fun onStart() {
@@ -187,7 +191,10 @@ class AdminMainFragment :
 
     private fun goToMain(themeId: Int) {
         val action =
-            AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(themeId = themeId)
+            AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(
+                themeId = themeId,
+                subscribeStatus = state.subscribeStatus
+            )
         findNavController().safeNavigate(action)
     }
 

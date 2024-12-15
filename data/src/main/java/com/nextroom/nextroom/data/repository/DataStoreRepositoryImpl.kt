@@ -26,4 +26,12 @@ class DataStoreRepositoryImpl @Inject constructor(
         }.also { firstInit ->
             if (firstInit) settingDataSource.setLastLaunchDate()
         }
+
+    override suspend fun getNetworkDisconnectedCount(): Int {
+        return settingDataSource.getNetworkDisconnectedCount()
+    }
+
+    override fun setNetworkDisconnectedCount(count: Int) {
+        settingDataSource.setNetworkDisconnectedCount(count)
+    }
 }

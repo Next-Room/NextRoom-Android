@@ -81,7 +81,7 @@ class MainActivity :
     private fun observe(event: MainEvent) {
         when (event) {
             is MainEvent.GoToGameScreen -> {
-                getFindNavController()?.navigate(R.id.mainFragment)
+                getFindNavController()?.navigate(R.id.gameFragment)
             }
 
             MainEvent.GoToLoginScreen -> {

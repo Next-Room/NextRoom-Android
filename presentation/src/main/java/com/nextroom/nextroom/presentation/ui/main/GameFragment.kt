@@ -120,7 +120,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         when (event) {
             is GameEvent.ClearHintCode -> binding.customCodeInput.setCode("")
             is GameEvent.OnOpenHint -> {
-                val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint)
+                val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint, event.subscribeStatus)
                 findNavController().safeNavigate(action)
                 viewModel.clearHintCode()
             }

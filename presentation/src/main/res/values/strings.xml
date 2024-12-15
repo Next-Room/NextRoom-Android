@@ -124,4 +124,5 @@
     <string name="start">시작</string>
     <string name="dialog_title_game_start_confirm">게임을 시작하시겠습니까?</string>
     <string name="dialog_message_game_start_confirm">버튼을 클릭하면 타이머가 시작됩니다</string>
+    <string name="text_image_error">이미지를 로드할 수 없습니다.\n직원에게 문의해 주세요.</string>
 </resources>

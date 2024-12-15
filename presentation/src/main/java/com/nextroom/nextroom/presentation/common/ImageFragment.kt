@@ -7,7 +7,7 @@ import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentHintImageBinding
 
 class ImageFragment(
-    private val imageUrl: String,
+    private val image: Image,
     private val onImageClicked: (() -> Unit)? = null
 ) : BaseFragment<FragmentHintImageBinding>(FragmentHintImageBinding::inflate) {
 
@@ -24,8 +24,18 @@ class ImageFragment(
     }
 
     private fun initView() {
-        Glide.with(requireContext())
-            .load(imageUrl)
-            .into(binding.ivHint)
+        when(image) {
+            is Image.Drawable -> binding.ivError.setImageResource(image.resourceId)
+            is Image.Url -> Glide.with(requireContext())
+                .load(image.url)
+                .into(binding.ivHint)
+            Image.None -> Unit
+        }
+    }
+
+    sealed interface Image {
+        data class Url(val url: String): Image
+        data class Drawable(val resourceId: Int): Image
+        data object None: Image
     }
 }

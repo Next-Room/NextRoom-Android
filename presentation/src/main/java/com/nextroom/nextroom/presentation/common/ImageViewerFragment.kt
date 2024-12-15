@@ -51,7 +51,7 @@ class ImageViewerFragment : BaseFragment<FragmentImageViewerBinding>(FragmentIma
             }
 
             override fun createFragment(position: Int): Fragment {
-                return ImageFragment(imageUrl = args.imageUrlList[position])
+                return ImageFragment(image = ImageFragment.Image.Url(args.imageUrlList[position]))
             }
         }
         binding.root.post {
