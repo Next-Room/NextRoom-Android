@@ -108,9 +108,8 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 tvSellPrice.text = sellPrice
                 tvSeeMore.setOnClickListener {
                     PurchaseFragmentDirections
-                        .actionGlobalWebViewFragment(
-                            url = "https://sponge-wood-68d.notion.site/ec2a28c470094769bc787acb74760da5" // TODO JH: 서버에서 받는 값으로 수정
-                        ).also { findNavController().safeNavigate(it) }
+                        .actionGlobalWebViewFragment(url = loaded.url)
+                        .also { findNavController().safeNavigate(it) }
                 }
             }
         }

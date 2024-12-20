@@ -2,13 +2,21 @@ package com.nextroom.nextroom.data.network.response
 
 import com.google.gson.annotations.SerializedName
 import com.nextroom.nextroom.domain.model.Plan
+import com.nextroom.nextroom.domain.model.Ticket
 
 data class TicketDto(
     @SerializedName("url")
     val url: String,
     @SerializedName("plans")
     val plans: List<PlanDto>
-)
+) {
+    fun toDomainModel(): Ticket {
+        return Ticket(
+            url = url,
+            plans = plans.map { it.toDomain() }
+        )
+    }
+}
 
 data class PlanDto(
     @SerializedName("id") val id: String,
