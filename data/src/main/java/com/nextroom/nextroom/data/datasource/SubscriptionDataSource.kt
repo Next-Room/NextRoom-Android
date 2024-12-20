@@ -21,7 +21,7 @@ class SubscriptionDataSource @Inject constructor(
         return apiService.getMypageInfo().mapOnSuccess { it.data.toDomain() }
     }
 
-    suspend fun getPlans(): Result<Ticket> {
+    suspend fun getTicketInfo(): Result<Ticket> {
         return apiService.getSubscriptionTicketInfo().mapOnSuccess { it.data.toDomainModel() }
     }
 }

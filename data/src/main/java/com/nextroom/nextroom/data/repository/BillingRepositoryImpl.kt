@@ -13,8 +13,8 @@ class BillingRepositoryImpl @Inject constructor(
     private val subscriptionDataSource: SubscriptionDataSource,
 ) : BillingRepository {
 
-    override suspend fun getPlans(): Result<Ticket> {
-        return subscriptionDataSource.getPlans()
+    override suspend fun getTicketInfo(): Result<Ticket> {
+        return subscriptionDataSource.getTicketInfo()
     }
 
     override suspend fun postPurchaseToken(purchaseToken: String): Result<Unit> {

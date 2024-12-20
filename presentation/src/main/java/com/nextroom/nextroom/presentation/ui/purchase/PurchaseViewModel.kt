@@ -26,7 +26,7 @@ class PurchaseViewModel @Inject constructor(
 
     private fun fetchPlans() {
         viewModelScope.launch {
-            billingRepository.getPlans().onSuccess { ticket ->
+            billingRepository.getTicketInfo().onSuccess { ticket ->
                 ticket.plans.firstOrNull()?.let { plan ->
                     UiState.Loaded(
                         id = plan.id,
