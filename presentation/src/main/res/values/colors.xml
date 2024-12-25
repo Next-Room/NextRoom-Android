@@ -8,6 +8,7 @@
     <color name="white_70">#B3FFFFFF</color>
 
     <color name="black">#1D1B20</color>
+    <color name="black_60">#99000000</color>
     <color name="onSurface">#1D1B20</color>
     <color name="surface">#FEF7FF</color>
 

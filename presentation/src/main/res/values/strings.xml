@@ -135,4 +135,5 @@
     <string name="text_background_custom_info_1">PC에서 배경을 등록하면 힌트폰에서 확인할 수 있습니다.</string>
     <string name="text_background_custom_info_2">미리보기에서 이미지의 어두움와 위치를 조정할 수 있습니다.</string>
     <string name="text_background_custom_info_3">미구독계정은 1개의 배경 이미지만 활성화할 수 있습니다.</string>
+    <string name="text_background_custom_introduce">타이머 배경의 위치와 어둡기를 설정할 수 있습니다.</string>
 </resources>

@@ -110,6 +110,9 @@ class ThemeListFragment :
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(ThemeListFragmentDirections.moveToBackgroundCustomFragment())
         }
+        flBackgroundCustom.setOnClickListener {
+            binding.groupBackgroundCustomIntroduce.isVisible = false
+        }
     }
 
     private fun navByDeepLink(deeplinkUrl: String) {
