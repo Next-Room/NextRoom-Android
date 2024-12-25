@@ -106,6 +106,10 @@ class ThemeListFragment :
             navByDeepLink(it.linkUrl)
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
         }
+
+        tvBacgroundSetting.setOnClickListener {
+            findNavController().safeNavigate(ThemeListFragmentDirections.moveToBackgroundCustomFragment())
+        }
     }
 
     private fun navByDeepLink(deeplinkUrl: String) {

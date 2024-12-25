@@ -31,13 +31,13 @@
         android:maxLines="2"
         android:textColor="@color/White"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/iv_arrow_right"
+        app:layout_constraintEnd_toStartOf="@+id/sc_background_toggle"
         app:layout_constraintStart_toEndOf="@+id/img_theme"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="로스트 킹덤2 : 잃어버린 세계를 찾아서" />
 
     <ImageView
-        android:id="@+id/iv_arrow_right"
+        android:id="@+id/sc_background_toggle"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginEnd="20dp"
