@@ -9,11 +9,13 @@ import com.nextroom.nextroom.presentation.databinding.ItemThemeBackgroundToggleB
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemeBackgroundToggleAdapter(
+    private val onToggleClicked: (ThemeInfoPresentation) -> Unit = {}
 ) : ListAdapter<ThemeInfoPresentation, ThemeBackgroundToggleAdapter.ThemeViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
         return ThemeViewHolder(
             ItemThemeBackgroundToggleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            onToggleClicked
         )
     }
 
@@ -23,10 +25,14 @@ class ThemeBackgroundToggleAdapter(
 
     class ThemeViewHolder(
         private val binding: ItemThemeBackgroundToggleBinding,
+        private val onToggleClicked: (ThemeInfoPresentation) -> Unit = {}
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(themeInfo: ThemeInfoPresentation) = with(binding) {
             tvThemeName.text = themeInfo.title
+            scBackgroundToggle.setOnClickListener {
+                onToggleClicked(themeInfo)
+            }
             //TODO : 이미지처리
         }
     }

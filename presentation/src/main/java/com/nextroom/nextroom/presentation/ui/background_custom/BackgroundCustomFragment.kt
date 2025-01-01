@@ -8,6 +8,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentBackgroundCustomBinding
 import com.nextroom.nextroom.presentation.databinding.ItemBackgroundCustomInfoBinding
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +42,9 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
             binding.llInfo.addView(it.root)
         }
 
-        binding.rvTheme.adapter = ThemeBackgroundToggleAdapter()
+        binding.rvTheme.adapter = ThemeBackgroundToggleAdapter {
+            findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
+        }
         (binding.rvTheme.adapter as? ThemeBackgroundToggleAdapter)?.submitList(
             listOf(
                 ThemeInfoPresentation(title = "testtttttttttt")

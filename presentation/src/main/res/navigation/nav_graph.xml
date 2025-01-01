@@ -41,7 +41,7 @@
             app:destination="@id/webViewFragment" />
         <action
             android:id="@+id/move_to_recommend_background_custom"
-            app:destination="@+id/recommend_background_custom_bottom_sheet"/>
+            app:destination="@+id/recommend_background_custom_bottom_sheet" />
         <action
             android:id="@+id/move_to_background_custom_fragment"
             app:destination="@+id/background_custom_fragment" />
@@ -49,11 +49,20 @@
 
     <fragment
         android:id="@+id/background_custom_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundCustomFragment" />
+        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundCustomFragment">
+
+        <action
+            android:id="@+id/move_to_subscription_payment"
+            app:destination="@+id/subscription_payment_fragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/subscription_payment_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPaymentBottomSheetFragment" />
 
     <dialog
         android:id="@+id/recommend_background_custom_bottom_sheet"
-        android:name="com.nextroom.nextroom.presentation.ui.adminmain.RecommendBackgroundCustomBottomSheet"/>
+        android:name="com.nextroom.nextroom.presentation.ui.adminmain.RecommendBackgroundCustomBottomSheet" />
 
     <fragment
         android:id="@+id/mainFragment"
@@ -216,7 +225,5 @@
             android:id="@+id/action_to_home"
             app:destination="@id/themeListFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/backgroundCustomFragment"
-        />
+    <fragment android:id="@+id/backgroundCustomFragment" />
 </navigation>
