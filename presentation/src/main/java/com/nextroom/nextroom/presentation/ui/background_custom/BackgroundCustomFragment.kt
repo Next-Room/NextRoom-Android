@@ -9,8 +9,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentBackgroundCustomBinding
 import com.nextroom.nextroom.presentation.databinding.ItemBackgroundCustomInfoBinding
-import com.nextroom.nextroom.presentation.extension.safeNavigate
-import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
+import com.nextroom.nextroom.presentation.extension.toast
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -56,7 +55,12 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
         }
 
         binding.rvTheme.adapter = ThemeBackgroundToggleAdapter {
-            findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
+            if (it.themeImageUrl.isNullOrEmpty()) {
+                toast(getString(R.string.text_background_setting_error))
+            }
+
+            //TODO : 추후 작업
+//            findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
         }
     }
 }

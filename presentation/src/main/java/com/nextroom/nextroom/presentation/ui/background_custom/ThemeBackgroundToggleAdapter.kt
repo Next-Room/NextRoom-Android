@@ -1,6 +1,8 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +14,7 @@ import com.nextroom.nextroom.presentation.databinding.ItemThemeBackgroundToggleB
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemeBackgroundToggleAdapter(
-    private val onToggleClicked: (ThemeInfoPresentation) -> Unit = {}
+    private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> }
 ) : ListAdapter<ThemeInfoPresentation, ThemeBackgroundToggleAdapter.ThemeViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
@@ -28,14 +30,21 @@ class ThemeBackgroundToggleAdapter(
 
     class ThemeViewHolder(
         private val binding: ItemThemeBackgroundToggleBinding,
-        private val onToggleClicked: (ThemeInfoPresentation) -> Unit = {}
+        private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> }
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("ClickableViewAccessibility")
         fun bind(themeInfo: ThemeInfoPresentation) = with(binding) {
             tvThemeName.text = themeInfo.title
-            scBackgroundToggle.setOnClickListener {
-                onToggleClicked(themeInfo)
+            scBackgroundToggle.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    onToggleClicked(themeInfo)
+                    return@setOnTouchListener true
+                }
+                false
             }
+
+            scBackgroundToggle.isChecked = themeInfo.useTimerUrl
 
             binding.tvEmptyImage.isVisible = themeInfo.themeImageUrl.isNullOrEmpty()
             Glide.with(binding.root.context)
