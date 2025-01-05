@@ -2,9 +2,12 @@ package com.nextroom.nextroom.presentation.ui.background_custom
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBackgroundToggleBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
@@ -33,7 +36,13 @@ class ThemeBackgroundToggleAdapter(
             scBackgroundToggle.setOnClickListener {
                 onToggleClicked(themeInfo)
             }
-            //TODO : 이미지처리
+
+            binding.tvEmptyImage.isVisible = themeInfo.themeImageUrl.isNullOrEmpty()
+            Glide.with(binding.root.context)
+                .load(themeInfo.themeImageUrl ?: "")
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_placeholder)
+                .into(binding.imgTheme)
         }
     }
 

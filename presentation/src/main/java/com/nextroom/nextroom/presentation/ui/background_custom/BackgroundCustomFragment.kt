@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.background_custom
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
@@ -11,13 +12,25 @@ import com.nextroom.nextroom.presentation.databinding.ItemBackgroundCustomInfoBi
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
 class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(FragmentBackgroundCustomBinding::inflate) {
 
+    private val viewModel by viewModels<BackgroundCustomViewModel>()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+    }
+
+    private fun render(state: BackgroundCustomState) {
+        (binding.rvTheme.adapter as? ThemeBackgroundToggleAdapter)?.submitList(state.themes)
+    }
+
+    private fun handleEvent(event: BackgroundCustomEvent) {
+
     }
 
     private fun initViews() {
@@ -45,10 +58,5 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
         binding.rvTheme.adapter = ThemeBackgroundToggleAdapter {
             findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
         }
-        (binding.rvTheme.adapter as? ThemeBackgroundToggleAdapter)?.submitList(
-            listOf(
-                ThemeInfoPresentation(title = "testtttttttttt")
-            )
-        )
     }
 }

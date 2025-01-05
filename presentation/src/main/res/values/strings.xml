@@ -140,4 +140,5 @@
     <string name="text_subscribe_benefit_desc">미구독계정은 1개의 배경이미지만 활성화할 수 있습니다.\n넥스트룸을 구독하면 아래 혜택을 누릴 수 있습니다.</string>
     <string name="text_subscribe_monthly_payment">월 ₩49,900원으로 구독하기</string>
     <string name="text_do_later">다음에 할게요</string>
+    <string name="text_empty_image">등록 이미지가\n없습니다</string>
 </resources>
