@@ -194,7 +194,7 @@ class BillingClientLifecycle private constructor(
         billingResult: BillingResult,
         purchasesList: MutableList<Purchase>,
     ) {
-        processPurchases(purchasesList)
+        cachedPurchasesList = purchasesList
     }
 
     // 새로운 구매가 감지 되었을 때 콜백
