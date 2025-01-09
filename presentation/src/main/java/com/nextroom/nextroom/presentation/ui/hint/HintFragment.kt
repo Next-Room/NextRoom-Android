@@ -4,18 +4,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.model.SubscribeStatus
-import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.common.ImageFragment
+import com.nextroom.nextroom.presentation.common.ImageAdapter
 import com.nextroom.nextroom.presentation.databinding.FragmentHintBinding
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
@@ -40,6 +37,8 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     //timer가 있어서 계속해서 render를 호출함. 이에 있어서 반드시 한번만 불려야 하는 ui를 위해 이 flag가 필요
     private var hintPagerInitialised = false
     private var hintAnswerPagerInitialised = false
+    private var hintImageAdapter: ImageAdapter? = null
+    private var answerImageAdapter: ImageAdapter? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -120,39 +119,38 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
             }
         }
 
-        vpHintImage.adapter = object : FragmentStateAdapter(requireActivity()) {
-            override fun getItemCount(): Int {
-                return hintState.hint.hintImageUrlList.size
-            }
-
-            override fun createFragment(position: Int): Fragment {
-                return ImageFragment(
-                    image = when (hintState.userSubscribeStatus) {
-                        SubscribeStatus.Default -> ImageFragment.Image.None
-                        SubscribeStatus.Subscribed -> {
-                            if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
-                                ImageFragment.Image.Drawable(R.drawable.img_placeholder)
-                            } else {
-                                ImageFragment.Image.Url(hintState.hint.hintImageUrlList[position])
-                            }
-                        }
-                        SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageFragment.Image.Drawable(R.drawable.img_placeholder)
-                    },
-                    onImageClicked = {
-                        if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
-                            NavGraphDirections.actionGlobalImageViewerFragment(
-                                imageUrlList = hintState.hint.hintImageUrlList.toTypedArray(),
-                                position = position
-                            ).also {
-                                findNavController().safeNavigate(it)
-                            }
-
-                            FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "hint_image"))
-                        }
+        hintImageAdapter = null
+        hintImageAdapter = ImageAdapter(
+            onImageClicked = {
+                if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
+                    NavGraphDirections.actionGlobalImageViewerFragment(
+                        imageUrlList = hintState.hint.hintImageUrlList.toTypedArray(),
+                        position = vpHintImage.currentItem
+                    ).also {
+                        findNavController().safeNavigate(it)
                     }
-                )
+
+                    FirebaseAnalytics.getInstance(requireContext())
+                        .logEvent("btn_click", bundleOf("btn_name" to "hint_image"))
+                }
             }
-        }
+        )
+        binding.vpHintImage.adapter = hintImageAdapter
+        hintState.hint.hintImageUrlList.map { imageUrl ->
+            when (hintState.userSubscribeStatus) {
+                SubscribeStatus.Default -> ImageAdapter.Image.None
+                SubscribeStatus.Subscribed -> {
+                    if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
+                        ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+                    } else {
+                        ImageAdapter.Image.Url(imageUrl)
+                    }
+                }
+
+                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+            }
+        }.also { hintImageAdapter?.setList(it) }
+
         vpHintImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -176,39 +174,38 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
             }
         }
 
-        vpHintAnswerImage.adapter = object : FragmentStateAdapter(requireActivity()) {
-            override fun getItemCount(): Int {
-                return hintState.hint.answerImageUrlList.size
-            }
-
-            override fun createFragment(position: Int): Fragment {
-                return ImageFragment(
-                    image = when (hintState.userSubscribeStatus) {
-                        SubscribeStatus.Default -> ImageFragment.Image.None
-                        SubscribeStatus.Subscribed -> {
-                            if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
-                                ImageFragment.Image.Drawable(R.drawable.img_placeholder)
-                            } else {
-                                ImageFragment.Image.Url(hintState.hint.hintImageUrlList[position])
-                            }
-                        }
-                        SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageFragment.Image.Drawable(R.drawable.img_placeholder)
-                    },
-                    onImageClicked = {
-                        if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
-                            NavGraphDirections.actionGlobalImageViewerFragment(
-                                imageUrlList = hintState.hint.answerImageUrlList.toTypedArray(),
-                                position = position
-                            ).also {
-                                findNavController().safeNavigate(it)
-                            }
-
-                            FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "answer_image"))
-                        }
+        answerImageAdapter = null
+        answerImageAdapter = ImageAdapter(
+            onImageClicked = {
+                if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
+                    NavGraphDirections.actionGlobalImageViewerFragment(
+                        imageUrlList = hintState.hint.answerImageUrlList.toTypedArray(),
+                        position = vpHintAnswerImage.currentItem
+                    ).also {
+                        findNavController().safeNavigate(it)
                     }
-                )
+
+                    FirebaseAnalytics.getInstance(requireContext())
+                        .logEvent("btn_click", bundleOf("btn_name" to "answer_image"))
+                }
             }
-        }
+        )
+        binding.vpHintAnswerImage.adapter = hintImageAdapter
+        hintState.hint.answerImageUrlList.map { imageUrl ->
+            when (hintState.userSubscribeStatus) {
+                SubscribeStatus.Default -> ImageAdapter.Image.None
+                SubscribeStatus.Subscribed -> {
+                    if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
+                        ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+                    } else {
+                        ImageAdapter.Image.Url(imageUrl)
+                    }
+                }
+
+                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+            }
+        }.also { answerImageAdapter?.setList(it) }
+
         vpHintAnswerImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
@@ -235,6 +232,8 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     override fun onDestroyView() {
         hintPagerInitialised = false
         hintAnswerPagerInitialised = false
+        hintImageAdapter = null
+        answerImageAdapter = null
         super.onDestroyView()
     }
 
