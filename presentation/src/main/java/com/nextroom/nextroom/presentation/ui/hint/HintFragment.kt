@@ -190,7 +190,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 }
             }
         )
-        binding.vpHintAnswerImage.adapter = hintImageAdapter
+        binding.vpHintAnswerImage.adapter = answerImageAdapter
         hintState.hint.answerImageUrlList.map { imageUrl ->
             when (hintState.userSubscribeStatus) {
                 SubscribeStatus.Default -> ImageAdapter.Image.None
