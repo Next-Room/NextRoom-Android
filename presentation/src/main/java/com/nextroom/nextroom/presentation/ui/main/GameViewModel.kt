@@ -226,6 +226,7 @@ class GameViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        timerRepository.stopTimer()
         super.onCleared()
         Timber.d("onCleared: GameViewModel")
     }
