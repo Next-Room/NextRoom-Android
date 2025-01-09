@@ -10,11 +10,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.databinding.ActivityMainBinding
 import com.nextroom.nextroom.presentation.extension.repeatOn
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import com.nextroom.nextroom.presentation.util.BillingClientLifecycle
 import com.nextroom.nextroom.presentation.util.WindowInsetsManager
@@ -81,7 +83,7 @@ class MainActivity :
     private fun observe(event: MainEvent) {
         when (event) {
             is MainEvent.GoToGameScreen -> {
-                getFindNavController()?.navigate(R.id.gameFragment)
+                getFindNavController()?.safeNavigate(NavGraphDirections.actionGlobalGameFragment(event.subscribeStatus))
             }
 
             MainEvent.GoToLoginScreen -> {

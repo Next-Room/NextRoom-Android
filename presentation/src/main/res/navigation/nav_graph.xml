@@ -136,6 +136,14 @@
     </fragment>
 
     <action
+        android:id="@+id/action_global_gameFragment"
+        app:destination="@+id/gameFragment">
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+    </action>
+
+    <action
         android:id="@+id/action_global_imageViewerFragment"
         app:destination="@id/imageViewerFragment" />
 
