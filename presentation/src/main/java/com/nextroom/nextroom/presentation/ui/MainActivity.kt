@@ -9,6 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
@@ -83,7 +84,12 @@ class MainActivity :
     private fun observe(event: MainEvent) {
         when (event) {
             is MainEvent.GoToGameScreen -> {
-                getFindNavController()?.safeNavigate(NavGraphDirections.actionGlobalGameFragment(event.subscribeStatus))
+                getFindNavController()?.safeNavigate(
+                    direction = NavGraphDirections.actionGlobalGameFragment(event.subscribeStatus),
+                    navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
             }
 
             MainEvent.GoToLoginScreen -> {
