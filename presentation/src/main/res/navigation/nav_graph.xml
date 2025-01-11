@@ -23,18 +23,6 @@
         android:label="AdminMainFragment"
         tools:layout="@layout/fragment_admin_main">
         <action
-            android:id="@+id/action_adminMainFragment_to_verifyFragment"
-            app:destination="@id/verifyFragment">
-
-            <argument
-                android:name="themeId"
-                app:argType="integer" />
-
-            <argument
-                android:name="subscribeStatus"
-                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        </action>
-        <action
             android:id="@+id/action_adminMainFragment_to_mypageFragment"
             app:destination="@id/mypageFragment" />
         <action
@@ -84,34 +72,6 @@
             android:name="nrTwoButtonArgument"
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </action>
-    <fragment
-        android:id="@+id/verifyFragment"
-        android:name="com.nextroom.nextroom.presentation.ui.verity.VerifyFragment"
-        android:label="VerifyFragment"
-        tools:layout="@layout/fragment_admin_code">
-
-        <argument
-            android:name="themeId"
-            app:argType="integer" />
-
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-
-        <!--        <action-->
-        <!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
-        <!--            app:destination="@id/startTimerFragment" />-->
-        <action
-            android:id="@+id/action_verifyFragment_to_gameFragment"
-            app:destination="@id/gameFragment"
-            app:launchSingleTop="true"
-            app:popUpTo="@id/adminMainFragment">
-
-            <argument
-                android:name="subscribeStatus"
-                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        </action>
-    </fragment>
     <!--    <fragment-->
     <!--        android:id="@+id/startTimerFragment"-->
     <!--        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"-->
