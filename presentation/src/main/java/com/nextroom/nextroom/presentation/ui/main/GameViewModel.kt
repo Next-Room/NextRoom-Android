@@ -153,6 +153,7 @@ class GameViewModel @Inject constructor(
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     ),
+                    GameFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
                 ),
             )
             setGameState()
@@ -225,6 +226,7 @@ class GameViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        timerRepository.stopTimer()
         super.onCleared()
         Timber.d("onCleared: GameViewModel")
     }

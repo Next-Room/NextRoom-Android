@@ -50,7 +50,7 @@ class ThemeBackgroundToggleAdapter(
             Glide.with(binding.root.context)
                 .load(themeInfo.themeImageUrl ?: "")
                 .placeholder(R.drawable.img_placeholder)
-                .error(R.drawable.img_placeholder)
+                .error(R.drawable.img_error)
                 .into(binding.imgTheme)
         }
     }

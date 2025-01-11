@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_APP_MIN_VERSION
@@ -35,8 +36,14 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            gameStateRepository.getGameState()?.let { gameState ->
-                event(MainEvent.GoToGameScreen(gameState))
+            try {
+                adminRepository.getUserSubscribe().getOrThrow.status
+            } catch (e: Exception) {
+                SubscribeStatus.Default
+            }.also { subscribeStatus ->
+                gameStateRepository.getGameState()?.let { gameState ->
+                    event(MainEvent.GoToGameScreen(gameState, subscribeStatus))
+                }
             }
         }
         viewModelScope.launch {

@@ -26,18 +26,19 @@ class PurchaseViewModel @Inject constructor(
 
     private fun fetchPlans() {
         viewModelScope.launch {
-            billingRepository.getPlans().onSuccess { plans ->
-                plans.firstOrNull()?.let { ticket ->
+            billingRepository.getTicketInfo().onSuccess { ticket ->
+                ticket.plans.firstOrNull()?.let { plan ->
                     UiState.Loaded(
-                        id = ticket.id,
-                        subscriptionProductId = ticket.subscriptionProductId,
-                        planId = ticket.planId,
-                        productName = ticket.productName,
-                        description = ticket.description,
-                        subDescription = ticket.subDescription,
-                        originPrice = DecimalFormat("#,###원").format(ticket.originPrice),
-                        sellPrice = DecimalFormat("#,###원").format(ticket.sellPrice),
-                        discountRate = ticket.discountRate,
+                        id = plan.id,
+                        subscriptionProductId = plan.subscriptionProductId,
+                        planId = plan.planId,
+                        productName = plan.productName,
+                        description = plan.description,
+                        subDescription = plan.subDescription,
+                        originPrice = DecimalFormat("#,###원").format(plan.originPrice),
+                        sellPrice = DecimalFormat("#,###원").format(plan.sellPrice),
+                        discountRate = plan.discountRate,
+                        url = ticket.url
                     )
                 }?.also {
                     _uiState.emit(it)
@@ -60,6 +61,7 @@ class PurchaseViewModel @Inject constructor(
             val originPrice: String,
             val sellPrice: String,
             val discountRate: Int,
+            val url: String,
         ) : UiState
 
         data object Failure : UiState

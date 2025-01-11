@@ -50,6 +50,17 @@ class ThemeListViewModel @Inject constructor(
         loadData()
     }
 
+    fun incrementNetworkDisconnectedCount() {
+        viewModelScope.launch {
+            val count = dataStoreRepository.getNetworkDisconnectedCount()
+            updateNetworkDisconnectedCount(count + 1)
+        }
+    }
+
+    private fun updateNetworkDisconnectedCount(count: Int) {
+        dataStoreRepository.setNetworkDisconnectedCount(count)
+    }
+
     private fun showInAppReview() = intent {
         viewModelScope.launch {
             delay(200)
@@ -97,6 +108,7 @@ class ThemeListViewModel @Inject constructor(
                         themeInfo.toPresentation(updatedAt)
                     },
                 )
+                updateNetworkDisconnectedCount(0)
             }.onFailure(::handleError)
 
             bannerRepository

@@ -1,10 +1,10 @@
 package com.nextroom.nextroom.data.network
 
-import com.nextroom.nextroom.data.network.response.BannerDto
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
 import com.nextroom.nextroom.data.network.request.PurchaseToken
 import com.nextroom.nextroom.data.network.request.StatisticsRequest
+import com.nextroom.nextroom.data.network.response.BannerDto
 import com.nextroom.nextroom.data.network.response.BaseListResponse
 import com.nextroom.nextroom.data.network.response.BaseResponse
 import com.nextroom.nextroom.data.network.response.HintDto
@@ -45,7 +45,7 @@ interface ApiService {
     suspend fun getMypageInfo(): Result<BaseResponse<MypageDto>>
 
     @GET("api/v1/subscription/plan")
-    suspend fun getSubscriptionPlans(): Result<BaseResponse<TicketDto>>
+    suspend fun getSubscriptionTicketInfo(): Result<BaseResponse<TicketDto>>
 
     @POST("api/v1/history")
     suspend fun postGameStats(@Body statsRequest: StatisticsRequest): Result<Unit>

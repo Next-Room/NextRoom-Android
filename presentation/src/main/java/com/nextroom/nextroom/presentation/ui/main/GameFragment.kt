@@ -72,9 +72,6 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     private fun initViews() = with(binding) {
-        enableFullScreen()
-        updateSystemPadding(false)
-
         tbGame.apply {
             root.setBackgroundColor(resources.getColor(android.R.color.transparent, null))
             tvButton.text = getString(R.string.memo_button)
@@ -88,6 +85,12 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             }
         }
         initKeypad()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        enableFullScreen()
+        updateSystemPadding(false)
     }
 
     private fun render(state: GameScreenState) = with(binding) {
@@ -120,7 +123,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         when (event) {
             is GameEvent.ClearHintCode -> binding.customCodeInput.setCode("")
             is GameEvent.OnOpenHint -> {
-                val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint)
+                val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint, event.subscribeStatus)
                 findNavController().safeNavigate(action)
                 viewModel.clearHintCode()
             }

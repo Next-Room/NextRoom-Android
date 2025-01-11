@@ -6,5 +6,5 @@ sealed interface LoginEvent {
     data class LoginFailed(val message: String) : LoginEvent
     data class ShowMessage(val message: UiText) : LoginEvent
     data object GoToOnboardingScreen : LoginEvent
-    data object GoToMainScreen : LoginEvent
+    data object GoToGameScreen : LoginEvent
 }

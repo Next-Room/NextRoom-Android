@@ -106,6 +106,11 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 tvOriginPrice.text = originPrice
                 tvOriginPrice.strikeThrow()
                 tvSellPrice.text = sellPrice
+                tvSeeMore.setOnClickListener {
+                    PurchaseFragmentDirections
+                        .actionGlobalWebViewFragment(url = loaded.url)
+                        .also { findNavController().safeNavigate(it) }
+                }
             }
         }
     }

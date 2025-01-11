@@ -21,5 +21,6 @@ data class HintState(
         answerOpened = false,
     ),
     val lastSeconds: Int = 0,
-    val userSubscribeStatus: SubscribeStatus = SubscribeStatus.Default
+    val userSubscribeStatus: SubscribeStatus = SubscribeStatus.Default,
+    val networkDisconnectedCount: Int = 0
 )
