@@ -5,6 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
+    <include app:graph="@navigation/nav_tutorial" />
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
@@ -239,4 +241,7 @@
             android:id="@+id/action_to_home"
             app:destination="@id/adminMainFragment" />
     </fragment>
+    <action
+        android:id="@+id/move_to_timer_tutorial"
+        app:destination="@id/nav_tutorial" />
 </navigation>

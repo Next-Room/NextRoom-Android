@@ -14,6 +14,7 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
@@ -62,6 +63,10 @@ class AdminMainFragment :
 
         initViews()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+
+        NavGraphDirections
+            .moveToTimerTutorial()
+            .also { findNavController().safeNavigate(it) }
     }
 
     override fun onResume() {

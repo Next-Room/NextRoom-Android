@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_tutorial"
+    app:startDestination="@id/timerTutorial">
+
+    <fragment
+        android:id="@+id/timerTutorial"
+        android:name="com.nextroom.nextroom.presentation.ui.tutorial.TimerTutorialFragment"
+        tools:layout="@layout/fragment_timer_tutorial" />
+</navigation>
