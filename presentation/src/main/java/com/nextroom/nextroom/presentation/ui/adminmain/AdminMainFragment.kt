@@ -40,7 +40,7 @@ class AdminMainFragment :
     private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
-            onStartGame = ::startGame,
+            onThemeClicked = ::onThemeClicked,
             onClickUpdate = viewModel::updateTheme,
         )
     }
@@ -81,7 +81,7 @@ class AdminMainFragment :
         }
     }*/
 
-    private fun startGame(themeId: Int) {
+    private fun onThemeClicked(themeId: Int) {
         viewModel.start(themeId) {
             goToMain(themeId)
         }
