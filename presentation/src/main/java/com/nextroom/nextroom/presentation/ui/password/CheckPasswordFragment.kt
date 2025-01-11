@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentCheckPasswordBinding
+import com.nextroom.nextroom.presentation.extension.BUNDLE_KEY_RESULT_DATA
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +40,10 @@ class CheckPasswordFragment : BaseFragment<FragmentCheckPasswordBinding>(Fragmen
                 viewModel.uiEvent.collect { event ->
                     when (event) {
                         CheckPasswordViewModel.UiEvent.PasswordCorrect -> {
-                            setFragmentResult(requestKey = args.requestKey, bundleOf())
+                            setFragmentResult(
+                                requestKey = args.requestKey,
+                                bundleOf(BUNDLE_KEY_RESULT_DATA to args.resultData)
+                            )
                             findNavController().popBackStack()
                         }
 

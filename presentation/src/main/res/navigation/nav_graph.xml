@@ -248,6 +248,12 @@
             android:name="request_key"
             app:argType="string"
             app:nullable="false" />
+
+        <argument
+            android:name="result_data"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <action
         android:id="@+id/move_to_check_password"
