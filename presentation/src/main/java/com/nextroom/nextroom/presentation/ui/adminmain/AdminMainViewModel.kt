@@ -128,6 +128,14 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(themes = themes) }
     }
 
+    fun tryGameStart() = intent {
+        reduce { state.copy(loading = true) }
+        adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
+            postSideEffect(AdminMainEvent.ReadyToGameStart(myPage.status))
+        }.onFailure(::handleError)
+        reduce { state.copy(loading = false) }
+    }
+
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
             is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
