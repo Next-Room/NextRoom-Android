@@ -22,4 +22,6 @@ interface AdminRepository {
     suspend fun getUserSubscribe(): Result<Mypage>
     suspend fun getEmailSaveChecked(): Boolean
     suspend fun getUserEmail(): String
+    suspend fun saveAppPassword(password: String)
+    suspend fun getAppPassword(): String
 }
