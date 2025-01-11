@@ -1,8 +1,12 @@
 package com.nextroom.nextroom.presentation.ui.password
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -25,8 +29,14 @@ class CheckPasswordFragment : BaseFragment<FragmentCheckPasswordBinding>(Fragmen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initView()
         initListener()
         initSubscribe()
+        showBiometricPrompt()
+    }
+
+    private fun initView() {
+        binding.keyBiometric.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
     }
 
     private fun initSubscribe() {
@@ -39,14 +49,7 @@ class CheckPasswordFragment : BaseFragment<FragmentCheckPasswordBinding>(Fragmen
             launch {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
-                        CheckPasswordViewModel.UiEvent.PasswordCorrect -> {
-                            setFragmentResult(
-                                requestKey = args.requestKey,
-                                bundleOf(BUNDLE_KEY_RESULT_DATA to args.resultData)
-                            )
-                            findNavController().popBackStack()
-                        }
-
+                        CheckPasswordViewModel.UiEvent.PasswordCorrect -> onPasswordCorrected()
                         CheckPasswordViewModel.UiEvent.PasswordInCorrect -> {
                             binding.customCodeInput.setError()
                             toast(getString(R.string.text_incorrect_password_error_message))
@@ -61,6 +64,33 @@ class CheckPasswordFragment : BaseFragment<FragmentCheckPasswordBinding>(Fragmen
         binding.customCodeInput.setCode(password)
     }
 
+    private fun showBiometricPrompt() {
+        val executor = ContextCompat.getMainExecutor(requireContext())
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            BiometricPrompt(this, executor, object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    onPasswordCorrected()
+                }
+            }).also { biometricPrompt ->
+                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(getString(R.string.text_finger_print_auth))
+                    .setNegativeButtonText(getString(R.string.text_cancel))
+                    .build()
+
+                biometricPrompt.authenticate(promptInfo)
+            }
+        }
+    }
+
+    private fun onPasswordCorrected() {
+        setFragmentResult(
+            requestKey = args.requestKey,
+            bundleOf(BUNDLE_KEY_RESULT_DATA to args.resultData)
+        )
+        findNavController().popBackStack()
+    }
+
     private fun initListener() {
         binding.tvKey1.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_1)) }
         binding.tvKey2.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_2)) }
@@ -72,6 +102,7 @@ class CheckPasswordFragment : BaseFragment<FragmentCheckPasswordBinding>(Fragmen
         binding.tvKey8.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_8)) }
         binding.tvKey9.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_9)) }
         binding.tvKey0.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_0)) }
+        binding.keyBiometric.setOnClickListener { showBiometricPrompt() }
         binding.keyBackspace.setOnClickListener { viewModel.onBackSpaceClicked() }
     }
 }
