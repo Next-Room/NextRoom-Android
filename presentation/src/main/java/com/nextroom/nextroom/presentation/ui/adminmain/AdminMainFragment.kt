@@ -170,6 +170,7 @@ class AdminMainFragment :
         tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
+        binding.layoutOpaqueLoading.root.isVisible = state.opaqueLoading
     }
 
     private fun handleEvent(event: AdminMainEvent) {

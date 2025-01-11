@@ -121,12 +121,12 @@ class AdminMainViewModel @Inject constructor(
     }
 
     fun tryGameStart(themeId: Int) = intent {
-        reduce { state.copy(loading = true) }
+        reduce { state.copy(opaqueLoading = true) }
         themeRepository.updateLatestTheme(themeId)
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
             postSideEffect(AdminMainEvent.ReadyToGameStart(myPage.status))
         }.onFailure(::handleError)
-        reduce { state.copy(loading = false) }
+        reduce { state.copy(opaqueLoading = false) }
     }
 
     private fun checkNeedToSetPassword() {
