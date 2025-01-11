@@ -50,6 +50,9 @@
             android:id="@+id/move_to_background_custom_fragment"
             app:destination="@+id/background_custom_fragment">
             <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+            <argument
                 android:name="themes"
                 app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
         </action>
@@ -58,6 +61,9 @@
     <fragment
         android:id="@+id/background_custom_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundCustomFragment">
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
 
         <argument
             android:name="themes"

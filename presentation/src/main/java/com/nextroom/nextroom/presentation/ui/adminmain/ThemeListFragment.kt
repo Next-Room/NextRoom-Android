@@ -113,7 +113,10 @@ class ThemeListFragment :
 
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(
-                ThemeListFragmentDirections.moveToBackgroundCustomFragment(state.themes.toTypedArray())
+                ThemeListFragmentDirections.moveToBackgroundCustomFragment(
+                    state.subscribeStatus,
+                    state.themes.toTypedArray()
+                )
             )
         }
         flBackgroundCustom.setOnClickListener {

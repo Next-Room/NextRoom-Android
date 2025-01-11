@@ -6,6 +6,10 @@ data class BackgroundCustomState(
     val themes: List<ThemeInfoPresentation>
 )
 
-interface BackgroundCustomEvent {
-
+sealed interface BackgroundCustomEvent {
+    data class ToggleImageError(val errorRes: Int) : BackgroundCustomEvent
+    data object NetworkError : BackgroundCustomEvent
+    data object UnknownError : BackgroundCustomEvent
+    data class ClientError(val message: String) : BackgroundCustomEvent
+    data object ToggleNotAllowed : BackgroundCustomEvent
 }
