@@ -14,10 +14,8 @@ import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -91,13 +89,6 @@ class AdminMainViewModel @Inject constructor(
         }.onFailure(::handleError)
     }
 
-    fun start(themeId: Int, readyToStart: () -> Unit) = intent {
-        themeRepository.updateLatestTheme(themeId)
-        withContext(Dispatchers.Main) {
-            readyToStart()
-        }
-    }
-
     fun loadData() = intent {
         reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
@@ -129,8 +120,9 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(themes = themes) }
     }
 
-    fun tryGameStart() = intent {
+    fun tryGameStart(themeId: Int) = intent {
         reduce { state.copy(loading = true) }
+        themeRepository.updateLatestTheme(themeId)
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
             postSideEffect(AdminMainEvent.ReadyToGameStart(myPage.status))
         }.onFailure(::handleError)

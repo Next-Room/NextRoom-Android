@@ -81,9 +81,7 @@ class AdminMainFragment :
                 try {
                     if (bundle.hasResultData()) {
                         bundle.getResultData()?.let { themeId ->
-                            viewModel.start(themeId.toInt()) {
-                                viewModel.tryGameStart()
-                            }
+                            viewModel.tryGameStart(themeId.toInt())
                         }
                     }
                 } catch (e: Exception) {
