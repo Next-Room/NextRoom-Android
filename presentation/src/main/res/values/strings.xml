@@ -125,4 +125,24 @@
     <string name="dialog_title_game_start_confirm">게임을 시작하시겠습니까?</string>
     <string name="dialog_message_game_start_confirm">버튼을 클릭하면 타이머가 시작됩니다</string>
     <string name="text_image_error">이미지를 로드할 수 없습니다.\n직원에게 문의해 주세요.</string>
+
+    <string name="text_input_password_header">비밀번호 입력</string>
+    <string name="text_input_password_description">앱 비밀번호를 입력해주세요.</string>
+    <string name="text_incorrect_password_error_message">비밀번호가 일치하지 않습니다.</string>
+    <string name="text_set_password">비밀번호 설정</string>
+    <string name="text_confirm_password">비밀번호 확인</string>
+    <string name="text_set_password_description">앱 비밀번호를 입력해주세요.</string>
+    <string name="text_set_password_description_for_confirm">확인을 위해 한번 더 입력해 주세요.</string>
+    <string name="text_set_password_succeed">비밀번호 설정이 완료되었습니다.</string>
+    <string name="text_change_app_password">앱 비밀번호 변경</string>
+    <string name="text_1">1</string>
+    <string name="text_2">2</string>
+    <string name="text_3">3</string>
+    <string name="text_4">4</string>
+    <string name="text_5">5</string>
+    <string name="text_6">6</string>
+    <string name="text_7">7</string>
+    <string name="text_8">8</string>
+    <string name="text_9">9</string>
+    <string name="text_0">0</string>
 </resources>
