@@ -18,6 +18,7 @@ import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.getResultData
@@ -44,7 +45,7 @@ class AdminMainFragment :
     private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
-            onThemeClicked = ::onThemeClicked,
+            onThemeClicked = { themeId -> viewModel.onThemeClicked(themeId.toString()) },
             onClickUpdate = viewModel::updateTheme,
         )
     }
@@ -71,6 +72,7 @@ class AdminMainFragment :
 
     private fun initSubscribe() {
         setFragmentResultListener(requestKeyCheckPassword, ::handleFragmentResults)
+        setFragmentResultListener(dialogKeyNeedToSetPassword, ::handleFragmentResults)
     }
 
     private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
@@ -89,6 +91,8 @@ class AdminMainFragment :
                     snackbar(R.string.error_something)
                 }
             }
+
+            dialogKeyNeedToSetPassword -> moveToSetPassword()
         }
     }
 
@@ -108,12 +112,6 @@ class AdminMainFragment :
             statisticsRepository.postGameStats()
         }
     }*/
-
-    private fun onThemeClicked(themeId: Int) {
-        NavGraphDirections
-            .moveToCheckPassword(requestKey = requestKeyCheckPassword, resultData = themeId.toString())
-            .also { findNavController().safeNavigate(it) }
-    }
 
     private fun initViews() = with(binding) {
         updateSystemPadding(statusBar = false, navigationBar = true)
@@ -183,6 +181,8 @@ class AdminMainFragment :
             is AdminMainEvent.ClientError -> snackbar(event.message)
             AdminMainEvent.InAppReview -> showInAppReview()
             is AdminMainEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
+            AdminMainEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
+            is AdminMainEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
         }
     }
 
@@ -224,6 +224,31 @@ class AdminMainFragment :
             .also { findNavController().safeNavigate(it) }
     }
 
+    private fun showNeedToSetPasswordDialog() {
+        NavGraphDirections
+            .actionGlobalNrTwoButtonDialog(
+                NRTwoButtonDialog.NRTwoButtonArgument(
+                    title = getString(R.string.text_need_to_set_password_title),
+                    message = getString(R.string.text_need_to_set_password_message),
+                    posBtnText = getString(R.string.text_move_to_setting),
+                    negBtnText = getString(R.string.dialog_close),
+                    dialogKey = dialogKeyNeedToSetPassword,
+                ),
+            ).also { findNavController().safeNavigate(it) }
+    }
+
+    private fun moveToSetPassword() {
+        NavGraphDirections
+            .moveToSetPassword()
+            .also { findNavController().safeNavigate(it) }
+    }
+
+    private fun moveToCheckPasswordForGameStart(themeId: String) {
+        NavGraphDirections
+            .moveToCheckPassword(requestKey = requestKeyCheckPassword, resultData = themeId)
+            .also { findNavController().safeNavigate(it) }
+    }
+
     override fun onDestroyView() {
         binding.rvThemes.adapter = null
         super.onDestroyView()
@@ -236,5 +261,6 @@ class AdminMainFragment :
 
     companion object {
         private const val requestKeyCheckPassword = "requestKeyCheckPassword"
+        private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
     }
 }

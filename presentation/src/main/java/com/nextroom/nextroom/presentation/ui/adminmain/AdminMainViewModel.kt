@@ -48,6 +48,7 @@ class AdminMainViewModel @Inject constructor(
 
     fun onResume() {
         loadData()
+        checkNeedToSetPassword()
     }
 
     fun incrementNetworkDisconnectedCount() {
@@ -134,6 +135,28 @@ class AdminMainViewModel @Inject constructor(
             postSideEffect(AdminMainEvent.ReadyToGameStart(myPage.status))
         }.onFailure(::handleError)
         reduce { state.copy(loading = false) }
+    }
+
+    private fun checkNeedToSetPassword() {
+        viewModelScope.launch {
+            if (adminRepository.getAppPassword().isEmpty()) {
+                intent {
+                    postSideEffect(AdminMainEvent.NeedToSetPassword)
+                }
+            }
+        }
+    }
+
+    fun onThemeClicked(themeId: String) {
+        viewModelScope.launch {
+            intent {
+                if (adminRepository.getAppPassword().isEmpty()) {
+                    AdminMainEvent.NeedToSetPassword
+                } else {
+                    AdminMainEvent.NeedToCheckPasswordForStartGame(themeId)
+                }.also { postSideEffect(it) }
+            }
+        }
     }
 
     private fun handleError(error: Result.Failure) = intent {

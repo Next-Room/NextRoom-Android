@@ -136,4 +136,8 @@
     <string name="text_8">8</string>
     <string name="text_9">9</string>
     <string name="text_0">0</string>
+
+    <string name="text_need_to_set_password_title">안내</string>
+    <string name="text_need_to_set_password_message">관리자만 게임을 시작할 수 있도록\n비밀번호 설정이 필요합니다.</string>
+    <string name="text_move_to_setting">설정하기</string>
 </resources>

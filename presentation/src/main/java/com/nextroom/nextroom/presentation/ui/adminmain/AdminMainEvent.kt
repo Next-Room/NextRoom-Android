@@ -8,4 +8,6 @@ sealed interface AdminMainEvent {
     data class ClientError(val message: String) : AdminMainEvent
     data object InAppReview : AdminMainEvent
     data class ReadyToGameStart(val subscribeStatus: SubscribeStatus) : AdminMainEvent
+    data object NeedToSetPassword : AdminMainEvent
+    data class NeedToCheckPasswordForStartGame(val themeId: String) : AdminMainEvent
 }
