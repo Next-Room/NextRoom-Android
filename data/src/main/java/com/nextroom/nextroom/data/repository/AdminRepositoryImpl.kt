@@ -66,4 +66,12 @@ class AdminRepositoryImpl @Inject constructor(
     override suspend fun getUserEmail(): String {
         return settingDataSource.getUserEmail()
     }
+
+    override suspend fun saveAppPassword(password: String) {
+        return settingDataSource.saveAppPassword(password)
+    }
+
+    override suspend fun getAppPassword(): String {
+        return settingDataSource.getAppPassword()
+    }
 }

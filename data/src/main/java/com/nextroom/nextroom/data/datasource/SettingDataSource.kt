@@ -97,11 +97,19 @@ class SettingDataSource @Inject constructor(
 
     fun saveUserEmail(userEmail: String) = runBlocking {
         dataStore.updateData {
-            it.copy(userEmail= userEmail)
+            it.copy(userEmail = userEmail)
         }
     }
 
     fun getUserEmail() = runBlocking {
         data.first().userEmail
     }
+
+    suspend fun saveAppPassword(password: String) {
+        dataStore.updateData {
+            it.copy(appPassword = password)
+        }
+    }
+
+    suspend fun getAppPassword() = data.first().appPassword
 }

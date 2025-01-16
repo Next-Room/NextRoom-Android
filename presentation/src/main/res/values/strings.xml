@@ -37,16 +37,7 @@
     <string name="memo_pen_description">그리기</string>
     <string name="memo_eraser_description">지우개</string>
 
-    <string name="admin_code_input_label">관리자 코드 5자리를\n입력해주세요</string>
     <string name="admin_code_no_account_guide"><u>계정이 없으신가요?</u></string>
-    <string name="admin_code_description">관리자 웹 사이트에 있는 관리자 코드를 입력해주세요</string>
-    <string name="admin_code_hint">관리자 코드</string>
-    <string name="admin_code_input_button">입력</string>
-    <string name="admin_code_input_hint">5자리 숫자를 입력해주세요</string>
-    <string name="admin_code_id_hint">ID</string>
-    <string name="admin_code_pw_hint">PASSWORD</string>
-    <string name="admin_code_invalid">관리자 코드가 일치하지 않습니다.</string>
-    <string name="admin_code_required">관리자 코드를 입력해주세요</string>
 
     <string name="admin_main_update_hint">관리자 웹 사이트에서 힌트를 업데이트 했다면 반드시 업데이트 버튼을 눌러주세요!</string>
     <string name="admin_main_themes_label">우리 지점의 테마 목록</string>
@@ -125,4 +116,32 @@
     <string name="dialog_title_game_start_confirm">게임을 시작하시겠습니까?</string>
     <string name="dialog_message_game_start_confirm">버튼을 클릭하면 타이머가 시작됩니다</string>
     <string name="text_image_error">이미지를 로드할 수 없습니다.\n직원에게 문의해 주세요.</string>
+
+    <string name="text_input_password_header">비밀번호 입력</string>
+    <string name="text_input_password_description">앱 비밀번호를 입력해주세요.</string>
+    <string name="text_incorrect_password_error_message">비밀번호가 일치하지 않습니다.</string>
+    <string name="text_set_password">비밀번호 설정</string>
+    <string name="text_confirm_password">비밀번호 확인</string>
+    <string name="text_set_password_description">앱 비밀번호를 입력해주세요.</string>
+    <string name="text_set_password_description_for_confirm">확인을 위해 한번 더 입력해 주세요.</string>
+    <string name="text_set_password_succeed">비밀번호 설정이 완료되었습니다.</string>
+    <string name="text_change_app_password">앱 비밀번호 변경</string>
+    <string name="text_1">1</string>
+    <string name="text_2">2</string>
+    <string name="text_3">3</string>
+    <string name="text_4">4</string>
+    <string name="text_5">5</string>
+    <string name="text_6">6</string>
+    <string name="text_7">7</string>
+    <string name="text_8">8</string>
+    <string name="text_9">9</string>
+    <string name="text_0">0</string>
+
+    <string name="text_need_to_set_password_title">안내</string>
+    <string name="text_need_to_set_password_message">관리자만 게임을 시작할 수 있도록\n비밀번호 설정이 필요합니다.</string>
+    <string name="text_move_to_setting">설정하기</string>
+    <string name="text_finger_print_auth">지문 인증</string>
+    <string name="text_prompt_fingerprint">지문을 입력하세요.</string>
+    <string name="text_cancel">취소</string>
+    <string name="text_biometric_error_message">지문 인증에 실패했습니다.</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
@@ -48,9 +49,13 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                 when (loaded.status) {
                     SubscribeStatus.SUBSCRIPTION_EXPIRATION,
                     SubscribeStatus.Default -> goToPurchase()
+
                     SubscribeStatus.Subscribed -> goToSubscriptionInfo()
                 }
             }
+        }
+        clChangeAppPassword.setOnClickListener {
+            moveToSetPassword()
         }
     }
 
@@ -107,6 +112,12 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                     dialogKey = REQUEST_KEY_RESIGN,
                 ),
             ).also { findNavController().safeNavigate(it) }
+    }
+
+    private fun moveToSetPassword() {
+        NavGraphDirections
+            .moveToSetPassword()
+            .also { findNavController().safeNavigate(it) }
     }
 
     companion object {

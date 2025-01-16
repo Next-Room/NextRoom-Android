@@ -14,10 +14,8 @@ import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.postSideEffect
@@ -48,6 +46,7 @@ class AdminMainViewModel @Inject constructor(
 
     fun onResume() {
         loadData()
+        checkNeedToSetPassword()
     }
 
     fun incrementNetworkDisconnectedCount() {
@@ -90,13 +89,6 @@ class AdminMainViewModel @Inject constructor(
         }.onFailure(::handleError)
     }
 
-    fun start(themeId: Int, readyToStart: () -> Unit) = intent {
-        themeRepository.updateLatestTheme(themeId)
-        withContext(Dispatchers.Main) {
-            readyToStart()
-        }
-    }
-
     fun loadData() = intent {
         reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
@@ -126,6 +118,37 @@ class AdminMainViewModel @Inject constructor(
 
     private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {
         reduce { state.copy(themes = themes) }
+    }
+
+    fun tryGameStart(themeId: Int) = intent {
+        reduce { state.copy(opaqueLoading = true) }
+        themeRepository.updateLatestTheme(themeId)
+        adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
+            postSideEffect(AdminMainEvent.ReadyToGameStart(myPage.status))
+        }.onFailure(::handleError)
+        reduce { state.copy(opaqueLoading = false) }
+    }
+
+    private fun checkNeedToSetPassword() {
+        viewModelScope.launch {
+            if (adminRepository.getAppPassword().isEmpty()) {
+                intent {
+                    postSideEffect(AdminMainEvent.NeedToSetPassword)
+                }
+            }
+        }
+    }
+
+    fun onThemeClicked(themeId: String) {
+        viewModelScope.launch {
+            intent {
+                if (adminRepository.getAppPassword().isEmpty()) {
+                    AdminMainEvent.NeedToSetPassword
+                } else {
+                    AdminMainEvent.NeedToCheckPasswordForStartGame(themeId)
+                }.also { postSideEffect(it) }
+            }
+        }
     }
 
     private fun handleError(error: Result.Failure) = intent {
