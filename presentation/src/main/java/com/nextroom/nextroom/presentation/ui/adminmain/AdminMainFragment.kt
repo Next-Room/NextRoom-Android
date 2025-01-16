@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -233,7 +234,14 @@ class AdminMainFragment :
                     negBtnText = getString(R.string.dialog_close),
                     dialogKey = dialogKeyNeedToSetPassword,
                 ),
-            ).also { findNavController().safeNavigate(it) }
+            ).also {
+                findNavController().safeNavigate(
+                    direction = it,
+                    navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
     }
 
     private fun moveToSetPassword() {
