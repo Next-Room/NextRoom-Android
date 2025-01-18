@@ -7,5 +7,6 @@ interface FirebaseRemoteConfigRepository {
 
     companion object {
         const val REMOTE_KEY_APP_MIN_VERSION = "app_min_version"
+        const val REMOTE_KEY_KAKAO_BUSINESS_CHANNEL_URL = "kakao_business_channel_url"
     }
 }

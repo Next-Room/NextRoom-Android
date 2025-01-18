@@ -100,6 +100,18 @@
         android:textAppearance="@style/Pretendard.12"
         android:textColor="@color/color_gray01_text_button"
         app:layout_constraintEnd_toEndOf="@id/guide_end"
+        app:layout_constraintStart_toEndOf="@id/tv_customer_service"
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
+
+    <TextView
+        android:id="@+id/tv_customer_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/text_kakao_cs_underline"
+        android:textAppearance="@style/Pretendard.12"
+        android:textColor="@color/color_gray01_text_button"
+        app:layout_constraintEnd_toStartOf="@id/tv_no_account_guide"
         app:layout_constraintStart_toStartOf="@id/guide_start"
         app:layout_constraintTop_toBottomOf="@id/btn_login" />
 

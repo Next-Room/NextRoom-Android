@@ -8,6 +8,7 @@ import com.nextroom.nextroom.domain.model.onFinally
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
+import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.InputState
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     private val dataStoreRepository: DataStoreRepository,
+    private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : BaseViewModel<LoginState, LoginEvent>() {
 
     override val container: Container<LoginState, LoginEvent> = container(LoginState())
@@ -48,6 +50,17 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (dataStoreRepository.getIsInitLaunch()) {
                 event(LoginEvent.GoToOnboardingScreen)
+            }
+        }
+        viewModelScope.launch {
+            intent {
+                firebaseRemoteConfigRepository
+                    .getFirebaseRemoteConfigValue(FirebaseRemoteConfigRepository.REMOTE_KEY_KAKAO_BUSINESS_CHANNEL_URL)
+                    .collect { kakaoChannelUrl ->
+                        reduce {
+                            state.copy(kakaoChannelUrl = kakaoChannelUrl)
+                        }
+                    }
             }
         }
     }

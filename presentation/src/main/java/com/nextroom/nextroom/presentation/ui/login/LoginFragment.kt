@@ -1,5 +1,7 @@
 package com.nextroom.nextroom.presentation.ui.login
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -16,6 +18,8 @@ import com.nextroom.nextroom.presentation.extension.setError
 import com.nextroom.nextroom.presentation.extension.setStateListener
 import com.nextroom.nextroom.presentation.extension.showKeyboard
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.ui.Constants.KAKAO_BUSINESS_CHANNEL_URL
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -70,6 +74,18 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
 
         cbIdSave.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onIdSaveChecked(isChecked)
+        }
+
+        tvCustomerService.setOnClickListener {
+            try {
+                viewModel.container.stateFlow.value.kakaoChannelUrl
+                    .ifEmpty { KAKAO_BUSINESS_CHANNEL_URL }
+                    .let { url ->
+                        Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
+                    }.also { startActivity(it) }
+            } catch (e: Exception) {
+                toast(getString(R.string.error_something))
+            }
         }
     }
 

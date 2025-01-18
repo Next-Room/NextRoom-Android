@@ -38,6 +38,8 @@
     <string name="memo_eraser_description">지우개</string>
 
     <string name="admin_code_no_account_guide"><u>계정이 없으신가요?</u></string>
+    <string name="text_kakao_cs_underline"><u>카카오로 문의하기</u></string>
+    <string name="text_customer_service">문의하기</string>
 
     <string name="admin_main_update_hint">관리자 웹 사이트에서 힌트를 업데이트 했다면 반드시 업데이트 버튼을 눌러주세요!</string>
     <string name="admin_main_themes_label">우리 지점의 테마 목록</string>
