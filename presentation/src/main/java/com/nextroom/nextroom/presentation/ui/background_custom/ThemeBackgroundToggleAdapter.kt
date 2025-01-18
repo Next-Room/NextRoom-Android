@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.DiffResult.NO_POSITION
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -14,13 +15,15 @@ import com.nextroom.nextroom.presentation.databinding.ItemThemeBackgroundToggleB
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemeBackgroundToggleAdapter(
-    private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> }
+    private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> },
+    private val onImageClicked: (ThemeInfoPresentation) -> Unit = {}
 ) : ListAdapter<ThemeInfoPresentation, ThemeBackgroundToggleAdapter.ThemeViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
         return ThemeViewHolder(
             ItemThemeBackgroundToggleBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onToggleClicked
+            onToggleClicked = onToggleClicked,
+            onImageClicked = { onImageClicked(getItem(it)) }
         )
     }
 
@@ -30,8 +33,17 @@ class ThemeBackgroundToggleAdapter(
 
     class ThemeViewHolder(
         private val binding: ItemThemeBackgroundToggleBinding,
-        private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> }
+        private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> },
+        private val onImageClicked: (Int) -> Unit = {}
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.imgTheme.setOnClickListener {
+                val position = bindingAdapterPosition
+                    .takeIf { it != NO_POSITION } ?: return@setOnClickListener
+                onImageClicked(position)
+            }
+        }
 
         @SuppressLint("ClickableViewAccessibility")
         fun bind(themeInfo: ThemeInfoPresentation) = with(binding) {

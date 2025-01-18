@@ -72,6 +72,24 @@
         <action
             android:id="@+id/move_to_subscription_payment"
             app:destination="@+id/subscription_payment_fragment" />
+
+        <action
+            android:id="@+id/nav_to_background_image_custom_detail_fragment"
+            app:destination="@+id/background_image_custom_detail_fragment">
+
+            <argument
+                android:name="theme"
+                app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/background_image_custom_detail_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundImageCustomDetailFragment">
+
+        <argument
+            android:name="theme"
+            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
     </fragment>
 
     <dialog

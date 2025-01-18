@@ -12,6 +12,7 @@ import com.nextroom.nextroom.presentation.databinding.ItemBackgroundCustomInfoBi
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -62,8 +63,16 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
             binding.llInfo.addView(it.root)
         }
 
-        binding.rvTheme.adapter = ThemeBackgroundToggleAdapter {
-            viewModel.toggleImage(it)
-        }
+        binding.rvTheme.adapter = ThemeBackgroundToggleAdapter(
+            onToggleClicked = { viewModel.toggleImage(it) },
+            onImageClicked = { navToImageCustom(it) }
+        )
+    }
+
+    private fun navToImageCustom(theme: ThemeInfoPresentation) {
+        //TODO : BackgroundCustomFragment 네이밍을 수정하자 -> BackgroundImageCustomListFragment
+        BackgroundCustomFragmentDirections
+            .navToBackgroundImageCustomDetailFragment(theme)
+            .also { findNavController().safeNavigate(it) } 
     }
 }
