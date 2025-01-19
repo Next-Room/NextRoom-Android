@@ -1,18 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.background_custom.BackgroundImageCustomDetailFragment">
+    android:background="@android:color/transparent">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/common_toolbar"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/img_theme"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent"
+        tools:context=".ui.background_custom.BackgroundImageCustomDetailFragment">
+
+        <ImageView
+            android:id="@+id/img_theme"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY" />
+
+        <include
+            android:id="@+id/layout_toolbar"
+            layout="@layout/common_toolbar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/layout_game"
+            layout="@layout/layout_game"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_toolbar" />
+
+        <LinearLayout
+            android:id="@+id/ll_expand_or_collapse"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:background="@drawable/bg_black_60_border_white_r20"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_expand_collapse"
+                android:layout_width="148dp"
+                android:layout_height="148dp"
+                android:src="@drawable/img_expand_collapse" />
+
+            <TextView
+                style="@style/Pretendard.16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/expand_or_collapse"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@color/sub1"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:layout_anchorGravity="bottom"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <FrameLayout
+            android:id="@+id/fl_drag"
+            android:layout_width="53dp"
+            android:layout_height="4dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_white_70_r2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_opacity"
+            style="@style/Pretendard.16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="36dp"
+            android:text="@string/dark_level"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fl_drag" />
+
+        <TextView
+            android:id="@+id/tv_opacity_percent"
+            style="@style/Pretendard.16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/bg_main_r_4"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            android:text="50%"
+            android:textColor="@color/white_70"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_opacity"
+            app:layout_constraintStart_toEndOf="@+id/tv_opacity"
+            app:layout_constraintTop_toTopOf="@+id/tv_opacity"
+            tools:text="50%" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/sb_opacity"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="40dp"
+            android:progress="50"
+            android:progressDrawable="@drawable/seekbar_style"
+            android:thumb="@drawable/seekbar_thumb"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_opacity_percent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_opacity_percent"
+            app:layout_constraintTop_toTopOf="@+id/tv_opacity_percent" />
+
+        <TextView
+            android:id="@+id/tv_apply_screen"
+            style="@style/Pretendard.16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/apply_real_screen"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_opacity"
+            app:layout_constraintTop_toBottomOf="@+id/tv_opacity"
+            app:layout_constraintVertical_bias="0"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sc_apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:background="@null"
+            android:checked="false"
+            android:thumb="@drawable/selector_thumb"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_apply_screen"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_apply_screen"
+            app:thumbTint="@null"
+            app:track="@drawable/selector_track"
+            app:trackTint="@null" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

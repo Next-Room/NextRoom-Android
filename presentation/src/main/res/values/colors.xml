@@ -32,6 +32,8 @@
     <color name="sub1">#1f2023</color>
     <color name="sub2">#3a3b3d</color>
 
+    <color name="bg_main">#131417</color>
+
     <drawable name="drawable_White">@color/White</drawable>
     <drawable name="drawable_Gray02">@color/Gray02</drawable>
     <drawable name="drawable_Dark01">@color/Dark01</drawable>

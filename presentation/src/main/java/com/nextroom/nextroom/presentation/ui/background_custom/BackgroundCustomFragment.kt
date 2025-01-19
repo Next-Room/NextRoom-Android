@@ -73,6 +73,6 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
         //TODO : BackgroundCustomFragment 네이밍을 수정하자 -> BackgroundImageCustomListFragment
         BackgroundCustomFragmentDirections
             .navToBackgroundImageCustomDetailFragment(theme)
-            .also { findNavController().safeNavigate(it) } 
+            .also { findNavController().safeNavigate(it) }
     }
 }

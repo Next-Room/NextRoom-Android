@@ -143,4 +143,8 @@
     <string name="text_empty_image">등록 이미지가\n없습니다</string>
     <string name="text_background_setting_error">등록된 이미지가 없어 배경을 활성화할 수 없습니다.</string>
     <string name="text_image_error">이미지를 로드할 수 없습니다.\n직원에게 문의해 주세요.</string>
+    <string name="save">저장</string>
+    <string name="expand_or_collapse">손가락을 이용해 이미지를\n확대, 축소, 이동할 수 있습니다.</string>
+    <string name="dark_level">어두움</string>
+    <string name="apply_real_screen">실제 적용 화면으로 보기</string>
 </resources>
