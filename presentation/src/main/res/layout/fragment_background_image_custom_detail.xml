@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         tools:context=".ui.background_custom.BackgroundImageCustomDetailFragment">
 
-        <ImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/img_theme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

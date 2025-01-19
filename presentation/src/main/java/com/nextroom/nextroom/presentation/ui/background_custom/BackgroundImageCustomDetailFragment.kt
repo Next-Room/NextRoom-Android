@@ -1,8 +1,11 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -25,6 +28,7 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
         initListener()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         binding.layoutToolbar.ivBack.setOnClickListener {
             findNavController().popBackStack()
@@ -32,6 +36,9 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
         binding.llExpandOrCollapse.setOnClickListener {
             binding.llExpandOrCollapse.visibility = View.INVISIBLE
         }
+        //PhotoView를 추가하면 bottomsheet이 드래그가 작동하지 않음.
+        //아래 코드를 넣으면 bottomsheet가 이벤트를 직접 소비함으로써 드래그가 다시 가능
+        binding.bottomSheet.setOnTouchListener { _, _ -> true }
     }
 
     private fun initView() {
