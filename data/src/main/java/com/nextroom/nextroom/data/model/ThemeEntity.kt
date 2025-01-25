@@ -14,6 +14,8 @@ data class ThemeEntity(
     val title: String = "",
     val timeLimitInMinute: Int = 60,
     val hintLimit: Int = -1,
+    val useTimerUrl: Boolean = false,
+    val themeImageUrl: String? = null,
     val themeImageCustomInfo: ThemeImageCustomInfo? = null
 ) {
     companion object {
@@ -28,6 +30,8 @@ fun ThemeEntity.toDomain(hints: List<Hint> = emptyList()): ThemeInfo {
         timeLimitInMinute = timeLimitInMinute,
         hintLimit = hintLimit,
         hints = hints,
+        useTimerUrl = useTimerUrl,
+        themeImageUrl = themeImageUrl,
         themeImageCustomInfo = themeImageCustomInfo
     )
 }
@@ -43,6 +47,8 @@ fun ThemeInfo.toEntity(adminCode: String): ThemeEntity {
         title = title,
         timeLimitInMinute = timeLimitInMinute,
         hintLimit = hintLimit,
+        useTimerUrl = useTimerUrl,
+        themeImageUrl = themeImageUrl,
         themeImageCustomInfo = themeImageCustomInfo
     )
 }
