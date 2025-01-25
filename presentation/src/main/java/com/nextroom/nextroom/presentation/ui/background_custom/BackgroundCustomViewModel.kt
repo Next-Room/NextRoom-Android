@@ -10,6 +10,7 @@ import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
+import com.nextroom.nextroom.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
@@ -54,6 +55,21 @@ class BackgroundCustomViewModel @Inject constructor(
                 } catch (ex: Exception) {
                     postSideEffect(BackgroundCustomEvent.UnknownError)
                 }
+            }
+        }
+    }
+
+    fun onThemeImageClicked(theme: ThemeInfoPresentation) = intent {
+        viewModelScope.launch {
+            try {
+                val updatedAt = themeRepository.getUpdatedInfo(theme.id)
+                themeRepository.getThemeById(theme.id)
+                    .toPresentation(updatedAt)
+                    .let {
+                        postSideEffect(BackgroundCustomEvent.ThemeImageClicked(it))
+                    }
+            } catch (ex: Exception) {
+                postSideEffect(BackgroundCustomEvent.UnknownError)
             }
         }
     }

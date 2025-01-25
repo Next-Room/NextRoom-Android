@@ -12,4 +12,5 @@ sealed interface BackgroundCustomEvent {
     data object UnknownError : BackgroundCustomEvent
     data class ClientError(val message: String) : BackgroundCustomEvent
     data object ToggleNotAllowed : BackgroundCustomEvent
+    data class ThemeImageClicked(val theme: ThemeInfoPresentation): BackgroundCustomEvent
 }

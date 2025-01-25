@@ -38,6 +38,7 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
             is BackgroundCustomEvent.ClientError -> snackbar(event.message)
             BackgroundCustomEvent.UnknownError -> snackbar(R.string.error_something)
             BackgroundCustomEvent.ToggleNotAllowed -> findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
+            is BackgroundCustomEvent.ThemeImageClicked -> navToImageCustom(event.theme)
         }
     }
 
@@ -65,7 +66,7 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
 
         binding.rvTheme.adapter = ThemeBackgroundToggleAdapter(
             onToggleClicked = { viewModel.toggleImage(it) },
-            onImageClicked = { navToImageCustom(it) }
+            onImageClicked = { viewModel.onThemeImageClicked(it) }
         )
     }
 
