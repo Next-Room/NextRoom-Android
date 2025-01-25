@@ -24,12 +24,15 @@ class ThemeRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getThemes(): Result<List<ThemeInfo>> {
-        // 로컬에 저장
-        return themeRemoteDateSource.getThemes().suspendOnSuccess {
-            themeLocalDataSource.updateThemes(
-                settingDataSource.getAdminCode(),
-                it,
-            )
+        return themeRemoteDateSource.getThemes().suspendOnSuccess { themes ->
+            themes
+                .map { it.copy(themeImageCustomInfo = getThemeById(it.id).themeImageCustomInfo) }
+                .also {
+                    themeLocalDataSource.updateThemes(
+                        settingDataSource.getAdminCode(),
+                        it,
+                    )
+                }
         }
     }
 
