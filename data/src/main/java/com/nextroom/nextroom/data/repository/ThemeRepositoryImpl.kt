@@ -9,6 +9,7 @@ import com.nextroom.nextroom.domain.model.ThemeInfo
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ThemeRepositoryImpl @Inject constructor(
@@ -55,5 +56,9 @@ class ThemeRepositoryImpl @Inject constructor(
 
     override suspend fun activateThemeBackgroundImage(activeThemeIdList: List<Int>, deActiveThemeIdList: List<Int>): Result<Unit> {
         return themeRemoteDateSource.putActiveThemeBackgroundImage(ThemeBackgroundActivationId(activeThemeIdList, deActiveThemeIdList))
+    }
+
+    override suspend fun getThemeById(id: Int): ThemeInfo {
+        return themeLocalDataSource.getTheme(id).first()
     }
 }

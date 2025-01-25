@@ -12,4 +12,5 @@ interface ThemeRepository {
     suspend fun getLatestTheme(): Flow<ThemeInfo> // 최근 플레이 한 테마
     suspend fun getUpdatedInfo(themeId: Int): Long // 최근 업데이트 날짜 (Long)
     suspend fun activateThemeBackgroundImage(activeThemeIdList: List<Int>, deActiveThemeIdList: List<Int>): Result<Unit>
+    suspend fun getThemeById(id: Int): ThemeInfo
 }
