@@ -167,18 +167,11 @@ class AdminMainFragment :
 
         binding.groupBackgroundCustomIntroduce.isVisible = !state.backgroundSettingsNoticeShown
 
-        when (state.subscribeStatus) {
-            SubscribeStatus.Default,
-            SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
-                if (state.banners.isEmpty()) {
-                    rvBanner.isVisible = false
-                } else {
-                    rvBanner.isVisible = true
-                    (rvBanner.adapter as? BannerAdapter)?.submitList(state.banners)
-                }
-            }
-
-            SubscribeStatus.Subscribed -> rvBanner.isVisible = false
+        if (state.banners.isEmpty()) {
+            rvBanner.isVisible = false
+        } else {
+            rvBanner.isVisible = true
+            (rvBanner.adapter as? BannerAdapter)?.submitList(state.banners)
         }
 
         tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed
