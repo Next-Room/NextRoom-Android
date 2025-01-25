@@ -120,6 +120,7 @@ class ThemeListFragment :
             )
         }
         flBackgroundCustom.setOnClickListener {
+            viewModel.onBackgroundSettingsNoticeClicked()
             binding.groupBackgroundCustomIntroduce.isVisible = false
         }
     }
@@ -138,6 +139,8 @@ class ThemeListFragment :
 
     private fun render(state: ThemeListState) = with(binding) {
         if (state.loading) return@with
+
+        binding.groupBackgroundCustomIntroduce.isVisible = !state.backgroundSettingsNoticeShown
 
         when (state.subscribeStatus) {
             SubscribeStatus.Default,

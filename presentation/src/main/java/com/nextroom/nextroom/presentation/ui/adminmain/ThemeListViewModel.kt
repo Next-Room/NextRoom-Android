@@ -38,11 +38,18 @@ class ThemeListViewModel @Inject constructor(
 
     init {
         showInAppReview()
+        updateBackgroundSettingsNoticeShown()
 
         viewModelScope.launch {
             adminRepository.shopName.collect {
                 updateShopInfo(it)
             }
+        }
+    }
+
+    private fun updateBackgroundSettingsNoticeShown() = intent {
+        reduce {
+            state.copy(backgroundSettingsNoticeShown = dataStoreRepository.getBackgroundSettingsNoticeShown())
         }
     }
 
@@ -122,6 +129,10 @@ class ThemeListViewModel @Inject constructor(
             }
         }
         reduce { state.copy(loading = false) }
+    }
+
+    fun onBackgroundSettingsNoticeClicked() {
+        dataStoreRepository.updateBackgroundSettingsShown()
     }
 
     private fun shouldHideRecommendBackgroundCustomDialog(): Boolean {
