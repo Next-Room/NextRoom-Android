@@ -169,4 +169,10 @@
     <string name="text_prompt_fingerprint">지문을 입력하세요.</string>
     <string name="text_cancel">취소</string>
     <string name="text_biometric_error_message">지문 인증에 실패했습니다.</string>
+    <string name="subscribe_beneft_first_title">구독혜택 1.</string>
+    <string name="subscribe_benefit_first_desc">힌트와 이미지를 함께 제공</string>
+    <string name="subscribe_benefit_first_sub_desc">힌트 이미지 삽입!</string>
+    <string name="subscribe_beneft_second_title">구독혜택 2.</string>
+    <string name="subscribe_benefit_second_desc">우리 매장만의 특별한 테마</string>
+    <string name="subscribe_benefit_second_sub_desc">타이머 배경 무제한 등록!</string>
 </resources>

@@ -49,22 +49,22 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         listOf(
             Benefit(
-                title = "구독혜택 1.",
-                desc = "힌트와 이미지를 함께 제공",
-                desc1 = "힌트 이미지 삽입!",
+                title = getString(R.string.subscribe_beneft_first_title),
+                desc = getString(R.string.subscribe_benefit_first_desc),
+                subDesc = getString(R.string.subscribe_benefit_first_sub_desc),
                 image = R.drawable.benefit
             ),
             Benefit(
-                title = "구독혜택 2.",
-                desc = "우리 매장만의 특별한 테마",
-                desc1 = "타이머 배경 무제한 등록!",
+                title = getString(R.string.subscribe_beneft_second_title),
+                desc = getString(R.string.subscribe_benefit_second_desc),
+                subDesc = getString(R.string.subscribe_benefit_second_sub_desc),
                 image = R.drawable.benefit1
             ),
         ).map {
             ItemBenefitBinding.inflate(layoutInflater).apply {
                 tvTitle.text = it.title
                 tvDesc.text = it.desc
-                tvDesc1.text = it.desc1
+                tvDesc1.text = it.subDesc
                 ivBenefit.setImageResource(it.image)
             }
         }.forEach {
@@ -87,7 +87,7 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
     data class Benefit(
         val title: String,
         val desc: String,
-        val desc1: String,
+        val subDesc: String,
         val image: Int
     )
 }
