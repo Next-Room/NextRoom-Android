@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.nextroom.nextroom.domain.model.Banner
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemBannerBinding
 
 class BannerAdapter(private val onBannerClicked: (Banner) -> Unit) : ListAdapter<Banner, BannerAdapter.ViewHolder>(DIFF_UTIL) {
@@ -27,7 +29,10 @@ class BannerAdapter(private val onBannerClicked: (Banner) -> Unit) : ListAdapter
 
         fun bind(item: Banner?) {
             item?.let {
-                //TODO : api나오면 처리
+                Glide.with(binding.root)
+                    .load(it.imageUrl)
+                    .error(R.drawable.img_banner_error)
+                    .into(binding.imgBanner)
 
                 binding.imgBanner.setOnClickListener {
                     onBannerClicked(item)
