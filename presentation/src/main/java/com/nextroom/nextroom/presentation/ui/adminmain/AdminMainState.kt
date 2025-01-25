@@ -4,7 +4,7 @@ import com.nextroom.nextroom.domain.model.Banner
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
-data class ThemeListState(
+data class AdminMainState(
     val loading: Boolean = false,
     val subscribeStatus: SubscribeStatus = SubscribeStatus.Default,
     val shopName: String = "",

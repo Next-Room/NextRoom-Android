@@ -12,16 +12,16 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_adminMainFragment"
-            app:destination="@id/themeListFragment" />
+            app:destination="@id/adminMainFragment" />
         <action
             android:id="@+id/action_loginFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment" />
     </fragment>
     <fragment
-        android:id="@+id/themeListFragment"
-        android:name="com.nextroom.nextroom.presentation.ui.adminmain.ThemeListFragment"
+        android:id="@+id/adminMainFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.adminmain.AdminMainFragment"
         android:label="AdminMainFragment"
-        tools:layout="@layout/fragment_theme_list">
+        tools:layout="@layout/fragment_admin_main">
         <action
             android:id="@+id/action_adminMainFragment_to_verifyFragment"
             app:destination="@id/verifyFragment">
@@ -161,8 +161,7 @@
             android:id="@+id/action_verifyFragment_to_gameFragment"
             app:destination="@id/gameFragment"
             app:launchSingleTop="true"
-            app:popUpTo="@id/themeListFragment">
-
+            app:popUpTo="@id/adminMainFragment">
             <argument
                 android:name="subscribeStatus"
                 app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
@@ -280,7 +279,7 @@
         <action
             android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"
             app:destination="@id/purchaseSuccessFragment"
-            app:popUpTo="@id/themeListFragment" />
+            app:popUpTo="@id/adminMainFragment" />
 
         <deepLink
             app:action="android.intent.action.VIEW"
@@ -293,7 +292,7 @@
         tools:layout="@layout/fragment_purchase_success">
         <action
             android:id="@+id/action_to_home"
-            app:destination="@id/themeListFragment" />
+            app:destination="@id/adminMainFragment" />
     </fragment>
     <fragment android:id="@+id/backgroundCustomFragment" />
 </navigation>

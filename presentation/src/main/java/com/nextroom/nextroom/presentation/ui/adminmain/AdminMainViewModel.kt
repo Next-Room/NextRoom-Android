@@ -26,15 +26,15 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class ThemeListViewModel @Inject constructor(
+class AdminMainViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val bannerRepository: BannerRepository
-) : BaseViewModel<ThemeListState, ThemeListEvent>() {
+) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
-    override val container: Container<ThemeListState, ThemeListEvent> = container(ThemeListState(loading = true))
+    override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
 
     init {
         showInAppReview()
@@ -71,7 +71,7 @@ class ThemeListViewModel @Inject constructor(
     private fun showInAppReview() = intent {
         viewModelScope.launch {
             delay(200)
-            postSideEffect(ThemeListEvent.InAppReview)
+            postSideEffect(AdminMainEvent.InAppReview)
         }
     }
 
@@ -125,7 +125,7 @@ class ThemeListViewModel @Inject constructor(
                 }
 
             if (!shouldHideRecommendBackgroundCustomDialog()) {
-                postSideEffect(ThemeListEvent.RecommendBackgroundCustom)
+                postSideEffect(AdminMainEvent.RecommendBackgroundCustom)
             }
         }
         reduce { state.copy(loading = false) }
@@ -150,9 +150,9 @@ class ThemeListViewModel @Inject constructor(
 
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
-            is Result.Failure.NetworkError -> postSideEffect(ThemeListEvent.NetworkError)
-            is Result.Failure.HttpError -> postSideEffect(ThemeListEvent.ClientError(error.message))
-            else -> postSideEffect(ThemeListEvent.UnknownError)
+            is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
+            is Result.Failure.HttpError -> postSideEffect(AdminMainEvent.ClientError(error.message))
+            else -> postSideEffect(AdminMainEvent.UnknownError)
         }
     }
 }

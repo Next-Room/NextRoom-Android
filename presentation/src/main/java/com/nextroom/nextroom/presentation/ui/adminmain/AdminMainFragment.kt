@@ -18,7 +18,7 @@ import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentThemeListBinding
+import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
@@ -31,21 +31,21 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ThemeListFragment :
-    BaseFragment<FragmentThemeListBinding>(FragmentThemeListBinding::inflate) {
+class AdminMainFragment :
+    BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
 
     @Inject
     lateinit var statisticsRepository: StatisticsRepository
 
-    private val viewModel: ThemeListViewModel by viewModels()
+    private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
             onStartGame = ::startGame
         )
     }
-    private val state: ThemeListState
+    private val state: AdminMainState
         get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
@@ -113,7 +113,7 @@ class ThemeListFragment :
 
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(
-                ThemeListFragmentDirections.moveToBackgroundCustomFragment(
+                AdminMainFragmentDirections.moveToBackgroundCustomFragment(
                     state.subscribeStatus,
                     state.themes.toTypedArray()
                 )
@@ -137,7 +137,7 @@ class ThemeListFragment :
         }
     }
 
-    private fun render(state: ThemeListState) = with(binding) {
+    private fun render(state: AdminMainState) = with(binding) {
         if (state.loading) return@with
 
         binding.groupBackgroundCustomIntroduce.isVisible = !state.backgroundSettingsNoticeShown
@@ -168,18 +168,18 @@ class ThemeListFragment :
         )
     }
 
-    private fun handleEvent(event: ThemeListEvent) {
+    private fun handleEvent(event: AdminMainEvent) {
         when (event) {
-            is ThemeListEvent.NetworkError -> snackbar(R.string.error_network)
-            is ThemeListEvent.UnknownError -> snackbar(R.string.error_something)
-            is ThemeListEvent.ClientError -> snackbar(event.message)
-            ThemeListEvent.InAppReview -> showInAppReview()
-            ThemeListEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
+            is AdminMainEvent.NetworkError -> snackbar(R.string.error_network)
+            is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
+            is AdminMainEvent.ClientError -> snackbar(event.message)
+            AdminMainEvent.InAppReview -> showInAppReview()
+            AdminMainEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
         }
     }
 
     private fun showRecommendBackgroundCustomBottomSheet() {
-        findNavController().safeNavigate(ThemeListFragmentDirections.moveToRecommendBackgroundCustom())
+        findNavController().safeNavigate(AdminMainFragmentDirections.moveToRecommendBackgroundCustom())
     }
 
     private fun showInAppReview() {
@@ -201,22 +201,22 @@ class ThemeListFragment :
     }
 
     private fun goToLink(linkUrl: String) {
-        findNavController().safeNavigate(ThemeListFragmentDirections.actionAdminToWebview(url = linkUrl))
+        findNavController().safeNavigate(AdminMainFragmentDirections.actionAdminToWebview(url = linkUrl))
     }
 
     private fun goToPurchase() {
-        val action = ThemeListFragmentDirections.actionAdminMainFragmentToPurchaseFragment()
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 
     private fun goToMyPage() {
-        val action = ThemeListFragmentDirections.actionAdminMainFragmentToMypageFragment()
+        val action = AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment()
         findNavController().safeNavigate(action)
     }
 
     private fun goToMain(themeId: Int) {
         val action =
-            ThemeListFragmentDirections.actionAdminMainFragmentToVerifyFragment(
+            AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(
                 themeId = themeId,
                 subscribeStatus = state.subscribeStatus
             )
