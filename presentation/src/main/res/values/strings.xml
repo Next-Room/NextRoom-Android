@@ -147,4 +147,5 @@
     <string name="expand_or_collapse">손가락을 이용해 이미지를\n확대, 축소, 이동할 수 있습니다.</string>
     <string name="dark_level">어두움</string>
     <string name="apply_real_screen">실제 적용 화면으로 보기</string>
+    <string name="save_success">저장됐습니다.</string>
 </resources>

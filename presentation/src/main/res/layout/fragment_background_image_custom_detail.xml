@@ -15,7 +15,7 @@
             android:id="@+id/img_theme"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"/>
 
         <include
             android:id="@+id/layout_toolbar"
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="40dp"
             android:background="@null"
-            android:checked="false"
+            android:checked="true"
             android:thumb="@drawable/selector_thumb"
             app:layout_constraintBottom_toBottomOf="@+id/tv_apply_screen"
             app:layout_constraintEnd_toEndOf="parent"
