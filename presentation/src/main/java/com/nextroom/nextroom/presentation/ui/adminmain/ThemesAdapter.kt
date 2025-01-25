@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
@@ -27,7 +29,11 @@ class ThemesAdapter(
         fun bind(themeInfo: ThemeInfoPresentation) = with(binding) {
             item = themeInfo
             tvThemeName.text = themeInfo.title
-            //TODO : 이미지처리
+            Glide.with(binding.root)
+                .load(themeInfo.themeImageUrl)
+                .placeholder(R.drawable.img_placeholder)
+                .error(R.drawable.img_placeholder)
+                .into(binding.imgTheme)
         }
     }
 
