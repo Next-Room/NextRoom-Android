@@ -6,7 +6,6 @@ import com.nextroom.nextroom.data.db.AppSettings
 import com.nextroom.nextroom.data.db.dataStore
 import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.network.request.LoginRequest
-import com.nextroom.nextroom.data.network.response.toDomain
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.mapOnSuccess
@@ -43,6 +42,7 @@ class AuthDataSource @Inject constructor(
                 shopName = "",
                 accessToken = "",
                 refreshToken = "",
+                appPassword = "",
             )
         }
     }

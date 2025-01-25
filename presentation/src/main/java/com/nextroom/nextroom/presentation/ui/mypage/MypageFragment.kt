@@ -1,5 +1,7 @@
 package com.nextroom.nextroom.presentation.ui.mypage
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -7,6 +9,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
@@ -15,6 +18,7 @@ import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.ui.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -48,8 +52,22 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                 when (loaded.status) {
                     SubscribeStatus.SUBSCRIPTION_EXPIRATION,
                     SubscribeStatus.Default -> goToPurchase()
+
                     SubscribeStatus.Subscribed -> goToSubscriptionInfo()
                 }
+            }
+        }
+        clChangeAppPassword.setOnClickListener {
+            moveToSetPassword()
+        }
+        clCustomerService.setOnClickListener {
+            try {
+                Constants.KAKAO_BUSINESS_CHANNEL_URL
+                    .let { url ->
+                        Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
+                    }.also { startActivity(it) }
+            } catch (e: Exception) {
+                toast(getString(R.string.error_something))
             }
         }
     }
@@ -107,6 +125,12 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                     dialogKey = REQUEST_KEY_RESIGN,
                 ),
             ).also { findNavController().safeNavigate(it) }
+    }
+
+    private fun moveToSetPassword() {
+        NavGraphDirections
+            .moveToSetPassword()
+            .also { findNavController().safeNavigate(it) }
     }
 
     companion object {

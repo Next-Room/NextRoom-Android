@@ -8,7 +8,9 @@ import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.play.core.review.ReviewManagerFactory
@@ -16,10 +18,14 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
+import com.nextroom.nextroom.presentation.extension.getResultData
+import com.nextroom.nextroom.presentation.extension.hasResultData
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
@@ -42,7 +48,7 @@ class AdminMainFragment :
     private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
-            onStartGame = ::startGame
+            onThemeClicked = { themeId -> viewModel.onThemeClicked(themeId.toString()) }
         )
     }
     private val state: AdminMainState
@@ -62,7 +68,32 @@ class AdminMainFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
+        initSubscribe()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+    }
+
+    private fun initSubscribe() {
+        setFragmentResultListener(requestKeyCheckPassword, ::handleFragmentResults)
+        setFragmentResultListener(dialogKeyNeedToSetPassword, ::handleFragmentResults)
+    }
+
+    private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
+        when (requestKey) {
+            requestKeyCheckPassword -> {
+                try {
+                    if (bundle.hasResultData()) {
+                        bundle.getResultData()?.let { themeId ->
+                            viewModel.tryGameStart(themeId.toInt())
+                        }
+                    }
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    snackbar(R.string.error_something)
+                }
+            }
+
+            dialogKeyNeedToSetPassword -> moveToSetPassword()
+        }
     }
 
     override fun onResume() {
@@ -81,12 +112,6 @@ class AdminMainFragment :
             statisticsRepository.postGameStats()
         }
     }*/
-
-    private fun startGame(themeId: Int) {
-        viewModel.start(themeId) {
-            goToMain(themeId)
-        }
-    }
 
     private fun initViews() = with(binding) {
         updateSystemPadding(statusBar = false, navigationBar = true)
@@ -166,6 +191,7 @@ class AdminMainFragment :
             R.string.text_last_hint_update,
             DateTimeUtil().longToDateString(System.currentTimeMillis(), pattern = "yyyy.MM.dd HH:mm")
         )
+        binding.layoutOpaqueLoading.root.isVisible = state.opaqueLoading
     }
 
     private fun handleEvent(event: AdminMainEvent) {
@@ -174,6 +200,9 @@ class AdminMainFragment :
             is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
             is AdminMainEvent.ClientError -> snackbar(event.message)
             AdminMainEvent.InAppReview -> showInAppReview()
+            is AdminMainEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
+            AdminMainEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
+            is AdminMainEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             AdminMainEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
         }
     }
@@ -214,13 +243,42 @@ class AdminMainFragment :
         findNavController().safeNavigate(action)
     }
 
-    private fun goToMain(themeId: Int) {
-        val action =
-            AdminMainFragmentDirections.actionAdminMainFragmentToVerifyFragment(
-                themeId = themeId,
-                subscribeStatus = state.subscribeStatus
-            )
-        findNavController().safeNavigate(action)
+    private fun moveToGameStart(subscribeStatus: SubscribeStatus) {
+        NavGraphDirections
+            .actionGlobalGameFragment(subscribeStatus)
+            .also { findNavController().safeNavigate(it) }
+    }
+
+    private fun showNeedToSetPasswordDialog() {
+        NavGraphDirections
+            .actionGlobalNrTwoButtonDialog(
+                NRTwoButtonDialog.NRTwoButtonArgument(
+                    title = getString(R.string.text_need_to_set_password_title),
+                    message = getString(R.string.text_need_to_set_password_message),
+                    posBtnText = getString(R.string.text_move_to_setting),
+                    negBtnText = getString(R.string.dialog_close),
+                    dialogKey = dialogKeyNeedToSetPassword,
+                ),
+            ).also {
+                findNavController().safeNavigate(
+                    direction = it,
+                    navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
+    }
+
+    private fun moveToSetPassword() {
+        NavGraphDirections
+            .moveToSetPassword()
+            .also { findNavController().safeNavigate(it) }
+    }
+
+    private fun moveToCheckPasswordForGameStart(themeId: String) {
+        NavGraphDirections
+            .moveToCheckPassword(requestKey = requestKeyCheckPassword, resultData = themeId)
+            .also { findNavController().safeNavigate(it) }
     }
 
     override fun onDestroyView() {
@@ -231,5 +289,10 @@ class AdminMainFragment :
     override fun onDetach() {
         super.onDetach()
         backCallback.remove()
+    }
+
+    companion object {
+        private const val requestKeyCheckPassword = "requestKeyCheckPassword"
+        private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
     }
 }

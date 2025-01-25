@@ -120,4 +120,12 @@ class SettingDataSource @Inject constructor(
     fun updateBackgroundSettingsShown() = runBlocking {
         dataStore.updateData { it.copy(backgroundSettingsNoticeShown = true) }
     }
+
+    suspend fun saveAppPassword(password: String) {
+        dataStore.updateData {
+            it.copy(appPassword = password)
+        }
+    }
+
+    suspend fun getAppPassword() = data.first().appPassword
 }

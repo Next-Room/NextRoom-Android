@@ -6,6 +6,7 @@ import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 data class AdminMainState(
     val loading: Boolean = false,
+    val opaqueLoading: Boolean = false,
     val subscribeStatus: SubscribeStatus = SubscribeStatus.Default,
     val shopName: String = "",
     val themes: List<ThemeInfoPresentation> = emptyList(),

@@ -23,18 +23,6 @@
         android:label="AdminMainFragment"
         tools:layout="@layout/fragment_admin_main">
         <action
-            android:id="@+id/action_adminMainFragment_to_verifyFragment"
-            app:destination="@id/verifyFragment">
-
-            <argument
-                android:name="themeId"
-                app:argType="integer" />
-
-            <argument
-                android:name="subscribeStatus"
-                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        </action>
-        <action
             android:id="@+id/action_adminMainFragment_to_mypageFragment"
             app:destination="@id/mypageFragment" />
         <action
@@ -295,4 +283,30 @@
             app:destination="@id/adminMainFragment" />
     </fragment>
     <fragment android:id="@+id/backgroundCustomFragment" />
+    <fragment
+        android:id="@+id/checkPassword"
+        android:name="com.nextroom.nextroom.presentation.ui.password.CheckPasswordFragment"
+        tools:layout="@layout/fragment_check_password">
+
+        <argument
+            android:name="request_key"
+            app:argType="string"
+            app:nullable="false" />
+
+        <argument
+            android:name="result_data"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+    <action
+        android:id="@+id/move_to_check_password"
+        app:destination="@id/checkPassword" />
+    <fragment
+        android:id="@+id/setPassword"
+        android:name="com.nextroom.nextroom.presentation.ui.password.SetPasswordFragment"
+        tools:layout="@layout/fragment_set_password" />
+    <action
+        android:id="@+id/move_to_set_password"
+        app:destination="@id/setPassword" />
 </navigation>

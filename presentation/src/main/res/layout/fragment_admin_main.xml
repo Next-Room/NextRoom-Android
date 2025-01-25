@@ -234,6 +234,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/iv_up" />
 
 
+
+            <include
+                android:id="@+id/layout_opaque_loading"
+                layout="@layout/layout_opaque_loading"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

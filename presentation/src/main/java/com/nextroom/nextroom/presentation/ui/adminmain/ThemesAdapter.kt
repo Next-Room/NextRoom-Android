@@ -9,7 +9,7 @@ import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemesAdapter(
-    private val onStartGame: (Int) -> Unit
+    private val onThemeClicked: (Int) -> Unit
 ) : ListAdapter<ThemeInfoPresentation, ThemesAdapter.ThemeViewHolder>(diffUtil) {
 
     class ThemeViewHolder(
@@ -34,7 +34,7 @@ class ThemesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThemeViewHolder {
         return ThemeViewHolder(
             ItemThemeBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-            onStartGame
+            onThemeClicked
         )
     }
 
