@@ -12,8 +12,9 @@ data class ThemeInfo(
 )
 
 data class ThemeImageCustomInfo(
-    val scaleFactor: Float,
-    val focusX: Float,
-    val focusY: Float,
-    val opacity: Int
+    val left: Float? = null,
+    val top: Float? = null,
+    val right: Float? = null,
+    val bottom: Float? = null,
+    val opacity: Int? = null
 )

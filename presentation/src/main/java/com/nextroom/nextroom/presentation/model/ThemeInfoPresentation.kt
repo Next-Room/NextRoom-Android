@@ -21,14 +21,26 @@ data class ThemeInfoPresentation(
 
     @Parcelize
     data class ThemeImageCustomInfoUi(
-        val opacity: Int,
-        val scaleFactor: Float,
-        val focusX: Float,
-        val focusY: Float
-    ) : Parcelable
+        val opacity: Int? = null,
+        val left: Float? = null,
+        val top: Float? = null,
+        val right: Float? = null,
+        val bottom: Float? = null,
+    ) : Parcelable {
+
+        fun toDomain(): ThemeImageCustomInfo {
+            return ThemeImageCustomInfo(
+                left = left,
+                top = top,
+                right = right,
+                bottom = bottom,
+                opacity = opacity
+            )
+        }
+    }
 }
 
-fun ThemeInfoPresentation.toDomain(themeImageCustomInfo: ThemeImageCustomInfo?): ThemeInfo {
+fun ThemeInfoPresentation.toDomain(themeImageCustomInfo: ThemeInfoPresentation.ThemeImageCustomInfoUi?): ThemeInfo {
     return ThemeInfo(
         id = id,
         title = title,
@@ -37,7 +49,7 @@ fun ThemeInfoPresentation.toDomain(themeImageCustomInfo: ThemeImageCustomInfo?):
         hints = hints,
         useTimerUrl = useTimerUrl,
         themeImageUrl = themeImageUrl,
-        themeImageCustomInfo = themeImageCustomInfo
+        themeImageCustomInfo = themeImageCustomInfo?.toDomain()
     )
 }
 
@@ -57,9 +69,10 @@ fun ThemeInfo.toPresentation(recentUpdated: Long): ThemeInfoPresentation {
 
 fun ThemeImageCustomInfo.toPresentation(): ThemeInfoPresentation.ThemeImageCustomInfoUi {
     return ThemeInfoPresentation.ThemeImageCustomInfoUi(
-        scaleFactor = scaleFactor,
-        focusX = focusX,
-        focusY = focusY,
+        left = left,
+        top = top,
+        right = right,
+        bottom = bottom,
         opacity = opacity
     )
 }
