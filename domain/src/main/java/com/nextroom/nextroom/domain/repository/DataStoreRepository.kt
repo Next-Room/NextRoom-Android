@@ -9,7 +9,7 @@ interface DataStoreRepository {
     val isFirstInitOfDay: Boolean
 
     fun setRecommendBackgroundCustomDialogHidden(time: Long)
-    fun getRecommendBackgroundCustomDialogHidden(): Long
+    fun getRecommendBackgroundCustomDialogHiddenUntil(): Long
     fun updateBackgroundSettingsShown()
     fun getBackgroundSettingsNoticeShown(): Boolean
 }

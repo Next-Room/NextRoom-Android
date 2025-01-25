@@ -116,7 +116,7 @@ class AdminMainViewModel @Inject constructor(
                     reduce { state.copy(banners = it) }
                 }
 
-            if (!shouldHideRecommendBackgroundCustomDialog()) {
+            if (!shouldHideRecommendBackgroundCustomDialogUntil()) {
                 postSideEffect(AdminMainEvent.RecommendBackgroundCustom)
             }
         }
@@ -127,8 +127,8 @@ class AdminMainViewModel @Inject constructor(
         dataStoreRepository.updateBackgroundSettingsShown()
     }
 
-    private fun shouldHideRecommendBackgroundCustomDialog(): Boolean {
-        val hideUntil = dataStoreRepository.getRecommendBackgroundCustomDialogHidden()
+    private fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
+        val hideUntil = dataStoreRepository.getRecommendBackgroundCustomDialogHiddenUntil()
         return System.currentTimeMillis() < hideUntil
     }
 

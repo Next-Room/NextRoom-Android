@@ -109,7 +109,7 @@ class SettingDataSource @Inject constructor(
         dataStore.updateData { it.copy(backgroundCustomDialogHideUntil = time) }
     }
 
-    fun getRecommendBackgroundCustomDialogHidden() = runBlocking {
+    fun getRecommendBackgroundCustomDialogHiddenUntil() = runBlocking {
         data.first().backgroundCustomDialogHideUntil
     }
 

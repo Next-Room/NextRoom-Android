@@ -31,8 +31,8 @@ class DataStoreRepositoryImpl @Inject constructor(
         settingDataSource.setRecommendBackgroundCustomDialogHidden(time)
     }
 
-    override fun getRecommendBackgroundCustomDialogHidden(): Long {
-        return settingDataSource.getRecommendBackgroundCustomDialogHidden()
+    override fun getRecommendBackgroundCustomDialogHiddenUntil(): Long {
+        return settingDataSource.getRecommendBackgroundCustomDialogHiddenUntil()
     }
 
     override fun updateBackgroundSettingsShown() {
