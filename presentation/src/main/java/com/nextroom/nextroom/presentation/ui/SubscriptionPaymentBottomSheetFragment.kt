@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -15,7 +17,9 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.FragmentSubscriptionPaymentBinding
 import com.nextroom.nextroom.presentation.databinding.ItemBenefitBinding
 import com.nextroom.nextroom.presentation.extension.dpToPx
+import com.nextroom.nextroom.presentation.extension.snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import org.orbitmvi.orbit.viewmodel.observe
 
 
 @AndroidEntryPoint
@@ -23,6 +27,8 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentSubscriptionPaymentBinding? = null
     private val binding get() = checkNotNull(_binding)
+
+    private val viewModel by viewModels<SubscriptionPaymentViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSubscriptionPaymentBinding.inflate(inflater, container, false)
@@ -47,6 +53,7 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         listOf(
             Benefit(
                 title = getString(R.string.subscribe_beneft_first_title),
@@ -75,12 +82,29 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
                 }
             binding.llBenefit.addView(it.root, layoutParams)
         }
-
         binding.ivClose.setOnClickListener {
             findNavController().navigateUp()
         }
         binding.tvLater.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+    }
+
+    private fun render(state: SubscriptionPaymentState) = with(binding) {
+        pbLoading.isVisible = state.loading
+
+        state.plan.plans.firstOrNull()?.let {
+            acbSubscribe.text = getString(R.string.text_subscribe_monthly_payment, it.sellPrice)
+        }
+    }
+
+    private fun handleEvent(event: SubscriptionPaymentEvent) {
+        when (event) {
+            is SubscriptionPaymentEvent.NetworkError -> snackbar(R.string.error_network)
+            is SubscriptionPaymentEvent.UnknownError -> snackbar(R.string.error_something)
+            is SubscriptionPaymentEvent.ClientError -> snackbar(event.message)
         }
     }
 

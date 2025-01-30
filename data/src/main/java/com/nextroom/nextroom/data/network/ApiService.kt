@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.data.network
 
+import com.nextroom.nextroom.data.network.response.SubscriptionPlanDto
 import com.nextroom.nextroom.data.model.ThemeBackgroundActivationId
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
@@ -60,4 +61,7 @@ interface ApiService {
 
     @PUT("api/v1/theme/timer/visible")
     suspend fun putActiveThemeBackgroundImage(@Body themeBackgroundActivationId: ThemeBackgroundActivationId): Result<Unit>
+
+    @GET("api/v1/subscription/plan")
+    suspend fun getSubscriptionPlan(): Result<BaseResponse<SubscriptionPlanDto>>
 }

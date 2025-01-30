@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -76,10 +77,10 @@
             android:layout_marginEnd="30dp"
             android:background="@drawable/bg_white_r_8"
             android:gravity="center"
-            android:text="@string/text_subscribe_monthly_payment"
             android:textAppearance="@style/Pretendard.18.SemiBold"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@+id/ll_benefit" />
+            app:layout_constraintTop_toBottomOf="@+id/ll_benefit"
+            tools:text="@string/text_subscribe_monthly_payment" />
 
         <TextView
             android:id="@+id/tv_later"
@@ -94,5 +95,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/acb_subscribe"
             app:layout_constraintVertical_bias="0" />
+
+        <com.nextroom.nextroom.presentation.common.NRLoading
+            android:id="@+id/pb_loading"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
