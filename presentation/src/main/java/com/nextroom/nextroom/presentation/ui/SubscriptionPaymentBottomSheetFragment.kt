@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -18,6 +19,7 @@ import com.nextroom.nextroom.presentation.databinding.FragmentSubscriptionPaymen
 import com.nextroom.nextroom.presentation.databinding.ItemBenefitBinding
 import com.nextroom.nextroom.presentation.extension.dpToPx
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -29,6 +31,7 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
     private val binding get() = checkNotNull(_binding)
 
     private val viewModel by viewModels<SubscriptionPaymentViewModel>()
+    private val billingViewModel: BillingViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentSubscriptionPaymentBinding.inflate(inflater, container, false)
@@ -81,6 +84,15 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
                     height = 108.dpToPx
                 }
             binding.llBenefit.addView(it.root, layoutParams)
+        }
+        binding.acbSubscribe.setOnClickListener {
+            viewModel.container.stateFlow.value.plan.plans.firstOrNull()?.let {
+                billingViewModel.buyPlans(
+                    productId = it.subscriptionProductId,
+                    tag = "",
+                    upDowngrade = false,
+                )
+            }
         }
         binding.ivClose.setOnClickListener {
             findNavController().navigateUp()
