@@ -59,7 +59,7 @@ interface ApiService {
     @GET("api/v1/banner")
     suspend fun getBanners(): Result<BaseListResponse<BannerDto>>
 
-    @PUT("api/v1/theme/timer/visible")
+    @PUT("api/v1/theme/timer/active")
     suspend fun putActiveThemeBackgroundImage(@Body themeBackgroundActivationId: ThemeBackgroundActivationId): Result<Unit>
 
     @GET("api/v1/subscription/plan")
