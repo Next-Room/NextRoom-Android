@@ -41,6 +41,10 @@ class ThemeLocalDataSource @Inject constructor(
         }
     }
 
+    suspend fun isThemeExist(themeId: Int): Boolean {
+        return themeDao.isThemeExist(themeId)
+    }
+
     suspend fun getUpdatedInfo(themeId: Int): Long {
         return themeTimeDao.getTimeInfo(themeId)?.recentUpdated ?: 0L
     }

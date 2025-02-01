@@ -26,7 +26,10 @@ class ThemeRepositoryImpl @Inject constructor(
     override suspend fun getThemes(): Result<List<ThemeInfo>> {
         return themeRemoteDateSource.getThemes().suspendOnSuccess { themes ->
             themes
-                .map { it.copy(themeImageCustomInfo = getThemeById(it.id).themeImageCustomInfo) }
+                .map {
+                    if (themeLocalDataSource.isThemeExist(it.id)) it.copy(themeImageCustomInfo = getThemeById(it.id).themeImageCustomInfo)
+                    else it
+                }
                 .also {
                     themeLocalDataSource.updateThemes(
                         settingDataSource.getAdminCode(),
