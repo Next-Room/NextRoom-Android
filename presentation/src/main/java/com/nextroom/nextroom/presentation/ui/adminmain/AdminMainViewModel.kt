@@ -102,15 +102,8 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
             reduce { state.copy(subscribeStatus = myPage.status) }
-            themeRepository.getThemes().onSuccess {
-                updateThemes(
-                    it.map { themeInfo ->
-                        val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                        themeInfo.toPresentation(updatedAt)
-                    },
-                )
-                updateNetworkDisconnectedCount(0)
-            }.onFailure(::handleError)
+
+            getThemes()
 
             bannerRepository
                 .getBanners()
@@ -126,6 +119,18 @@ class AdminMainViewModel @Inject constructor(
             }
         }
         reduce { state.copy(loading = false) }
+    }
+
+    private suspend fun getThemes() {
+        themeRepository.getThemes().onSuccess {
+            updateThemes(
+                it.map { themeInfo ->
+                    val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
+                    themeInfo.toPresentation(updatedAt)
+                },
+            )
+            updateNetworkDisconnectedCount(0)
+        }.onFailure(::handleError)
     }
 
     fun onBackgroundSettingsNoticeClicked() {
@@ -175,6 +180,12 @@ class AdminMainViewModel @Inject constructor(
                 }.also { postSideEffect(it) }
             }
         }
+    }
+
+    fun onThemeRefreshClicked() = intent {
+        reduce { state.copy(loading = true) }
+        getThemes()
+        reduce { state.copy(loading = false) }
     }
 
     private fun handleError(error: Result.Failure) = intent {

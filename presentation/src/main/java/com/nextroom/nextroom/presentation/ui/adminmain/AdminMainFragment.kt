@@ -148,6 +148,9 @@ class AdminMainFragment :
             viewModel.onBackgroundSettingsNoticeClicked()
             binding.groupBackgroundCustomIntroduce.isVisible = false
         }
+        ivRefresh.setOnClickListener {
+            viewModel.onThemeRefreshClicked()
+        }
     }
 
     private fun navByDeepLink(deeplinkUrl: String) {
