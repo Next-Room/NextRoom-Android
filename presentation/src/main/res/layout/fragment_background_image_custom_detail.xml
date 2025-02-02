@@ -94,17 +94,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fl_drag" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_opacity_percent"
             style="@style/Pretendard.16"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:background="@drawable/bg_main_r_4"
+            android:gravity="center"
+            android:maxLines="1"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
             android:text="50%"
             android:textColor="@color/white_70"
+            app:autoSizeMinTextSize="12dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_opacity"
             app:layout_constraintStart_toEndOf="@+id/tv_opacity"
             app:layout_constraintTop_toTopOf="@+id/tv_opacity"

@@ -93,7 +93,7 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
             ?.let {
                 binding.sbOpacity.progress = it
                 binding.imgTheme.alpha = (it.toFloat() / 100)
-                binding.tvOpacityPercent.text = it.toString()
+                binding.tvOpacityPercent.text = "$it%"
             }
     }
 
