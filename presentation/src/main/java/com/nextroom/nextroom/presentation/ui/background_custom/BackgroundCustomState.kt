@@ -1,9 +1,11 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 data class BackgroundCustomState(
-    val themes: List<ThemeInfoPresentation>
+    val themes: List<ThemeInfoPresentation>,
+    val userSubscribeStatus: SubscribeStatus
 )
 
 sealed interface BackgroundCustomEvent {

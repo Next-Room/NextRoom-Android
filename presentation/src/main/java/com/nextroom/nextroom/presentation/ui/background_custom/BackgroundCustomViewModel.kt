@@ -27,7 +27,12 @@ class BackgroundCustomViewModel @Inject constructor(
 ) : BaseViewModel<BackgroundCustomState, BackgroundCustomEvent>() {
 
     override val container: Container<BackgroundCustomState, BackgroundCustomEvent> =
-        container(BackgroundCustomState(BackgroundCustomFragmentArgs.fromSavedStateHandle(savedStateHandle).themes.toList()))
+        container(
+            BackgroundCustomState(
+                themes = BackgroundCustomFragmentArgs.fromSavedStateHandle(savedStateHandle).themes.toList(),
+                userSubscribeStatus = getUserSubscribeStatus()
+            )
+        )
 
     fun toggleImage(theme: ThemeInfoPresentation) = intent {
         if (theme.themeImageUrl.isNullOrEmpty()) {

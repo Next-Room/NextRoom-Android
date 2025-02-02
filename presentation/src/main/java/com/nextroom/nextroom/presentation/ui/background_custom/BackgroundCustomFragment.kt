@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentBackgroundCustomBinding
@@ -29,6 +30,27 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
 
     private fun render(state: BackgroundCustomState) {
         (binding.rvTheme.adapter as? ThemeBackgroundToggleAdapter)?.submitList(state.themes)
+
+        binding.llInfo.removeAllViews()
+        mutableListOf(
+            getString(R.string.text_background_custom_info_1),
+            getString(R.string.text_background_custom_info_2),
+        ).apply {
+            if (state.userSubscribeStatus == SubscribeStatus.Default
+                || state.userSubscribeStatus == SubscribeStatus.SUBSCRIPTION_EXPIRATION
+            ) {
+                add(getString(R.string.text_background_custom_info_3))
+            }
+        }.map {
+            ItemBackgroundCustomInfoBinding
+                .inflate(layoutInflater)
+                .apply {
+                    tvInfo.text = it
+                }
+        }.forEach {
+            binding.llInfo.addView(it.root)
+        }
+
     }
 
     private fun handleEvent(event: BackgroundCustomEvent) {
@@ -47,21 +69,6 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
         binding.toolbar.tvButton.isVisible = false
         binding.toolbar.ivBack.setOnClickListener {
             findNavController().navigateUp()
-        }
-
-        binding.llInfo.removeAllViews()
-        listOf(
-            getString(R.string.text_background_custom_info_1),
-            getString(R.string.text_background_custom_info_2),
-            getString(R.string.text_background_custom_info_3)
-        ).map {
-            ItemBackgroundCustomInfoBinding
-                .inflate(layoutInflater)
-                .apply {
-                    tvInfo.text = it
-                }
-        }.forEach {
-            binding.llInfo.addView(it.root)
         }
 
         binding.rvTheme.adapter = ThemeBackgroundToggleAdapter(
