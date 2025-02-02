@@ -11,5 +11,5 @@ data class AdminMainState(
     val shopName: String = "",
     val themes: List<ThemeInfoPresentation> = emptyList(),
     val banners: List<Banner> = emptyList(),
-    val backgroundSettingsNoticeShown: Boolean = false
+    val backgroundSettingsNoticeShown: Boolean = true
 )

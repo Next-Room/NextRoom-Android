@@ -187,6 +187,7 @@
                 android:id="@+id/group_background_custom_introduce"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:constraint_referenced_ids="fl_background_custom, fl_background_setting, iv_up, tv_background_custom_introduce" />
 
             <FrameLayout
