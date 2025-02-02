@@ -59,11 +59,13 @@ class ThemeBackgroundToggleAdapter(
             scBackgroundToggle.isChecked = themeInfo.useTimerUrl
 
             binding.tvEmptyImage.isVisible = themeInfo.themeImageUrl.isNullOrEmpty()
-            Glide.with(binding.root.context)
-                .load(themeInfo.themeImageUrl ?: "")
-                .placeholder(R.drawable.img_placeholder)
-                .error(R.drawable.img_error)
-                .into(binding.imgTheme)
+            if (!themeInfo.themeImageUrl.isNullOrEmpty()) {
+                Glide.with(binding.root.context)
+                    .load(themeInfo.themeImageUrl)
+                    .placeholder(R.drawable.img_placeholder)
+                    .error(R.drawable.img_error)
+                    .into(binding.imgTheme)
+            }
         }
     }
 
