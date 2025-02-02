@@ -34,6 +34,8 @@ class AdminMainViewModel @Inject constructor(
 
     override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
 
+    private var shownBackgroundCustomDialog = false
+
     init {
         showInAppReview()
 
@@ -116,7 +118,10 @@ class AdminMainViewModel @Inject constructor(
                     reduce { state.copy(banners = it) }
                 }
 
-            if (!shouldHideRecommendBackgroundCustomDialogUntil()) {
+            if (!shouldHideRecommendBackgroundCustomDialogUntil()
+                && !shownBackgroundCustomDialog
+            ) {
+                shownBackgroundCustomDialog = true
                 postSideEffect(AdminMainEvent.RecommendBackgroundCustom)
             }
         }
