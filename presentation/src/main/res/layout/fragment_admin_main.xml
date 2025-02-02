@@ -54,6 +54,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="32dp"
                 android:src="@drawable/icon_locate"
+                app:tint="@color/white_70"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_purchase_button" />
 
