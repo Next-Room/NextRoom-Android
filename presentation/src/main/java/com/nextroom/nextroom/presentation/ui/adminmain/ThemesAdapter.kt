@@ -6,8 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBinding
+import com.nextroom.nextroom.presentation.extension.dpToPx
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
 class ThemesAdapter(
@@ -31,6 +35,7 @@ class ThemesAdapter(
             tvThemeName.text = themeInfo.title
             Glide.with(binding.root)
                 .load(themeInfo.themeImageUrl)
+                .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(8.dpToPx)))
                 .placeholder(R.drawable.img_placeholder)
                 .error(R.drawable.img_placeholder)
                 .into(binding.imgTheme)

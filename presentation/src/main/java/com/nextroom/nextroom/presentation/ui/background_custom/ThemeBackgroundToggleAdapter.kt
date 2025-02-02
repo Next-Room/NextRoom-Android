@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.ViewGroup
@@ -10,9 +11,18 @@ import androidx.recyclerview.widget.DiffUtil.DiffResult.NO_POSITION
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.ItemThemeBackgroundToggleBinding
+import com.nextroom.nextroom.presentation.extension.dpToPx
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
+
 
 class ThemeBackgroundToggleAdapter(
     private val onToggleClicked: (ThemeInfoPresentation) -> Unit = { _ -> },
@@ -64,6 +74,18 @@ class ThemeBackgroundToggleAdapter(
                     .load(themeInfo.themeImageUrl)
                     .placeholder(R.drawable.img_placeholder)
                     .error(R.drawable.img_error)
+                    .apply(RequestOptions().transforms(CenterCrop(), RoundedCorners(8.dpToPx)))
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                            binding.flPreview.isVisible = false
+                            return false
+                        }
+
+                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                            binding.flPreview.isVisible = true
+                            return false
+                        }
+                    })
                     .into(binding.imgTheme)
             }
         }

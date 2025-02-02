@@ -175,4 +175,5 @@
     <string name="subscribe_beneft_second_title">구독혜택 2.</string>
     <string name="subscribe_benefit_second_desc">우리 매장만의 특별한 테마</string>
     <string name="subscribe_benefit_second_sub_desc">타이머 배경 무제한 등록!</string>
+    <string name="preview">미리보기</string>
 </resources>
