@@ -36,7 +36,6 @@ class AdminMainViewModel @Inject constructor(
 
     init {
         showInAppReview()
-        updateBackgroundSettingsNoticeShown()
 
         viewModelScope.launch {
             adminRepository.shopName.collect {
@@ -54,6 +53,7 @@ class AdminMainViewModel @Inject constructor(
     fun onResume() {
         loadData()
         checkNeedToSetPassword()
+        updateBackgroundSettingsNoticeShown()
     }
 
     fun incrementNetworkDisconnectedCount() {
@@ -125,6 +125,7 @@ class AdminMainViewModel @Inject constructor(
 
     fun onBackgroundSettingsNoticeClicked() {
         dataStoreRepository.updateBackgroundSettingsShown()
+        updateBackgroundSettingsNoticeShown()
     }
 
     private fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
