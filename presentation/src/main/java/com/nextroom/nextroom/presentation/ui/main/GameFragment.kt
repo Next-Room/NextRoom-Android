@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Matrix
 import android.graphics.RectF
@@ -71,8 +72,14 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        initListener()
         setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initListener() {
+        binding.pvCustomImage.setOnTouchListener { _, _ -> true }
     }
 
     private fun setFragmentResultListeners() {
