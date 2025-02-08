@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mangbaam.commonutil.DateTimeUtil
@@ -122,6 +123,7 @@ class AdminMainFragment :
         ivMyButton.addMargin(top = requireContext().statusBarHeight)
 
         rvThemes.adapter = adapter
+
         tvPurchaseButton.setOnClickListener {
             goToPurchase()
         }
@@ -138,6 +140,7 @@ class AdminMainFragment :
             navByDeepLink(it.linkUrl)
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
         }
+        PagerSnapHelper().attachToRecyclerView(rvBanner)
 
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(

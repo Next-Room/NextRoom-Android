@@ -77,7 +77,6 @@
                 android:layout_marginTop="20dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:paddingHorizontal="20dp"
                 app:layout_constraintTop_toBottomOf="@+id/tv_shop_name" />
 
             <TextView
