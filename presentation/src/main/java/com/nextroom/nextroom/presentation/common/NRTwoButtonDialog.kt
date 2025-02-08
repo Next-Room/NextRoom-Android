@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.nextroom.nextroom.presentation.base.BaseDialogFragment
 import com.nextroom.nextroom.presentation.databinding.DialogFragmentNrTwoButtonBinding
@@ -44,11 +45,11 @@ class NRTwoButtonDialog :
 
     private fun initListeners() {
         binding.btnPositive.setOnClickListener {
-            dismiss()
+            findNavController().popBackStack()
             setFragmentResult(args.nrTwoButtonArgument.dialogKey, bundleOf())
         }
         binding.btnNegative.setOnClickListener {
-            dismiss()
+            findNavController().popBackStack()
         }
     }
 
