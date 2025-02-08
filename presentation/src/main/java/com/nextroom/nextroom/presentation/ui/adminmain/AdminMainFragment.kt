@@ -22,6 +22,7 @@ import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
+import com.nextroom.nextroom.presentation.customview.BlurDrawable
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.getResultData
@@ -115,6 +116,8 @@ class AdminMainFragment :
 
     private fun initViews() = with(binding) {
         updateSystemPadding(statusBar = false, navigationBar = true)
+
+        flBackgroundCustom.background = BlurDrawable(3f)
 
         ivMyButton.addMargin(top = requireContext().statusBarHeight)
 
