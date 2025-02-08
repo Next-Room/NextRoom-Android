@@ -147,6 +147,7 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
                 viewModel.onMatrixChanged(it.left, it.top, it.right, it.bottom)
             }
         }
+        binding.imgTheme.setOnViewDragListener { _, _ -> hideUsageIntroduceLayout() }
         binding.layoutToolbar.tvButton.setOnClickListener {
             viewModel.onSaveClicked()
         }
