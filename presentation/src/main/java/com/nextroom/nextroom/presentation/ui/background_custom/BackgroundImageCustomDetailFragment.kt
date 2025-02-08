@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Matrix
 import android.graphics.RectF
@@ -8,7 +9,9 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -17,10 +20,13 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentBackgroundImageCustomDetailBinding
 import com.nextroom.nextroom.presentation.extension.dpToPx
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +38,17 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
     private val viewModel by viewModels<BackgroundImageCustomDetailViewModel>()
 
     private var rendered = false
+
+    private val dialogKeyEditingExit = DIALOG_KEY_EDITING_EXIT
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                checkImageEditing()
+            }
+        })
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -111,7 +128,7 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
     @SuppressLint("ClickableViewAccessibility")
     private fun initListener() {
         binding.layoutToolbar.ivBack.setOnClickListener {
-            findNavController().popBackStack()
+            checkImageEditing()
         }
         binding.llExpandOrCollapse.setOnClickListener {
             hideUsageIntroduceLayout()
@@ -126,7 +143,9 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
             hideUsageIntroduceLayout()
         }
         binding.imgTheme.setOnMatrixChangeListener {
-            viewModel.onMatrixChanged(it.left, it.top, it.right, it.bottom)
+            if (it.left != 0f && it.top != 0f) {
+                viewModel.onMatrixChanged(it.left, it.top, it.right, it.bottom)
+            }
         }
         binding.layoutToolbar.tvButton.setOnClickListener {
             viewModel.onSaveClicked()
@@ -141,6 +160,29 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
         })
         binding.scApply.setOnCheckedChangeListener { _, isChecked ->
             binding.layoutGame.root.isVisible = isChecked
+        }
+
+        setFragmentResultListener(dialogKeyEditingExit) { _, _ ->
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun checkImageEditing() {
+        if (viewModel.isImageEditing()) {
+            NavGraphDirections
+                .actionGlobalNrTwoButtonDialog(
+                    NRTwoButtonDialog.NRTwoButtonArgument(
+                        title = getString(R.string.text_image_editing_exit_title),
+                        message = getString(R.string.text_image_editing_exit_desc),
+                        posBtnText = getString(R.string.text_image_editing_exit_confirm),
+                        negBtnText = getString(R.string.text_cancel),
+                        dialogKey = dialogKeyEditingExit,
+                    ),
+                ).also {
+                    findNavController().safeNavigate(direction = it)
+                }
+        } else {
+            findNavController().popBackStack()
         }
     }
 
@@ -158,5 +200,9 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
         if (binding.llExpandOrCollapse.isVisible) {
             binding.llExpandOrCollapse.visibility = View.INVISIBLE
         }
+    }
+
+    companion object {
+        private const val DIALOG_KEY_EDITING_EXIT = "DIALOG_KEY_EDITING_EXIT"
     }
 }

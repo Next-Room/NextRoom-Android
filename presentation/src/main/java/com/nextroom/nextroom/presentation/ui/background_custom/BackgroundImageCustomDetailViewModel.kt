@@ -28,6 +28,10 @@ class BackgroundImageCustomDetailViewModel @Inject constructor(
 
     private var themeImageCustomInfoUi: ThemeInfoPresentation.ThemeImageCustomInfoUi? = theme.themeImageCustomInfo
 
+    fun isImageEditing(): Boolean {
+        return themeImageCustomInfoUi != theme.themeImageCustomInfo
+    }
+
     fun onMatrixChanged(left: Float, top: Float, right: Float, bottom: Float) {
         themeImageCustomInfoUi = getThemeImageCustomInfo().copy(
             left = left,
