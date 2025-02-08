@@ -68,7 +68,7 @@ class ThemeBackgroundToggleAdapter(
 
             scBackgroundToggle.isChecked = themeInfo.useTimerUrl
 
-            imgTheme.alpha = 0.4f
+            imgTheme.alpha = if (themeInfo.useTimerUrl) 1f else 0.4f
 
             binding.tvEmptyImage.isVisible = themeInfo.themeImageUrl.isNullOrEmpty()
             if (!themeInfo.themeImageUrl.isNullOrEmpty()) {
