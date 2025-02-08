@@ -22,6 +22,7 @@ import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
+import java.text.NumberFormat
 
 
 @AndroidEntryPoint
@@ -107,9 +108,14 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
     private fun render(state: SubscriptionPaymentState) = with(binding) {
         pbLoading.isVisible = state.loading
 
-        state.plan.plans.firstOrNull()?.let {
-            acbSubscribe.text = getString(R.string.text_subscribe_monthly_payment, it.sellPrice)
-        }
+        state.plan.plans.firstOrNull()
+            ?.let {
+                acbSubscribe.text = try {
+                    getString(R.string.text_subscribe_monthly_payment, NumberFormat.getNumberInstance().format(it.sellPrice))
+                } catch (_: Exception) {
+                    getString(R.string.text_subscribe_monthly_payment, it.sellPrice)
+                }
+            }
     }
 
     private fun handleEvent(event: SubscriptionPaymentEvent) {
