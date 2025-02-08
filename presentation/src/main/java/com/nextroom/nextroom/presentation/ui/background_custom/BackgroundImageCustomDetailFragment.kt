@@ -41,13 +41,21 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
 
     private val dialogKeyEditingExit = DIALOG_KEY_EDITING_EXIT
 
+    private lateinit var backCallback: OnBackPressedCallback
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        requireActivity().onBackPressedDispatcher.addCallback(object : OnBackPressedCallback(true) {
+        backCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 checkImageEditing()
             }
-        })
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backCallback)
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        backCallback.remove()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
