@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.nextroom.nextroom.data.model.GameStateEntity.Companion.GAME_STATE_TABLE
 import com.nextroom.nextroom.domain.model.GameState
+import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 
 @Entity(
     tableName = GAME_STATE_TABLE,
@@ -23,6 +24,8 @@ data class GameStateEntity(
     val hintLimit: Int,
     val usedHints: Set<Int>,
     val startTime: Long, // 게임을 시작한 시간
+    val themeImageUrl: String? = null,
+    val themeImageCustomInfo: ThemeImageCustomInfo? = null,
 ) {
     companion object {
         const val GAME_STATE_TABLE = "GameState"
@@ -38,5 +41,7 @@ fun GameStateEntity.toDomain(): GameState {
         hintLimit = hintLimit,
         usedHints = usedHints,
         startTime = startTime,
+        themeImageUrl = themeImageUrl,
+        themeImageCustomInfo = themeImageCustomInfo
     )
 }

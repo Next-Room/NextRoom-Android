@@ -8,6 +8,7 @@
     android:backgroundTintMode="add">
 
     <ImageView
+        android:id="@+id/iv_default_image"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="-41dp"
@@ -18,15 +19,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:importantForAccessibility="no"
-        android:src="@drawable/gradient_bottom_black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_hint_count" />
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/pv_custom_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:visibility="gone" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guide_half"
@@ -139,6 +137,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
         android:text="1"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/tv_key_4"
         app:layout_constraintEnd_toStartOf="@id/tv_key_2"
         app:layout_constraintHorizontal_chainStyle="packed"
@@ -151,6 +150,7 @@
         android:id="@+id/tv_key_2"
         style="@style/Keypad"
         android:text="2"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_1"
         app:layout_constraintEnd_toStartOf="@id/tv_key_3"
         app:layout_constraintStart_toEndOf="@id/tv_key_1"
@@ -162,6 +162,7 @@
         style="@style/Keypad"
         android:layout_marginEnd="20dp"
         android:text="3"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_key_2"
@@ -172,6 +173,7 @@
         android:id="@+id/tv_key_4"
         style="@style/Keypad"
         android:text="4"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/tv_key_7"
         app:layout_constraintEnd_toStartOf="@id/tv_key_5"
         app:layout_constraintStart_toStartOf="@id/tv_key_1"
@@ -182,6 +184,7 @@
         android:id="@+id/tv_key_5"
         style="@style/Keypad"
         android:text="5"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_4"
         app:layout_constraintEnd_toStartOf="@id/tv_key_6"
         app:layout_constraintStart_toEndOf="@id/tv_key_4"
@@ -192,6 +195,7 @@
         android:id="@+id/tv_key_6"
         style="@style/Keypad"
         android:text="6"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_4"
         app:layout_constraintEnd_toEndOf="@id/tv_key_3"
         app:layout_constraintStart_toEndOf="@id/tv_key_5"
@@ -202,6 +206,7 @@
         android:id="@+id/tv_key_7"
         style="@style/Keypad"
         android:text="7"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@id/tv_key_0"
         app:layout_constraintEnd_toStartOf="@id/tv_key_8"
         app:layout_constraintStart_toStartOf="@id/tv_key_1"
@@ -212,6 +217,7 @@
         android:id="@+id/tv_key_8"
         style="@style/Keypad"
         android:text="8"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_7"
         app:layout_constraintEnd_toStartOf="@id/tv_key_9"
         app:layout_constraintStart_toEndOf="@id/tv_key_7"
@@ -222,6 +228,7 @@
         android:id="@+id/tv_key_9"
         style="@style/Keypad"
         android:text="9"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_7"
         app:layout_constraintEnd_toEndOf="@id/tv_key_3"
         app:layout_constraintStart_toEndOf="@id/tv_key_8"
@@ -233,6 +240,7 @@
         style="@style/Keypad"
         android:layout_marginBottom="42dp"
         android:text="0"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@id/tv_key_8"
         app:layout_constraintStart_toStartOf="@id/tv_key_8"
@@ -242,6 +250,7 @@
     <FrameLayout
         android:id="@+id/key_backspace"
         style="@style/Keypad"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@id/tv_key_0"
         app:layout_constraintEnd_toEndOf="@id/tv_key_9"
         app:layout_constraintStart_toEndOf="@id/tv_key_0"

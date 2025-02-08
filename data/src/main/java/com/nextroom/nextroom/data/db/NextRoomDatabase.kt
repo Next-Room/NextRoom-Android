@@ -12,7 +12,7 @@ import com.nextroom.nextroom.data.model.ThemeTimeEntity
 
 @Database(
     entities = [ThemeEntity::class, ThemeTimeEntity::class, HintEntity::class, GameStateEntity::class, GameStatsEntity::class, HintStatsEntity::class],
-    version = 6,
+    version = 7,
 )
 @TypeConverters(TypeConverter::class)
 abstract class NextRoomDatabase : RoomDatabase() {

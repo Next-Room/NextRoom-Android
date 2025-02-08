@@ -5,6 +5,7 @@ import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.model.GameStateEntity
 import com.nextroom.nextroom.data.model.toDomain
 import com.nextroom.nextroom.domain.model.GameState
+import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import javax.inject.Inject
@@ -19,6 +20,8 @@ class GameStateRepositoryImpl @Inject constructor(
         hintLimit: Int,
         usedHints: Set<Int>,
         startTime: Long,
+        themeImageUrl: String?,
+        themeImageCustomInfo: ThemeImageCustomInfo?,
     ) {
         val themeId = settingDataSource.getLatestGameCode()
         gameStateDao.insertGameState(
@@ -28,6 +31,8 @@ class GameStateRepositoryImpl @Inject constructor(
                 hintLimit = hintLimit,
                 usedHints = usedHints,
                 startTime = startTime,
+                themeImageUrl = themeImageUrl,
+                themeImageCustomInfo = themeImageCustomInfo
             ),
         )
     }

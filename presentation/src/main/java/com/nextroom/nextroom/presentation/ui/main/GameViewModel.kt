@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.GameState
+import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -73,6 +74,8 @@ class GameViewModel @Inject constructor(
                         hintLimit = hintLimit,
                         usedHints = emptySet(),
                         startTime = System.currentTimeMillis(),
+                        themeImageUrl = themeImageUrl,
+                        themeImageCustomInfo = themeImageCustomInfo
                     )
                     setGameScreenState(
                         seconds = timeLimitInMinute * 60,
@@ -80,6 +83,8 @@ class GameViewModel @Inject constructor(
                         usedHints = emptySet(),
                         lastSeconds = timeLimitInMinute * 60,
                         startTime = startTime,
+                        themeImageUrl = themeImageUrl,
+                        themeImageCustomInfo = themeImageCustomInfo
                     )
                     startGame(startTime + timeLimitInMinute * 60 * 1000)
                 }
@@ -98,6 +103,8 @@ class GameViewModel @Inject constructor(
                 usedHints = usedHints,
                 lastSeconds = lastSeconds,
                 startTime = startTime,
+                themeImageUrl = themeImageUrl,
+                themeImageCustomInfo = themeImageCustomInfo
             )
             startGame(startTime + timeLimitInMinute * 60 * 1000)
         }
@@ -189,6 +196,8 @@ class GameViewModel @Inject constructor(
                 hintLimit = state.totalHintCount,
                 usedHints = state.usedHints,
                 startTime = state.startTime,
+                themeImageUrl = state.themeImageUrl,
+                themeImageCustomInfo = state.themeImageCustomInfo
             )
         }
     }
@@ -213,6 +222,8 @@ class GameViewModel @Inject constructor(
         usedHints: Set<Int>,
         lastSeconds: Int,
         startTime: Long,
+        themeImageUrl: String? = null,
+        themeImageCustomInfo: ThemeImageCustomInfo? = null
     ) = intent {
         reduce {
             state.copy(
@@ -221,6 +232,8 @@ class GameViewModel @Inject constructor(
                 usedHints = usedHints,
                 lastSeconds = lastSeconds,
                 startTime = startTime,
+                themeImageUrl = themeImageUrl,
+                themeImageCustomInfo = themeImageCustomInfo
             )
         }
     }
