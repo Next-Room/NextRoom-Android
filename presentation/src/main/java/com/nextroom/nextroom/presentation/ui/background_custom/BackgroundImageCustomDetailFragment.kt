@@ -114,11 +114,17 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
             findNavController().popBackStack()
         }
         binding.llExpandOrCollapse.setOnClickListener {
-            binding.llExpandOrCollapse.visibility = View.INVISIBLE
+            hideUsageIntroduceLayout()
         }
         //PhotoView를 추가하면 bottomsheet이 드래그가 작동하지 않음.
         //아래 코드를 넣으면 bottomsheet가 이벤트를 직접 소비함으로써 드래그가 다시 가능
-        binding.bottomSheet.setOnTouchListener { _, _ -> true }
+        binding.bottomSheet.setOnTouchListener { _, _ ->
+            hideUsageIntroduceLayout()
+            true
+        }
+        binding.imgTheme.setOnPhotoTapListener { _, _, _ ->
+            hideUsageIntroduceLayout()
+        }
         binding.imgTheme.setOnMatrixChangeListener {
             viewModel.onMatrixChanged(it.left, it.top, it.right, it.bottom)
         }
@@ -146,5 +152,11 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
         binding.layoutToolbar.toolbar.setBackgroundColor(Color.TRANSPARENT)
         binding.layoutToolbar.tvButton.isVisible = true
         binding.layoutToolbar.tvButton.text = getString(R.string.save)
+    }
+
+    private fun hideUsageIntroduceLayout() {
+        if (binding.llExpandOrCollapse.isVisible) {
+            binding.llExpandOrCollapse.visibility = View.INVISIBLE
+        }
     }
 }
