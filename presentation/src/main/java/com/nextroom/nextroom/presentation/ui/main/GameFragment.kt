@@ -134,7 +134,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             else -> {}
         }
 
-        if (!state.themeImageUrl.isNullOrEmpty()) {
+        if (state.themeImageEnabled && !state.themeImageUrl.isNullOrEmpty()) {
             binding.pvCustomImage.isVisible = true
             Glide.with(requireContext())
                 .load(state.themeImageUrl)

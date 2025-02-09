@@ -60,7 +60,8 @@ class GameViewModel @Inject constructor(
         reduce {
             state.copy(
                 themeImageUrl = theme.themeImageUrl,
-                themeImageCustomInfo = theme.themeImageCustomInfo
+                themeImageCustomInfo = theme.themeImageCustomInfo,
+                themeImageEnabled = theme.useTimerUrl
             )
         }
     }

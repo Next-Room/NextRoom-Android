@@ -14,6 +14,7 @@ data class GameScreenState(
     val startTime: Long = -1,
     val themeImageUrl: String? = null,
     val themeImageCustomInfo: ThemeImageCustomInfo? = null,
+    val themeImageEnabled: Boolean = false
 ) {
     val usedHintsCount: Int
         get() = usedHints.size
