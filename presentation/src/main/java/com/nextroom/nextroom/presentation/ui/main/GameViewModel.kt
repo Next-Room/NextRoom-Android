@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.GameState
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
+import com.nextroom.nextroom.domain.model.ThemeInfo
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -47,10 +48,20 @@ class GameViewModel @Inject constructor(
             val latestGame = gameStateRepository.getGameState()
             fun isNewGame() = latestGame == null
             if (isNewGame()) {
+                showGameBackgroundImage(loadLatestTheme())
                 showGameStartConfirmDialog()
             } else {
                 resumeGame(latestGame ?: return@launch)
             }
+        }
+    }
+
+    private fun showGameBackgroundImage(theme: ThemeInfo) = intent {
+        reduce {
+            state.copy(
+                themeImageUrl = theme.themeImageUrl,
+                themeImageCustomInfo = theme.themeImageCustomInfo
+            )
         }
     }
 
@@ -60,6 +71,10 @@ class GameViewModel @Inject constructor(
 
     fun onGameStartClicked() {
         startOrResumeGame()
+    }
+
+    private suspend fun loadLatestTheme(): ThemeInfo {
+        return themeRepository.getLatestTheme().first()
     }
 
     private fun startOrResumeGame() {
