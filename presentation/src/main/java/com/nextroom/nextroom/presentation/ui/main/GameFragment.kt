@@ -58,9 +58,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     private fun dismissStartConfirmDialog() {
         gameStartConfirmDialog.dismiss()
     }
-
-    private var rendered = false
-
+    
     override fun onAttach(context: Context) {
         super.onAttach(context)
         backCallback = object : OnBackPressedCallback(true) {
@@ -136,8 +134,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             else -> {}
         }
 
-        if (!rendered && !state.themeImageUrl.isNullOrEmpty()) {
-            rendered = true
+        if (!state.themeImageUrl.isNullOrEmpty()) {
             binding.pvCustomImage.isVisible = true
             Glide.with(requireContext())
                 .load(state.themeImageUrl)
