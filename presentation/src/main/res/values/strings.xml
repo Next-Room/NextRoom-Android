@@ -133,6 +133,7 @@
     <string name="text_subscribe_monthly_payment">월 ₩%s원으로 구독하기</string>
     <string name="text_do_later">다음에 할게요</string>
     <string name="text_empty_image">등록 이미지가\n없습니다</string>
+    <string name="text_upload_image_first">PC에서 이미지를 등록해주세요.</string>
     <string name="text_background_setting_error">등록된 이미지가 없어 배경을 활성화할 수 없습니다.</string>
     <string name="text_image_error">이미지를 로드할 수 없습니다.\n직원에게 문의해 주세요.</string>
     <string name="save">저장</string>

@@ -81,7 +81,13 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
 
         binding.rvTheme.adapter = ThemeBackgroundToggleAdapter(
             onToggleClicked = { viewModel.toggleImage(it) },
-            onImageClicked = { viewModel.onThemeImageClicked(it) }
+            onImageClicked = {
+                if (it.themeImageUrl.isNullOrEmpty()) {
+                    toast(R.string.text_upload_image_first)
+                } else {
+                    viewModel.onThemeImageClicked(it)
+                }
+            }
         )
     }
 
