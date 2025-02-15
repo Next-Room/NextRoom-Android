@@ -187,12 +187,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:constraint_referenced_ids="fl_background_custom, fl_background_setting, iv_up, tv_background_custom_introduce" />
+                app:constraint_referenced_ids="fl_background_custom, fl_background_setting" />
 
             <FrameLayout
                 android:id="@+id/fl_background_custom"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="visible"
                 android:background="@color/black_60" />
 
             <FrameLayout
@@ -213,28 +214,6 @@
                     android:text="@string/text_background_setting"
                     android:textColor="@color/white_70" />
             </FrameLayout>
-
-            <ImageView
-                android:id="@+id/iv_up"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/ic_arrow_up_24"
-                app:layout_constraintEnd_toEndOf="@+id/fl_background_setting"
-                app:layout_constraintStart_toStartOf="@+id/fl_background_setting"
-                app:layout_constraintTop_toBottomOf="@+id/fl_background_setting" />
-
-            <TextView
-                android:id="@+id/tv_background_custom_introduce"
-                style="@style/Pretendard.16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_background_custom_introduce"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/fl_background_setting"
-                app:layout_constraintTop_toBottomOf="@+id/iv_up" />
-
-
 
             <include
                 android:id="@+id/layout_opaque_loading"
