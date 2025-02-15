@@ -1,6 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- new font styles -->
+    <!-- title -->
+    <style name="Title">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="Title.24">
+        <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="Title.20">
+        <item name="android:textSize">20dp</item>
+    </style>
+
+    <style name="Title.18">
+        <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="Title.16">
+        <item name="android:textSize">24dp</item>
+    </style>
+
+    <style name="Title.24.SB">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="Title.24.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="Title.20.SB">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="Title.20.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="Title.18.SB">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="Title.16.SB">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="Title.16.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <!-- body -->
+    <style name="Body">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="Body.16">
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Body.14">
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Body.12">
+        <item name="android:textSize">16dp</item>
+    </style>
+
+    <style name="Body.16.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="Body.16.R">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="Body.14.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="Body.14.R">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <style name="Body.12.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+    <style name="Body.12.R">
+        <item name="android:fontFamily">@font/pretendard_regular</item>
+    </style>
+
+    <!-- Caption -->
+    <style name="Caption">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textColor">@color/White</item>
+    </style>
+
+    <style name="Caption.12">
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="Caption.12.SB">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+    </style>
+
+    <style name="Caption.12.M">
+        <item name="android:fontFamily">@font/pretendard_medium</item>
+    </style>
+
+
+    <!-- legacy font styles -->
+
     <style name="Pretendard">
         <item name="android:fontFamily">@font/pretendard_medium</item>
         <item name="android:includeFontPadding">false</item>
