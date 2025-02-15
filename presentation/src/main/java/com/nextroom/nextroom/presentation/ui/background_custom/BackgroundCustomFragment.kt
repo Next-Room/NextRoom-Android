@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.background_custom
 
 import android.os.Bundle
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -47,8 +48,15 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
                 .apply {
                     tvInfo.text = it
                 }
-        }.forEach {
-            binding.llInfo.addView(it.root)
+        }.forEachIndexed { index, view ->
+            if (index > 0) {
+                ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
+                ).apply { this.topMargin = 12 }
+                    .also { view.root.layoutParams = it }
+            }
+            binding.llInfo.addView(view.root)
         }
 
     }

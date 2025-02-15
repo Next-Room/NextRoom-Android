@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/tv_info"
-        style="@style/Pretendard.14"
+        style="@style/Pretendard.12"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
