@@ -264,11 +264,6 @@
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
         android:label="PurchaseFragment"
         tools:layout="@layout/fragment_purchase">
-        <action
-            android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"
-            app:destination="@id/purchaseSuccessFragment"
-            app:popUpTo="@id/adminMainFragment" />
-
         <deepLink
             app:action="android.intent.action.VIEW"
             app:uri="@string/deeplink_purchase" />
@@ -277,11 +272,10 @@
         android:id="@+id/purchaseSuccessFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
         android:label="PurchaseSuccessFragment"
-        tools:layout="@layout/fragment_purchase_success">
-        <action
-            android:id="@+id/action_to_home"
-            app:destination="@id/adminMainFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_purchase_success" />
+    <action
+        android:id="@+id/move_to_purchase_success"
+        app:destination="@id/purchaseSuccessFragment" />
     <fragment android:id="@+id/backgroundCustomFragment" />
     <fragment
         android:id="@+id/checkPassword"
