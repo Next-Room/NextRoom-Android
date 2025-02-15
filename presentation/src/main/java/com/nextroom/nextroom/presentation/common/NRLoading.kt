@@ -5,7 +5,9 @@ import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
+import com.nextroom.nextroom.presentation.R
 
 class NRLoading @JvmOverloads constructor(
     context: Context,
@@ -20,8 +22,13 @@ class NRLoading @JvmOverloads constructor(
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
 
-        // 배경을 투명하게 설정
-        setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+        // 속성에서 배경 타입 설정
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.NRLoading)
+        val backgroundTypeOrdinal =
+            typedArray.getInt(R.styleable.NRLoading_backgroundType, BackgroundType.TRANSPARENT.ordinal)
+        typedArray.recycle()
+
+        setBackgroundType(BackgroundType.entries[backgroundTypeOrdinal])
 
         // ProgressBar를 가운데에 배치
         val progressBar = ProgressBar(context).apply {
@@ -41,5 +48,16 @@ class NRLoading @JvmOverloads constructor(
 
         // ProgressBar를 이 뷰에 추가
         addView(progressBar)
+    }
+
+    fun setBackgroundType(backgroundType: BackgroundType) {
+        ContextCompat.getColor(context, backgroundType.colorRes).also {
+            setBackgroundColor(it)
+        }
+    }
+
+    enum class BackgroundType(@ColorRes val colorRes: Int) {
+        TRANSPARENT(android.R.color.transparent),
+        BLACK(android.R.color.black),
     }
 }

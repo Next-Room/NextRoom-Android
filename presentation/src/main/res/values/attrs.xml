@@ -6,16 +6,23 @@
     </declare-styleable>
 
     <declare-styleable name="ArcProgress">
-        <attr name="arc_progress" format="integer"/>
-        <attr name="lastSeconds" format="integer"/>
-        <attr name="arc_angle" format="float"/>
-        <attr name="arc_stroke_width" format="dimension"/>
-        <attr name="timeLimit" format="integer"/>
-        <attr name="arc_unfinished_color" format="color"/>
-        <attr name="arc_finished_color" format="color"/>
-        <attr name="arc_progress_text_size" format="dimension"/>
-        <attr name="arc_progress_text_color" format="color"/>
+        <attr name="arc_progress" format="integer" />
+        <attr name="lastSeconds" format="integer" />
+        <attr name="arc_angle" format="float" />
+        <attr name="arc_stroke_width" format="dimension" />
+        <attr name="timeLimit" format="integer" />
+        <attr name="arc_unfinished_color" format="color" />
+        <attr name="arc_finished_color" format="color" />
+        <attr name="arc_progress_text_size" format="dimension" />
+        <attr name="arc_progress_text_color" format="color" />
         <attr name="arc_left_text" format="string|reference" />
         <attr name="arc_right_text" format="string|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="NRLoading">
+        <attr name="backgroundType">
+            <enum name="transparent" value="0" />
+            <enum name="black" value="1" />
+        </attr>
     </declare-styleable>
 </resources>
