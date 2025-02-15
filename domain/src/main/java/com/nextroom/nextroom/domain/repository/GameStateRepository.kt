@@ -10,6 +10,7 @@ interface GameStateRepository {
         hintLimit: Int,
         usedHints: Set<Int>,
         startTime: Long,
+        useTimerUrl: Boolean,
         themeImageUrl: String? = null,
         themeImageCustomInfo: ThemeImageCustomInfo? = null,
     )

@@ -20,6 +20,7 @@ class GameStateRepositoryImpl @Inject constructor(
         hintLimit: Int,
         usedHints: Set<Int>,
         startTime: Long,
+        useTimerUrl: Boolean,
         themeImageUrl: String?,
         themeImageCustomInfo: ThemeImageCustomInfo?,
     ) {
@@ -31,6 +32,7 @@ class GameStateRepositoryImpl @Inject constructor(
                 hintLimit = hintLimit,
                 usedHints = usedHints,
                 startTime = startTime,
+                useTimerUrl = useTimerUrl,
                 themeImageUrl = themeImageUrl,
                 themeImageCustomInfo = themeImageCustomInfo
             ),

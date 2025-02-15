@@ -7,6 +7,7 @@ data class GameState(
     val lastSeconds: Int, // 보정된 시간
     val hintLimit: Int,
     val usedHints: Set<Int>,
+    val useTimerUrl: Boolean,
     val themeImageUrl: String? = null,
     val themeImageCustomInfo: ThemeImageCustomInfo? = null,
 )

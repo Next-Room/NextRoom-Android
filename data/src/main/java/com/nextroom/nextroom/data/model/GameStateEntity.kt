@@ -24,6 +24,7 @@ data class GameStateEntity(
     val hintLimit: Int,
     val usedHints: Set<Int>,
     val startTime: Long, // 게임을 시작한 시간
+    val useTimerUrl: Boolean,
     val themeImageUrl: String? = null,
     val themeImageCustomInfo: ThemeImageCustomInfo? = null,
 ) {
@@ -41,6 +42,7 @@ fun GameStateEntity.toDomain(): GameState {
         hintLimit = hintLimit,
         usedHints = usedHints,
         startTime = startTime,
+        useTimerUrl = useTimerUrl,
         themeImageUrl = themeImageUrl,
         themeImageCustomInfo = themeImageCustomInfo
     )

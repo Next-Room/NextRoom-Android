@@ -90,6 +90,7 @@ class GameViewModel @Inject constructor(
                         hintLimit = hintLimit,
                         usedHints = emptySet(),
                         startTime = System.currentTimeMillis(),
+                        useTimerUrl = useTimerUrl,
                         themeImageUrl = themeImageUrl,
                         themeImageCustomInfo = themeImageCustomInfo
                     )
@@ -100,7 +101,8 @@ class GameViewModel @Inject constructor(
                         lastSeconds = timeLimitInMinute * 60,
                         startTime = startTime,
                         themeImageUrl = themeImageUrl,
-                        themeImageCustomInfo = themeImageCustomInfo
+                        themeImageCustomInfo = themeImageCustomInfo,
+                        themeImageEnabled = useTimerUrl,
                     )
                     startGame(startTime + timeLimitInMinute * 60 * 1000)
                 }
@@ -120,7 +122,8 @@ class GameViewModel @Inject constructor(
                 lastSeconds = lastSeconds,
                 startTime = startTime,
                 themeImageUrl = themeImageUrl,
-                themeImageCustomInfo = themeImageCustomInfo
+                themeImageCustomInfo = themeImageCustomInfo,
+                themeImageEnabled = useTimerUrl,
             )
             startGame(startTime + timeLimitInMinute * 60 * 1000)
         }
@@ -212,6 +215,7 @@ class GameViewModel @Inject constructor(
                 hintLimit = state.totalHintCount,
                 usedHints = state.usedHints,
                 startTime = state.startTime,
+                useTimerUrl = state.themeImageEnabled,
                 themeImageUrl = state.themeImageUrl,
                 themeImageCustomInfo = state.themeImageCustomInfo
             )
@@ -239,7 +243,8 @@ class GameViewModel @Inject constructor(
         lastSeconds: Int,
         startTime: Long,
         themeImageUrl: String? = null,
-        themeImageCustomInfo: ThemeImageCustomInfo? = null
+        themeImageCustomInfo: ThemeImageCustomInfo? = null,
+        themeImageEnabled: Boolean,
     ) = intent {
         reduce {
             state.copy(
@@ -249,7 +254,8 @@ class GameViewModel @Inject constructor(
                 lastSeconds = lastSeconds,
                 startTime = startTime,
                 themeImageUrl = themeImageUrl,
-                themeImageCustomInfo = themeImageCustomInfo
+                themeImageCustomInfo = themeImageCustomInfo,
+                themeImageEnabled = themeImageEnabled
             )
         }
     }
