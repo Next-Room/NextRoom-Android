@@ -33,7 +33,12 @@ class AdminMainViewModel @Inject constructor(
     private val bannerRepository: BannerRepository
 ) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
-    override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
+    override val container: Container<AdminMainState, AdminMainEvent> = container(
+        AdminMainState(
+            opaqueLoading = true,
+            loading = true,
+        )
+    )
 
     private var shownBackgroundCustomDialog = false
 
@@ -136,7 +141,7 @@ class AdminMainViewModel @Inject constructor(
                 postSideEffect(AdminMainEvent.RecommendBackgroundCustom)
             }
         }
-        reduce { state.copy(loading = false) }
+        reduce { state.copy(opaqueLoading = false, loading = false) }
     }
 
     private suspend fun getThemes() {

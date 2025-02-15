@@ -22,6 +22,7 @@ import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRLoading
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
@@ -165,8 +166,6 @@ class AdminMainFragment :
     }
 
     private fun render(state: AdminMainState) = with(binding) {
-        if (state.loading) return@with
-
         if (state.banners.isEmpty()) {
             rvBanner.isVisible = false
         } else {
@@ -184,7 +183,13 @@ class AdminMainFragment :
             R.string.text_last_hint_update,
             DateTimeUtil().longToDateString(System.currentTimeMillis(), pattern = "yyyy.MM.dd HH:mm")
         )
-        binding.layoutOpaqueLoading.root.isVisible = state.opaqueLoading
+
+        if (state.opaqueLoading) {
+            NRLoading.BackgroundType.BLACK
+        } else {
+            NRLoading.BackgroundType.TRANSPARENT
+        }.also { binding.nrLoading.setBackgroundType(it) }
+        binding.nrLoading.isVisible = state.opaqueLoading || state.loading
     }
 
     private fun handleEvent(event: AdminMainEvent) {
