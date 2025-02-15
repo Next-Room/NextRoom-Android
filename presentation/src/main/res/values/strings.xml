@@ -94,7 +94,7 @@
     <string name="purchase_sub_label_subscribe_end">다시 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
     <string name="purchase_sub_label_free_end">지금 구독하시면 저장하신 정보 그대로 사용할 수 있어요!</string>
     <string name="purchase_price_alert">추후 금액이 인상될 수 있습니다.</string>
-    <string name="purchase_success_button">홈으로</string>
+    <string name="purchase_success_button">돌아가기</string>
     <string name="purchase_success_title">결제가 완료되었어요</string>
     <string name="purchase_success_content">지금 바로 넥스트룸을 사용해보세요</string>
     <string name="purchase_error_message">일시적인 오류이거나 서비스 장애입니다. 다시 시도하여도 해당 메시지가 계속 보일 경우 상태 코드와 함께 문의 바랍니다.\n상태 코드: %d</string>
