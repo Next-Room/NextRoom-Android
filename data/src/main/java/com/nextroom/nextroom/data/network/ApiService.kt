@@ -1,5 +1,7 @@
 package com.nextroom.nextroom.data.network
 
+import com.nextroom.nextroom.data.network.response.SubscriptionPlanDto
+import com.nextroom.nextroom.data.model.ThemeBackgroundActivationId
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
 import com.nextroom.nextroom.data.network.request.PurchaseToken
@@ -19,6 +21,7 @@ import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Query
 
 interface ApiService {
@@ -55,4 +58,10 @@ interface ApiService {
 
     @GET("api/v1/banner")
     suspend fun getBanners(): Result<BaseListResponse<BannerDto>>
+
+    @PUT("api/v1/theme/timer/active")
+    suspend fun putActiveThemeBackgroundImage(@Body themeBackgroundActivationId: ThemeBackgroundActivationId): Result<Unit>
+
+    @GET("api/v1/subscription/plan")
+    suspend fun getSubscriptionPlan(): Result<BaseResponse<SubscriptionPlanDto>>
 }

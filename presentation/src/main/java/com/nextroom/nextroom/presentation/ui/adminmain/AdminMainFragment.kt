@@ -12,13 +12,17 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NRLoading
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
@@ -46,8 +50,7 @@ class AdminMainFragment :
     private val viewModel: AdminMainViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
-            onThemeClicked = { themeId -> viewModel.onThemeClicked(themeId.toString()) },
-            onClickUpdate = viewModel::updateTheme,
+            onThemeClicked = { themeId -> viewModel.onThemeClicked(themeId.toString()) }
         )
     }
     private val state: AdminMainState
@@ -118,6 +121,7 @@ class AdminMainFragment :
         ivMyButton.addMargin(top = requireContext().statusBarHeight)
 
         rvThemes.adapter = adapter
+
         tvPurchaseButton.setOnClickListener {
             goToPurchase()
         }
@@ -129,11 +133,23 @@ class AdminMainFragment :
             viewModel.loadData()
         }
 
-        llBanner.setOnClickListener {
-            viewModel.container.stateFlow.value.banner?.linkUrl?.let {
-                navByDeepLink(it)
-            }
+        rvBanner.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        rvBanner.adapter = BannerAdapter {
+            navByDeepLink(it.linkUrl)
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
+        }
+        PagerSnapHelper().attachToRecyclerView(rvBanner)
+
+        tvBacgroundSetting.setOnClickListener {
+            findNavController().safeNavigate(
+                AdminMainFragmentDirections.moveToBackgroundCustomFragment(
+                    state.subscribeStatus,
+                    state.themes.toTypedArray()
+                )
+            )
+        }
+        ivRefresh.setOnClickListener {
+            viewModel.onThemeRefreshClicked()
         }
     }
 
@@ -150,20 +166,11 @@ class AdminMainFragment :
     }
 
     private fun render(state: AdminMainState) = with(binding) {
-        if (state.loading) return@with
-
-        when (state.subscribeStatus) {
-            SubscribeStatus.Default,
-            SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
-                state.banner?.let {
-                    llBanner.isVisible = true
-                    tvBanner.text = it.description
-                } ?: run {
-                    llBanner.isVisible = false
-                }
-            }
-
-            SubscribeStatus.Subscribed -> llBanner.isVisible = false
+        if (state.banners.isEmpty()) {
+            rvBanner.isVisible = false
+        } else {
+            rvBanner.isVisible = true
+            (rvBanner.adapter as? BannerAdapter)?.submitList(state.banners)
         }
 
         tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed
@@ -171,7 +178,18 @@ class AdminMainFragment :
         tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes)
-        binding.layoutOpaqueLoading.root.isVisible = state.opaqueLoading
+        tvThemeCount.text = state.themes.size.toString()
+        tvLastUpdate.text = getString(
+            R.string.text_last_hint_update,
+            DateTimeUtil().longToDateString(System.currentTimeMillis(), pattern = "yyyy.MM.dd HH:mm")
+        )
+
+        if (state.opaqueLoading) {
+            NRLoading.BackgroundType.BLACK
+        } else {
+            NRLoading.BackgroundType.TRANSPARENT
+        }.also { binding.nrLoading.setBackgroundType(it) }
+        binding.nrLoading.isVisible = state.opaqueLoading || state.loading
     }
 
     private fun handleEvent(event: AdminMainEvent) {
@@ -183,7 +201,12 @@ class AdminMainFragment :
             is AdminMainEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
             AdminMainEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is AdminMainEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
+            AdminMainEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
         }
+    }
+
+    private fun showRecommendBackgroundCustomBottomSheet() {
+        findNavController().safeNavigate(AdminMainFragmentDirections.moveToRecommendBackgroundCustom())
     }
 
     private fun showInAppReview() {

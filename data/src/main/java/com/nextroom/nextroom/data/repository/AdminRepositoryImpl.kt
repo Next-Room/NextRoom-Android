@@ -8,6 +8,7 @@ import com.nextroom.nextroom.data.datasource.UserDataSource
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscriptionPlan
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
@@ -73,5 +74,9 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun getAppPassword(): String {
         return settingDataSource.getAppPassword()
+    }
+
+    override suspend fun getSubscriptionPlan(): Result<SubscriptionPlan> {
+        return subscriptionDataSource.getSubscriptionPlan()
     }
 }

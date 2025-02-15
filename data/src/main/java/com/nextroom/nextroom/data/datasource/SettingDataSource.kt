@@ -105,6 +105,14 @@ class SettingDataSource @Inject constructor(
         data.first().userEmail
     }
 
+    fun setRecommendBackgroundCustomDialogHidden(time: Long) = runBlocking {
+        dataStore.updateData { it.copy(backgroundCustomDialogHideUntil = time) }
+    }
+
+    fun getRecommendBackgroundCustomDialogHiddenUntil() = runBlocking {
+        data.first().backgroundCustomDialogHideUntil
+    }
+
     suspend fun saveAppPassword(password: String) {
         dataStore.updateData {
             it.copy(appPassword = password)

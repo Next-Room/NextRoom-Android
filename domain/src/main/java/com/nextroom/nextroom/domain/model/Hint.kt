@@ -1,5 +1,7 @@
 package com.nextroom.nextroom.domain.model
 
+import java.io.Serializable
+
 data class Hint(
     val id: Int,
     val title: String = "",
@@ -9,4 +11,4 @@ data class Hint(
     val progress: Int = 0, // 진행률
     val hintImageUrlList: List<String>,
     val answerImageUrlList: List<String>,
-)
+) : Serializable

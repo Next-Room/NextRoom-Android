@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.domain.repository
 
 import com.nextroom.nextroom.domain.model.GameState
+import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 
 interface GameStateRepository {
 
@@ -9,6 +10,9 @@ interface GameStateRepository {
         hintLimit: Int,
         usedHints: Set<Int>,
         startTime: Long,
+        useTimerUrl: Boolean,
+        themeImageUrl: String? = null,
+        themeImageCustomInfo: ThemeImageCustomInfo? = null,
     )
 
     suspend fun finishGame(onFinished: () -> Unit = {})

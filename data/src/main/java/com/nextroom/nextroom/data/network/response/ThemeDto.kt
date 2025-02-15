@@ -17,6 +17,10 @@ data class ThemeDto(
     val createdAt: String,
     @SerializedName("modifiedAt")
     val modifiedAt: String,
+    @SerializedName("useTimerUrl")
+    val useTimerUrl: Boolean,
+    @SerializedName("themeImageUrl")
+    val themeImageUrl: String? = null
 )
 
 fun ThemeDto.toDomain(hints: List<Hint> = emptyList()): ThemeInfo {
@@ -26,6 +30,8 @@ fun ThemeDto.toDomain(hints: List<Hint> = emptyList()): ThemeInfo {
         timeLimitInMinute = timeLimit,
         hintLimit = hintLimit,
         hints = hints,
+        useTimerUrl = useTimerUrl,
+        themeImageUrl = themeImageUrl
     )
 }
 

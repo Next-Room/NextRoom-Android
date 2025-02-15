@@ -1,13 +1,23 @@
 package com.nextroom.nextroom.presentation.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Matrix
+import android.graphics.RectF
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
@@ -48,7 +58,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     private fun dismissStartConfirmDialog() {
         gameStartConfirmDialog.dismiss()
     }
-
+    
     override fun onAttach(context: Context) {
         super.onAttach(context)
         backCallback = object : OnBackPressedCallback(true) {
@@ -60,8 +70,14 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        initListener()
         setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun initListener() {
+        binding.pvCustomImage.setOnTouchListener { _, _ -> true }
     }
 
     private fun setFragmentResultListeners() {
@@ -116,6 +132,62 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             }
 
             else -> {}
+        }
+
+        if (state.themeImageEnabled && !state.themeImageUrl.isNullOrEmpty()) {
+            binding.pvCustomImage.isVisible = true
+            Glide.with(requireContext())
+                .load(state.themeImageUrl)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        binding.pvCustomImage.isVisible = false
+                        binding.ivDefaultImage.isVisible = true
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        val left = state.themeImageCustomInfo?.left
+                        val top = state.themeImageCustomInfo?.top
+                        val right = state.themeImageCustomInfo?.right
+                        val bottom = state.themeImageCustomInfo?.bottom
+
+                        if (left != null && top != null && right != null && bottom != null && resource != null) {
+                            val matrix = Matrix()
+                                .apply {
+                                    val fromRectF = RectF(0f, 0f, binding.pvCustomImage.width.toFloat(), binding.pvCustomImage.height.toFloat())
+                                    val toRectF = RectF(
+                                        left,
+                                        top,
+                                        right,
+                                        bottom
+                                    )
+                                    setRectToRect(
+                                        fromRectF,
+                                        toRectF,
+                                        Matrix.ScaleToFit.FILL
+                                    )
+                                }
+
+                            // 내부적으로 setImageMatrix를 여러번 호출하면서 최신 matrix정보를 덮어 씀으로 타이밍을 늦춰 마지막에 setImageMatrix를 호출할 수 있도록 post 추가
+                            binding.pvCustomImage.post {
+                                binding.pvCustomImage.setImageDrawable(resource)
+                                binding.pvCustomImage.setSuppMatrix(matrix)
+                            }
+                        }
+
+                        binding.ivDefaultImage.isVisible = false
+
+                        return false
+                    }
+
+                })
+                .into(binding.pvCustomImage)
+
+            state.themeImageCustomInfo
+                ?.opacity
+                ?.let {
+                    binding.pvCustomImage.alpha = (it.toFloat() / 100)
+                }
         }
     }
 

@@ -117,7 +117,30 @@
     <string name="start">시작</string>
     <string name="dialog_title_game_start_confirm">게임을 시작하시겠습니까?</string>
     <string name="dialog_message_game_start_confirm">버튼을 클릭하면 타이머가 시작됩니다</string>
+    <string name="text_no_show_for_a_week">일주일간 보지않기</string>
+    <string name="text_confirm">확인</string>
+    <string name="text_background_custom_recommend_title">타이머 배경 커스텀 기능 출시 ✨</string>
+    <string name="text_recommend_background_custom_desc">테마 포스터로 타이머 배경을 커스텀 할 수 있습니다. 각 테마의 독특한 분위기를 더해 몰입감을 높여보세요.</string>
+    <string name="tv_theme">테마</string>
+    <string name="text_background_setting">배경 설정</string>
+    <string name="text_last_hint_update">최근 힌트 업데이트 %s</string>
+    <string name="text_timer_background_custom">타이머 배경 설정</string>
+    <string name="text_background_custom_info_1">PC에서 배경을 등록하면 힌트폰에서 확인할 수 있습니다.</string>
+    <string name="text_background_custom_info_2">미리보기에서 이미지의 어두움와 위치를 조정할 수 있습니다.</string>
+    <string name="text_background_custom_info_3">미구독계정은 1개의 배경 이미지만 활성화할 수 있습니다.</string>
+    <string name="text_nextroom_subscribe_title">넥스트룸을 구독해보세요✨</string>
+    <string name="text_subscribe_benefit_desc">미구독계정은 1개의 배경이미지만 활성화할 수 있습니다.\n넥스트룸을 구독하면 아래 혜택을 누릴 수 있습니다.</string>
+    <string name="text_subscribe_monthly_payment">월 ₩%s원으로 구독하기</string>
+    <string name="text_do_later">다음에 할게요</string>
+    <string name="text_empty_image">등록 이미지가\n없습니다</string>
+    <string name="text_upload_image_first">PC에서 이미지를 등록해주세요.</string>
+    <string name="text_background_setting_error">등록된 이미지가 없어 배경을 활성화할 수 없습니다.</string>
     <string name="text_image_error">이미지를 로드할 수 없습니다.\n직원에게 문의해 주세요.</string>
+    <string name="save">저장</string>
+    <string name="expand_or_collapse">손가락을 이용해 이미지를\n확대, 축소, 이동할 수 있습니다.</string>
+    <string name="dark_level">어두움</string>
+    <string name="apply_real_screen">실제 적용 화면으로 보기</string>
+    <string name="save_success">저장됐습니다.</string>
 
     <string name="text_input_password_header">비밀번호 입력</string>
     <string name="text_input_password_description">앱 비밀번호를 입력해주세요.</string>
@@ -146,4 +169,14 @@
     <string name="text_prompt_fingerprint">지문을 입력하세요.</string>
     <string name="text_cancel">취소</string>
     <string name="text_biometric_error_message">지문 인증에 실패했습니다.</string>
+    <string name="subscribe_beneft_first_title">구독혜택 1.</string>
+    <string name="subscribe_benefit_first_desc">힌트와 이미지를 함께 제공</string>
+    <string name="subscribe_benefit_first_sub_desc">힌트 이미지 삽입!</string>
+    <string name="subscribe_beneft_second_title">구독혜택 2.</string>
+    <string name="subscribe_benefit_second_desc">우리 매장만의 특별한 테마</string>
+    <string name="subscribe_benefit_second_sub_desc">타이머 배경 무제한 등록!</string>
+    <string name="preview">미리보기</string>
+    <string name="text_image_editing_exit_title">그만두시겠어요?</string>
+    <string name="text_image_editing_exit_desc">지금까지 작성한 내용은 저장되지 않습니다.</string>
+    <string name="text_image_editing_exit_confirm">그만두기</string>
 </resources>

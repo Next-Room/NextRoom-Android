@@ -5,7 +5,9 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
@@ -74,10 +76,16 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 billingViewModel.uiEvent.collect { event ->
                     when (event) {
                         BillingEvent.PurchaseAcknowledged -> {
-                            PurchaseFragmentDirections
-                                .actionPurchaseFragmentToPurchaseSuccessFragment()
+                            NavGraphDirections
+                                .moveToPurchaseSuccess()
                                 .also {
-                                    findNavController().safeNavigate(it)
+                                    findNavController().navigate(
+                                        directions = it,
+                                        navOptions = NavOptions.Builder().setPopUpTo(
+                                            destinationId = R.id.purchaseFragment,
+                                            inclusive = true,
+                                        ).build()
+                                    )
                                 }
                         }
 

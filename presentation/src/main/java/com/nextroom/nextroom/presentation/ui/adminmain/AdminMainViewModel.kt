@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.adminmain
 
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
@@ -29,10 +30,17 @@ class AdminMainViewModel @Inject constructor(
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
-    private val bannerRepository: BannerRepository,
+    private val bannerRepository: BannerRepository
 ) : BaseViewModel<AdminMainState, AdminMainEvent>() {
 
-    override val container: Container<AdminMainState, AdminMainEvent> = container(AdminMainState(loading = true))
+    override val container: Container<AdminMainState, AdminMainEvent> = container(
+        AdminMainState(
+            opaqueLoading = true,
+            loading = true,
+        )
+    )
+
+    private var shownBackgroundCustomDialog = false
 
     init {
         showInAppReview()
@@ -90,26 +98,67 @@ class AdminMainViewModel @Inject constructor(
     }
 
     fun loadData() = intent {
+        suspend fun inactiveAllThemeBG(themes: List<ThemeInfoPresentation>) {
+            themeRepository.activateThemeBackgroundImage(
+                activeThemeIdList = emptyList(),
+                deActiveThemeIdList = themes.map { it.id }
+            )
+        }
+
+        suspend fun handleThemeActivationBySubscription(
+            subscribeStatus: SubscribeStatus,
+            themes: List<ThemeInfoPresentation>,
+        ) {
+            when (subscribeStatus) {
+                SubscribeStatus.Subscribed -> Unit
+                SubscribeStatus.Default,
+                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
+                    val activeThemeImageCount = themes.count { it.useTimerUrl }
+                    if (activeThemeImageCount > LIMITED_CUSTOM_BG_COUNT_FOR_FREE) {
+                        inactiveAllThemeBG(themes)
+                    }
+                }
+            }
+        }
+
         reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
             reduce { state.copy(subscribeStatus = myPage.status) }
-            themeRepository.getThemes().onSuccess {
-                updateThemes(
-                    it.map { themeInfo ->
-                        val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                        themeInfo.toPresentation(updatedAt)
-                    },
-                )
-                updateNetworkDisconnectedCount(0)
-            }.onFailure(::handleError)
+
+            getThemes()
+            handleThemeActivationBySubscription(state.subscribeStatus, state.themes)
 
             bannerRepository
                 .getBanners()
                 .onSuccess {
-                    reduce { state.copy(banner = it.firstOrNull()) }
+                    reduce { state.copy(banners = it) }
                 }
+
+            if (!shouldHideRecommendBackgroundCustomDialogUntil()
+                && !shownBackgroundCustomDialog
+            ) {
+                shownBackgroundCustomDialog = true
+                postSideEffect(AdminMainEvent.RecommendBackgroundCustom)
+            }
         }
-        reduce { state.copy(loading = false) }
+        reduce { state.copy(opaqueLoading = false, loading = false) }
+    }
+
+    private suspend fun getThemes() {
+        themeRepository.getThemes().onSuccess {
+            updateThemes(
+                it.map { themeInfo ->
+                    val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
+                    themeInfo.toPresentation(updatedAt)
+                },
+            )
+            updateNetworkDisconnectedCount(0)
+        }.onFailure(::handleError)
+    }
+
+    private fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
+        val hideUntil = dataStoreRepository.getRecommendBackgroundCustomDialogHiddenUntil()
+        return System.currentTimeMillis() < hideUntil
     }
 
     private fun updateShopInfo(shopName: String) = intent {
@@ -151,11 +200,21 @@ class AdminMainViewModel @Inject constructor(
         }
     }
 
+    fun onThemeRefreshClicked() = intent {
+        reduce { state.copy(loading = true) }
+        getThemes()
+        reduce { state.copy(loading = false) }
+    }
+
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
             is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
             is Result.Failure.HttpError -> postSideEffect(AdminMainEvent.ClientError(error.message))
             else -> postSideEffect(AdminMainEvent.UnknownError)
         }
+    }
+
+    companion object {
+        const val LIMITED_CUSTOM_BG_COUNT_FOR_FREE = 1
     }
 }

@@ -17,6 +17,9 @@ interface ThemeDao {
     @Query("SELECT * FROM $THEME_TABLE_NAME WHERE themeId = :themeId LIMIT 1")
     fun getTheme(themeId: Int): Flow<ThemeEntity>
 
+    @Query("SELECT EXISTS(SELECT * FROM $THEME_TABLE_NAME WHERE themeId = :themeId)")
+    suspend fun isThemeExist(themeId : Int) : Boolean
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertThemes(vararg themes: ThemeEntity)
 

@@ -6,13 +6,16 @@ import com.nextroom.nextroom.domain.model.Banner
 data class BannerDto(
     @SerializedName("description")
     val description: String,
+    @SerializedName("imageUrl")
+    val imageUrl: String,
     @SerializedName("url")
-    val imageUrl: String
+    val linkUrl: String
 )
 
 fun BannerDto.toDomain() = Banner(
     description = description,
-    linkUrl = imageUrl
+    imageUrl = imageUrl,
+    linkUrl = linkUrl
 )
 
 fun List<BannerDto>.toDomain(): List<Banner> {

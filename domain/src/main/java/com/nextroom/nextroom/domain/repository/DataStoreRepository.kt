@@ -7,4 +7,7 @@ interface DataStoreRepository {
     fun setNetworkDisconnectedCount(count: Int)
 
     val isFirstInitOfDay: Boolean
+
+    fun setRecommendBackgroundCustomDialogHidden(time: Long)
+    fun getRecommendBackgroundCustomDialogHiddenUntil(): Long
 }

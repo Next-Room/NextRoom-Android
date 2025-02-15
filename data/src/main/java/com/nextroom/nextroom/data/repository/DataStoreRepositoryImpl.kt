@@ -27,6 +27,14 @@ class DataStoreRepositoryImpl @Inject constructor(
             if (firstInit) settingDataSource.setLastLaunchDate()
         }
 
+    override fun setRecommendBackgroundCustomDialogHidden(time: Long) {
+        settingDataSource.setRecommendBackgroundCustomDialogHidden(time)
+    }
+
+    override fun getRecommendBackgroundCustomDialogHiddenUntil(): Long {
+        return settingDataSource.getRecommendBackgroundCustomDialogHiddenUntil()
+    }
+
     override suspend fun getNetworkDisconnectedCount(): Int {
         return settingDataSource.getNetworkDisconnectedCount()
     }

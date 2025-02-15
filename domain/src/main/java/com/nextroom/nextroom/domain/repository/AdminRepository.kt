@@ -3,6 +3,7 @@ package com.nextroom.nextroom.domain.repository
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscriptionPlan
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import kotlinx.coroutines.flow.Flow
 
@@ -24,4 +25,5 @@ interface AdminRepository {
     suspend fun getUserEmail(): String
     suspend fun saveAppPassword(password: String)
     suspend fun getAppPassword(): String
+    suspend fun getSubscriptionPlan(): Result<SubscriptionPlan>
 }

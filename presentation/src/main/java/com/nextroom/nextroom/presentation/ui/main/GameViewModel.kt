@@ -3,6 +3,8 @@ package com.nextroom.nextroom.presentation.ui.main
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.GameState
+import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
+import com.nextroom.nextroom.domain.model.ThemeInfo
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
@@ -46,10 +48,21 @@ class GameViewModel @Inject constructor(
             val latestGame = gameStateRepository.getGameState()
             fun isNewGame() = latestGame == null
             if (isNewGame()) {
+                showGameBackgroundImage(loadLatestTheme())
                 showGameStartConfirmDialog()
             } else {
                 resumeGame(latestGame ?: return@launch)
             }
+        }
+    }
+
+    private fun showGameBackgroundImage(theme: ThemeInfo) = intent {
+        reduce {
+            state.copy(
+                themeImageUrl = theme.themeImageUrl,
+                themeImageCustomInfo = theme.themeImageCustomInfo,
+                themeImageEnabled = theme.useTimerUrl
+            )
         }
     }
 
@@ -59,6 +72,10 @@ class GameViewModel @Inject constructor(
 
     fun onGameStartClicked() {
         startOrResumeGame()
+    }
+
+    private suspend fun loadLatestTheme(): ThemeInfo {
+        return themeRepository.getLatestTheme().first()
     }
 
     private fun startOrResumeGame() {
@@ -73,6 +90,9 @@ class GameViewModel @Inject constructor(
                         hintLimit = hintLimit,
                         usedHints = emptySet(),
                         startTime = System.currentTimeMillis(),
+                        useTimerUrl = useTimerUrl,
+                        themeImageUrl = themeImageUrl,
+                        themeImageCustomInfo = themeImageCustomInfo
                     )
                     setGameScreenState(
                         seconds = timeLimitInMinute * 60,
@@ -80,6 +100,9 @@ class GameViewModel @Inject constructor(
                         usedHints = emptySet(),
                         lastSeconds = timeLimitInMinute * 60,
                         startTime = startTime,
+                        themeImageUrl = themeImageUrl,
+                        themeImageCustomInfo = themeImageCustomInfo,
+                        themeImageEnabled = useTimerUrl,
                     )
                     startGame(startTime + timeLimitInMinute * 60 * 1000)
                 }
@@ -98,6 +121,9 @@ class GameViewModel @Inject constructor(
                 usedHints = usedHints,
                 lastSeconds = lastSeconds,
                 startTime = startTime,
+                themeImageUrl = themeImageUrl,
+                themeImageCustomInfo = themeImageCustomInfo,
+                themeImageEnabled = useTimerUrl,
             )
             startGame(startTime + timeLimitInMinute * 60 * 1000)
         }
@@ -189,6 +215,9 @@ class GameViewModel @Inject constructor(
                 hintLimit = state.totalHintCount,
                 usedHints = state.usedHints,
                 startTime = state.startTime,
+                useTimerUrl = state.themeImageEnabled,
+                themeImageUrl = state.themeImageUrl,
+                themeImageCustomInfo = state.themeImageCustomInfo
             )
         }
     }
@@ -213,6 +242,9 @@ class GameViewModel @Inject constructor(
         usedHints: Set<Int>,
         lastSeconds: Int,
         startTime: Long,
+        themeImageUrl: String? = null,
+        themeImageCustomInfo: ThemeImageCustomInfo? = null,
+        themeImageEnabled: Boolean,
     ) = intent {
         reduce {
             state.copy(
@@ -221,6 +253,9 @@ class GameViewModel @Inject constructor(
                 usedHints = usedHints,
                 lastSeconds = lastSeconds,
                 startTime = startTime,
+                themeImageUrl = themeImageUrl,
+                themeImageCustomInfo = themeImageCustomInfo,
+                themeImageEnabled = themeImageEnabled
             )
         }
     }

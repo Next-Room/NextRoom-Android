@@ -17,18 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/iv_background"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-126dp"
-                android:alpha="0.3"
-                android:importantForAccessibility="no"
-                android:src="@drawable/bg"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            
             <!-- 결제 관련 -->
             <TextView
                 android:id="@+id/tv_purchase_button"
@@ -59,92 +47,110 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_shop_name_label"
+            <ImageView
+                android:id="@+id/img_locate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="142dp"
-                android:includeFontPadding="false"
-                android:text="@string/admin_main_shop_name_label"
-                android:textAppearance="@style/Pretendard.32"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/icon_locate"
+                app:tint="@color/white_70"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/tv_purchase_button" />
 
             <TextView
                 android:id="@+id/tv_shop_name"
+                style="@style/Pretendard.20.SemiBold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
                 android:includeFontPadding="false"
-                android:textAppearance="@style/Pretendard.32.bold"
-                app:layout_constraintStart_toStartOf="@id/tv_shop_name_label"
-                app:layout_constraintTop_toBottomOf="@id/tv_shop_name_label"
+                app:layout_constraintBottom_toBottomOf="@+id/img_locate"
+                app:layout_constraintStart_toEndOf="@+id/img_locate"
+                app:layout_constraintTop_toTopOf="@+id/img_locate"
                 tools:text="비트포비아 강남 2호점" />
 
-            <TextView
-                android:id="@+id/tv_update_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="20dp"
-                android:alpha="0.6"
-                android:includeFontPadding="false"
-                android:text="@string/admin_main_update_hint"
-                android:textAppearance="@style/Pretendard.14.SemiBold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_shop_name"
-                app:layout_constraintTop_toBottomOf="@id/tv_shop_name" />
-
-            <LinearLayout
-                android:id="@+id/ll_banner"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                app:layout_constraintTop_toBottomOf="@+id/tv_shop_name" />
+
+            <TextView
+                android:id="@+id/tv_theme"
+                style="@style/Pretendard.18.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/bg_1f2023_bd_4c4d4f_r_8"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="43dp"
+                android:text="@string/tv_theme"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_update_description"
-                tools:visibility="visible">
+                app:layout_constraintTop_toBottomOf="@id/rv_banner" />
 
-                <TextView
-                    android:id="@+id/tv_banner"
-                    style="@style/Pretendard.20"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_weight="1"
-                    android:maxLines="1"
-                    android:paddingVertical="24dp"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    app:autoSizeMinTextSize="12dp"
-                    tools:text="힌트 설명란에 사진을 추가해 보세요!"
-                    tools:visibility="visible" />
+            <TextView
+                android:id="@+id/tv_theme_count"
+                style="@style/Pretendard.16.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:textColor="@color/white_50"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_theme"
+                app:layout_constraintStart_toEndOf="@+id/tv_theme"
+                app:layout_constraintTop_toTopOf="@+id/tv_theme"
+                tools:text="2" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/ic_arrow_right_24" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_bacground_setting"
+                style="@style/Pretendard.14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/text_background_setting"
+                android:textColor="@color/white_70"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_theme_count"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/tv_theme_count" />
+
+            <TextView
+                android:id="@+id/tv_last_update"
+                style="@style/Pretendard.14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/white_50"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_theme"
+                tools:text="최근 힌트 업데이트 2023.01.02 00:00" />
+
+            <ImageView
+                android:id="@+id/iv_refresh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:padding="3dp"
+                android:src="@drawable/icon_refrash"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_last_update"
+                app:layout_constraintStart_toEndOf="@+id/tv_last_update"
+                app:layout_constraintTop_toTopOf="@+id/tv_last_update" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_themes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="10dp"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_banner"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_update"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_theme" />
 
@@ -159,7 +165,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_update_description">
+                app:layout_constraintTop_toBottomOf="@id/rv_banner"
+                tools:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -175,14 +182,17 @@
                     android:text="@string/admin_main_empty_theme_guide" />
             </LinearLayout>
 
-            <include
-                android:id="@+id/layout_opaque_loading"
-                layout="@layout/layout_opaque_loading"
-                android:visibility="gone"
+            <com.nextroom.nextroom.presentation.common.NRLoading
+                android:id="@+id/nr_loading"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="visible"
+                app:backgroundType="black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="gone" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

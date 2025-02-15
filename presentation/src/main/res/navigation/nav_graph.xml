@@ -31,7 +31,63 @@
         <action
             android:id="@+id/action_admin_to_webview"
             app:destination="@id/webViewFragment" />
+        <action
+            android:id="@+id/move_to_recommend_background_custom"
+            app:destination="@+id/recommend_background_custom_bottom_sheet" />
+        <action
+            android:id="@+id/move_to_background_custom_fragment"
+            app:destination="@+id/background_custom_fragment">
+            <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+            <argument
+                android:name="themes"
+                app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
+        </action>
     </fragment>
+
+    <fragment
+        android:id="@+id/background_custom_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundCustomFragment">
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+
+        <argument
+            android:name="themes"
+            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
+
+        <action
+            android:id="@+id/move_to_subscription_payment"
+            app:destination="@+id/subscription_payment_fragment" />
+
+        <action
+            android:id="@+id/nav_to_background_image_custom_detail_fragment"
+            app:destination="@+id/background_image_custom_detail_fragment">
+
+            <argument
+                android:name="theme"
+                app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/background_image_custom_detail_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundImageCustomDetailFragment">
+
+        <argument
+            android:name="theme"
+            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/subscription_payment_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPaymentBottomSheetFragment" />
+
+    <dialog
+        android:id="@+id/recommend_background_custom_bottom_sheet"
+        android:name="com.nextroom.nextroom.presentation.ui.adminmain.RecommendBackgroundCustomBottomSheet" />
+
     <fragment
         android:id="@+id/gameFragment"
         android:name="com.nextroom.nextroom.presentation.ui.main.GameFragment"
@@ -72,6 +128,33 @@
             android:name="nrTwoButtonArgument"
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </action>
+    <fragment
+        android:id="@+id/verifyFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.verity.VerifyFragment"
+        android:label="VerifyFragment"
+        tools:layout="@layout/fragment_admin_code">
+
+        <argument
+            android:name="themeId"
+            app:argType="integer" />
+
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+
+        <!--        <action-->
+        <!--            android:id="@+id/action_verifyFragment_to_startTimerFragment"-->
+        <!--            app:destination="@id/startTimerFragment" />-->
+        <action
+            android:id="@+id/action_verifyFragment_to_gameFragment"
+            app:destination="@id/gameFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/adminMainFragment">
+            <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        </action>
+    </fragment>
     <!--    <fragment-->
     <!--        android:id="@+id/startTimerFragment"-->
     <!--        android:name="com.nextroom.nextroom.presentation.ui.counter.CounterFragment"-->
@@ -181,11 +264,6 @@
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
         android:label="PurchaseFragment"
         tools:layout="@layout/fragment_purchase">
-        <action
-            android:id="@+id/action_purchaseFragment_to_purchaseSuccessFragment"
-            app:destination="@id/purchaseSuccessFragment"
-            app:popUpTo="@id/adminMainFragment" />
-
         <deepLink
             app:action="android.intent.action.VIEW"
             app:uri="@string/deeplink_purchase" />
@@ -194,11 +272,11 @@
         android:id="@+id/purchaseSuccessFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
         android:label="PurchaseSuccessFragment"
-        tools:layout="@layout/fragment_purchase_success">
-        <action
-            android:id="@+id/action_to_home"
-            app:destination="@id/adminMainFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_purchase_success" />
+    <action
+        android:id="@+id/move_to_purchase_success"
+        app:destination="@id/purchaseSuccessFragment" />
+    <fragment android:id="@+id/backgroundCustomFragment" />
     <fragment
         android:id="@+id/checkPassword"
         android:name="com.nextroom.nextroom.presentation.ui.password.CheckPasswordFragment"

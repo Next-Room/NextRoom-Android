@@ -141,13 +141,13 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 SubscribeStatus.Default -> ImageAdapter.Image.None
                 SubscribeStatus.Subscribed -> {
                     if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
-                        ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+                        ImageAdapter.Image.Drawable(R.drawable.img_error)
                     } else {
                         ImageAdapter.Image.Url(imageUrl)
                     }
                 }
 
-                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageAdapter.Image.Drawable(R.drawable.img_error)
             }
         }.also { hintImageAdapter?.setList(it) }
 
@@ -196,13 +196,13 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 SubscribeStatus.Default -> ImageAdapter.Image.None
                 SubscribeStatus.Subscribed -> {
                     if (hintState.networkDisconnectedCount > NETWORK_DISCONNECT_LIMIT) {
-                        ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+                        ImageAdapter.Image.Drawable(R.drawable.img_error)
                     } else {
                         ImageAdapter.Image.Url(imageUrl)
                     }
                 }
 
-                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageAdapter.Image.Drawable(R.drawable.img_placeholder)
+                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> ImageAdapter.Image.Drawable(R.drawable.img_error)
             }
         }.also { answerImageAdapter?.setList(it) }
 

@@ -10,5 +10,5 @@ data class AdminMainState(
     val subscribeStatus: SubscribeStatus = SubscribeStatus.Default,
     val shopName: String = "",
     val themes: List<ThemeInfoPresentation> = emptyList(),
-    val banner: Banner? = null
+    val banners: List<Banner> = emptyList(),
 )

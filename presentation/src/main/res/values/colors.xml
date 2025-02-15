@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFF</color>
+    <color name="white_5">#0DFFFFFF</color>
+    <color name="white_12">#1FFFFFFF</color>
+    <color name="white_20">#33FFFFFF</color>
+    <color name="white_50">#80FFFFFF</color>
+    <color name="white_70">#B3FFFFFF</color>
+
     <color name="black">#1D1B20</color>
+    <color name="black_60">#99000000</color>
     <color name="onSurface">#1D1B20</color>
     <color name="surface">#FEF7FF</color>
 
@@ -9,6 +16,9 @@
     <color name="colorSurface">#FEF7FF</color>
     <color name="colorSecondarySurface">#146750A4</color>
     <color name="colorLightPrimary">#146750A4</color>
+    
+    <color name="blue">#378EFF</color>
+    <color name="blue_15">#26378EFF</color>
 
     <color name="Dark01">#151516</color>
     <color name="Gray01">#9898A0</color>
@@ -18,6 +28,11 @@
     <color name="Gray05">#46454a</color>
     <color name="White">#FFFFFF</color>
     <color name="Red">#FF5065</color>
+
+    <color name="sub1">#1f2023</color>
+    <color name="sub2">#3a3b3d</color>
+
+    <color name="bg_main">#131417</color>
 
     <drawable name="drawable_White">@color/White</drawable>
     <drawable name="drawable_Gray02">@color/Gray02</drawable>
