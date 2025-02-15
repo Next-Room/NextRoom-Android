@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.adminmain
 
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
@@ -99,11 +100,35 @@ class AdminMainViewModel @Inject constructor(
     }
 
     fun loadData() = intent {
+        suspend fun inactiveAllThemeBG(themes: List<ThemeInfoPresentation>) {
+            themeRepository.activateThemeBackgroundImage(
+                activeThemeIdList = emptyList(),
+                deActiveThemeIdList = themes.map { it.id }
+            )
+        }
+
+        suspend fun handleThemeActivationBySubscription(
+            subscribeStatus: SubscribeStatus,
+            themes: List<ThemeInfoPresentation>,
+        ) {
+            when (subscribeStatus) {
+                SubscribeStatus.Subscribed -> Unit
+                SubscribeStatus.Default,
+                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
+                    val activeThemeImageCount = themes.count { it.useTimerUrl }
+                    if (activeThemeImageCount > LIMITED_CUSTOM_BG_COUNT_FOR_FREE) {
+                        inactiveAllThemeBG(themes)
+                    }
+                }
+            }
+        }
+
         reduce { state.copy(loading = true) }
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
             reduce { state.copy(subscribeStatus = myPage.status) }
 
             getThemes()
+            handleThemeActivationBySubscription(state.subscribeStatus, state.themes)
 
             bannerRepository
                 .getBanners()
@@ -194,5 +219,9 @@ class AdminMainViewModel @Inject constructor(
             is Result.Failure.HttpError -> postSideEffect(AdminMainEvent.ClientError(error.message))
             else -> postSideEffect(AdminMainEvent.UnknownError)
         }
+    }
+
+    companion object {
+        const val LIMITED_CUSTOM_BG_COUNT_FOR_FREE = 1
     }
 }
