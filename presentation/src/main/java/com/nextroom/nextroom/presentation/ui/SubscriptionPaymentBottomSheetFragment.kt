@@ -10,17 +10,23 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.databinding.FragmentSubscriptionPaymentBinding
 import com.nextroom.nextroom.presentation.databinding.ItemBenefitBinding
 import com.nextroom.nextroom.presentation.extension.dpToPx
+import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import java.text.NumberFormat
 
@@ -88,6 +94,7 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
         }
         binding.acbSubscribe.setOnClickListener {
             viewModel.container.stateFlow.value.plan.plans.firstOrNull()?.let {
+                binding.pbLoading.isVisible = true
                 billingViewModel.buyPlans(
                     productId = it.subscriptionProductId,
                     tag = "",
@@ -103,6 +110,37 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+
+        initObserve()
+    }
+
+    private fun initObserve() {
+        viewLifecycleOwner.repeatOnStarted {
+            launch {
+                billingViewModel.uiEvent.collect { event ->
+                    when (event) {
+                        BillingEvent.PurchaseAcknowledged -> {
+                            NavGraphDirections
+                                .moveToPurchaseSuccess()
+                                .also {
+                                    findNavController().navigate(
+                                        directions = it,
+                                        navOptions = NavOptions.Builder().setPopUpTo(
+                                            destinationId = R.id.subscription_payment_fragment,
+                                            inclusive = true,
+                                        ).build()
+                                    )
+                                }
+                        }
+
+                        is BillingEvent.PurchaseFailed -> {
+                            toast(getString(R.string.purchase_error_message, event.purchaseState))
+                            binding.pbLoading.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun render(state: SubscriptionPaymentState) = with(binding) {
@@ -111,7 +149,10 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
         state.plan.plans.firstOrNull()
             ?.let {
                 acbSubscribe.text = try {
-                    getString(R.string.text_subscribe_monthly_payment, NumberFormat.getNumberInstance().format(it.sellPrice))
+                    getString(
+                        R.string.text_subscribe_monthly_payment,
+                        NumberFormat.getNumberInstance().format(it.sellPrice)
+                    )
                 } catch (_: Exception) {
                     getString(R.string.text_subscribe_monthly_payment, it.sellPrice)
                 }
