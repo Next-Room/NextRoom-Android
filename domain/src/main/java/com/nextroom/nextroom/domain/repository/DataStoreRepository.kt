@@ -10,6 +10,4 @@ interface DataStoreRepository {
 
     fun setRecommendBackgroundCustomDialogHidden(time: Long)
     fun getRecommendBackgroundCustomDialogHiddenUntil(): Long
-    fun updateBackgroundSettingsShown()
-    fun getBackgroundSettingsNoticeShown(): Boolean
 }

@@ -47,16 +47,9 @@ class AdminMainViewModel @Inject constructor(
         }
     }
 
-    private fun updateBackgroundSettingsNoticeShown() = intent {
-        reduce {
-            state.copy(backgroundSettingsNoticeShown = dataStoreRepository.getBackgroundSettingsNoticeShown())
-        }
-    }
-
     fun onResume() {
         loadData()
         checkNeedToSetPassword()
-        updateBackgroundSettingsNoticeShown()
     }
 
     fun incrementNetworkDisconnectedCount() {
@@ -156,11 +149,6 @@ class AdminMainViewModel @Inject constructor(
             )
             updateNetworkDisconnectedCount(0)
         }.onFailure(::handleError)
-    }
-
-    fun onBackgroundSettingsNoticeClicked() {
-        dataStoreRepository.updateBackgroundSettingsShown()
-        updateBackgroundSettingsNoticeShown()
     }
 
     private fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {

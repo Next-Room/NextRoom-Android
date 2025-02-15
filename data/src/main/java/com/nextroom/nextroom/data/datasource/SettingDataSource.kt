@@ -113,14 +113,6 @@ class SettingDataSource @Inject constructor(
         data.first().backgroundCustomDialogHideUntil
     }
 
-    fun getBackgroundSettingsNoticeShown() = runBlocking {
-        data.first().backgroundSettingsNoticeShown
-    }
-
-    fun updateBackgroundSettingsShown() = runBlocking {
-        dataStore.updateData { it.copy(backgroundSettingsNoticeShown = true) }
-    }
-
     suspend fun saveAppPassword(password: String) {
         dataStore.updateData {
             it.copy(appPassword = password)
