@@ -12,8 +12,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mangbaam.commonutil.DateTimeUtil
@@ -134,12 +132,10 @@ class AdminMainFragment :
             viewModel.loadData()
         }
 
-        rvBanner.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        rvBanner.adapter = BannerAdapter {
+        vpBanner.adapter = BannerAdapter {
             navByDeepLink(it.linkUrl)
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
         }
-        PagerSnapHelper().attachToRecyclerView(rvBanner)
 
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(
@@ -168,10 +164,10 @@ class AdminMainFragment :
 
     private fun render(state: AdminMainState) = with(binding) {
         if (state.banners.isEmpty()) {
-            rvBanner.isVisible = false
+            vpBanner.isVisible = false
         } else {
-            rvBanner.isVisible = true
-            (rvBanner.adapter as? BannerAdapter)?.submitList(state.banners)
+            vpBanner.isVisible = true
+            (vpBanner.adapter as? BannerAdapter)?.submitList(state.banners)
         }
 
         tvPurchaseButton.isVisible = state.subscribeStatus != SubscribeStatus.Subscribed
