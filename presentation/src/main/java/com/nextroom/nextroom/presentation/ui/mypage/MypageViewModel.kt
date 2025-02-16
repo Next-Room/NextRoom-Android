@@ -16,10 +16,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class MypageViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
+    @Named("app_version") private val appVersion: String,
 ) : ViewModel() {
 
     private val _myInfo = MutableStateFlow<UiState>(UiState.Loading)
@@ -55,6 +57,7 @@ class MypageViewModel @Inject constructor(
                 UiState.Loaded(
                     shopName = mypage.name,
                     status = mypage.status,
+                    appVersion = appVersion,
                 ).also {
                     _myInfo.emit(it)
                 }
@@ -82,6 +85,7 @@ class MypageViewModel @Inject constructor(
         data class Loaded(
             val shopName: String,
             val status: SubscribeStatus,
+            val appVersion: String,
         ) : UiState
 
         data object Failure : UiState

@@ -81,6 +81,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
                         is MypageViewModel.UiState.Loaded -> {
                             binding.tvShopName.text = state.shopName
                             binding.pbLoading.isVisible = false
+                            binding.tvAppVersion.text = state.appVersion
                         }
 
                         MypageViewModel.UiState.Loading -> binding.pbLoading.isVisible = true

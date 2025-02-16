@@ -179,4 +179,6 @@
     <string name="text_image_editing_exit_title">그만두시겠어요?</string>
     <string name="text_image_editing_exit_desc">지금까지 작성한 내용은 저장되지 않습니다.</string>
     <string name="text_image_editing_exit_confirm">그만두기</string>
+
+    <string name="text_app_version">앱 버전</string>
 </resources>
