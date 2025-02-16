@@ -43,7 +43,7 @@
 
     <string name="admin_main_update_hint">관리자 웹 사이트에서 힌트를 업데이트 했다면 반드시 업데이트 버튼을 눌러주세요!</string>
     <string name="admin_main_themes_label">우리 지점의 테마 목록</string>
-    <string name="admin_main_shop_name_label">우리 지점은</string>
+    <string name="admin_main_shop_name_label">우리 매장은</string>
     <string name="admin_main_updated_at">최근 업데이트 일 : %s</string>
     <string name="admin_main_empty_theme_guide">관리자 페이지에서\n테마를 추가해주세요!</string>
 
@@ -103,7 +103,7 @@
     <string name="subscription_status">구독 상태</string>
     <string name="subscription_info">구독 정보</string>
     <string name="mypage_button_description">마이페이지 이동</string>
-    <string name="mypage_title">My</string>
+    <string name="mypage_title">매장 정보</string>
     <string name="ticket_origin_price">%d원</string>
     <string name="ticket_sell_price">%d원/월</string>
     <string name="ticket_subscribing">구독중</string>
