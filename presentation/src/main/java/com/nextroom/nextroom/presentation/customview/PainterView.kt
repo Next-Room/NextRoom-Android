@@ -43,41 +43,46 @@ class PainterView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x
-        val y = event.y
+        if (event.pointerCount == 1) {
+            val x = event.x
+            val y = event.y
 
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                if (tool == PEN) {
-                    path = Path().apply {
-                        moveTo(x, y)
-                        paths.add(this)
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    if (tool == PEN) {
+                        path = Path().apply {
+                            moveTo(x, y)
+                            paths.add(this)
+                            listener?.onPainted(paths)
+                        }
+                    } else {
+                        erase(x, y)
+                    }
+                }
+
+                MotionEvent.ACTION_MOVE -> {
+                    if (tool == PEN) {
+                        path?.lineTo(x, y)
+                    } else {
+                        erase(x, y)
+                    }
+                }
+
+                MotionEvent.ACTION_UP -> {
+                    path?.let {
+                        paths.add(it)
                         listener?.onPainted(paths)
                     }
-                } else {
-                    erase(x, y)
+                    path = null
                 }
-            }
 
-            MotionEvent.ACTION_MOVE -> {
-                if (tool == PEN) {
-                    path?.lineTo(x, y)
-                } else {
-                    erase(x, y)
-                }
+                else -> return false
             }
-
-            MotionEvent.ACTION_UP -> {
-                path?.let {
-                    paths.add(it)
-                    listener?.onPainted(paths)
-                }
-                path = null
-            }
-
-            else -> return false
+            invalidate()
+        } else if (event.pointerCount == 2) {
+            return false
         }
-        invalidate()
+
         return true
     }
 
