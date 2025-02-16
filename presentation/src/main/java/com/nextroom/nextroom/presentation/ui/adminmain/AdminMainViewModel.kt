@@ -75,28 +75,6 @@ class AdminMainViewModel @Inject constructor(
         }
     }
 
-    fun updateTheme(themeId: Int) = intent {
-        themeRepository
-            .getThemes()
-            .onSuccess { themes ->
-                themes
-                    .find { it.id == themeId }
-                    ?.let { themeRepository.upsertTheme(it) }
-            }.onFailure {
-                handleError(it)
-                return@intent
-            }
-
-        hintRepository.saveHints(themeId).onSuccess { updatedAt ->
-            reduce {
-                state.copy(
-                    themes = state.themes.toMutableList()
-                        .map { if (it.id == themeId) it.copy(recentUpdated = updatedAt) else it },
-                )
-            }
-        }.onFailure(::handleError)
-    }
-
     fun loadData() = intent {
         suspend fun inactiveAllThemeBG(themes: List<ThemeInfoPresentation>) {
             themeRepository.activateThemeBackgroundImage(
@@ -152,6 +130,10 @@ class AdminMainViewModel @Inject constructor(
                     themeInfo.toPresentation(updatedAt)
                 },
             )
+
+            it.forEach { themeInfo ->
+                hintRepository.saveHints(themeInfo.id).onFailure(::handleError)
+            }
             updateNetworkDisconnectedCount(0)
         }.onFailure(::handleError)
     }
