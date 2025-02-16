@@ -182,4 +182,5 @@
     <string name="text_image_editing_exit_confirm">그만두기</string>
 
     <string name="text_app_version">앱 버전</string>
+    <string name="text_no_available_browser_guide">사용 가능한 브라우저가 없습니다.</string>
 </resources>

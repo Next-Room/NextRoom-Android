@@ -32,6 +32,7 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setCurrentItemWithDuration
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
+import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.util.isOnline
@@ -206,6 +207,7 @@ class AdminMainFragment :
                     startActivity(it)
                 }
         } catch (ex: Exception) {
+            toast(R.string.text_no_available_browser_guide)
             Timber.e(ex)
         }
     }
