@@ -29,6 +29,7 @@ import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.getResultData
 import com.nextroom.nextroom.presentation.extension.hasResultData
 import com.nextroom.nextroom.presentation.extension.safeNavigate
+import com.nextroom.nextroom.presentation.extension.setCurrentItemWithDuration
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
@@ -228,7 +229,7 @@ class AdminMainFragment :
             NRLoading.BackgroundType.TRANSPARENT
         }.also { binding.nrLoading.setBackgroundType(it) }
         binding.nrLoading.isVisible = state.opaqueLoading || state.loading
-        binding.vpBanner.currentItem = state.currentBannerPosition
+        binding.vpBanner.setCurrentItemWithDuration(state.currentBannerPosition, PAGING_ANIMATION_DURATION)
 
         if (job == null || job?.isActive == false) {
             startAutoScroll()
@@ -349,5 +350,6 @@ class AdminMainFragment :
         private const val requestKeyCheckPassword = "requestKeyCheckPassword"
         private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
         private const val AUTO_SCROLL_INTERVAL_TIME = 3500L
+        private const val PAGING_ANIMATION_DURATION = 400L
     }
 }
