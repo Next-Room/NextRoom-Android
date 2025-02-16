@@ -10,8 +10,10 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.mangbaam.commonutil.DateTimeUtil
@@ -33,6 +35,9 @@ import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.util.isOnline
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,6 +47,7 @@ class AdminMainFragment :
     BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
+    private var job: Job? = null
 
     @Inject
     lateinit var statisticsRepository: StatisticsRepository
@@ -148,6 +154,41 @@ class AdminMainFragment :
         ivRefresh.setOnClickListener {
             viewModel.onThemeRefreshClicked()
         }
+
+        binding.vpBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {
+                super.onPageScrollStateChanged(state)
+                when (state) {
+                    ViewPager2.SCROLL_STATE_IDLE -> {
+                        setCurrentBannerPosition(binding.vpBanner.currentItem)
+                        if (job?.isActive == false) startAutoScroll()
+                    }
+
+                    ViewPager2.SCROLL_STATE_DRAGGING -> job?.cancel()
+                    ViewPager2.SCROLL_STATE_SETTLING -> Unit
+                }
+            }
+        })
+    }
+
+    private fun startAutoScroll() {
+        try {
+            job = lifecycleScope.launch {
+                while (true) {
+                    delay(AUTO_SCROLL_INTERVAL_TIME)
+                    setCurrentBannerPosition(viewModel.getCurrentBannerPosition() + 1)
+                }
+            }
+        } catch (e: Exception) {
+            job?.cancel()
+        }
+    }
+
+    private fun setCurrentBannerPosition(currentPosition: Int) {
+        (binding.vpBanner.adapter as? BannerAdapter)
+            ?.itemCount
+            ?.let { currentPosition % it }
+            ?.let { viewModel.setCurrentBannerPosition(it) }
     }
 
     private fun navByDeepLink(deeplinkUrl: String) {
@@ -187,6 +228,11 @@ class AdminMainFragment :
             NRLoading.BackgroundType.TRANSPARENT
         }.also { binding.nrLoading.setBackgroundType(it) }
         binding.nrLoading.isVisible = state.opaqueLoading || state.loading
+        binding.vpBanner.currentItem = state.currentBannerPosition
+
+        if (job == null || job?.isActive == false) {
+            startAutoScroll()
+        }
     }
 
     private fun handleEvent(event: AdminMainEvent) {
@@ -284,6 +330,11 @@ class AdminMainFragment :
         )
     }
 
+    override fun onPause() {
+        job?.cancel()
+        super.onPause()
+    }
+
     override fun onDestroyView() {
         binding.rvThemes.adapter = null
         super.onDestroyView()
@@ -297,5 +348,6 @@ class AdminMainFragment :
     companion object {
         private const val requestKeyCheckPassword = "requestKeyCheckPassword"
         private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
+        private const val AUTO_SCROLL_INTERVAL_TIME = 3500L
     }
 }

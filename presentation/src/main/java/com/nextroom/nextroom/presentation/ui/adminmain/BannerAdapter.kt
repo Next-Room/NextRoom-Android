@@ -19,7 +19,11 @@ class BannerAdapter(private val onBannerClicked: (Banner) -> Unit) : ListAdapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position % currentList.size))
+    }
+
+    override fun getItemCount(): Int {
+        return Int.MAX_VALUE
     }
 
     class ViewHolder(

@@ -206,6 +206,14 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(loading = false) }
     }
 
+    fun getCurrentBannerPosition() = container.stateFlow.value.currentBannerPosition
+
+    fun setCurrentBannerPosition(position: Int) {
+        intent {
+            reduce { state.copy(currentBannerPosition = position) }
+        }
+    }
+
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
             is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
