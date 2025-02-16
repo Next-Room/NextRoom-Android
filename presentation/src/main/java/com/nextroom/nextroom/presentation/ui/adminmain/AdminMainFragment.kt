@@ -49,6 +49,7 @@ class AdminMainFragment :
 
     private lateinit var backCallback: OnBackPressedCallback
     private var job: Job? = null
+    private var pageChangeCallback: ViewPager2.OnPageChangeCallback? = null
 
     @Inject
     lateinit var statisticsRepository: StatisticsRepository
@@ -156,20 +157,25 @@ class AdminMainFragment :
             viewModel.onThemeRefreshClicked()
         }
 
-        binding.vpBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 super.onPageScrollStateChanged(state)
                 when (state) {
                     ViewPager2.SCROLL_STATE_IDLE -> {
-                        setCurrentBannerPosition(binding.vpBanner.currentItem)
-                        if (job?.isActive == false) startAutoScroll()
+                        try {
+                            setCurrentBannerPosition(binding.vpBanner.currentItem)
+                            if (job?.isActive == false) startAutoScroll()
+                        } catch (e: Exception) {
+                            // do nothing
+                        }
                     }
 
                     ViewPager2.SCROLL_STATE_DRAGGING -> job?.cancel()
                     ViewPager2.SCROLL_STATE_SETTLING -> Unit
                 }
             }
-        })
+        }
+        pageChangeCallback?.let { binding.vpBanner.registerOnPageChangeCallback(it) }
     }
 
     private fun startAutoScroll() {
@@ -338,6 +344,8 @@ class AdminMainFragment :
 
     override fun onDestroyView() {
         binding.rvThemes.adapter = null
+        binding.vpBanner.adapter = null
+        pageChangeCallback?.let { binding.vpBanner.unregisterOnPageChangeCallback(it) }
         super.onDestroyView()
     }
 
