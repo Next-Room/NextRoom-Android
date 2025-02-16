@@ -32,6 +32,7 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
+import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.util.isOnline
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -177,7 +178,7 @@ class AdminMainFragment :
         srlTheme.isRefreshing = false
         tvShopName.text = state.shopName
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
-        adapter.submitList(state.themes)
+        adapter.submitList(state.themes.map { it.toAdapterUI() })
         tvThemeCount.text = state.themes.size.toString()
         tvLastUpdate.text = getString(
             R.string.text_last_hint_update,
@@ -277,6 +278,14 @@ class AdminMainFragment :
         NavGraphDirections
             .moveToCheckPassword(requestKey = requestKeyCheckPassword, resultData = themeId)
             .also { findNavController().safeNavigate(it) }
+    }
+
+    private fun ThemeInfoPresentation.toAdapterUI(): ThemesAdapter.ThemeInfo {
+        return ThemesAdapter.ThemeInfo(
+            id = this.id,
+            title = this.title,
+            imageUrl = this.themeImageUrl,
+        )
     }
 
     override fun onDestroyView() {
