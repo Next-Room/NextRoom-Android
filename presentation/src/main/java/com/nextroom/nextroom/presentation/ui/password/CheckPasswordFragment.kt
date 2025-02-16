@@ -104,5 +104,6 @@ class CheckPasswordFragment : BaseFragment<FragmentCheckPasswordBinding>(Fragmen
         binding.tvKey0.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_0)) }
         binding.keyBiometric.setOnClickListener { showBiometricPrompt() }
         binding.keyBackspace.setOnClickListener { viewModel.onBackSpaceClicked() }
+        binding.ivBack.setOnClickListener { findNavController().navigateUp() }
     }
 }

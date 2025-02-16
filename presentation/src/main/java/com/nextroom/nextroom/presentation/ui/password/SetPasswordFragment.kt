@@ -75,5 +75,6 @@ class SetPasswordFragment : BaseFragment<FragmentSetPasswordBinding>(FragmentSet
         binding.tvKey9.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_9)) }
         binding.tvKey0.setOnClickListener { viewModel.onNumberClicked(getString(R.string.text_0)) }
         binding.keyBackspace.setOnClickListener { viewModel.onBackSpaceClicked() }
+        binding.ivBack.setOnClickListener { findNavController().navigateUp() }
     }
 }
