@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui
 
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onFinally
@@ -29,7 +28,7 @@ class SubscriptionPaymentViewModel @Inject constructor(
     }
 
     private fun getSubscriptionPlan() = intent {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             reduce { state.copy(loading = true) }
             adminRepository.getSubscriptionPlan()
                 .onSuccess {

@@ -42,17 +42,17 @@ class LoginViewModel @Inject constructor(
     private var idSaveChecked = false
 
     init {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             adminRepository.loggedIn.collect {
                 if (it) verifySuccess() // 로그인 됐으면 테마 목록으로 이동
             }
         }
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             if (dataStoreRepository.getIsInitLaunch()) {
                 event(LoginEvent.GoToOnboardingScreen)
             }
         }
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             intent {
                 firebaseRemoteConfigRepository
                     .getFirebaseRemoteConfigValue(FirebaseRemoteConfigRepository.REMOTE_KEY_KAKAO_BUSINESS_CHANNEL_URL)
@@ -66,7 +66,7 @@ class LoginViewModel @Inject constructor(
     }
 
     fun checkEmailSaved() {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             intent {
                 val idSaveChecked = adminRepository.getEmailSaveChecked()
                 val userEmail = if (idSaveChecked) adminRepository.getUserEmail() else ""

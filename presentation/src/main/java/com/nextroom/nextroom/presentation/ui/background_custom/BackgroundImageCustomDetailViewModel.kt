@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
@@ -42,7 +41,7 @@ class BackgroundImageCustomDetailViewModel @Inject constructor(
     }
 
     fun onSaveClicked() = intent {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             try {
                 val themeImageCustomInfoUi = themeImageCustomInfoUi ?: return@launch
                 themeRepository.upsertTheme(theme.toDomain(themeImageCustomInfoUi))

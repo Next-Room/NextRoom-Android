@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.adminmain
 
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.onFailure
@@ -45,7 +44,7 @@ class AdminMainViewModel @Inject constructor(
     init {
         showInAppReview()
 
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             adminRepository.shopName.collect {
                 updateShopInfo(it)
             }
@@ -58,7 +57,7 @@ class AdminMainViewModel @Inject constructor(
     }
 
     fun incrementNetworkDisconnectedCount() {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             val count = dataStoreRepository.getNetworkDisconnectedCount()
             updateNetworkDisconnectedCount(count + 1)
         }
@@ -69,7 +68,7 @@ class AdminMainViewModel @Inject constructor(
     }
 
     private fun showInAppReview() = intent {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             delay(200)
             postSideEffect(AdminMainEvent.InAppReview)
         }
@@ -161,7 +160,7 @@ class AdminMainViewModel @Inject constructor(
     }
 
     private fun checkNeedToSetPassword() {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             if (adminRepository.getAppPassword().isEmpty()) {
                 intent {
                     postSideEffect(AdminMainEvent.NeedToSetPassword)
@@ -171,7 +170,7 @@ class AdminMainViewModel @Inject constructor(
     }
 
     fun onThemeClicked(themeId: String) {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             intent {
                 if (adminRepository.getAppPassword().isEmpty()) {
                     AdminMainEvent.NeedToSetPassword

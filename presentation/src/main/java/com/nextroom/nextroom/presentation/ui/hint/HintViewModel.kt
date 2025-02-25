@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
@@ -40,11 +39,11 @@ class HintViewModel @Inject constructor(
     private val dateTimeUtil: DateTimeUtil by lazy { DateTimeUtil() }
 
     init {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
 
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             dataStoreRepository
                 .getNetworkDisconnectedCount()
                 .let {

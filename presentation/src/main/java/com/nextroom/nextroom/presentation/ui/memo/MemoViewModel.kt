@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.memo
 
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +19,7 @@ class MemoViewModel @Inject constructor(
     override val container: Container<MemoState, MemoEvent> = container(MemoState())
 
     init {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
     }

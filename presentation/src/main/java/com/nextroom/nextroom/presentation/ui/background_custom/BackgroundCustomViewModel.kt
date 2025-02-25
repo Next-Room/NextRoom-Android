@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.background_custom
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.onFailure
@@ -65,7 +64,7 @@ class BackgroundCustomViewModel @Inject constructor(
     }
 
     fun onThemeImageClicked(theme: ThemeInfoPresentation) = intent {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             try {
                 val updatedAt = themeRepository.getUpdatedInfo(theme.id)
                 themeRepository.getThemeById(theme.id)
@@ -80,7 +79,7 @@ class BackgroundCustomViewModel @Inject constructor(
     }
 
     private fun updateToggle(theme: ThemeInfoPresentation) = intent {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             container.stateFlow.value.themes
                 .map {
                     if (it.id == theme.id) it.copy(useTimerUrl = !it.useTimerUrl)

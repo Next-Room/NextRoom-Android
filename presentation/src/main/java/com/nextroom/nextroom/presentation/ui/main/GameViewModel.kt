@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.main
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.GameState
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.domain.model.ThemeInfo
@@ -41,10 +40,10 @@ class GameViewModel @Inject constructor(
     override val container: Container<GameScreenState, GameEvent> = container(GameScreenState())
 
     init {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             timerRepository.lastSeconds.collect(::tick)
         }
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             val latestGame = gameStateRepository.getGameState()
             fun isNewGame() = latestGame == null
             if (isNewGame()) {
@@ -79,7 +78,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun startOrResumeGame() {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
                 resumeGame(gameState)
             } ?: run { // 새로운 게임을 시작하는 경우
@@ -227,7 +226,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun finishGame(onFinished: () -> Unit = {}) = intent {
-        viewModelScope.launch(Dispatchers.Main) {
+        baseViewModelScope.launch(Dispatchers.Main) {
             gameStateRepository.finishGame(onFinished)
         }
     }
