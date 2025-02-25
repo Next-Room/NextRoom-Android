@@ -18,6 +18,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
@@ -33,6 +34,7 @@ import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
 import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
+import com.nextroom.nextroom.presentation.util.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import java.util.Locale
@@ -109,6 +111,85 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         updateSystemPadding(false)
     }
 
+    private fun setBackground(url: String?, themeImageCustomInfo: ThemeImageCustomInfo?) {
+        Glide.with(requireContext())
+            .load(url)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    e?.message?.let { Logger.e(e) }
+
+                    try {
+                        if (isAdded) {
+                            binding.pvCustomImage.isVisible = false
+                            binding.ivDefaultImage.isVisible = true
+                        }
+                    } catch (e: Exception) {
+                        Logger.e(e)
+                    }
+
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    if (!isAdded) return false
+
+                    try {
+                        val left = themeImageCustomInfo?.left
+                        val top = themeImageCustomInfo?.top
+                        val right = themeImageCustomInfo?.right
+                        val bottom = themeImageCustomInfo?.bottom
+
+                        if (left != null && top != null && right != null && bottom != null && resource != null) {
+                            val matrix = Matrix()
+                                .apply {
+                                    val fromRectF = RectF(
+                                        0f,
+                                        0f,
+                                        binding.pvCustomImage.width.toFloat(),
+                                        binding.pvCustomImage.height.toFloat()
+                                    )
+                                    val toRectF = RectF(
+                                        left,
+                                        top,
+                                        right,
+                                        bottom
+                                    )
+                                    setRectToRect(
+                                        fromRectF,
+                                        toRectF,
+                                        Matrix.ScaleToFit.FILL
+                                    )
+                                }
+
+                            // 내부적으로 setImageMatrix를 여러번 호출하면서 최신 matrix정보를 덮어 씀으로 타이밍을 늦춰 마지막에 setImageMatrix를 호출할 수 있도록 post 추가
+                            binding.pvCustomImage.post {
+                                binding.pvCustomImage.setImageDrawable(resource)
+                                binding.pvCustomImage.setSuppMatrix(matrix)
+                            }
+                        }
+
+                        binding.ivDefaultImage.isVisible = false
+                    } catch (e: Exception) {
+                        Logger.e(e)
+                    }
+
+                    return false
+                }
+
+            }).into(binding.pvCustomImage)
+    }
+
     private fun render(state: GameScreenState) = with(binding) {
         // 타이머 렌더링
         tvTimer.text = state.lastSeconds.toTimerFormat()
@@ -136,53 +217,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
 
         if (binding.pvCustomImage.drawable == null && state.themeImageEnabled && !state.themeImageUrl.isNullOrEmpty()) {
             binding.pvCustomImage.isVisible = true
-            Glide.with(requireContext())
-                .load(state.themeImageUrl)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        binding.pvCustomImage.isVisible = false
-                        binding.ivDefaultImage.isVisible = true
-                        return false
-                    }
-
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        val left = state.themeImageCustomInfo?.left
-                        val top = state.themeImageCustomInfo?.top
-                        val right = state.themeImageCustomInfo?.right
-                        val bottom = state.themeImageCustomInfo?.bottom
-
-                        if (left != null && top != null && right != null && bottom != null && resource != null) {
-                            val matrix = Matrix()
-                                .apply {
-                                    val fromRectF = RectF(0f, 0f, binding.pvCustomImage.width.toFloat(), binding.pvCustomImage.height.toFloat())
-                                    val toRectF = RectF(
-                                        left,
-                                        top,
-                                        right,
-                                        bottom
-                                    )
-                                    setRectToRect(
-                                        fromRectF,
-                                        toRectF,
-                                        Matrix.ScaleToFit.FILL
-                                    )
-                                }
-
-                            // 내부적으로 setImageMatrix를 여러번 호출하면서 최신 matrix정보를 덮어 씀으로 타이밍을 늦춰 마지막에 setImageMatrix를 호출할 수 있도록 post 추가
-                            binding.pvCustomImage.post {
-                                binding.pvCustomImage.setImageDrawable(resource)
-                                binding.pvCustomImage.setSuppMatrix(matrix)
-                            }
-                        }
-
-                        binding.ivDefaultImage.isVisible = false
-
-                        return false
-                    }
-
-                })
-                .into(binding.pvCustomImage)
-
+            setBackground(state.themeImageUrl, state.themeImageCustomInfo)
             state.themeImageCustomInfo
                 ?.opacity
                 ?.let {
