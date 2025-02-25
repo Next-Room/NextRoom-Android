@@ -3,7 +3,7 @@ name: Bug Fix
 about: 버그 수정
 title: "[BUG]"
 labels: bug
-assignees: mangbaam
+assignees: juhwankim-dev
 
 ---
 

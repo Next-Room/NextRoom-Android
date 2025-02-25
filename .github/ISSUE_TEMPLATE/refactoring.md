@@ -1,9 +1,9 @@
 ---
 name: Refactoring
 about: 리팩터링
-title: '[REFACTOR]'
+title: "[REFACTOR]"
 labels: refactor
-assignees: mangbaam
+assignees: juhwankim-dev
 
 ---
 

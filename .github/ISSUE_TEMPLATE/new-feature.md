@@ -3,7 +3,7 @@ name: New Feature
 about: 새로운 기능 추가 혹은 변경
 title: "[FEAT]"
 labels: feature
-assignees: mangbaam
+assignees: juhwankim-dev
 
 ---
 
