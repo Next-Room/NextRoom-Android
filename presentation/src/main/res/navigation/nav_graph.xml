@@ -123,7 +123,7 @@
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </dialog>
     <action
-        android:id="@+id/action_global_nr_two_button_dialog"
+        android:id="@+id/move_to_nr_two_button_dialog"
         app:destination="@id/nr_two_button_dialog">
         <argument
 
@@ -143,7 +143,7 @@
     </fragment>
 
     <action
-        android:id="@+id/action_global_timer_fragment"
+        android:id="@+id/move_to_timer_fragment"
         app:destination="@+id/timer_fragment">
         <argument
             android:name="subscribeStatus"
@@ -151,7 +151,7 @@
     </action>
 
     <action
-        android:id="@+id/action_global_image_viewer_fragment"
+        android:id="@+id/move_to_image_viewer_fragment"
         app:destination="@id/image_viewer_fragment" />
 
     <fragment
@@ -179,7 +179,7 @@
             app:argType="boolean" />
     </fragment>
     <action
-        android:id="@+id/action_global_memo_fragment"
+        android:id="@+id/move_to_memo_fragment"
         app:destination="@id/memo_fragment" />
     <fragment
         android:id="@+id/web_view_fragment"
@@ -198,10 +198,10 @@
         android:name="com.nextroom.nextroom.presentation.ui.onboarding.OnboardingFragment"
         tools:layout="@layout/fragment_onboarding" />
     <action
-        android:id="@+id/action_global_web_view_fragment"
+        android:id="@+id/move_to_web_view_fragment"
         app:destination="@id/web_view_fragment" />
     <action
-        android:id="@+id/action_global_login_fragment"
+        android:id="@+id/move_to_login_fragment"
         app:destination="@id/login_fragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />

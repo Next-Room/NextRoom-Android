@@ -68,7 +68,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         btnLogin.setOnClickListener { viewModel.complete() }
 
         tvPrivacyPolicy.setOnClickListener {
-            val action = LoginFragmentDirections.actionGlobalWebViewFragment(getString(R.string.link_privacy_policy))
+            val action = LoginFragmentDirections.moveToWebViewFragment(getString(R.string.link_privacy_policy))
             findNavController().safeNavigate(action)
         }
 

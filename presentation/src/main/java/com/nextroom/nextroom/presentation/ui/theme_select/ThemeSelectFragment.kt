@@ -295,13 +295,13 @@ class ThemeSelectFragment :
 
     private fun moveToGameStart(subscribeStatus: SubscribeStatus) {
         NavGraphDirections
-            .actionGlobalTimerFragment(subscribeStatus)
+            .moveToTimerFragment(subscribeStatus)
             .also { findNavController().safeNavigate(it) }
     }
 
     private fun showNeedToSetPasswordDialog() {
         NavGraphDirections
-            .actionGlobalNrTwoButtonDialog(
+            .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.text_need_to_set_password_title),
                     message = getString(R.string.text_need_to_set_password_message),

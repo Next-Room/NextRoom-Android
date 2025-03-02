@@ -117,7 +117,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
 
     private fun showConfirmResignDialog() {
         MypageFragmentDirections
-            .actionGlobalNrTwoButtonDialog(
+            .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.resign_dialog_title),
                     message = getString(R.string.resign_dialog_message),

@@ -94,7 +94,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
             root.setBackgroundColor(resources.getColor(android.R.color.transparent, null))
             tvButton.text = getString(R.string.memo_button)
             tvButton.setOnClickListener {
-                val action = TimerFragmentDirections.actionGlobalMemoFragment()
+                val action = TimerFragmentDirections.moveToMemoFragment()
                 findNavController().safeNavigate(action)
             }
             ivBack.alpha = 0.2F
@@ -246,7 +246,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     private fun showExitDialog() {
         TimerFragmentDirections
-            .actionGlobalNrTwoButtonDialog(
+            .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.game_main_exit_dialog),
                     message = getString(R.string.game_main_exit_dialog_message),

@@ -20,7 +20,7 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
 
     private fun initViews() {
         binding.btnSignUp.setOnClickListener {
-            val action = OnboardingFragmentDirections.actionGlobalWebViewFragment(
+            val action = OnboardingFragmentDirections.moveToWebViewFragment(
                 url = getString(R.string.link_signup),
                 showToolbar = true,
             )

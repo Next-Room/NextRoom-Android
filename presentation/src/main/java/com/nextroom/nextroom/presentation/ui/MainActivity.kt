@@ -85,7 +85,7 @@ class MainActivity :
         when (event) {
             is MainEvent.GoToGameScreen -> {
                 getFindNavController()?.safeNavigate(
-                    direction = NavGraphDirections.actionGlobalTimerFragment(event.subscribeStatus),
+                    direction = NavGraphDirections.moveToTimerFragment(event.subscribeStatus),
                     navOptions = NavOptions.Builder()
                         .setLaunchSingleTop(true)
                         .build()
@@ -93,7 +93,7 @@ class MainActivity :
             }
 
             MainEvent.GoToLoginScreen -> {
-                getFindNavController()?.navigate(R.id.action_global_login_fragment)
+                getFindNavController()?.navigate(R.id.move_to_login_fragment)
             }
 
             MainEvent.ShowForceUpdateDialog -> showForceUpdateDialog()
