@@ -6,6 +6,7 @@
     app:startDestination="@id/login_fragment">
 
     <include app:graph="@navigation/game_navigation" />
+    <include app:graph="@navigation/mypage_navigation" />
 
     <fragment
         android:id="@+id/login_fragment"
@@ -23,8 +24,8 @@
         android:name="com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectFragment"
         tools:layout="@layout/fragment_theme_select">
         <action
-            android:id="@+id/move_to_mypage_fragment"
-            app:destination="@id/mypage_fragment" />
+            android:id="@+id/move_to_mypage"
+            app:destination="@id/mypage_navigation" />
         <action
             android:id="@+id/move_to_recommend_background_custom"
             app:destination="@+id/recommend_background_custom_bottom_sheet" />
@@ -158,18 +159,7 @@
         app:destination="@id/login_fragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
-    <fragment
-        android:id="@+id/mypage_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
-        tools:layout="@layout/fragment_mypage">
-        <action
-            android:id="@+id/move_to_subscription_info_fragment"
-            app:destination="@id/subscription_info_fragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/subscription_info_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.mypage.SubscriptionInfoFragment"
-        tools:layout="@layout/fragment_subscription_info" />
+
     <fragment
         android:id="@+id/purchase_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"

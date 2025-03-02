@@ -285,7 +285,7 @@ class ThemeSelectFragment :
     }
 
     private fun goToMyPage() {
-        val action = ThemeSelectFragmentDirections.moveToMypageFragment()
+        val action = ThemeSelectFragmentDirections.moveToMypage()
         findNavController().safeNavigate(action)
     }
 
