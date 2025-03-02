@@ -280,16 +280,16 @@ class ThemeSelectFragment :
     }
 
     private fun goToLink(linkUrl: String) {
-        findNavController().safeNavigate(ThemeSelectFragmentDirections.actionAdminToWebview(url = linkUrl))
+        findNavController().safeNavigate(ThemeSelectFragmentDirections.moveToWebview(url = linkUrl))
     }
 
     private fun goToPurchase() {
-        val action = ThemeSelectFragmentDirections.actionThemeSelectFragmentToPurchaseFragment()
+        val action = ThemeSelectFragmentDirections.moveToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 
     private fun goToMyPage() {
-        val action = ThemeSelectFragmentDirections.actionThemeSelectFragmentToMypageFragment()
+        val action = ThemeSelectFragmentDirections.moveToMypageFragment()
         findNavController().safeNavigate(action)
     }
 

@@ -10,10 +10,10 @@
         android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_login_fragment_to_theme_select_fragment"
+            android:id="@+id/move_to_theme_select_fragment"
             app:destination="@id/theme_select_fragment" />
         <action
-            android:id="@+id/action_login_fragment_to_onboarding_fragment"
+            android:id="@+id/move_to_onboarding_fragment"
             app:destination="@id/onboarding_fragment" />
     </fragment>
     <fragment
@@ -21,13 +21,13 @@
         android:name="com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectFragment"
         tools:layout="@layout/fragment_theme_select">
         <action
-            android:id="@+id/action_theme_select_fragment_to_mypage_fragment"
+            android:id="@+id/move_to_mypage_fragment"
             app:destination="@id/mypage_fragment" />
         <action
-            android:id="@+id/action_theme_select_fragment_to_purchase_fragment"
+            android:id="@+id/move_to_purchase_fragment"
             app:destination="@id/purchase_fragment" />
         <action
-            android:id="@+id/action_admin_to_webview"
+            android:id="@+id/move_to_webview"
             app:destination="@id/web_view_fragment" />
         <action
             android:id="@+id/move_to_recommend_background_custom"
@@ -60,7 +60,7 @@
             app:destination="@+id/subscription_payment_fragment" />
 
         <action
-            android:id="@+id/nav_to_background_image_custom_detail_fragment"
+            android:id="@+id/move_to_background_image_custom_detail_fragment"
             app:destination="@+id/background_image_custom_detail_fragment">
 
             <argument
@@ -91,7 +91,7 @@
         android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
         tools:layout="@layout/fragment_timer">
         <action
-            android:id="@+id/action_mainFragment_to_hint_fragment"
+            android:id="@+id/move_to_hint_fragment"
             app:destination="@id/hint_fragment">
             <argument
                 android:name="hint"
@@ -204,10 +204,10 @@
         android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
         tools:layout="@layout/fragment_mypage">
         <action
-            android:id="@+id/action_mypage_fragment_to_purchase_fragment"
+            android:id="@+id/move_to_purchase_fragment"
             app:destination="@id/purchase_fragment" />
         <action
-            android:id="@+id/action_mypage_fragment_to_subscription_info_fragment"
+            android:id="@+id/move_to_subscription_info_fragment"
             app:destination="@id/subscription_info_fragment" />
     </fragment>
     <fragment

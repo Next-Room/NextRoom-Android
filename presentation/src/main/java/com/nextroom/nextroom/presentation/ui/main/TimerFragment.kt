@@ -230,7 +230,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         when (event) {
             is TimerEvent.ClearHintCode -> binding.customCodeInput.setCode("")
             is TimerEvent.OnOpenHint -> {
-                val action = TimerFragmentDirections.actionMainFragmentToHintFragment(event.hint, event.subscribeStatus)
+                val action = TimerFragmentDirections.moveToHintFragment(event.hint, event.subscribeStatus)
                 findNavController().safeNavigate(action)
                 viewModel.clearHintCode()
             }
