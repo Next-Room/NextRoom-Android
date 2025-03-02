@@ -26,9 +26,6 @@
             android:id="@+id/move_to_mypage_fragment"
             app:destination="@id/mypage_fragment" />
         <action
-            android:id="@+id/move_to_purchase_fragment"
-            app:destination="@id/purchase_fragment" />
-        <action
             android:id="@+id/move_to_recommend_background_custom"
             app:destination="@+id/recommend_background_custom_bottom_sheet" />
         <action
@@ -166,9 +163,6 @@
         android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
         tools:layout="@layout/fragment_mypage">
         <action
-            android:id="@+id/move_to_purchase_fragment"
-            app:destination="@id/purchase_fragment" />
-        <action
             android:id="@+id/move_to_subscription_info_fragment"
             app:destination="@id/subscription_info_fragment" />
     </fragment>
@@ -184,6 +178,9 @@
             app:action="android.intent.action.VIEW"
             app:uri="@string/deeplink_purchase" />
     </fragment>
+    <action
+        android:id="@+id/move_to_purchase_fragment"
+        app:destination="@id/purchase_fragment" />
     <fragment
         android:id="@+id/purchase_success_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"

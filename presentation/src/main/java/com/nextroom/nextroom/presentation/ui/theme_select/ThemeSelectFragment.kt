@@ -280,7 +280,7 @@ class ThemeSelectFragment :
     }
 
     private fun goToPurchase() {
-        val action = ThemeSelectFragmentDirections.moveToPurchaseFragment()
+        val action = NavGraphDirections.moveToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 

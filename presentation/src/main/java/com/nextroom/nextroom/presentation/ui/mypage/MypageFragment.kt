@@ -106,7 +106,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     }
 
     private fun goToPurchase() {
-        val action = MypageFragmentDirections.moveToPurchaseFragment()
+        val action = NavGraphDirections.moveToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 
