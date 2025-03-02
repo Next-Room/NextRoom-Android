@@ -95,7 +95,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             viewModel.loginState.collect { loggedIn ->
                 if (loggedIn) {
                     val action =
-                        LoginFragmentDirections.actionLoginFragmentToAdminMainFragment()
+                        LoginFragmentDirections.actionLoginFragmentToThemeSelectFragment()
                     findNavController().safeNavigate(action)
                     clearInputs()
                 }

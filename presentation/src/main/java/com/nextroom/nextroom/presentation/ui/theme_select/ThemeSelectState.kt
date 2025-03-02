@@ -1,10 +1,10 @@
-package com.nextroom.nextroom.presentation.ui.adminmain
+package com.nextroom.nextroom.presentation.ui.theme_select
 
 import com.nextroom.nextroom.domain.model.Banner
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 
-data class AdminMainState(
+data class ThemeSelectState(
     val loading: Boolean = false,
     val opaqueLoading: Boolean = false,
     val subscribeStatus: SubscribeStatus = SubscribeStatus.Default,

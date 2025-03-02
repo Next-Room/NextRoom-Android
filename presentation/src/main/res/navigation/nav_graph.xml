@@ -11,22 +11,21 @@
         android:label="AdminCodeFragment"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_loginFragment_to_adminMainFragment"
-            app:destination="@id/adminMainFragment" />
+            android:id="@+id/action_loginFragment_to_themeSelectFragment"
+            app:destination="@id/themeSelectFragment" />
         <action
             android:id="@+id/action_loginFragment_to_onboardingFragment"
             app:destination="@id/onboardingFragment" />
     </fragment>
     <fragment
-        android:id="@+id/adminMainFragment"
-        android:name="com.nextroom.nextroom.presentation.ui.adminmain.AdminMainFragment"
-        android:label="AdminMainFragment"
-        tools:layout="@layout/fragment_admin_main">
+        android:id="@+id/themeSelectFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectFragment"
+        tools:layout="@layout/fragment_theme_select">
         <action
-            android:id="@+id/action_adminMainFragment_to_mypageFragment"
+            android:id="@+id/action_themeSelectFragment_to_mypageFragment"
             app:destination="@id/mypageFragment" />
         <action
-            android:id="@+id/action_adminMainFragment_to_purchaseFragment"
+            android:id="@+id/action_themeSelectFragment_to_purchaseFragment"
             app:destination="@id/purchaseFragment" />
         <action
             android:id="@+id/action_admin_to_webview"
@@ -86,7 +85,7 @@
 
     <dialog
         android:id="@+id/recommend_background_custom_bottom_sheet"
-        android:name="com.nextroom.nextroom.presentation.ui.adminmain.RecommendBackgroundCustomBottomSheet" />
+        android:name="com.nextroom.nextroom.presentation.ui.theme_select.RecommendBackgroundCustomBottomSheet" />
 
     <fragment
         android:id="@+id/gameFragment"
@@ -149,7 +148,7 @@
             android:id="@+id/action_verifyFragment_to_gameFragment"
             app:destination="@id/gameFragment"
             app:launchSingleTop="true"
-            app:popUpTo="@id/adminMainFragment">
+            app:popUpTo="@id/themeSelectFragment">
             <argument
                 android:name="subscribeStatus"
                 app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
@@ -163,7 +162,7 @@
     <!--        <action-->
     <!--            android:id="@+id/action_startTimerFragment_to_mainFragment"-->
     <!--            app:destination="@id/mainFragment"-->
-    <!--            app:popUpTo="@id/adminMainFragment" />-->
+    <!--            app:popUpTo="@id/themeSelectFragment" />-->
     <!--    </fragment>-->
     <fragment
         android:id="@+id/hintFragment"
