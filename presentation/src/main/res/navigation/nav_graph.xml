@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
-        android:label="AdminCodeFragment"
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_themeSelectFragment"
@@ -90,7 +89,6 @@
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
-        android:label="MainFragment"
         tools:layout="@layout/fragment_timer">
         <action
             android:id="@+id/action_mainFragment_to_hintFragment"
@@ -130,7 +128,6 @@
     <fragment
         android:id="@+id/hintFragment"
         android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
-        android:label="HintFragment"
         tools:layout="@layout/fragment_hint">
         <argument
             android:name="subscribeStatus"
@@ -169,7 +166,6 @@
     <fragment
         android:id="@+id/memoFragment"
         android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
-        android:label="MemoFragment"
         tools:layout="@layout/fragment_memo">
         <argument
             android:name="fromHint"
@@ -182,7 +178,6 @@
     <fragment
         android:id="@+id/webViewFragment"
         android:name="com.nextroom.nextroom.presentation.ui.webview.WebViewFragment"
-        android:label="WebViewFragment"
         tools:layout="@layout/fragment_webview">
         <argument
             android:name="url"
@@ -195,7 +190,6 @@
     <fragment
         android:id="@+id/onboardingFragment"
         android:name="com.nextroom.nextroom.presentation.ui.onboarding.OnboardingFragment"
-        android:label="OnboardingFragment"
         tools:layout="@layout/fragment_onboarding" />
     <action
         android:id="@+id/action_global_webViewFragment"
@@ -208,7 +202,6 @@
     <fragment
         android:id="@+id/mypageFragment"
         android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
-        android:label="MypageFragment"
         tools:layout="@layout/fragment_mypage">
         <action
             android:id="@+id/action_mypageFragment_to_purchaseFragment"
@@ -224,7 +217,6 @@
     <fragment
         android:id="@+id/purchaseFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
-        android:label="PurchaseFragment"
         tools:layout="@layout/fragment_purchase">
         <deepLink
             app:action="android.intent.action.VIEW"
@@ -233,7 +225,6 @@
     <fragment
         android:id="@+id/purchaseSuccessFragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
-        android:label="PurchaseSuccessFragment"
         tools:layout="@layout/fragment_purchase_success" />
     <action
         android:id="@+id/move_to_purchase_success"
