@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
@@ -245,7 +246,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
     }
 
     private fun showExitDialog() {
-        TimerFragmentDirections
+        NavGraphDirections
             .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.game_main_exit_dialog),

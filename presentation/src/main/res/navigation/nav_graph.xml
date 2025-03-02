@@ -5,6 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/login_fragment">
 
+    <include app:graph="@navigation/game_navigation" />
+
     <fragment
         android:id="@+id/login_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
@@ -39,6 +41,9 @@
                 android:name="themes"
                 app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
         </action>
+        <action
+            android:id="@+id/move_to_timer_fragment"
+            app:destination="@id/game_navigation" />
     </fragment>
 
     <fragment
@@ -88,28 +93,6 @@
         android:name="com.nextroom.nextroom.presentation.ui.theme_select.RecommendBackgroundCustomBottomSheet"
         tools:layout="@layout/bottom_sheet_recommend_background_custom" />
 
-    <fragment
-        android:id="@+id/timer_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
-        tools:layout="@layout/fragment_timer">
-        <action
-            android:id="@+id/move_to_hint_fragment"
-            app:destination="@id/hint_fragment">
-            <argument
-                android:name="hint"
-                app:argType="com.nextroom.nextroom.presentation.model.Hint" />
-            <argument
-                android:name="subscribeStatus"
-                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        </action>
-        <argument
-            android:name="overflowTime"
-            android:defaultValue="0L"
-            app:argType="long" />
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-    </fragment>
     <dialog
         android:id="@+id/nr_two_button_dialog"
         android:name="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog"
@@ -127,18 +110,6 @@
             android:name="nrTwoButtonArgument"
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </action>
-    <fragment
-        android:id="@+id/hint_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
-        tools:layout="@layout/fragment_hint">
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        <argument
-            android:name="hint"
-            app:argType="com.nextroom.nextroom.presentation.model.Hint" />
-    </fragment>
-
     <action
         android:id="@+id/move_to_timer_fragment"
         app:destination="@+id/timer_fragment">
@@ -166,18 +137,6 @@
             app:argType="string[]" />
     </fragment>
 
-    <fragment
-        android:id="@+id/memo_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
-        tools:layout="@layout/fragment_memo">
-        <argument
-            android:name="fromHint"
-            android:defaultValue="false"
-            app:argType="boolean" />
-    </fragment>
-    <action
-        android:id="@+id/move_to_memo_fragment"
-        app:destination="@id/memo_fragment" />
     <fragment
         android:id="@+id/web_view_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.webview.WebViewFragment"

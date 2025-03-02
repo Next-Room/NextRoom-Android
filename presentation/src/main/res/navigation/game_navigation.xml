@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/game_navigation"
+    app:startDestination="@id/timer_fragment">
+
+    <fragment
+        android:id="@+id/timer_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
+        tools:layout="@layout/fragment_timer">
+
+        <action
+            android:id="@+id/move_to_hint_fragment"
+            app:destination="@id/hint_fragment">
+            <argument
+                android:name="hint"
+                app:argType="com.nextroom.nextroom.presentation.model.Hint" />
+            <argument
+                android:name="subscribeStatus"
+                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        </action>
+        <action
+            android:id="@+id/move_to_memo_fragment"
+            app:destination="@id/memo_fragment" />
+        <argument
+            android:name="overflowTime"
+            android:defaultValue="0L"
+            app:argType="long" />
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hint_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
+        tools:layout="@layout/fragment_hint">
+
+        <action
+            android:id="@+id/move_to_memo_fragment"
+            app:destination="@id/memo_fragment" />
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+        <argument
+            android:name="hint"
+            app:argType="com.nextroom.nextroom.presentation.model.Hint" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/memo_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
+        tools:layout="@layout/fragment_memo">
+        <argument
+            android:name="fromHint"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+</navigation>
