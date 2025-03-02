@@ -251,11 +251,11 @@
             android:id="@+id/action_mypageFragment_to_purchaseFragment"
             app:destination="@id/purchaseFragment" />
         <action
-            android:id="@+id/action_mypageFragment_to_subscriptionFragment"
-            app:destination="@id/subscriptionFragment" />
+            android:id="@+id/action_mypageFragment_to_subscriptionInfoFragment"
+            app:destination="@id/subscriptionInfoFragment" />
     </fragment>
     <fragment
-        android:id="@+id/subscriptionFragment"
+        android:id="@+id/subscriptionInfoFragment"
         android:name="com.nextroom.nextroom.presentation.ui.mypage.SubscriptionInfoFragment"
         tools:layout="@layout/fragment_subscription_info" />
     <fragment

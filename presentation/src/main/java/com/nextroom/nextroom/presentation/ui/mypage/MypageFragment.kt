@@ -111,7 +111,7 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     }
 
     private fun goToSubscriptionInfo() {
-        val action = MypageFragmentDirections.actionMypageFragmentToSubscriptionFragment()
+        val action = MypageFragmentDirections.actionMypageFragmentToSubscriptionInfoFragment()
         findNavController().safeNavigate(action)
     }
 
