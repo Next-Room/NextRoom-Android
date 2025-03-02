@@ -85,7 +85,7 @@ class MainActivity :
         when (event) {
             is MainEvent.GoToGameScreen -> {
                 getFindNavController()?.safeNavigate(
-                    direction = NavGraphDirections.actionGlobalGameFragment(event.subscribeStatus),
+                    direction = NavGraphDirections.actionGlobalTimerFragment(event.subscribeStatus),
                     navOptions = NavOptions.Builder()
                         .setLaunchSingleTop(true)
                         .build()

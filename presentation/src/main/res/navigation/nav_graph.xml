@@ -88,10 +88,10 @@
         android:name="com.nextroom.nextroom.presentation.ui.theme_select.RecommendBackgroundCustomBottomSheet" />
 
     <fragment
-        android:id="@+id/gameFragment"
-        android:name="com.nextroom.nextroom.presentation.ui.main.GameFragment"
+        android:id="@+id/timerFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_main">
+        tools:layout="@layout/fragment_timer">
         <action
             android:id="@+id/action_mainFragment_to_hintFragment"
             app:destination="@id/hintFragment">
@@ -141,8 +141,8 @@
     </fragment>
 
     <action
-        android:id="@+id/action_global_gameFragment"
-        app:destination="@+id/gameFragment">
+        android:id="@+id/action_global_timerFragment"
+        app:destination="@+id/timerFragment">
         <argument
             android:name="subscribeStatus"
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />

@@ -295,7 +295,7 @@ class ThemeSelectFragment :
 
     private fun moveToGameStart(subscribeStatus: SubscribeStatus) {
         NavGraphDirections
-            .actionGlobalGameFragment(subscribeStatus)
+            .actionGlobalTimerFragment(subscribeStatus)
             .also { findNavController().safeNavigate(it) }
     }
 

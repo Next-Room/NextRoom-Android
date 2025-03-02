@@ -3,7 +3,7 @@ package com.nextroom.nextroom.presentation.ui.main
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.presentation.model.InputState
 
-data class GameScreenState(
+data class TimerScreenState(
     val totalSeconds: Int = 0,
     val lastSeconds: Int = 0,
     val currentInput: String = "",

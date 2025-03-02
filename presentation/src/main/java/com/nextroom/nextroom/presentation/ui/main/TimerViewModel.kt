@@ -28,16 +28,16 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel @Inject constructor(
+class TimerViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val themeRepository: ThemeRepository,
     private val timerRepository: TimerRepository,
     private val gameStateRepository: GameStateRepository,
     private val hintRepository: HintRepository,
     private val statsRepository: StatisticsRepository,
-) : BaseViewModel<GameScreenState, GameEvent>() {
+) : BaseViewModel<TimerScreenState, TimerEvent>() {
 
-    override val container: Container<GameScreenState, GameEvent> = container(GameScreenState())
+    override val container: Container<TimerScreenState, TimerEvent> = container(TimerScreenState())
 
     init {
         baseViewModelScope.launch {
@@ -66,7 +66,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun showGameStartConfirmDialog() = intent {
-        postSideEffect(GameEvent.NewGame)
+        postSideEffect(TimerEvent.NewTimer)
     }
 
     fun onGameStartClicked() {
@@ -156,7 +156,7 @@ class GameViewModel @Inject constructor(
 
     fun clearHintCode() = intent {
         reduce { state.copy(currentInput = "", inputState = InputState.Empty) }
-        postSideEffect(GameEvent.ClearHintCode)
+        postSideEffect(TimerEvent.ClearHintCode)
     }
 
     private fun validateHintCode() = intent {
@@ -168,7 +168,7 @@ class GameViewModel @Inject constructor(
                 )
             }
             postSideEffect(
-                GameEvent.OnOpenHint(
+                TimerEvent.OnOpenHint(
                     Hint(
                         id = hint.id,
                         progress = hint.progress,
@@ -178,14 +178,14 @@ class GameViewModel @Inject constructor(
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     ),
-                    GameFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
+                    TimerFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
                 ),
             )
             setGameState()
         }
 
         if (timerRepository.timerState.value is TimerState.Finished) {
-            postSideEffect(GameEvent.GameFinish)
+            postSideEffect(TimerEvent.TimerFinish)
             delay(500)
             clearHintCode()
             return@intent
@@ -197,7 +197,7 @@ class GameViewModel @Inject constructor(
             } else if (state.usedHintsCount < state.totalHintCount) {
                 openHint(hint)
             } else {
-                postSideEffect(GameEvent.ShowAvailableHintExceedError)
+                postSideEffect(TimerEvent.ShowAvailableHintExceedError)
                 reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
             }
         } ?: run {
