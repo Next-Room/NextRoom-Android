@@ -123,7 +123,7 @@
 
     <action
         android:id="@+id/move_to_timer_fragment"
-        app:destination="@+id/timer_fragment">
+        app:destination="@+id/game_navigation">
         <argument
             android:name="subscribeStatus"
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
