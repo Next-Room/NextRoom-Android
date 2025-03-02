@@ -226,7 +226,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     private fun gotoHome() {
         Timber.d("gotoHome")
-        findNavController().popBackStack(R.id.timerFragment, false)
+        findNavController().popBackStack(R.id.timer_fragment, false)
     }
 
     override fun onDestroyView() {

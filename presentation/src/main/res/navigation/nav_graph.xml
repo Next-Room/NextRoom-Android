@@ -3,32 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/login_fragment">
 
     <fragment
-        android:id="@+id/loginFragment"
+        android:id="@+id/login_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
         tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_loginFragment_to_themeSelectFragment"
-            app:destination="@id/themeSelectFragment" />
+            android:id="@+id/action_login_fragment_to_theme_select_fragment"
+            app:destination="@id/theme_select_fragment" />
         <action
-            android:id="@+id/action_loginFragment_to_onboardingFragment"
-            app:destination="@id/onboardingFragment" />
+            android:id="@+id/action_login_fragment_to_onboarding_fragment"
+            app:destination="@id/onboarding_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/themeSelectFragment"
+        android:id="@+id/theme_select_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectFragment"
         tools:layout="@layout/fragment_theme_select">
         <action
-            android:id="@+id/action_themeSelectFragment_to_mypageFragment"
-            app:destination="@id/mypageFragment" />
+            android:id="@+id/action_theme_select_fragment_to_mypage_fragment"
+            app:destination="@id/mypage_fragment" />
         <action
-            android:id="@+id/action_themeSelectFragment_to_purchaseFragment"
-            app:destination="@id/purchaseFragment" />
+            android:id="@+id/action_theme_select_fragment_to_purchase_fragment"
+            app:destination="@id/purchase_fragment" />
         <action
             android:id="@+id/action_admin_to_webview"
-            app:destination="@id/webViewFragment" />
+            app:destination="@id/web_view_fragment" />
         <action
             android:id="@+id/move_to_recommend_background_custom"
             app:destination="@+id/recommend_background_custom_bottom_sheet" />
@@ -87,12 +87,12 @@
         android:name="com.nextroom.nextroom.presentation.ui.theme_select.RecommendBackgroundCustomBottomSheet" />
 
     <fragment
-        android:id="@+id/timerFragment"
+        android:id="@+id/timer_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
         tools:layout="@layout/fragment_timer">
         <action
-            android:id="@+id/action_mainFragment_to_hintFragment"
-            app:destination="@id/hintFragment">
+            android:id="@+id/action_mainFragment_to_hint_fragment"
+            app:destination="@id/hint_fragment">
             <argument
                 android:name="hint"
                 app:argType="com.nextroom.nextroom.presentation.model.Hint" />
@@ -109,7 +109,7 @@
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
     </fragment>
     <dialog
-        android:id="@+id/nrTwoButtonDialog"
+        android:id="@+id/nr_two_button_dialog"
         android:name="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog"
         tools:layout="@layout/dialog_fragment_nr_two_button">
 
@@ -118,15 +118,15 @@
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </dialog>
     <action
-        android:id="@+id/action_global_nrTwoButtonDialog"
-        app:destination="@id/nrTwoButtonDialog">
+        android:id="@+id/action_global_nr_two_button_dialog"
+        app:destination="@id/nr_two_button_dialog">
         <argument
 
             android:name="nrTwoButtonArgument"
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </action>
     <fragment
-        android:id="@+id/hintFragment"
+        android:id="@+id/hint_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
         tools:layout="@layout/fragment_hint">
         <argument
@@ -138,19 +138,19 @@
     </fragment>
 
     <action
-        android:id="@+id/action_global_timerFragment"
-        app:destination="@+id/timerFragment">
+        android:id="@+id/action_global_timer_fragment"
+        app:destination="@+id/timer_fragment">
         <argument
             android:name="subscribeStatus"
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
     </action>
 
     <action
-        android:id="@+id/action_global_imageViewerFragment"
-        app:destination="@id/imageViewerFragment" />
+        android:id="@+id/action_global_image_viewer_fragment"
+        app:destination="@id/image_viewer_fragment" />
 
     <fragment
-        android:id="@+id/imageViewerFragment"
+        android:id="@+id/image_viewer_fragment"
         android:name="com.nextroom.nextroom.presentation.common.ImageViewerFragment">
 
         <argument
@@ -164,7 +164,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/memoFragment"
+        android:id="@+id/memo_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
         tools:layout="@layout/fragment_memo">
         <argument
@@ -173,10 +173,10 @@
             app:argType="boolean" />
     </fragment>
     <action
-        android:id="@+id/action_global_memoFragment"
-        app:destination="@id/memoFragment" />
+        android:id="@+id/action_global_memo_fragment"
+        app:destination="@id/memo_fragment" />
     <fragment
-        android:id="@+id/webViewFragment"
+        android:id="@+id/web_view_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.webview.WebViewFragment"
         tools:layout="@layout/fragment_webview">
         <argument
@@ -188,34 +188,34 @@
             app:argType="boolean" />
     </fragment>
     <fragment
-        android:id="@+id/onboardingFragment"
+        android:id="@+id/onboarding_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.onboarding.OnboardingFragment"
         tools:layout="@layout/fragment_onboarding" />
     <action
-        android:id="@+id/action_global_webViewFragment"
-        app:destination="@id/webViewFragment" />
+        android:id="@+id/action_global_web_view_fragment"
+        app:destination="@id/web_view_fragment" />
     <action
-        android:id="@+id/action_global_loginFragment"
-        app:destination="@id/loginFragment"
+        android:id="@+id/action_global_login_fragment"
+        app:destination="@id/login_fragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
     <fragment
-        android:id="@+id/mypageFragment"
+        android:id="@+id/mypage_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.mypage.MypageFragment"
         tools:layout="@layout/fragment_mypage">
         <action
-            android:id="@+id/action_mypageFragment_to_purchaseFragment"
-            app:destination="@id/purchaseFragment" />
+            android:id="@+id/action_mypage_fragment_to_purchase_fragment"
+            app:destination="@id/purchase_fragment" />
         <action
-            android:id="@+id/action_mypageFragment_to_subscriptionInfoFragment"
-            app:destination="@id/subscriptionInfoFragment" />
+            android:id="@+id/action_mypage_fragment_to_subscription_info_fragment"
+            app:destination="@id/subscription_info_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/subscriptionInfoFragment"
+        android:id="@+id/subscription_info_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.mypage.SubscriptionInfoFragment"
         tools:layout="@layout/fragment_subscription_info" />
     <fragment
-        android:id="@+id/purchaseFragment"
+        android:id="@+id/purchase_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.PurchaseFragment"
         tools:layout="@layout/fragment_purchase">
         <deepLink
@@ -223,14 +223,14 @@
             app:uri="@string/deeplink_purchase" />
     </fragment>
     <fragment
-        android:id="@+id/purchaseSuccessFragment"
+        android:id="@+id/purchase_success_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
         tools:layout="@layout/fragment_purchase_success" />
     <action
         android:id="@+id/move_to_purchase_success"
-        app:destination="@id/purchaseSuccessFragment" />
+        app:destination="@id/purchase_success_fragment" />
     <fragment
-        android:id="@+id/checkPassword"
+        android:id="@+id/check_password"
         android:name="com.nextroom.nextroom.presentation.ui.password.CheckPasswordFragment"
         tools:layout="@layout/fragment_check_password">
 
@@ -247,12 +247,12 @@
     </fragment>
     <action
         android:id="@+id/move_to_check_password"
-        app:destination="@id/checkPassword" />
+        app:destination="@id/check_password" />
     <fragment
-        android:id="@+id/setPassword"
+        android:id="@+id/set_password"
         android:name="com.nextroom.nextroom.presentation.ui.password.SetPasswordFragment"
         tools:layout="@layout/fragment_set_password" />
     <action
         android:id="@+id/move_to_set_password"
-        app:destination="@id/setPassword" />
+        app:destination="@id/set_password" />
 </navigation>
