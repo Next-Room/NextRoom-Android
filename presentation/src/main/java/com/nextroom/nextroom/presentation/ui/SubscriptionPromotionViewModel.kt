@@ -16,12 +16,13 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class SubscriptionPaymentViewModel @Inject constructor(
+class SubscriptionPromotionViewModel @Inject constructor(
     private val adminRepository: AdminRepository
-) : BaseViewModel<SubscriptionPaymentState, SubscriptionPaymentEvent>() {
+) : BaseViewModel<SubscriptionPromotionState, SubscriptionPromotionEvent>() {
 
 
-    override val container: Container<SubscriptionPaymentState, SubscriptionPaymentEvent> = container(SubscriptionPaymentState())
+    override val container: Container<SubscriptionPromotionState, SubscriptionPromotionEvent> =
+        container(SubscriptionPromotionState())
 
     init {
         getSubscriptionPlan()
@@ -32,7 +33,7 @@ class SubscriptionPaymentViewModel @Inject constructor(
             reduce { state.copy(loading = true) }
             adminRepository.getSubscriptionPlan()
                 .onSuccess {
-                    reduce { SubscriptionPaymentState(plan = it) }
+                    reduce { SubscriptionPromotionState(plan = it) }
                 }.onFailure {
                     handleError(it)
                 }.onFinally {
@@ -43,9 +44,9 @@ class SubscriptionPaymentViewModel @Inject constructor(
 
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
-            is Result.Failure.NetworkError -> postSideEffect(SubscriptionPaymentEvent.NetworkError)
-            is Result.Failure.HttpError -> postSideEffect(SubscriptionPaymentEvent.ClientError(error.message))
-            else -> postSideEffect(SubscriptionPaymentEvent.UnknownError)
+            is Result.Failure.NetworkError -> postSideEffect(SubscriptionPromotionEvent.NetworkError)
+            is Result.Failure.HttpError -> postSideEffect(SubscriptionPromotionEvent.ClientError(error.message))
+            else -> postSideEffect(SubscriptionPromotionEvent.UnknownError)
         }
     }
 }

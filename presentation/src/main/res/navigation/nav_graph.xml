@@ -81,7 +81,7 @@
 
     <dialog
         android:id="@+id/subscription_payment_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPaymentBottomSheetFragment" />
+        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPromotionBottomSheet" />
 
     <dialog
         android:id="@+id/recommend_background_custom_bottom_sheet"
