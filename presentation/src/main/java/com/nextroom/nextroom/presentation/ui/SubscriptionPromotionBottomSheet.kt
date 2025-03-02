@@ -126,7 +126,7 @@ class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
                                     findNavController().navigate(
                                         directions = it,
                                         navOptions = NavOptions.Builder().setPopUpTo(
-                                            destinationId = R.id.subscription_payment_fragment,
+                                            destinationId = R.id.subscription_promotion,
                                             inclusive = true,
                                         ).build()
                                     )

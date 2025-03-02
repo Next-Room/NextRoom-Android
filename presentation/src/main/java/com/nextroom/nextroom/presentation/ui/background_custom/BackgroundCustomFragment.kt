@@ -67,7 +67,9 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
             is BackgroundCustomEvent.NetworkError -> snackbar(R.string.error_network)
             is BackgroundCustomEvent.ClientError -> snackbar(event.message)
             BackgroundCustomEvent.UnknownError -> snackbar(R.string.error_something)
-            BackgroundCustomEvent.ToggleNotAllowed -> findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
+            BackgroundCustomEvent.ToggleNotAllowed -> findNavController().safeNavigate(
+                BackgroundCustomFragmentDirections.moveToSubscriptionPromotion()
+            )
             is BackgroundCustomEvent.ThemeImageClicked -> navToImageCustom(event.theme)
         }
     }

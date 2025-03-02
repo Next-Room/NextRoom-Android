@@ -56,8 +56,8 @@
             app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
 
         <action
-            android:id="@+id/move_to_subscription_payment"
-            app:destination="@+id/subscription_payment_fragment" />
+            android:id="@+id/move_to_subscription_promotion"
+            app:destination="@+id/subscription_promotion" />
 
         <action
             android:id="@+id/move_to_background_image_custom_detail_fragment"
@@ -79,8 +79,9 @@
     </fragment>
 
     <dialog
-        android:id="@+id/subscription_payment_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPromotionBottomSheet" />
+        android:id="@+id/subscription_promotion"
+        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPromotionBottomSheet"
+        tools:layout="@layout/bottom_sheet_subscription_promotion" />
 
     <dialog
         android:id="@+id/recommend_background_custom_bottom_sheet"
