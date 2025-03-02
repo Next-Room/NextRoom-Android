@@ -66,7 +66,9 @@ dependencies {
 
     implementation(libs.bundles.network)
 
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config.ktx)
+    implementation(libs.firebase.analytics.ktx)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)

@@ -1,10 +1,15 @@
 package com.nextroom.nextroom.data.di
 
+import android.content.Context
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
+import com.nextroom.nextroom.data.util.UserEventLoggerImpl
+import com.nextroom.nextroom.domain.util.UserEventLogger
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -23,5 +28,17 @@ object FirebaseModule {
             .apply {
                 setConfigSettingsAsync(configSettings)
             }
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAnalytics(@ApplicationContext context: Context): FirebaseAnalytics {
+        return FirebaseAnalytics.getInstance(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUserEventLogger(firebaseAnalytics: FirebaseAnalytics): UserEventLogger {
+        return UserEventLoggerImpl(firebaseAnalytics)
     }
 }
