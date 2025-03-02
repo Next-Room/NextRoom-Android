@@ -7,6 +7,7 @@
 
     <include app:graph="@navigation/game_navigation" />
     <include app:graph="@navigation/mypage_navigation" />
+    <include app:graph="@navigation/background_custom_navigation" />
 
     <fragment
         android:id="@+id/login_fragment"
@@ -31,7 +32,7 @@
             app:destination="@+id/recommend_background_custom_bottom_sheet" />
         <action
             android:id="@+id/move_to_background_custom_fragment"
-            app:destination="@+id/background_custom_fragment">
+            app:destination="@+id/background_custom_navigation">
             <argument
                 android:name="subscribeStatus"
                 app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
@@ -43,48 +44,6 @@
             android:id="@+id/move_to_timer_fragment"
             app:destination="@id/game_navigation" />
     </fragment>
-
-    <fragment
-        android:id="@+id/background_custom_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundCustomFragment"
-        tools:layout="@layout/fragment_background_custom">
-
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-
-        <argument
-            android:name="themes"
-            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
-
-        <action
-            android:id="@+id/move_to_subscription_promotion"
-            app:destination="@+id/subscription_promotion" />
-
-        <action
-            android:id="@+id/move_to_background_image_custom_detail_fragment"
-            app:destination="@+id/background_image_custom_detail_fragment">
-
-            <argument
-                android:name="theme"
-                app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
-        </action>
-    </fragment>
-
-    <fragment
-        android:id="@+id/background_image_custom_detail_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundImageCustomDetailFragment"
-        tools:layout="@layout/fragment_background_image_custom_detail">
-
-        <argument
-            android:name="theme"
-            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
-    </fragment>
-
-    <dialog
-        android:id="@+id/subscription_promotion"
-        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPromotionBottomSheet"
-        tools:layout="@layout/bottom_sheet_subscription_promotion" />
 
     <dialog
         android:id="@+id/recommend_background_custom_bottom_sheet"
