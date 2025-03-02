@@ -27,9 +27,6 @@
             android:id="@+id/move_to_purchase_fragment"
             app:destination="@id/purchase_fragment" />
         <action
-            android:id="@+id/move_to_webview"
-            app:destination="@id/web_view_fragment" />
-        <action
             android:id="@+id/move_to_recommend_background_custom"
             app:destination="@+id/recommend_background_custom_bottom_sheet" />
         <action
