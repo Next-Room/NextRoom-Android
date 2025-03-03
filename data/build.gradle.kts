@@ -68,6 +68,9 @@ dependencies {
 
     implementation(libs.firebase.config.ktx)
 
+    debugImplementation(libs.bundles.flipper)
+    releaseImplementation(libs.flipper.noop)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
 }
