@@ -46,6 +46,8 @@ swiperefreshlayout = "1.1.0"
 firebaseCommonKtx = "21.0.0"
 photoview = "2.3.0"
 biometric = "1.1.0"
+flipper = "0.200.0"
+soloader = "0.10.4"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -98,6 +100,10 @@ billing = { module = "com.android.billingclient:billing", version.ref = "billing
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version.ref = "firebaseCommonKtx" }
 biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
+flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
+soloader = { module = "com.facebook.soloader:soloader", version.ref = "soloader" }
+flipper-noop = { module = "com.facebook.flipper:flipper-noop", version.ref = "flipper" }
+flipper-network-plugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
@@ -119,3 +125,4 @@ android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-co
 network = ["retrofit", "converter-gson", "logging-interceptor"]
 db = ["androidx-datastore", "androidx-datastore-preferences-core", "androidx-room-runtime", "androidx-room-ktx"]
 firebase = ["firebase-analytics-ktx", "firebase-crashlytics-ktx"]
+flipper = ["flipper", "soloader", "flipper-network-plugin"]
