@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/email_login_fragment">
+    app:startDestination="@id/login_fragment">
 
     <!-- nested navigation graphs -->
     <include app:graph="@navigation/game_navigation" />
@@ -173,11 +173,20 @@
     <fragment
         android:id="@+id/login_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/move_to_email_login"
+            app:destination="@id/email_login_fragment" />
+
+        <action
+            android:id="@+id/move_to_theme_select"
+            app:destination="@id/theme_select_fragment" />
+    </fragment>
 
     <action
-        android:id="@+id/move_to_email_login_fragment"
-        app:destination="@id/email_login_fragment"
+        android:id="@+id/move_to_login_fragment"
+        app:destination="@id/login_fragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
 </navigation>

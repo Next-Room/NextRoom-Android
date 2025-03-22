@@ -93,7 +93,7 @@ class MainActivity :
             }
 
             MainEvent.GoToLoginScreen -> {
-                getFindNavController()?.navigate(R.id.move_to_email_login_fragment)
+                getFindNavController()?.navigate(R.id.move_to_login_fragment)
             }
 
             MainEvent.ShowForceUpdateDialog -> showForceUpdateDialog()
