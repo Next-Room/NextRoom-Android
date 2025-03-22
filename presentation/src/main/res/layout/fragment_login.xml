@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:background="@color/Dark01"
-    tools:context=".ui.onboarding.OnboardingFragment">
+    tools:context=".ui.onboarding.LoginFragment">
 
     <TextView
         android:id="@+id/tv_description"

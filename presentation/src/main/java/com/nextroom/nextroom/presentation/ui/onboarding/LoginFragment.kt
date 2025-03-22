@@ -5,12 +5,12 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentOnboardingBinding
+import com.nextroom.nextroom.presentation.databinding.FragmentLoginBinding
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboardingBinding::inflate) {
+class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -20,7 +20,7 @@ class OnboardingFragment : BaseFragment<FragmentOnboardingBinding>(FragmentOnboa
 
     private fun initViews() {
         binding.btnSignUp.setOnClickListener {
-            val action = OnboardingFragmentDirections.moveToWebViewFragment(
+            val action = LoginFragmentDirections.moveToWebViewFragment(
                 url = getString(R.string.link_signup),
                 showToolbar = true,
             )

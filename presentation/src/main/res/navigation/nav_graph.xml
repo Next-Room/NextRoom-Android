@@ -171,9 +171,9 @@
         tools:layout="@layout/bottom_sheet_recommend_background_custom" />
 
     <fragment
-        android:id="@+id/onboarding_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.onboarding.OnboardingFragment"
-        tools:layout="@layout/fragment_onboarding" />
+        android:id="@+id/login_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment"
+        tools:layout="@layout/fragment_login" />
 
     <action
         android:id="@+id/move_to_email_login_fragment"
