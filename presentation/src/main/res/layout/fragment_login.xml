@@ -34,33 +34,92 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="74dp"
+        android:layout_marginTop="32dp"
         android:importantForAccessibility="no"
         android:src="@drawable/bg_onboarding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_sign_up"
-        style="@style/Button.Kor"
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="@string/sign_up"
-        android:textColor="@color/Dark01"
-        app:layout_constraintBottom_toTopOf="@id/tv_existing_user_guide"
+        android:src="@drawable/bg_black_to_white_gradient"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/white_12"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_label"
+        app:layout_constraintEnd_toStartOf="@id/tv_login_label"
+        app:layout_constraintStart_toStartOf="@id/ll_start_with_google"
+        app:layout_constraintTop_toTopOf="@id/tv_login_label" />
+
     <TextView
-        android:id="@+id/tv_existing_user_guide"
-        style="@style/Pretendard.16"
+        android:id="@+id/tv_login_label"
+        style="@style/Pretendard.14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:text="@string/onboarding_existing_user_guide"
-        android:textColor="@color/White"
+        android:layout_marginBottom="16dp"
+        android:text="@string/text_recommend_google_login_guide"
+        app:layout_constraintBottom_toTopOf="@id/ll_start_with_google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/white_12"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_label"
+        app:layout_constraintEnd_toEndOf="@id/ll_start_with_google"
+        app:layout_constraintStart_toEndOf="@id/tv_login_label"
+        app:layout_constraintTop_toTopOf="@id/tv_login_label" />
+
+    <LinearLayout
+        android:id="@+id/ll_start_with_google"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_white_border_r_100"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="20dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_start_with_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_google" />
+
+        <TextView
+            style="@style/Pretendard.16.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/text_start_with_google"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_start_with_email"
+        style="@style/Pretendard.16.Bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/bg_black_border_white20_r_100"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="@string/text_start_with_email"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

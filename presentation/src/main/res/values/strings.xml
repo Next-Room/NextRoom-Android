@@ -183,4 +183,7 @@
 
     <string name="text_app_version">앱 버전</string>
     <string name="text_no_available_browser_guide">사용 가능한 브라우저가 없습니다.</string>
+    <string name="text_recommend_google_login_guide">⚡️ 3초만에 빠른 로그인</string>
+    <string name="text_start_with_google">구글로 시작하기</string>
+    <string name="text_start_with_email">이메일로 시작하기</string>
 </resources>
