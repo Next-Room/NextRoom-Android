@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.presentation.ui.adminmain
+package com.nextroom.nextroom.presentation.ui.theme_select
 
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.SubscribeStatus
@@ -24,16 +24,16 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class AdminMainViewModel @Inject constructor(
+class ThemeSelectViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     private val themeRepository: ThemeRepository,
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val bannerRepository: BannerRepository
-) : BaseViewModel<AdminMainState, AdminMainEvent>() {
+) : BaseViewModel<ThemeSelectState, ThemeSelectEvent>() {
 
-    override val container: Container<AdminMainState, AdminMainEvent> = container(
-        AdminMainState(
+    override val container: Container<ThemeSelectState, ThemeSelectEvent> = container(
+        ThemeSelectState(
             opaqueLoading = true,
             loading = true,
         )
@@ -70,7 +70,7 @@ class AdminMainViewModel @Inject constructor(
     private fun showInAppReview() = intent {
         baseViewModelScope.launch {
             delay(200)
-            postSideEffect(AdminMainEvent.InAppReview)
+            postSideEffect(ThemeSelectEvent.InAppReview)
         }
     }
 
@@ -115,7 +115,7 @@ class AdminMainViewModel @Inject constructor(
                 && !shownBackgroundCustomDialog
             ) {
                 shownBackgroundCustomDialog = true
-                postSideEffect(AdminMainEvent.RecommendBackgroundCustom)
+                postSideEffect(ThemeSelectEvent.RecommendBackgroundCustom)
             }
         }
         reduce { state.copy(opaqueLoading = false, loading = false) }
@@ -154,7 +154,7 @@ class AdminMainViewModel @Inject constructor(
         reduce { state.copy(opaqueLoading = true) }
         themeRepository.updateLatestTheme(themeId)
         adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
-            postSideEffect(AdminMainEvent.ReadyToGameStart(myPage.status))
+            postSideEffect(ThemeSelectEvent.ReadyToGameStart(myPage.status))
         }.onFailure(::handleError)
         reduce { state.copy(opaqueLoading = false) }
     }
@@ -163,7 +163,7 @@ class AdminMainViewModel @Inject constructor(
         baseViewModelScope.launch {
             if (adminRepository.getAppPassword().isEmpty()) {
                 intent {
-                    postSideEffect(AdminMainEvent.NeedToSetPassword)
+                    postSideEffect(ThemeSelectEvent.NeedToSetPassword)
                 }
             }
         }
@@ -173,9 +173,9 @@ class AdminMainViewModel @Inject constructor(
         baseViewModelScope.launch {
             intent {
                 if (adminRepository.getAppPassword().isEmpty()) {
-                    AdminMainEvent.NeedToSetPassword
+                    ThemeSelectEvent.NeedToSetPassword
                 } else {
-                    AdminMainEvent.NeedToCheckPasswordForStartGame(themeId)
+                    ThemeSelectEvent.NeedToCheckPasswordForStartGame(themeId)
                 }.also { postSideEffect(it) }
             }
         }
@@ -197,9 +197,9 @@ class AdminMainViewModel @Inject constructor(
 
     private fun handleError(error: Result.Failure) = intent {
         when (error) {
-            is Result.Failure.NetworkError -> postSideEffect(AdminMainEvent.NetworkError)
-            is Result.Failure.HttpError -> postSideEffect(AdminMainEvent.ClientError(error.message))
-            else -> postSideEffect(AdminMainEvent.UnknownError)
+            is Result.Failure.NetworkError -> postSideEffect(ThemeSelectEvent.NetworkError)
+            is Result.Failure.HttpError -> postSideEffect(ThemeSelectEvent.ClientError(error.message))
+            else -> postSideEffect(ThemeSelectEvent.UnknownError)
         }
     }
 

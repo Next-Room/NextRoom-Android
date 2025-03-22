@@ -68,7 +68,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         btnLogin.setOnClickListener { viewModel.complete() }
 
         tvPrivacyPolicy.setOnClickListener {
-            val action = LoginFragmentDirections.actionGlobalWebViewFragment(getString(R.string.link_privacy_policy))
+            val action = LoginFragmentDirections.moveToWebViewFragment(getString(R.string.link_privacy_policy))
             findNavController().safeNavigate(action)
         }
 
@@ -95,7 +95,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             viewModel.loginState.collect { loggedIn ->
                 if (loggedIn) {
                     val action =
-                        LoginFragmentDirections.actionLoginFragmentToAdminMainFragment()
+                        LoginFragmentDirections.moveToThemeSelectFragment()
                     findNavController().safeNavigate(action)
                     clearInputs()
                 }
@@ -135,7 +135,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
     }
 
     private fun goToOnboardingScreen() {
-        val action = LoginFragmentDirections.actionLoginFragmentToOnboardingFragment()
+        val action = LoginFragmentDirections.moveToOnboardingFragment()
         findNavController().safeNavigate(action)
     }
 

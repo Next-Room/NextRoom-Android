@@ -54,7 +54,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         tbHint.apply {
             tvButton.text = getString(R.string.memo_button)
             tvButton.setOnClickListener {
-                val action = HintFragmentDirections.actionGlobalMemoFragment(true)
+                val action = HintFragmentDirections.moveToMemoFragment(true)
                 findNavController().safeNavigate(action)
             }
             ivBack.setOnClickListener { gotoHome() }
@@ -123,7 +123,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         hintImageAdapter = ImageAdapter(
             onImageClicked = {
                 if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
-                    NavGraphDirections.actionGlobalImageViewerFragment(
+                    NavGraphDirections.moveToImageViewerFragment(
                         imageUrlList = hintState.hint.hintImageUrlList.toTypedArray(),
                         position = vpHintImage.currentItem
                     ).also {
@@ -178,7 +178,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         answerImageAdapter = ImageAdapter(
             onImageClicked = {
                 if (hintState.userSubscribeStatus == SubscribeStatus.Subscribed) {
-                    NavGraphDirections.actionGlobalImageViewerFragment(
+                    NavGraphDirections.moveToImageViewerFragment(
                         imageUrlList = hintState.hint.answerImageUrlList.toTypedArray(),
                         position = vpHintAnswerImage.currentItem
                     ).also {
@@ -226,7 +226,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
 
     private fun gotoHome() {
         Timber.d("gotoHome")
-        findNavController().popBackStack(R.id.gameFragment, false)
+        findNavController().popBackStack(R.id.timer_fragment, false)
     }
 
     override fun onDestroyView() {

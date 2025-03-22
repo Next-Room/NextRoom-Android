@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background_custom_navigation"
+    app:startDestination="@id/background_custom_fragment">
+
+    <fragment
+        android:id="@+id/background_custom_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundCustomFragment"
+        tools:layout="@layout/fragment_background_custom">
+
+        <argument
+            android:name="subscribeStatus"
+            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+
+        <argument
+            android:name="themes"
+            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation[]" />
+
+        <action
+            android:id="@+id/move_to_subscription_promotion"
+            app:destination="@+id/subscription_promotion" />
+
+        <action
+            android:id="@+id/move_to_background_image_custom_detail_fragment"
+            app:destination="@+id/background_image_custom_detail_fragment">
+
+            <argument
+                android:name="theme"
+                app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
+        </action>
+    </fragment>
+
+    <dialog
+        android:id="@+id/subscription_promotion"
+        android:name="com.nextroom.nextroom.presentation.ui.SubscriptionPromotionBottomSheet"
+        tools:layout="@layout/bottom_sheet_subscription_promotion" />
+
+    <fragment
+        android:id="@+id/background_image_custom_detail_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.background_custom.BackgroundImageCustomDetailFragment"
+        tools:layout="@layout/fragment_background_image_custom_detail">
+
+        <argument
+            android:name="theme"
+            app:argType="com.nextroom.nextroom.presentation.model.ThemeInfoPresentation" />
+    </fragment>
+</navigation>

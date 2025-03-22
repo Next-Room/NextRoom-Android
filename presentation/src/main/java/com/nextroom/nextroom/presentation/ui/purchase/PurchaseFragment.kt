@@ -82,7 +82,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                                     findNavController().navigate(
                                         directions = it,
                                         navOptions = NavOptions.Builder().setPopUpTo(
-                                            destinationId = R.id.purchaseFragment,
+                                            destinationId = R.id.purchase_fragment,
                                             inclusive = true,
                                         ).build()
                                     )
@@ -116,7 +116,7 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 tvSellPrice.text = sellPrice
                 tvSeeMore.setOnClickListener {
                     PurchaseFragmentDirections
-                        .actionGlobalWebViewFragment(url = loaded.url)
+                        .moveToWebViewFragment(url = loaded.url)
                         .also { findNavController().safeNavigate(it) }
                 }
             }

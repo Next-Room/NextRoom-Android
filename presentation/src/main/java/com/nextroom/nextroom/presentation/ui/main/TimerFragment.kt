@@ -19,11 +19,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
-import com.nextroom.nextroom.presentation.databinding.FragmentMainBinding
+import com.nextroom.nextroom.presentation.databinding.FragmentTimerBinding
 import com.nextroom.nextroom.presentation.extension.disableFullScreen
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -40,10 +41,10 @@ import org.orbitmvi.orbit.viewmodel.observe
 import java.util.Locale
 
 @AndroidEntryPoint
-class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::inflate) {
+class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::inflate) {
     private lateinit var backCallback: OnBackPressedCallback
 
-    private val viewModel: GameViewModel by viewModels()
+    private val viewModel: TimerViewModel by viewModels()
     private val painterViewModel: PainterViewModel by activityViewModels()
 
     private val gameStartConfirmDialog by lazy {
@@ -94,7 +95,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             root.setBackgroundColor(resources.getColor(android.R.color.transparent, null))
             tvButton.text = getString(R.string.memo_button)
             tvButton.setOnClickListener {
-                val action = GameFragmentDirections.actionGlobalMemoFragment()
+                val action = TimerFragmentDirections.moveToMemoFragment()
                 findNavController().safeNavigate(action)
             }
             ivBack.alpha = 0.2F
@@ -190,7 +191,7 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
             }).into(binding.pvCustomImage)
     }
 
-    private fun render(state: GameScreenState) = with(binding) {
+    private fun render(state: TimerScreenState) = with(binding) {
         // 타이머 렌더링
         tvTimer.text = state.lastSeconds.toTimerFormat()
         customTimer.timeLimit = state.totalSeconds
@@ -226,27 +227,27 @@ class GameFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         }
     }
 
-    private fun handleEvent(event: GameEvent) {
+    private fun handleEvent(event: TimerEvent) {
         when (event) {
-            is GameEvent.ClearHintCode -> binding.customCodeInput.setCode("")
-            is GameEvent.OnOpenHint -> {
-                val action = GameFragmentDirections.actionMainFragmentToHintFragment(event.hint, event.subscribeStatus)
+            is TimerEvent.ClearHintCode -> binding.customCodeInput.setCode("")
+            is TimerEvent.OnOpenHint -> {
+                val action = TimerFragmentDirections.moveToHintFragment(event.hint, event.subscribeStatus)
                 findNavController().safeNavigate(action)
                 viewModel.clearHintCode()
             }
 
-            is GameEvent.GameFinish -> snackbar(R.string.game_finished)
+            is TimerEvent.TimerFinish -> snackbar(R.string.game_finished)
 
-            GameEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
-            GameEvent.NewGame -> {
+            TimerEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
+            TimerEvent.NewTimer -> {
                 gameStartConfirmDialog.show(parentFragmentManager, "GameStartConfirmDialog")
             }
         }
     }
 
     private fun showExitDialog() {
-        GameFragmentDirections
-            .actionGlobalNrTwoButtonDialog(
+        NavGraphDirections
+            .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.game_main_exit_dialog),
                     message = getString(R.string.game_main_exit_dialog_message),

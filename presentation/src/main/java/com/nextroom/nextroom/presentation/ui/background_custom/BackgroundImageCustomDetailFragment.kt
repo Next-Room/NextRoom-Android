@@ -179,7 +179,7 @@ class BackgroundImageCustomDetailFragment : BaseFragment<FragmentBackgroundImage
     private fun checkImageEditing() {
         if (viewModel.isImageEditing()) {
             NavGraphDirections
-                .actionGlobalNrTwoButtonDialog(
+                .moveToNrTwoButtonDialog(
                     NRTwoButtonDialog.NRTwoButtonArgument(
                         title = getString(R.string.text_image_editing_exit_title),
                         message = getString(R.string.text_image_editing_exit_desc),

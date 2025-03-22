@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.presentation.ui.adminmain
+package com.nextroom.nextroom.presentation.ui.theme_select
 
 import android.app.Dialog
 import android.os.Bundle
@@ -11,14 +11,14 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentBottomSheetRecommendBackgrounCustomBinding
+import com.nextroom.nextroom.presentation.databinding.BottomSheetRecommendBackgroundCustomBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RecommendBackgroundCustomBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: FragmentBottomSheetRecommendBackgrounCustomBinding? = null
-    private val binding: FragmentBottomSheetRecommendBackgrounCustomBinding get() = checkNotNull(_binding)
+    private var _binding: BottomSheetRecommendBackgroundCustomBinding? = null
+    private val binding: BottomSheetRecommendBackgroundCustomBinding get() = checkNotNull(_binding)
 
     private val viewModel by viewModels<RecommendBackgroundCustomViewModel>()
 
@@ -28,7 +28,7 @@ class RecommendBackgroundCustomBottomSheet : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        _binding = FragmentBottomSheetRecommendBackgrounCustomBinding.inflate(inflater, container, false)
+        _binding = BottomSheetRecommendBackgroundCustomBinding.inflate(inflater, container, false)
         return binding.root
     }
 

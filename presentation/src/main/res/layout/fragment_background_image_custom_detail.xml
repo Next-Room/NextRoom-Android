@@ -24,7 +24,7 @@
 
         <include
             android:id="@+id/layout_game"
-            layout="@layout/layout_game"
+            layout="@layout/layout_timer"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

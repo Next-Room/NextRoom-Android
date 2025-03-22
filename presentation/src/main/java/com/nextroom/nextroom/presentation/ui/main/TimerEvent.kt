@@ -3,15 +3,15 @@ package com.nextroom.nextroom.presentation.ui.main
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.model.Hint
 
-sealed interface GameEvent {
+sealed interface TimerEvent {
     data class OnOpenHint(
         val hint: Hint,
         val subscribeStatus: SubscribeStatus
-    ) : GameEvent
+    ) : TimerEvent
 
-    data object GameFinish : GameEvent
-    data object ClearHintCode : GameEvent
+    data object TimerFinish : TimerEvent
+    data object ClearHintCode : TimerEvent
 
-    data object ShowAvailableHintExceedError : GameEvent
-    data object NewGame : GameEvent
+    data object ShowAvailableHintExceedError : TimerEvent
+    data object NewTimer : TimerEvent
 }

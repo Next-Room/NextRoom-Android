@@ -67,7 +67,9 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
             is BackgroundCustomEvent.NetworkError -> snackbar(R.string.error_network)
             is BackgroundCustomEvent.ClientError -> snackbar(event.message)
             BackgroundCustomEvent.UnknownError -> snackbar(R.string.error_something)
-            BackgroundCustomEvent.ToggleNotAllowed -> findNavController().safeNavigate(BackgroundCustomFragmentDirections.moveToSubscriptionPayment())
+            BackgroundCustomEvent.ToggleNotAllowed -> findNavController().safeNavigate(
+                BackgroundCustomFragmentDirections.moveToSubscriptionPromotion()
+            )
             is BackgroundCustomEvent.ThemeImageClicked -> navToImageCustom(event.theme)
         }
     }
@@ -94,7 +96,7 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
     private fun navToImageCustom(theme: ThemeInfoPresentation) {
         //TODO : BackgroundCustomFragment 네이밍을 수정하자 -> BackgroundImageCustomListFragment
         BackgroundCustomFragmentDirections
-            .navToBackgroundImageCustomDetailFragment(theme)
+            .moveToBackgroundImageCustomDetailFragment(theme)
             .also { findNavController().safeNavigate(it) }
     }
 }

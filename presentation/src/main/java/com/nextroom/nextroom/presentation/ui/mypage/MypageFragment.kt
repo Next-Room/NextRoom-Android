@@ -106,18 +106,18 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
     }
 
     private fun goToPurchase() {
-        val action = MypageFragmentDirections.actionMypageFragmentToPurchaseFragment()
+        val action = NavGraphDirections.moveToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 
     private fun goToSubscriptionInfo() {
-        val action = MypageFragmentDirections.actionMypageFragmentToSubscriptionFragment()
+        val action = MypageFragmentDirections.moveToSubscriptionInfoFragment()
         findNavController().safeNavigate(action)
     }
 
     private fun showConfirmResignDialog() {
-        MypageFragmentDirections
-            .actionGlobalNrTwoButtonDialog(
+        NavGraphDirections
+            .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.resign_dialog_title),
                     message = getString(R.string.resign_dialog_message),

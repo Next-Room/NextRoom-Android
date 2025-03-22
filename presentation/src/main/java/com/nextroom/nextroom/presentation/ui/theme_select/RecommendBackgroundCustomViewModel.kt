@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.presentation.ui.adminmain
+package com.nextroom.nextroom.presentation.ui.theme_select
 
 import androidx.lifecycle.ViewModel
 import com.nextroom.nextroom.domain.repository.DataStoreRepository

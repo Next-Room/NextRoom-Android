@@ -1,4 +1,4 @@
-package com.nextroom.nextroom.presentation.ui.adminmain
+package com.nextroom.nextroom.presentation.ui.theme_select
 
 import android.content.Context
 import android.content.Intent
@@ -24,7 +24,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRLoading
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
-import com.nextroom.nextroom.presentation.databinding.FragmentAdminMainBinding
+import com.nextroom.nextroom.presentation.databinding.FragmentThemeSelectBinding
 import com.nextroom.nextroom.presentation.extension.addMargin
 import com.nextroom.nextroom.presentation.extension.getResultData
 import com.nextroom.nextroom.presentation.extension.hasResultData
@@ -45,8 +45,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AdminMainFragment :
-    BaseFragment<FragmentAdminMainBinding>(FragmentAdminMainBinding::inflate) {
+class ThemeSelectFragment :
+    BaseFragment<FragmentThemeSelectBinding>(FragmentThemeSelectBinding::inflate) {
 
     private lateinit var backCallback: OnBackPressedCallback
     private var job: Job? = null
@@ -55,13 +55,13 @@ class AdminMainFragment :
     @Inject
     lateinit var statisticsRepository: StatisticsRepository
 
-    private val viewModel: AdminMainViewModel by viewModels()
+    private val viewModel: ThemeSelectViewModel by viewModels()
     private val adapter: ThemesAdapter by lazy {
         ThemesAdapter(
             onThemeClicked = { themeId -> viewModel.onThemeClicked(themeId.toString()) }
         )
     }
-    private val state: AdminMainState
+    private val state: ThemeSelectState
         get() = viewModel.container.stateFlow.value
 
     override fun onAttach(context: Context) {
@@ -148,7 +148,7 @@ class AdminMainFragment :
 
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(
-                AdminMainFragmentDirections.moveToBackgroundCustomFragment(
+                ThemeSelectFragmentDirections.moveToBackgroundCustomFragment(
                     state.subscribeStatus,
                     state.themes.toTypedArray()
                 )
@@ -212,7 +212,7 @@ class AdminMainFragment :
         }
     }
 
-    private fun render(state: AdminMainState) = with(binding) {
+    private fun render(state: ThemeSelectState) = with(binding) {
         if (state.banners.isEmpty()) {
             vpBanner.isVisible = false
         } else {
@@ -244,21 +244,21 @@ class AdminMainFragment :
         }
     }
 
-    private fun handleEvent(event: AdminMainEvent) {
+    private fun handleEvent(event: ThemeSelectEvent) {
         when (event) {
-            is AdminMainEvent.NetworkError -> snackbar(R.string.error_network)
-            is AdminMainEvent.UnknownError -> snackbar(R.string.error_something)
-            is AdminMainEvent.ClientError -> snackbar(event.message)
-            AdminMainEvent.InAppReview -> showInAppReview()
-            is AdminMainEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
-            AdminMainEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
-            is AdminMainEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
-            AdminMainEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
+            is ThemeSelectEvent.NetworkError -> snackbar(R.string.error_network)
+            is ThemeSelectEvent.UnknownError -> snackbar(R.string.error_something)
+            is ThemeSelectEvent.ClientError -> snackbar(event.message)
+            ThemeSelectEvent.InAppReview -> showInAppReview()
+            is ThemeSelectEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
+            ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
+            is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
+            ThemeSelectEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
         }
     }
 
     private fun showRecommendBackgroundCustomBottomSheet() {
-        findNavController().safeNavigate(AdminMainFragmentDirections.moveToRecommendBackgroundCustom())
+        findNavController().safeNavigate(ThemeSelectFragmentDirections.moveToRecommendBackgroundCustom())
     }
 
     private fun showInAppReview() {
@@ -279,29 +279,25 @@ class AdminMainFragment :
             }
     }
 
-    private fun goToLink(linkUrl: String) {
-        findNavController().safeNavigate(AdminMainFragmentDirections.actionAdminToWebview(url = linkUrl))
-    }
-
     private fun goToPurchase() {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToPurchaseFragment()
+        val action = NavGraphDirections.moveToPurchaseFragment()
         findNavController().safeNavigate(action)
     }
 
     private fun goToMyPage() {
-        val action = AdminMainFragmentDirections.actionAdminMainFragmentToMypageFragment()
+        val action = ThemeSelectFragmentDirections.moveToMypage()
         findNavController().safeNavigate(action)
     }
 
     private fun moveToGameStart(subscribeStatus: SubscribeStatus) {
         NavGraphDirections
-            .actionGlobalGameFragment(subscribeStatus)
+            .moveToTimerFragment(subscribeStatus)
             .also { findNavController().safeNavigate(it) }
     }
 
     private fun showNeedToSetPasswordDialog() {
         NavGraphDirections
-            .actionGlobalNrTwoButtonDialog(
+            .moveToNrTwoButtonDialog(
                 NRTwoButtonDialog.NRTwoButtonArgument(
                     title = getString(R.string.text_need_to_set_password_title),
                     message = getString(R.string.text_need_to_set_password_message),

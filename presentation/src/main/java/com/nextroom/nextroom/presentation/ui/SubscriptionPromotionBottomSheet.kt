@@ -17,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
-import com.nextroom.nextroom.presentation.databinding.FragmentSubscriptionPaymentBinding
+import com.nextroom.nextroom.presentation.databinding.BottomSheetSubscriptionPromotionBinding
 import com.nextroom.nextroom.presentation.databinding.ItemBenefitBinding
 import com.nextroom.nextroom.presentation.extension.dpToPx
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
@@ -32,16 +32,16 @@ import java.text.NumberFormat
 
 
 @AndroidEntryPoint
-class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
+class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: FragmentSubscriptionPaymentBinding? = null
+    private var _binding: BottomSheetSubscriptionPromotionBinding? = null
     private val binding get() = checkNotNull(_binding)
 
-    private val viewModel by viewModels<SubscriptionPaymentViewModel>()
+    private val viewModel by viewModels<SubscriptionPromotionViewModel>()
     private val billingViewModel: BillingViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentSubscriptionPaymentBinding.inflate(inflater, container, false)
+        _binding = BottomSheetSubscriptionPromotionBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -126,7 +126,7 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
                                     findNavController().navigate(
                                         directions = it,
                                         navOptions = NavOptions.Builder().setPopUpTo(
-                                            destinationId = R.id.subscription_payment_fragment,
+                                            destinationId = R.id.subscription_promotion,
                                             inclusive = true,
                                         ).build()
                                     )
@@ -143,7 +143,7 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun render(state: SubscriptionPaymentState) = with(binding) {
+    private fun render(state: SubscriptionPromotionState) = with(binding) {
         pbLoading.isVisible = state.loading
 
         state.plan.plans.firstOrNull()
@@ -159,11 +159,11 @@ class SubscriptionPaymentBottomSheetFragment : BottomSheetDialogFragment() {
             }
     }
 
-    private fun handleEvent(event: SubscriptionPaymentEvent) {
+    private fun handleEvent(event: SubscriptionPromotionEvent) {
         when (event) {
-            is SubscriptionPaymentEvent.NetworkError -> snackbar(R.string.error_network)
-            is SubscriptionPaymentEvent.UnknownError -> snackbar(R.string.error_something)
-            is SubscriptionPaymentEvent.ClientError -> snackbar(event.message)
+            is SubscriptionPromotionEvent.NetworkError -> snackbar(R.string.error_network)
+            is SubscriptionPromotionEvent.UnknownError -> snackbar(R.string.error_something)
+            is SubscriptionPromotionEvent.ClientError -> snackbar(event.message)
         }
     }
 
