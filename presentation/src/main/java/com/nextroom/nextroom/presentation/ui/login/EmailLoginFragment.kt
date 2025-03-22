@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentLoginBinding
+import com.nextroom.nextroom.presentation.databinding.FragmentEmailLoginBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setError
@@ -24,9 +24,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
+class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmailLoginBinding::inflate) {
 
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: EmailLoginViewModel by viewModels()
 
     private var emailInitialised = false
 
@@ -65,10 +65,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
 
         tvNoAccountGuide.setOnClickListener { goToOnboardingScreen() }
-        btnLogin.setOnClickListener { viewModel.complete() }
+        btnEmailLogin.setOnClickListener { viewModel.complete() }
 
         tvPrivacyPolicy.setOnClickListener {
-            val action = LoginFragmentDirections.moveToWebViewFragment(getString(R.string.link_privacy_policy))
+            val action = EmailLoginFragmentDirections.moveToWebViewFragment(getString(R.string.link_privacy_policy))
             findNavController().safeNavigate(action)
         }
 
@@ -95,7 +95,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             viewModel.loginState.collect { loggedIn ->
                 if (loggedIn) {
                     val action =
-                        LoginFragmentDirections.moveToThemeSelectFragment()
+                        EmailLoginFragmentDirections.moveToThemeSelectFragment()
                     findNavController().safeNavigate(action)
                     clearInputs()
                 }
@@ -103,7 +103,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
-    private fun render(state: LoginState) = with(binding) {
+    private fun render(state: EmailLoginState) = with(binding) {
         pbLoading.isVisible = state.loading
         etEmail.isEnabled = !state.loading
         etPassword.isEnabled = !state.loading
@@ -112,30 +112,30 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             etEmail.setText(state.userEmail)
             cbIdSave.isChecked = state.idSaveChecked
         }
-        btnLogin.isEnabled = !state.loading
+        btnEmailLogin.isEnabled = !state.loading
         tvPrivacyPolicy.isEnabled = !state.loading
         tvNoAccountGuide.isEnabled = !state.loading
     }
 
-    private fun handleEvent(event: LoginEvent) {
+    private fun handleEvent(event: EmailLoginEvent) {
         when (event) {
-            is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
-            is LoginEvent.LoginFailed -> {
+            is EmailLoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
+            is EmailLoginEvent.EmailLoginFailed -> {
                 binding.etEmail.setError()
                 binding.etPassword.setError()
                 snackbar(event.message)
             }
 
-            LoginEvent.GoToOnboardingScreen -> {
+            EmailLoginEvent.GoToOnboardingScreen -> {
                 goToOnboardingScreen()
             }
 
-            LoginEvent.GoToGameScreen -> Unit
+            EmailLoginEvent.GoToGameScreen -> Unit
         }
     }
 
     private fun goToOnboardingScreen() {
-        val action = LoginFragmentDirections.moveToOnboardingFragment()
+        val action = EmailLoginFragmentDirections.moveToOnboardingFragment()
         findNavController().safeNavigate(action)
     }
 
