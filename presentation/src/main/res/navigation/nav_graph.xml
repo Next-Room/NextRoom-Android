@@ -138,9 +138,6 @@
         <action
             android:id="@+id/move_to_theme_select_fragment"
             app:destination="@id/theme_select_fragment" />
-        <action
-            android:id="@+id/move_to_onboarding_fragment"
-            app:destination="@id/onboarding_fragment" />
     </fragment>
 
     <fragment

@@ -64,7 +64,6 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
             }
         }
 
-        tvNoAccountGuide.setOnClickListener { goToOnboardingScreen() }
         btnEmailLogin.setOnClickListener { viewModel.complete() }
 
         tvPrivacyPolicy.setOnClickListener {
@@ -126,17 +125,8 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
                 snackbar(event.message)
             }
 
-            EmailLoginEvent.GoToOnboardingScreen -> {
-                goToOnboardingScreen()
-            }
-
             EmailLoginEvent.GoToGameScreen -> Unit
         }
-    }
-
-    private fun goToOnboardingScreen() {
-        val action = EmailLoginFragmentDirections.moveToOnboardingFragment()
-        findNavController().safeNavigate(action)
     }
 
     private fun clearInputs() {

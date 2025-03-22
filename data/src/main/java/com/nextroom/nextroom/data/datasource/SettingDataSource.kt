@@ -41,16 +41,6 @@ class SettingDataSource @Inject constructor(
         }
     }
 
-    suspend fun getIsInitLaunch(): Boolean {
-        return data.first().isInitLaunch
-    }
-
-    suspend fun setIsNotInitLaunch() {
-        dataStore.updateData {
-            it.copy(isInitLaunch = false)
-        }
-    }
-
     fun setLastLaunchDate() = runBlocking {
         dataStore.updateData {
             it.copy(lastLaunchDate = System.currentTimeMillis())

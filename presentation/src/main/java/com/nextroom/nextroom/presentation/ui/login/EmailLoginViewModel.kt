@@ -48,11 +48,6 @@ class EmailLoginViewModel @Inject constructor(
             }
         }
         baseViewModelScope.launch {
-            if (dataStoreRepository.getIsInitLaunch()) {
-                event(EmailLoginEvent.GoToOnboardingScreen)
-            }
-        }
-        baseViewModelScope.launch {
             intent {
                 firebaseRemoteConfigRepository
                     .getFirebaseRemoteConfigValue(FirebaseRemoteConfigRepository.REMOTE_KEY_KAKAO_BUSINESS_CHANNEL_URL)
@@ -142,7 +137,6 @@ class EmailLoginViewModel @Inject constructor(
     private fun event(event: EmailLoginEvent) {
         when (event) {
             is EmailLoginEvent.EmailLoginFailed -> showMessage(event.message)
-            EmailLoginEvent.GoToOnboardingScreen -> intent { postSideEffect(EmailLoginEvent.GoToOnboardingScreen) }
             else -> {}
         }
     }

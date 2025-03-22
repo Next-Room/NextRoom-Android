@@ -10,7 +10,6 @@ data class AppSettings(
     val latestGameCode: Int = -1,
     val accessToken: String = "",
     val refreshToken: String = "",
-    val isInitLaunch: Boolean = true,
     val lastLaunchDate: Long = 0L,
     val emailSaveChecked: Boolean = false,
     val userEmail: String = "",
