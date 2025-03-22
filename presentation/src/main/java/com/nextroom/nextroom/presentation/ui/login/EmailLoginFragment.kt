@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentEmailLoginBinding
@@ -64,12 +65,7 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
             }
         }
 
-        btnEmailLogin.setOnClickListener { viewModel.complete() }
-
-        tvPrivacyPolicy.setOnClickListener {
-            val action = EmailLoginFragmentDirections.moveToWebViewFragment(getString(R.string.link_privacy_policy))
-            findNavController().safeNavigate(action)
-        }
+        tvEmailLogin.setOnClickListener { viewModel.complete() }
 
         cbIdSave.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onIdSaveChecked(isChecked)
@@ -85,6 +81,23 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
             } catch (e: Exception) {
                 toast(getString(R.string.error_something))
             }
+        }
+
+        ivBack.setOnClickListener { findNavController().navigateUp() }
+        tvCustomerService.setOnClickListener {
+            try {
+                Intent(Intent.ACTION_VIEW)
+                    .apply { data = Uri.parse(getString(R.string.link_official_instagram)) }
+                    .also { startActivity(it) }
+            } catch (e: Exception) {
+                toast(getString(R.string.error_something))
+            }
+        }
+        tvSignup.setOnClickListener {
+            NavGraphDirections.moveToWebViewFragment(
+                url = getString(R.string.link_signup),
+                showToolbar = true,
+            ).also { findNavController().safeNavigate(it) }
         }
     }
 
@@ -111,9 +124,7 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
             etEmail.setText(state.userEmail)
             cbIdSave.isChecked = state.idSaveChecked
         }
-        btnEmailLogin.isEnabled = !state.loading
-        tvPrivacyPolicy.isEnabled = !state.loading
-        tvNoAccountGuide.isEnabled = !state.loading
+        tvEmailLogin.isEnabled = !state.loading
     }
 
     private fun handleEvent(event: EmailLoginEvent) {
