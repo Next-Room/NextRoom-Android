@@ -54,6 +54,9 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.credentials)
+    implementation(libs.credentials.auth)
+    implementation(libs.google.identity)
     implementation(libs.material)
     implementation(libs.bundles.lifecycle)
 

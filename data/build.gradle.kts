@@ -69,6 +69,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config.ktx)
     implementation(libs.firebase.analytics.ktx)
+    implementation(libs.credentials)
+    implementation(libs.credentials.auth)
+    implementation(libs.google.identity)
 
     debugImplementation(libs.bundles.flipper)
     releaseImplementation(libs.flipper.noop)

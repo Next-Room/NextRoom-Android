@@ -10,6 +10,9 @@ targetJvm = "17"
 kotlin = "1.9.10"
 android = "8.1.2"
 ksp = "1.9.10-1.0.13"
+credentials = "1.2.2"
+credentials-auth = "1.2.2"
+google-identity = "1.1.0"
 
 activity-ktx = "1.8.0"
 fragment-ktx = "1.6.1"
@@ -104,6 +107,9 @@ flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 soloader = { module = "com.facebook.soloader:soloader", version.ref = "soloader" }
 flipper-noop = { module = "com.facebook.flipper:flipper-noop", version.ref = "flipper" }
 flipper-network-plugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
+credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
+credentials-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials-auth" }
+google-identity = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-identity" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
