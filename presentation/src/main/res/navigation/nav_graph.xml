@@ -86,6 +86,15 @@
         android:name="com.nextroom.nextroom.presentation.ui.password.SetPasswordFragment"
         tools:layout="@layout/fragment_set_password" />
 
+    <dialog
+        android:id="@+id/select_item"
+        android:name="com.nextroom.nextroom.presentation.common.SelectItemBottomSheet"
+        tools:layout="@layout/bottom_sheet_select_item">
+
+        <argument
+            android:name="argument"
+            app:argType="com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg" />
+    </dialog>
 
     <!-- global actions -->
     <action
@@ -129,6 +138,14 @@
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
     </action>
 
+    <action
+        android:id="@+id/move_to_select_item"
+        app:destination="@id/select_item">
+
+        <argument
+            android:name="argument"
+            app:argType="com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg" />
+    </action>
 
     <!-- local fragments -->
     <fragment
