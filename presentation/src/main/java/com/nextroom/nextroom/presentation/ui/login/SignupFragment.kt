@@ -13,6 +13,7 @@ import com.nextroom.nextroom.presentation.base.BaseViewModelFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentSignupBinding
 import com.nextroom.nextroom.presentation.extension.BUNDLE_KEY_RESULT_DATA
 import com.nextroom.nextroom.presentation.extension.hasResultData
+import com.nextroom.nextroom.presentation.extension.inputMethodManager
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg
 import kotlinx.coroutines.launch
@@ -38,6 +39,12 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.llMarketingTermAgree.setOnClickListener(this)
         binding.etShopName.addTextChangedListener {
             viewModel.onShopNameChanged(it.toString())
+        }
+        binding.etShopName.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                requireActivity().inputMethodManager?.hideSoftInputFromWindow(v.windowToken, 0)
+                binding.etShopName.clearFocus()
+            }
         }
     }
 
