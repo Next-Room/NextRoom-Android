@@ -40,7 +40,7 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
                         LoginViewModel.UIEvent.GoogleLoginFailed -> toast(R.string.error_something)
 
                         LoginViewModel.UIEvent.GoogleLoginSuccess -> moveToThemeSelect()
-                        is LoginViewModel.UIEvent.NeedAdditionalUserInfo -> Unit // TODO: 구현 예정
+                        is LoginViewModel.UIEvent.NeedAdditionalUserInfo -> moveToSignup()
                     }
                 }
             }
@@ -53,6 +53,10 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
 
     private fun moveToEmailLogin() {
         LoginFragmentDirections.moveToEmailLogin().also { findNavController().navigate(it) }
+    }
+
+    private fun moveToSignup() {
+        LoginFragmentDirections.moveToSignup().also { findNavController().navigate(it) }
     }
 
     override fun onClick(v: View) {

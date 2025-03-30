@@ -155,6 +155,9 @@
         <action
             android:id="@+id/move_to_theme_select_fragment"
             app:destination="@id/theme_select_fragment" />
+        <action
+            android:id="@+id/move_to_signup"
+            app:destination="@id/signup_fragment" />
     </fragment>
 
     <fragment
@@ -199,6 +202,10 @@
         <action
             android:id="@+id/move_to_theme_select"
             app:destination="@id/theme_select_fragment" />
+
+        <action
+            android:id="@+id/move_to_signup"
+            app:destination="@id/signup_fragment" />
     </fragment>
 
     <action
@@ -206,4 +213,9 @@
         app:destination="@id/login_fragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
+
+    <fragment
+        android:id="@+id/signup_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment"
+        tools:layout="@layout/fragment_signup" />
 </navigation>
