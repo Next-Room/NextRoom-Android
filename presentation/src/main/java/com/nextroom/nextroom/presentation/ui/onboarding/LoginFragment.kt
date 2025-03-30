@@ -58,6 +58,11 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
                     }
                 }
             }
+            launch {
+                viewModel.loginState.collect {
+                    if (it) moveToThemeSelect()
+                }
+            }
         }
     }
 
