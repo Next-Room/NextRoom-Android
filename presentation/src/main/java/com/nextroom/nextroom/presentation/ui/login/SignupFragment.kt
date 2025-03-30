@@ -3,6 +3,7 @@ package com.nextroom.nextroom.presentation.ui.login
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.BundleCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -35,6 +36,9 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.clAgreeAllTerms.setOnClickListener(this)
         binding.llServiceTermAgree.setOnClickListener(this)
         binding.llMarketingTermAgree.setOnClickListener(this)
+        binding.etShopName.addTextChangedListener {
+            viewModel.onShopNameChanged(it.toString())
+        }
     }
 
     override fun setFragmentResultListeners() {

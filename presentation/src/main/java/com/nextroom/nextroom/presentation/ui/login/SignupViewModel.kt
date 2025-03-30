@@ -7,24 +7,28 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
 
 ) : NewBaseViewModel() {
+    private val _shopName = MutableStateFlow<String?>(null)
     private val _selectedSignupSource = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
     private val _selectedSignupReason = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
     private val _serviceTermAgree = MutableStateFlow(false)
     private val _marketingTermAgree = MutableStateFlow(false)
 
     val uiState = combine(
+        _shopName,
         _selectedSignupSource,
         _selectedSignupReason,
         _serviceTermAgree,
         _marketingTermAgree,
-    ) { selectedSignupSource, selectedSignupReason, serviceTermAgree, marketingTermAgree ->
+    ) { shopName, selectedSignupSource, selectedSignupReason, serviceTermAgree, marketingTermAgree ->
         UIState.Loaded(
+            shopName = shopName,
             selectedSignupSource = selectedSignupSource,
             selectedSignupReason = selectedSignupReason,
             serviceTermAgreed = serviceTermAgree,
@@ -32,6 +36,14 @@ class SignupViewModel @Inject constructor(
             allTermsAgreed = serviceTermAgree && marketingTermAgree
         )
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, UIState.Loading)
+
+    fun onShopNameChanged(shopName: String?) {
+        baseViewModelScope.launch {
+            shopName
+                .takeIf { !it.isNullOrEmpty() }
+                .also { _shopName.emit(it) }
+        }
+    }
 
     fun setSelectedSignupSource(selectedItem: UIState.Loaded.SelectedItem) {
         _selectedSignupSource.update { selectedItem }
@@ -57,6 +69,7 @@ class SignupViewModel @Inject constructor(
     sealed interface UIState {
         data object Loading : UIState
         data class Loaded(
+            val shopName: String?,
             val selectedSignupSource: SelectedItem?,
             val selectedSignupReason: SelectedItem?,
             val serviceTermAgreed: Boolean,
