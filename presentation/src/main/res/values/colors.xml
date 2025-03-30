@@ -28,11 +28,17 @@
     <color name="Gray05">#46454a</color>
     <color name="White">#FFFFFF</color>
     <color name="Red">#FF5065</color>
+    <color name="Red02">#F04438</color>
 
     <color name="sub1">#1f2023</color>
     <color name="sub2">#3a3b3d</color>
 
     <color name="bg_main">#131417</color>
+
+    <color name="primary_button_background">#FFFFFF</color>
+    <color name="disabled_button_background">#2D2D2D</color>
+    <color name="primary_button_text">#000000</color>
+    <color name="disabled_button_text">#555555</color>
 
     <drawable name="drawable_White">@color/White</drawable>
     <drawable name="drawable_Gray02">@color/Gray02</drawable>

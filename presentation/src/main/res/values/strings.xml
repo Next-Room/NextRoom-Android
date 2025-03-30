@@ -187,4 +187,15 @@
     <string name="text_start_with_email">이메일로 시작하기</string>
     <string name="text_login">로그인</string>
     <string name="text_email_login">이메일 로그인</string>
+    <string name="text_signup_complete">가입완료</string>
+    <string name="text_shop_name">매장명</string>
+    <string name="text_asterisk">*</string>
+    <string name="text_please_input">입력해 주세요.</string>
+    <string name="text_please_select">선택해 주세요.</string>
+    <string name="text_singup_source">가입 경로</string>
+    <string name="text_singup_reason">가입 이유</string>
+    <string name="text_agree_all_terms">모두 동의합니다.</string>
+    <string name="text_service_term_agree">서비스 이용약관 동의</string>
+    <string name="text_required_label">(필수)</string>
+    <string name="text_marketing_term_agree">새로운 업데이트 소식 받기</string>
 </resources>
