@@ -53,8 +53,8 @@ class AdminRepositoryImpl @Inject constructor(
             }
             settingDataSource.setEmailSaveChecked(emailSaveChecked)
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
-            settingDataSource.setLoggedIn(true)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
+            settingDataSource.setLoggedIn(true)
         }
     }
 
@@ -142,9 +142,9 @@ class AdminRepositoryImpl @Inject constructor(
         return apiService.postGoogleLogin(GoogleLoginRequestDto(idToken)).mapOnSuccess {
             it.data.toDomainModel()
         }.onSuccess {
-            if (it.isComplete) settingDataSource.setLoggedIn(true)
-            settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName ?: "")
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
+            settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName ?: "")
+            if (it.isComplete) settingDataSource.setLoggedIn(true)
         }
     }
 
