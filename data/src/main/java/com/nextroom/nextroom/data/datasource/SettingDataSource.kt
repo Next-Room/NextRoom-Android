@@ -67,13 +67,17 @@ class SettingDataSource @Inject constructor(
     suspend fun saveAdminInfo(adminCode: String, shopName: String) {
         dataStore.updateData {
             it.copy(
-                loggedIn = true,
                 adminCode = adminCode,
                 shopName = shopName,
             )
         }
     }
 
+    suspend fun setLoggedIn(loggedIn: Boolean) {
+        dataStore.updateData {
+            it.copy(loggedIn = loggedIn)
+        }
+    }
 
     fun setEmailSaveChecked(emailSaveChecked: Boolean) = runBlocking {
         dataStore.updateData {

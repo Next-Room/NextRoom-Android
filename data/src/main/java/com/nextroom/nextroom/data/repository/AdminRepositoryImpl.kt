@@ -53,6 +53,7 @@ class AdminRepositoryImpl @Inject constructor(
             }
             settingDataSource.setEmailSaveChecked(emailSaveChecked)
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
+            settingDataSource.setLoggedIn(true)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
         }
     }
@@ -141,6 +142,7 @@ class AdminRepositoryImpl @Inject constructor(
         return apiService.postGoogleLogin(GoogleLoginRequestDto(idToken)).mapOnSuccess {
             it.data.toDomainModel()
         }.onSuccess {
+            if (it.isComplete) settingDataSource.setLoggedIn(true)
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName ?: "")
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
         }
@@ -164,6 +166,7 @@ class AdminRepositoryImpl @Inject constructor(
         }.onSuccess {
             // adminCode는 서비스 내에서 제거될 예정. 현재 사용하고 있지 않고 일부 코드만이 남아있다.
             settingDataSource.saveAdminInfo(adminCode = it.adminCode ?: "", shopName = it.shopName)
+            settingDataSource.setLoggedIn(true)
         }
     }
 
