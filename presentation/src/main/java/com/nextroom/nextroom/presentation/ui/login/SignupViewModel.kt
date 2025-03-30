@@ -1,9 +1,14 @@
 package com.nextroom.nextroom.presentation.ui.login
 
+import com.nextroom.nextroom.domain.model.onFailure
+import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -12,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
-
+    val adminRepository: AdminRepository,
 ) : NewBaseViewModel() {
     private val _shopName = MutableStateFlow<String?>(null)
     private val _selectedSignupSource = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
@@ -37,6 +42,9 @@ class SignupViewModel @Inject constructor(
             allRequiredFieldFilled = !shopName.isNullOrEmpty() && selectedSignupSource != null && serviceTermAgree
         )
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, UIState.Loading)
+
+    private val _uiEvent = MutableSharedFlow<UIEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     fun onShopNameChanged(shopName: String?) {
         baseViewModelScope.launch {
@@ -67,6 +75,25 @@ class SignupViewModel @Inject constructor(
         _marketingTermAgree.update { agree }
     }
 
+    fun signup() {
+        baseViewModelScope.launch {
+            val shopName = requireNotNull(_shopName.value.toString())
+            val signupSource = requireNotNull(_selectedSignupSource.value?.text)
+            val signupReason = requireNotNull(_selectedSignupReason.value?.text)
+
+            adminRepository.putAdditionalUserInfo(
+                shopName = shopName,
+                signupSource = signupSource,
+                signupReason = signupReason,
+                marketingTermAgreed = _marketingTermAgree.value
+            ).onSuccess {
+                _uiEvent.emit(UIEvent.SignupSuccess)
+            }.onFailure {
+                _uiEvent.emit(UIEvent.SignupFailure)
+            }
+        }
+    }
+
     sealed interface UIState {
         data object Loading : UIState
         data class Loaded(
@@ -83,5 +110,10 @@ class SignupViewModel @Inject constructor(
                 val text: String,
             )
         }
+    }
+
+    sealed interface UIEvent {
+        data object SignupSuccess : UIEvent
+        data object SignupFailure : UIEvent
     }
 }

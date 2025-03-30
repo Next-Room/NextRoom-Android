@@ -16,9 +16,12 @@ import com.nextroom.nextroom.presentation.extension.BUNDLE_KEY_RESULT_DATA
 import com.nextroom.nextroom.presentation.extension.hasResultData
 import com.nextroom.nextroom.presentation.extension.inputMethodManager
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewModel>(FragmentSignupBinding::inflate),
     View.OnClickListener {
     override val screenName = "signup"
@@ -38,6 +41,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.clAgreeAllTerms.setOnClickListener(this)
         binding.llServiceTermAgree.setOnClickListener(this)
         binding.llMarketingTermAgree.setOnClickListener(this)
+        binding.tvSignupComplete.setOnClickListener(this)
         binding.etShopName.addTextChangedListener {
             viewModel.onShopNameChanged(it.toString())
         }
@@ -89,6 +93,14 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                     when (state) {
                         is SignupViewModel.UIState.Loaded -> updateUI(state)
                         SignupViewModel.UIState.Loading -> Unit // TODO: 수정
+                    }
+                }
+            }
+            launch {
+                viewModel.uiEvent.collect { event ->
+                    when (event) {
+                        SignupViewModel.UIEvent.SignupFailure -> toast(R.string.error_something)
+                        SignupViewModel.UIEvent.SignupSuccess -> Unit // TODO: 구현 예정
                     }
                 }
             }
@@ -165,6 +177,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
             binding.clAgreeAllTerms -> viewModel.onAllTermsAgreeClicked(binding.cbAgreeAllTerms.isChecked.not())
             binding.llServiceTermAgree -> viewModel.setServiceTermAgree(binding.cbServiceTermAgree.isChecked.not())
             binding.llMarketingTermAgree -> viewModel.setMarketingTermAgree(binding.cbMarketingTermsAgree.isChecked.not())
+            binding.tvSignupComplete -> viewModel.signup()
         }
     }
 
