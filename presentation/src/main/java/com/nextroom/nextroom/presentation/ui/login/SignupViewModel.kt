@@ -86,13 +86,12 @@ class SignupViewModel @Inject constructor(
         baseViewModelScope.launch {
             val shopName = requireNotNull(_shopName.value.toString())
             val signupSource = requireNotNull(_selectedSignupSource.value?.text)
-            val signupReason = requireNotNull(_selectedSignupReason.value?.text)
 
             _apiLoading.emit(true)
             adminRepository.putAdditionalUserInfo(
                 shopName = shopName,
                 signupSource = signupSource,
-                signupReason = signupReason,
+                signupReason = _selectedSignupReason.value?.text ?: "",
                 marketingTermAgreed = _marketingTermAgree.value
             ).onSuccess {
                 _uiEvent.emit(UIEvent.SignupSuccess)
