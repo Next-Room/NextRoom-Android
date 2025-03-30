@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -96,8 +97,9 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                 viewModel.uiState.collect { state ->
                     when (state) {
                         is SignupViewModel.UIState.Loaded -> updateUI(state)
-                        SignupViewModel.UIState.Loading -> Unit // TODO: 수정
+                        SignupViewModel.UIState.Loading -> Unit
                     }
+                    binding.pbLoading.isVisible = state is SignupViewModel.UIState.Loading
                 }
             }
             launch {

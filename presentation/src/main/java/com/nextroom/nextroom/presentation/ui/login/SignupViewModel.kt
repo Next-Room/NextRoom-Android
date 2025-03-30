@@ -24,6 +24,7 @@ class SignupViewModel @Inject constructor(
     private val _selectedSignupReason = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
     private val _serviceTermAgree = MutableStateFlow(false)
     private val _marketingTermAgree = MutableStateFlow(false)
+    private val _apiLoading = MutableStateFlow(false)
 
     val uiState = combine(
         _shopName,
@@ -41,6 +42,12 @@ class SignupViewModel @Inject constructor(
             allTermsAgreed = serviceTermAgree && marketingTermAgree,
             allRequiredFieldFilled = !shopName.isNullOrEmpty() && selectedSignupSource != null && serviceTermAgree
         )
+    }.combine(_apiLoading) { loaded, loading ->
+        if (loading) {
+            UIState.Loading
+        } else {
+            loaded
+        }
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, UIState.Loading)
 
     private val _uiEvent = MutableSharedFlow<UIEvent>()
@@ -81,6 +88,7 @@ class SignupViewModel @Inject constructor(
             val signupSource = requireNotNull(_selectedSignupSource.value?.text)
             val signupReason = requireNotNull(_selectedSignupReason.value?.text)
 
+            _apiLoading.emit(true)
             adminRepository.putAdditionalUserInfo(
                 shopName = shopName,
                 signupSource = signupSource,
@@ -91,6 +99,7 @@ class SignupViewModel @Inject constructor(
             }.onFailure {
                 _uiEvent.emit(UIEvent.SignupFailure)
             }
+            _apiLoading.emit(false)
         }
     }
 
