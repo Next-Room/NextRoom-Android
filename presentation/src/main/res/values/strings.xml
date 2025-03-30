@@ -17,6 +17,16 @@
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
     <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
 
+    <!-- array -->
+    <string-array name="signup_source">
+        <item>네이버 검색</item>
+        <item>구글 검색</item>
+        <item>네이버 카페(오프라인 방탈출)</item>
+        <item>지인 추천</item>
+        <item>홍보물</item>
+        <item>기타</item>
+    </string-array>
+
     <string name="sign_up">회원가입</string>
 
     <string name="dialog_yes">예</string>
@@ -198,4 +208,5 @@
     <string name="text_service_term_agree">서비스 이용약관 동의</string>
     <string name="text_required_label">(필수)</string>
     <string name="text_marketing_term_agree">새로운 업데이트 소식 받기</string>
+    <string name="text_select_signup_source">가입 경로 선택</string>
 </resources>
