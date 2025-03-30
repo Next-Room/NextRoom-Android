@@ -5,6 +5,8 @@ import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
 import com.nextroom.nextroom.data.network.request.PurchaseToken
 import com.nextroom.nextroom.data.network.request.StatisticsRequest
+import com.nextroom.nextroom.data.network.response.AdditionalUserInfoRequestDto
+import com.nextroom.nextroom.data.network.response.AdditionalUserInfoResponseDto
 import com.nextroom.nextroom.data.network.response.BannerDto
 import com.nextroom.nextroom.data.network.response.BaseListResponse
 import com.nextroom.nextroom.data.network.response.BaseResponse
@@ -69,4 +71,9 @@ interface ApiService {
 
     @POST("api/v1/auth/login/google/app")
     suspend fun postGoogleLogin(@Body request: GoogleLoginRequestDto): Result<BaseResponse<GoogleLoginResponseDto>>
+
+    @PUT("api/v1/auth/shop")
+    suspend fun putAdditionalUserInfo(
+        @Body request: AdditionalUserInfoRequestDto,
+    ): Result<BaseResponse<AdditionalUserInfoResponseDto>>
 }

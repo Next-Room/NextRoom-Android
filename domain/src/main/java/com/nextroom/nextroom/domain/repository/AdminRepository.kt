@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.domain.repository
 
+import com.nextroom.nextroom.domain.model.AdditionalUserInfoResponse
 import com.nextroom.nextroom.domain.model.GoogleAuthResponse
 import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
@@ -30,4 +31,10 @@ interface AdminRepository {
     suspend fun getAppPassword(): String
     suspend fun getSubscriptionPlan(): Result<SubscriptionPlan>
     suspend fun postGoogleLogin(idToken: String): Result<GoogleLoginResponse>
+    suspend fun putAdditionalUserInfo(
+        shopName: String,
+        signupSource: String,
+        signupReason: String,
+        marketingTermAgreed: Boolean
+    ): Result<AdditionalUserInfoResponse>
 }

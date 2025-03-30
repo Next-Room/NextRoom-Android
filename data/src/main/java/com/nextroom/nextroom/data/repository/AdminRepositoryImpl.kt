@@ -14,7 +14,9 @@ import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.datasource.UserDataSource
 import com.nextroom.nextroom.data.network.ApiService
+import com.nextroom.nextroom.data.network.response.AdditionalUserInfoRequestDto
 import com.nextroom.nextroom.data.network.response.GoogleLoginRequestDto
+import com.nextroom.nextroom.domain.model.AdditionalUserInfoResponse
 import com.nextroom.nextroom.domain.model.GoogleAuthResponse
 import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
@@ -141,6 +143,27 @@ class AdminRepositoryImpl @Inject constructor(
         }.onSuccess {
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName ?: "")
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
+        }
+    }
+
+    override suspend fun putAdditionalUserInfo(
+        shopName: String,
+        signupSource: String,
+        signupReason: String,
+        marketingTermAgreed: Boolean
+    ): Result<AdditionalUserInfoResponse> {
+        return apiService.putAdditionalUserInfo(
+            request = AdditionalUserInfoRequestDto(
+                shopName = shopName,
+                signupSource = signupSource,
+                signupReason = signupReason,
+                marketingTermAgreed = marketingTermAgreed
+            )
+        ).mapOnSuccess {
+            it.data.toDomainModel()
+        }.onSuccess {
+            // adminCode는 서비스 내에서 제거될 예정. 현재 사용하고 있지 않고 일부 코드만이 남아있다.
+            settingDataSource.saveAdminInfo(adminCode = it.adminCode ?: "", shopName = it.shopName)
         }
     }
 
