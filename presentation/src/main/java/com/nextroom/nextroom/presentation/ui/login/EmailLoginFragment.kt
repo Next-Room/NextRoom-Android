@@ -21,6 +21,7 @@ import com.nextroom.nextroom.presentation.extension.showKeyboard
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.Constants.KAKAO_BUSINESS_CHANNEL_URL
+import com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment.Companion.SIGNUP_REQUEST_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
@@ -66,6 +67,7 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
         }
 
         tvEmailLogin.setOnClickListener { viewModel.complete() }
+        llGoogleLogin.setOnClickListener { viewModel.requestGoogleAuth() }
 
         cbIdSave.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onIdSaveChecked(isChecked)
@@ -137,6 +139,10 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
             }
 
             EmailLoginEvent.GoToGameScreen -> Unit
+            EmailLoginEvent.GoogleAuthFailed,
+            EmailLoginEvent.GoogleLoginFailed -> toast(R.string.error_something)
+
+            is EmailLoginEvent.NeedAdditionalUserInfo -> moveToSignup()
         }
     }
 
@@ -144,5 +150,9 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
         binding.etEmail.setText("")
         binding.etPassword.setText("")
         viewModel.initState()
+    }
+
+    private fun moveToSignup() {
+        findNavController().safeNavigate(EmailLoginFragmentDirections.moveToSignup(SIGNUP_REQUEST_KEY))
     }
 }

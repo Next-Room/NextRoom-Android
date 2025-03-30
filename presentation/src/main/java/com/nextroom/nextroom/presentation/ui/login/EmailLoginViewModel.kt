@@ -140,4 +140,31 @@ class EmailLoginViewModel @Inject constructor(
             else -> {}
         }
     }
+
+    fun requestGoogleAuth() = intent {
+        baseViewModelScope.launch {
+            reduce { state.copy(loading = true) }
+            try {
+                adminRepository.requestGoogleAuth().getOrThrow
+                    .also { postGoogleLogin(it.idToken) }
+            } catch (e: Exception) {
+                postSideEffect(EmailLoginEvent.GoogleAuthFailed)
+            }
+            reduce { state.copy(loading = false) }
+        }
+    }
+
+    private fun postGoogleLogin(idToken: String) = intent {
+        baseViewModelScope.launch {
+            try {
+                adminRepository.postGoogleLogin(idToken).getOrThrow.let {
+                    if (!it.isComplete) {
+                        postSideEffect(EmailLoginEvent.NeedAdditionalUserInfo(it.shopName))
+                    }
+                }
+            } catch (e: Exception) {
+                postSideEffect(EmailLoginEvent.GoogleLoginFailed)
+            }
+        }
+    }
 }
