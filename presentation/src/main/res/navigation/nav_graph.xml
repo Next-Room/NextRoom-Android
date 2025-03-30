@@ -152,12 +152,20 @@
         android:id="@+id/email_login_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.EmailLoginFragment"
         tools:layout="@layout/fragment_email_login">
+
         <action
             android:id="@+id/move_to_theme_select_fragment"
             app:destination="@id/theme_select_fragment" />
+
         <action
             android:id="@+id/move_to_signup"
-            app:destination="@id/signup_fragment" />
+            app:destination="@id/signup_fragment">
+
+            <argument
+                android:name="request_key"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
     </fragment>
 
     <fragment
@@ -205,7 +213,13 @@
 
         <action
             android:id="@+id/move_to_signup"
-            app:destination="@id/signup_fragment" />
+            app:destination="@id/signup_fragment">
+
+            <argument
+                android:name="request_key"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
     </fragment>
 
     <action
@@ -217,5 +231,11 @@
     <fragment
         android:id="@+id/signup_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment"
-        tools:layout="@layout/fragment_signup" />
+        tools:layout="@layout/fragment_signup">
+
+        <argument
+            android:name="request_key"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 </navigation>

@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.core.os.BundleCompat
+import androidx.core.os.bundleOf
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModelFragment
@@ -26,6 +29,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
     View.OnClickListener {
     override val screenName = "signup"
     override val viewModel: SignupViewModel by viewModels()
+    val args: SignupFragmentArgs by navArgs()
 
     override fun initViews() {
         super.initViews()
@@ -100,7 +104,10 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                 viewModel.uiEvent.collect { event ->
                     when (event) {
                         SignupViewModel.UIEvent.SignupFailure -> toast(R.string.error_something)
-                        SignupViewModel.UIEvent.SignupSuccess -> Unit // TODO: 구현 예정
+                        SignupViewModel.UIEvent.SignupSuccess -> {
+                            setFragmentResult(args.requestKey, bundleOf())
+                            findNavController().navigateUp()
+                        }
                     }
                 }
             }

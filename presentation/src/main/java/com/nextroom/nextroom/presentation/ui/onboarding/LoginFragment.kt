@@ -1,7 +1,9 @@
 package com.nextroom.nextroom.presentation.ui.onboarding
 
+import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.R
@@ -22,6 +24,18 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
         super.initListeners()
         binding.tvStartWithEmail.setOnClickListener(this)
         binding.llStartWithGoogle.setOnClickListener(this)
+    }
+
+    override fun setFragmentResultListeners() {
+        super.setFragmentResultListeners()
+
+        setFragmentResultListener(SIGNUP_REQUEST_KEY, ::handleFragmentResults)
+    }
+
+    private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
+        when (requestKey) {
+            SIGNUP_REQUEST_KEY -> moveToThemeSelect()
+        }
     }
 
     override fun initObserve() {
@@ -56,7 +70,7 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
     }
 
     private fun moveToSignup() {
-        LoginFragmentDirections.moveToSignup().also { findNavController().navigate(it) }
+        LoginFragmentDirections.moveToSignup(SIGNUP_REQUEST_KEY).also { findNavController().navigate(it) }
     }
 
     override fun onClick(v: View) {
@@ -64,5 +78,9 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
             binding.tvStartWithEmail -> moveToEmailLogin()
             binding.llStartWithGoogle -> viewModel.requestGoogleAuth()
         }
+    }
+
+    companion object {
+        const val SIGNUP_REQUEST_KEY = "SIGNUP_REQUEST_KEY"
     }
 }
