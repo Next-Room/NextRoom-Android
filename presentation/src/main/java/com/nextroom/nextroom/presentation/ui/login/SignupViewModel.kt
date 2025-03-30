@@ -15,12 +15,22 @@ class SignupViewModel @Inject constructor(
 ) : NewBaseViewModel() {
     private val _selectedSignupSource = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
     private val _selectedSignupReason = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
+    private val _serviceTermAgree = MutableStateFlow(false)
+    private val _marketingTermAgree = MutableStateFlow(false)
 
     val uiState = combine(
         _selectedSignupSource,
-        _selectedSignupReason
-    ) { selectedSignupSource, selectedSignupReason ->
-        UIState.Loaded(selectedSignupSource, selectedSignupReason)
+        _selectedSignupReason,
+        _serviceTermAgree,
+        _marketingTermAgree,
+    ) { selectedSignupSource, selectedSignupReason, serviceTermAgree, marketingTermAgree ->
+        UIState.Loaded(
+            selectedSignupSource = selectedSignupSource,
+            selectedSignupReason = selectedSignupReason,
+            serviceTermAgreed = serviceTermAgree,
+            marketingTermAgreed = marketingTermAgree,
+            allTermsAgreed = serviceTermAgree && marketingTermAgree
+        )
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, UIState.Loading)
 
     fun setSelectedSignupSource(selectedItem: UIState.Loaded.SelectedItem) {
@@ -31,11 +41,27 @@ class SignupViewModel @Inject constructor(
         _selectedSignupReason.update { selectedItem }
     }
 
+    fun onAllTermsAgreeClicked(agree: Boolean) {
+        _serviceTermAgree.update { agree }
+        _marketingTermAgree.update { agree }
+    }
+
+    fun setServiceTermAgree(agree: Boolean) {
+        _serviceTermAgree.update { agree }
+    }
+
+    fun setMarketingTermAgree(agree: Boolean) {
+        _marketingTermAgree.update { agree }
+    }
+
     sealed interface UIState {
         data object Loading : UIState
         data class Loaded(
             val selectedSignupSource: SelectedItem?,
             val selectedSignupReason: SelectedItem?,
+            val serviceTermAgreed: Boolean,
+            val marketingTermAgreed: Boolean,
+            val allTermsAgreed: Boolean,
         ) : UIState {
             data class SelectedItem(
                 val id: String,

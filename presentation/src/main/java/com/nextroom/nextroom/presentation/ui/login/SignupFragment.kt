@@ -32,6 +32,9 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
 
         binding.llSignupSource.setOnClickListener(this)
         binding.llSignupReason.setOnClickListener(this)
+        binding.clAgreeAllTerms.setOnClickListener(this)
+        binding.llServiceTermAgree.setOnClickListener(this)
+        binding.llMarketingTermAgree.setOnClickListener(this)
     }
 
     override fun setFragmentResultListeners() {
@@ -87,6 +90,9 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         state.selectedSignupReason?.let {
             binding.tvSignupReason.text = it.text
         }
+        binding.cbAgreeAllTerms.isChecked = state.allTermsAgreed
+        binding.cbServiceTermAgree.isChecked = state.serviceTermAgreed
+        binding.cbMarketingTermsAgree.isChecked = state.marketingTermAgreed
     }
 
     private fun showSelectSignupSourceBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {
@@ -137,6 +143,9 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                     showSelectSignupReasonBottomSheet(loaded.selectedSignupReason)
                 }
             }
+            binding.clAgreeAllTerms -> viewModel.onAllTermsAgreeClicked(binding.cbAgreeAllTerms.isChecked.not())
+            binding.llServiceTermAgree -> viewModel.setServiceTermAgree(binding.cbServiceTermAgree.isChecked.not())
+            binding.llMarketingTermAgree -> viewModel.setMarketingTermAgree(binding.cbMarketingTermsAgree.isChecked.not())
         }
     }
 

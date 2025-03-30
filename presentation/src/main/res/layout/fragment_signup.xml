@@ -212,61 +212,75 @@
             android:id="@+id/cb_agree_all_terms"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/tv_service_term_agree"
-        style="@style/Pretendard.12"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/ll_service_term_agree"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/text_service_term_agree"
+        android:layout_marginTop="8dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="8dp"
         app:layout_constraintStart_toStartOf="@id/gl_start"
-        app:layout_constraintTop_toBottomOf="@id/cl_agree_all_terms" />
-
-    <TextView
-        style="@style/Pretendard.12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/text_required_label"
-        android:textColor="@color/Red02"
-        app:layout_constraintBottom_toBottomOf="@id/tv_service_term_agree"
-        app:layout_constraintStart_toEndOf="@id/tv_service_term_agree"
-        app:layout_constraintTop_toTopOf="@id/tv_service_term_agree" />
-
-    <CheckBox
-        android:id="@+id/cb_service_term_agree"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_service_term_agree"
         app:layout_constraintEnd_toEndOf="@id/gl_end"
-        app:layout_constraintTop_toTopOf="@id/tv_service_term_agree" />
+        app:layout_constraintTop_toBottomOf="@id/cl_agree_all_terms">
 
-    <TextView
-        android:id="@+id/tv_marketing_term_agree"
-        style="@style/Pretendard.12"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_service_term_agree"
+            style="@style/Pretendard.12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/text_service_term_agree" />
+
+        <TextView
+            style="@style/Pretendard.12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/text_required_label"
+            android:textColor="@color/Red02" />
+
+        <CheckBox
+            android:id="@+id/cb_service_term_agree"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:clickable="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_marketing_term_agree"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/text_marketing_term_agree"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="8dp"
         app:layout_constraintStart_toStartOf="@id/gl_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_service_term_agree" />
-
-    <CheckBox
-        android:id="@+id/cb_marketing_terms_agree"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_marketing_term_agree"
         app:layout_constraintEnd_toEndOf="@id/gl_end"
-        app:layout_constraintTop_toTopOf="@id/tv_marketing_term_agree" />
+        app:layout_constraintTop_toBottomOf="@id/ll_service_term_agree">
+
+        <TextView
+            android:id="@+id/tv_marketing_term_agree"
+            style="@style/Pretendard.12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/text_marketing_term_agree" />
+
+        <CheckBox
+            android:id="@+id/cb_marketing_terms_agree"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            android:clickable="false" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_signup_complete"
