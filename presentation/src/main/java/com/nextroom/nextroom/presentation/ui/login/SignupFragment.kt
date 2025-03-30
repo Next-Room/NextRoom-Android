@@ -20,6 +20,7 @@ import com.nextroom.nextroom.presentation.extension.BUNDLE_KEY_RESULT_DATA
 import com.nextroom.nextroom.presentation.extension.hasResultData
 import com.nextroom.nextroom.presentation.extension.inputMethodManager
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,6 +45,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.llSignupSource.setOnClickListener(this)
         binding.llSignupReason.setOnClickListener(this)
         binding.clAgreeAllTerms.setOnClickListener(this)
+        binding.tvServiceTermAgree.setOnClickListener(this)
         binding.llServiceTermAgree.setOnClickListener(this)
         binding.llMarketingTermAgree.setOnClickListener(this)
         binding.tvSignupComplete.setOnClickListener(this)
@@ -171,6 +173,12 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         }
     }
 
+    private fun moveToServiceTermWebView() {
+        EmailLoginFragmentDirections
+            .moveToWebViewFragment(getString(R.string.link_privacy_policy))
+            .also { findNavController().safeNavigate(it) }
+    }
+
     override fun onClick(v: View) {
         when (v) {
             binding.llSignupSource -> {
@@ -184,6 +192,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                 }
             }
             binding.clAgreeAllTerms -> viewModel.onAllTermsAgreeClicked(binding.cbAgreeAllTerms.isChecked.not())
+            binding.tvServiceTermAgree -> moveToServiceTermWebView()
             binding.llServiceTermAgree -> viewModel.setServiceTermAgree(binding.cbServiceTermAgree.isChecked.not())
             binding.llMarketingTermAgree -> viewModel.setMarketingTermAgree(binding.cbMarketingTermsAgree.isChecked.not())
             binding.tvSignupComplete -> viewModel.signup()

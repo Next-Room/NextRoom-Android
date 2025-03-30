@@ -212,7 +212,7 @@
     <string name="text_singup_source">가입 경로</string>
     <string name="text_singup_reason">가입 이유</string>
     <string name="text_agree_all_terms">모두 동의합니다.</string>
-    <string name="text_service_term_agree">서비스 이용약관 동의</string>
+    <string name="text_service_term_agree"><u>서비스 이용약관</u> 동의</string>
     <string name="text_required_label">(필수)</string>
     <string name="text_marketing_term_agree">새로운 업데이트 소식 받기</string>
     <string name="text_select_signup_source">가입 경로 선택</string>
