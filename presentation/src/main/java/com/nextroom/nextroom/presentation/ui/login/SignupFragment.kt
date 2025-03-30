@@ -97,6 +97,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.cbAgreeAllTerms.isChecked = state.allTermsAgreed
         binding.cbServiceTermAgree.isChecked = state.serviceTermAgreed
         binding.cbMarketingTermsAgree.isChecked = state.marketingTermAgreed
+        binding.tvSignupComplete.isEnabled = state.allRequiredFieldFilled
     }
 
     private fun showSelectSignupSourceBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {

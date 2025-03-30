@@ -33,7 +33,8 @@ class SignupViewModel @Inject constructor(
             selectedSignupReason = selectedSignupReason,
             serviceTermAgreed = serviceTermAgree,
             marketingTermAgreed = marketingTermAgree,
-            allTermsAgreed = serviceTermAgree && marketingTermAgree
+            allTermsAgreed = serviceTermAgree && marketingTermAgree,
+            allRequiredFieldFilled = !shopName.isNullOrEmpty() && selectedSignupSource != null && serviceTermAgree
         )
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, UIState.Loading)
 
@@ -75,6 +76,7 @@ class SignupViewModel @Inject constructor(
             val serviceTermAgreed: Boolean,
             val marketingTermAgreed: Boolean,
             val allTermsAgreed: Boolean,
+            val allRequiredFieldFilled: Boolean,
         ) : UIState {
             data class SelectedItem(
                 val id: String,
