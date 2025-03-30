@@ -138,6 +138,9 @@ class AdminRepositoryImpl @Inject constructor(
     override suspend fun postGoogleLogin(idToken: String): Result<GoogleLoginResponse> {
         return apiService.postGoogleLogin(GoogleLoginRequestDto(idToken)).mapOnSuccess {
             it.data.toDomainModel()
+        }.onSuccess {
+            settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName ?: "")
+            tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
         }
     }
 
