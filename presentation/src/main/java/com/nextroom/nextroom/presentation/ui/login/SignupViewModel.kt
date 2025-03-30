@@ -27,6 +27,10 @@ class SignupViewModel @Inject constructor(
         _selectedSignupSource.update { selectedItem }
     }
 
+    fun setSelectedSignupReason(selectedItem: UIState.Loaded.SelectedItem) {
+        _selectedSignupReason.update { selectedItem }
+    }
+
     sealed interface UIState {
         data object Loading : UIState
         data class Loaded(

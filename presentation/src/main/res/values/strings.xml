@@ -27,6 +27,13 @@
         <item>기타</item>
     </string-array>
 
+    <string-array name="signup_reason">
+        <item>운영 중인 매장에 도입하기 위해</item>
+        <item>오픈 예정인 매장에 도입하기 위해</item>
+        <item>학교 혹은 공공기관에서 이벤트성으로 사용</item>
+        <item>기타</item>
+    </string-array>
+
     <string name="sign_up">회원가입</string>
 
     <string name="dialog_yes">예</string>
@@ -209,4 +216,5 @@
     <string name="text_required_label">(필수)</string>
     <string name="text_marketing_term_agree">새로운 업데이트 소식 받기</string>
     <string name="text_select_signup_source">가입 경로 선택</string>
+    <string name="text_select_signup_reason">가입 이유 선택</string>
 </resources>

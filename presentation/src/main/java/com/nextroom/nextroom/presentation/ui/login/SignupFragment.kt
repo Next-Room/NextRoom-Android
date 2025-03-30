@@ -38,19 +38,28 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         super.setFragmentResultListeners()
 
         setFragmentResultListener(SELECT_SIGNUP_SOURCE_REQUEST_KEY, ::handleFragmentResults)
+        setFragmentResultListener(SELECT_SIGNUP_REASON_REQUEST_KEY, ::handleFragmentResults)
     }
 
     private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
+        fun Bundle.toSelectedItem(): SignupViewModel.UIState.Loaded.SelectedItem? {
+            return BundleCompat.getParcelable(
+                bundle,
+                BUNDLE_KEY_RESULT_DATA,
+                SelectItemBottomSheetArg.Item::class.java
+            )?.let { SignupViewModel.UIState.Loaded.SelectedItem(id = it.id, text = it.text) }
+        }
+
         when (requestKey) {
             SELECT_SIGNUP_SOURCE_REQUEST_KEY -> {
                 if (bundle.hasResultData()) {
-                    BundleCompat.getParcelable(
-                        bundle,
-                        BUNDLE_KEY_RESULT_DATA,
-                        SelectItemBottomSheetArg.Item::class.java
-                    )
-                        ?.let { SignupViewModel.UIState.Loaded.SelectedItem(id = it.id, text = it.text) }
-                        ?.let { viewModel.setSelectedSignupSource(it) }
+                    bundle.toSelectedItem()?.let { viewModel.setSelectedSignupSource(it) }
+                }
+            }
+
+            SELECT_SIGNUP_REASON_REQUEST_KEY -> {
+                if (bundle.hasResultData()) {
+                    bundle.toSelectedItem()?.let { viewModel.setSelectedSignupReason(it) }
                 }
             }
         }
@@ -75,6 +84,9 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         state.selectedSignupSource?.let {
             binding.tvSignupSource.text = it.text
         }
+        state.selectedSignupReason?.let {
+            binding.tvSignupReason.text = it.text
+        }
     }
 
     private fun showSelectSignupSourceBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {
@@ -95,6 +107,24 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         }
     }
 
+    private fun showSelectSignupReasonBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {
+        resources.getStringArray(R.array.signup_reason).mapIndexed { index, s ->
+            SelectItemBottomSheetArg.Item(
+                id = index.toString(),
+                text = s,
+                isSelected = index == selectedItem?.id?.toIntOrNull()
+            )
+        }.let {
+            SelectItemBottomSheetArg(
+                header = getString(R.string.text_select_signup_reason),
+                items = it,
+                requestKey = SELECT_SIGNUP_REASON_REQUEST_KEY
+            )
+        }.also {
+            findNavController().navigate(NavGraphDirections.moveToSelectItem(it))
+        }
+    }
+
     override fun onClick(v: View) {
         when (v) {
             binding.llSignupSource -> {
@@ -102,10 +132,16 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                     showSelectSignupSourceBottomSheet(loaded.selectedSignupSource)
                 }
             }
+            binding.llSignupReason -> {
+                (viewModel.uiState.value as? SignupViewModel.UIState.Loaded)?.let { loaded ->
+                    showSelectSignupReasonBottomSheet(loaded.selectedSignupReason)
+                }
+            }
         }
     }
 
     companion object {
         const val SELECT_SIGNUP_SOURCE_REQUEST_KEY = "SELECT_SIGNUP_SOURCE_REQUEST_KEY"
+        const val SELECT_SIGNUP_REASON_REQUEST_KEY = "SELECT_SIGNUP_REASON_REQUEST_KEY"
     }
 }
