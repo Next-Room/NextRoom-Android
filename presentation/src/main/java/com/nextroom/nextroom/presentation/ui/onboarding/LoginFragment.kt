@@ -36,15 +36,19 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
             launch {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
-                        is LoginViewModel.UIEvent.GoogleAuthSuccess -> {
-                            // TODO: 구현 예정
-                        }
+                        LoginViewModel.UIEvent.GoogleAuthFailed,
+                        LoginViewModel.UIEvent.GoogleLoginFailed -> toast(R.string.error_something)
 
-                        LoginViewModel.UIEvent.GoogleAuthFailed -> toast(R.string.error_something)
+                        LoginViewModel.UIEvent.GoogleLoginSuccess -> moveToThemeSelect()
+                        is LoginViewModel.UIEvent.NeedAdditionalUserInfo -> Unit // TODO: 구현 예정
                     }
                 }
             }
         }
+    }
+
+    private fun moveToThemeSelect() {
+        LoginFragmentDirections.moveToThemeSelect().also { findNavController().navigate(it) }
     }
 
     private fun moveToEmailLogin() {

@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.onboarding
 
-import com.nextroom.nextroom.domain.model.GoogleAuthResponse
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +23,7 @@ class LoginViewModel @Inject constructor(
             try {
                 apiLoading.emit(true)
                 adminRepository.requestGoogleAuth().getOrThrow
-                    .let { UIEvent.GoogleAuthSuccess(it) }
-                    .also { _uiEvent.emit(it) }
+                    .also { postGoogleLogin(it.idToken) }
             } catch (e: Exception) {
                 _uiEvent.emit(UIEvent.GoogleAuthFailed)
             } finally {
@@ -34,8 +32,26 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun postGoogleLogin(idToken: String) {
+        baseViewModelScope.launch {
+            try {
+                adminRepository.postGoogleLogin(idToken).getOrThrow.let {
+                    if (it.isComplete) {
+                        UIEvent.GoogleLoginSuccess
+                    } else {
+                        UIEvent.NeedAdditionalUserInfo(it.shopName)
+                    }
+                }.also { _uiEvent.emit(it) }
+            } catch (e: Exception) {
+                _uiEvent.emit(UIEvent.GoogleLoginFailed)
+            }
+        }
+    }
+
     sealed interface UIEvent {
-        data class GoogleAuthSuccess(val googleAuthResponse: GoogleAuthResponse) : UIEvent
         data object GoogleAuthFailed : UIEvent
+        data object GoogleLoginSuccess : UIEvent
+        data object GoogleLoginFailed : UIEvent
+        data class NeedAdditionalUserInfo(val shopName: String?) : UIEvent
     }
 }
