@@ -13,12 +13,16 @@ import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.datasource.UserDataSource
+import com.nextroom.nextroom.data.network.ApiService
+import com.nextroom.nextroom.data.network.response.GoogleLoginRequestDto
 import com.nextroom.nextroom.domain.model.GoogleAuthResponse
+import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.SubscriptionPlan
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
+import com.nextroom.nextroom.domain.model.mapOnSuccess
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import kotlinx.coroutines.flow.Flow
@@ -33,6 +37,7 @@ class AdminRepositoryImpl @Inject constructor(
     private val getCredentialRequest: GetCredentialRequest,
     private val credentialManager: CredentialManager,
     private val context: Context,
+    private val apiService: ApiService,
 ) : AdminRepository {
 
     override val loggedIn: Flow<Boolean> = authDataSource.loggedIn
@@ -128,6 +133,12 @@ class AdminRepositoryImpl @Inject constructor(
 
     override suspend fun getSubscriptionPlan(): Result<SubscriptionPlan> {
         return subscriptionDataSource.getSubscriptionPlan()
+    }
+
+    override suspend fun postGoogleLogin(idToken: String): Result<GoogleLoginResponse> {
+        return apiService.postGoogleLogin(GoogleLoginRequestDto(idToken)).mapOnSuccess {
+            it.data.toDomainModel()
+        }
     }
 
     companion object {

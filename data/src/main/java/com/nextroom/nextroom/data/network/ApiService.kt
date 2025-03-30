@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.data.network
 
-import com.nextroom.nextroom.data.network.response.SubscriptionPlanDto
 import com.nextroom.nextroom.data.model.ThemeBackgroundActivationId
 import com.nextroom.nextroom.data.model.TokenDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
@@ -9,9 +8,12 @@ import com.nextroom.nextroom.data.network.request.StatisticsRequest
 import com.nextroom.nextroom.data.network.response.BannerDto
 import com.nextroom.nextroom.data.network.response.BaseListResponse
 import com.nextroom.nextroom.data.network.response.BaseResponse
+import com.nextroom.nextroom.data.network.response.GoogleLoginRequestDto
+import com.nextroom.nextroom.data.network.response.GoogleLoginResponseDto
 import com.nextroom.nextroom.data.network.response.HintDto
 import com.nextroom.nextroom.data.network.response.LoginDto
 import com.nextroom.nextroom.data.network.response.MypageDto
+import com.nextroom.nextroom.data.network.response.SubscriptionPlanDto
 import com.nextroom.nextroom.data.network.response.ThemeDto
 import com.nextroom.nextroom.data.network.response.TicketDto
 import com.nextroom.nextroom.data.network.response.UserSubscriptionStatusDto
@@ -64,4 +66,7 @@ interface ApiService {
 
     @GET("api/v1/subscription/plan")
     suspend fun getSubscriptionPlan(): Result<BaseResponse<SubscriptionPlanDto>>
+
+    @POST("api/v1/auth/login/google/app")
+    suspend fun postGoogleLogin(@Body request: GoogleLoginRequestDto): Result<BaseResponse<GoogleLoginResponseDto>>
 }

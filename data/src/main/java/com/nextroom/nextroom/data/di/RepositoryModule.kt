@@ -122,6 +122,7 @@ object RepositoryModule {
         getCredentialRequest: GetCredentialRequest,
         credentialManager: CredentialManager,
         @ApplicationContext context: Context,
+        apiService: ApiService,
     ): AdminRepository = AdminRepositoryImpl(
         authDataSource = authDataSource,
         userDataSource = userDataSource,
@@ -131,6 +132,7 @@ object RepositoryModule {
         getCredentialRequest = getCredentialRequest,
         credentialManager = credentialManager,
         context = context,
+        apiService = apiService,
     )
 
     @Singleton
