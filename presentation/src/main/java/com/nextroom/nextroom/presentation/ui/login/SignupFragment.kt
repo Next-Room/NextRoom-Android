@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.login
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.core.os.BundleCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResultListener
@@ -95,12 +96,18 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
     }
 
     private fun updateUI(state: SignupViewModel.UIState.Loaded) {
-        state.selectedSignupSource?.let {
-            binding.tvSignupSource.text = it.text
+        fun updateTextView(view: TextView, text: String?) {
+            if (text == null) {
+                view.setTextColor(resources.getColor(R.color.Gray01, null))
+                view.text = getString(R.string.text_please_select)
+            } else {
+                view.setTextColor(resources.getColor(R.color.white, null))
+                view.text = text
+            }
         }
-        state.selectedSignupReason?.let {
-            binding.tvSignupReason.text = it.text
-        }
+
+        updateTextView(binding.tvSignupSource, state.selectedSignupSource?.text)
+        updateTextView(binding.tvSignupReason, state.selectedSignupReason?.text)
         binding.cbAgreeAllTerms.isChecked = state.allTermsAgreed
         binding.cbServiceTermAgree.isChecked = state.serviceTermAgreed
         binding.cbMarketingTermsAgree.isChecked = state.marketingTermAgreed
