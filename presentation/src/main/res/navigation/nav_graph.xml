@@ -86,6 +86,15 @@
         android:name="com.nextroom.nextroom.presentation.ui.password.SetPasswordFragment"
         tools:layout="@layout/fragment_set_password" />
 
+    <dialog
+        android:id="@+id/select_item"
+        android:name="com.nextroom.nextroom.presentation.common.SelectItemBottomSheet"
+        tools:layout="@layout/bottom_sheet_select_item">
+
+        <argument
+            android:name="argument"
+            app:argType="com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg" />
+    </dialog>
 
     <!-- global actions -->
     <action
@@ -129,18 +138,34 @@
             app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
     </action>
 
+    <action
+        android:id="@+id/move_to_select_item"
+        app:destination="@id/select_item">
+
+        <argument
+            android:name="argument"
+            app:argType="com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg" />
+    </action>
 
     <!-- local fragments -->
     <fragment
-        android:id="@+id/login_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.login.LoginFragment"
-        tools:layout="@layout/fragment_login">
+        android:id="@+id/email_login_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.login.EmailLoginFragment"
+        tools:layout="@layout/fragment_email_login">
+
         <action
             android:id="@+id/move_to_theme_select_fragment"
             app:destination="@id/theme_select_fragment" />
+
         <action
-            android:id="@+id/move_to_onboarding_fragment"
-            app:destination="@id/onboarding_fragment" />
+            android:id="@+id/move_to_signup"
+            app:destination="@id/signup_fragment">
+
+            <argument
+                android:name="request_key"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
     </fragment>
 
     <fragment
@@ -174,13 +199,43 @@
         tools:layout="@layout/bottom_sheet_recommend_background_custom" />
 
     <fragment
-        android:id="@+id/onboarding_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.onboarding.OnboardingFragment"
-        tools:layout="@layout/fragment_onboarding" />
+        android:id="@+id/login_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/move_to_email_login"
+            app:destination="@id/email_login_fragment" />
+
+        <action
+            android:id="@+id/move_to_theme_select"
+            app:destination="@id/theme_select_fragment" />
+
+        <action
+            android:id="@+id/move_to_signup"
+            app:destination="@id/signup_fragment">
+
+            <argument
+                android:name="request_key"
+                app:argType="string"
+                app:nullable="false" />
+        </action>
+    </fragment>
 
     <action
         android:id="@+id/move_to_login_fragment"
         app:destination="@id/login_fragment"
         app:launchSingleTop="true"
         app:popUpTo="@id/nav_graph" />
+
+    <fragment
+        android:id="@+id/signup_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment"
+        tools:layout="@layout/fragment_signup">
+
+        <argument
+            android:name="request_key"
+            app:argType="string"
+            app:nullable="false" />
+    </fragment>
 </navigation>

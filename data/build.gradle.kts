@@ -20,6 +20,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
         buildConfigField("String", "APP_VERSION", "\"${libs.versions.versionName.get()}\"")
+        buildConfigField("String", "O_AUTH_WEB_CLIENT_ID", getApiKey("o_auth_web_client_id"))
     }
 
     buildTypes {
@@ -69,6 +70,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config.ktx)
     implementation(libs.firebase.analytics.ktx)
+    implementation(libs.credentials)
+    implementation(libs.credentials.auth)
+    implementation(libs.google.identity)
 
     debugImplementation(libs.bundles.flipper)
     releaseImplementation(libs.flipper.noop)

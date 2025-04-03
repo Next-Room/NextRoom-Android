@@ -41,16 +41,6 @@ class SettingDataSource @Inject constructor(
         }
     }
 
-    suspend fun getIsInitLaunch(): Boolean {
-        return data.first().isInitLaunch
-    }
-
-    suspend fun setIsNotInitLaunch() {
-        dataStore.updateData {
-            it.copy(isInitLaunch = false)
-        }
-    }
-
     fun setLastLaunchDate() = runBlocking {
         dataStore.updateData {
             it.copy(lastLaunchDate = System.currentTimeMillis())
@@ -77,13 +67,17 @@ class SettingDataSource @Inject constructor(
     suspend fun saveAdminInfo(adminCode: String, shopName: String) {
         dataStore.updateData {
             it.copy(
-                loggedIn = true,
                 adminCode = adminCode,
                 shopName = shopName,
             )
         }
     }
 
+    suspend fun setLoggedIn(loggedIn: Boolean) {
+        dataStore.updateData {
+            it.copy(loggedIn = loggedIn)
+        }
+    }
 
     fun setEmailSaveChecked(emailSaveChecked: Boolean) = runBlocking {
         dataStore.updateData {
@@ -120,4 +114,12 @@ class SettingDataSource @Inject constructor(
     }
 
     suspend fun getAppPassword() = data.first().appPassword
+
+    suspend fun saveHasSeenGuidePopup() {
+        dataStore.updateData {
+            it.copy(hasSeenGuidePopup = true)
+        }
+    }
+
+    suspend fun getHasSeenGuidePopup() = data.first().hasSeenGuidePopup
 }

@@ -9,9 +9,10 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentLoginBinding
+import com.nextroom.nextroom.presentation.databinding.FragmentEmailLoginBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setError
@@ -20,13 +21,14 @@ import com.nextroom.nextroom.presentation.extension.showKeyboard
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.Constants.KAKAO_BUSINESS_CHANNEL_URL
+import com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment.Companion.SIGNUP_REQUEST_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 
 @AndroidEntryPoint
-class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
+class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmailLoginBinding::inflate) {
 
-    private val viewModel: LoginViewModel by viewModels()
+    private val viewModel: EmailLoginViewModel by viewModels()
 
     private var emailInitialised = false
 
@@ -64,13 +66,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             }
         }
 
-        tvNoAccountGuide.setOnClickListener { goToOnboardingScreen() }
-        btnLogin.setOnClickListener { viewModel.complete() }
-
-        tvPrivacyPolicy.setOnClickListener {
-            val action = LoginFragmentDirections.moveToWebViewFragment(getString(R.string.link_privacy_policy))
-            findNavController().safeNavigate(action)
-        }
+        tvEmailLogin.setOnClickListener { viewModel.complete() }
+        llGoogleLogin.setOnClickListener { viewModel.requestGoogleAuth() }
 
         cbIdSave.setOnCheckedChangeListener { _, isChecked ->
             viewModel.onIdSaveChecked(isChecked)
@@ -87,6 +84,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
                 toast(getString(R.string.error_something))
             }
         }
+
+        ivBack.setOnClickListener { findNavController().navigateUp() }
+        tvCustomerService.setOnClickListener {
+            try {
+                Intent(Intent.ACTION_VIEW)
+                    .apply { data = Uri.parse(getString(R.string.link_official_instagram)) }
+                    .also { startActivity(it) }
+            } catch (e: Exception) {
+                toast(getString(R.string.error_something))
+            }
+        }
+        tvSignup.setOnClickListener {
+            NavGraphDirections.moveToWebViewFragment(
+                url = getString(R.string.link_signup),
+                showToolbar = true,
+            ).also { findNavController().safeNavigate(it) }
+        }
     }
 
     private fun observe() {
@@ -95,7 +109,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             viewModel.loginState.collect { loggedIn ->
                 if (loggedIn) {
                     val action =
-                        LoginFragmentDirections.moveToThemeSelectFragment()
+                        EmailLoginFragmentDirections.moveToThemeSelectFragment()
                     findNavController().safeNavigate(action)
                     clearInputs()
                 }
@@ -103,7 +117,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         }
     }
 
-    private fun render(state: LoginState) = with(binding) {
+    private fun render(state: EmailLoginState) = with(binding) {
         pbLoading.isVisible = state.loading
         etEmail.isEnabled = !state.loading
         etPassword.isEnabled = !state.loading
@@ -112,36 +126,33 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
             etEmail.setText(state.userEmail)
             cbIdSave.isChecked = state.idSaveChecked
         }
-        btnLogin.isEnabled = !state.loading
-        tvPrivacyPolicy.isEnabled = !state.loading
-        tvNoAccountGuide.isEnabled = !state.loading
+        tvEmailLogin.isEnabled = !state.loading
     }
 
-    private fun handleEvent(event: LoginEvent) {
+    private fun handleEvent(event: EmailLoginEvent) {
         when (event) {
-            is LoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
-            is LoginEvent.LoginFailed -> {
+            is EmailLoginEvent.ShowMessage -> snackbar(event.message.toString(requireContext()))
+            is EmailLoginEvent.EmailLoginFailed -> {
                 binding.etEmail.setError()
                 binding.etPassword.setError()
                 snackbar(event.message)
             }
 
-            LoginEvent.GoToOnboardingScreen -> {
-                goToOnboardingScreen()
-            }
+            EmailLoginEvent.GoToGameScreen -> Unit
+            EmailLoginEvent.GoogleAuthFailed,
+            EmailLoginEvent.GoogleLoginFailed -> toast(R.string.error_something)
 
-            LoginEvent.GoToGameScreen -> Unit
+            is EmailLoginEvent.NeedAdditionalUserInfo -> moveToSignup()
         }
-    }
-
-    private fun goToOnboardingScreen() {
-        val action = LoginFragmentDirections.moveToOnboardingFragment()
-        findNavController().safeNavigate(action)
     }
 
     private fun clearInputs() {
         binding.etEmail.setText("")
         binding.etPassword.setText("")
         viewModel.initState()
+    }
+
+    private fun moveToSignup() {
+        findNavController().safeNavigate(EmailLoginFragmentDirections.moveToSignup(SIGNUP_REQUEST_KEY))
     }
 }

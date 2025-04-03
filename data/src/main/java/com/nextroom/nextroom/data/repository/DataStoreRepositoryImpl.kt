@@ -9,12 +9,6 @@ import javax.inject.Inject
 class DataStoreRepositoryImpl @Inject constructor(
     private val settingDataSource: SettingDataSource,
 ) : DataStoreRepository {
-    override suspend fun getIsInitLaunch(): Boolean {
-        return settingDataSource.getIsInitLaunch().also {
-            if (it) settingDataSource.setIsNotInitLaunch()
-        }
-    }
-
     override val isFirstInitOfDay: Boolean
         get() = run {
             val util = DateTimeUtil()
@@ -41,5 +35,13 @@ class DataStoreRepositoryImpl @Inject constructor(
 
     override fun setNetworkDisconnectedCount(count: Int) {
         settingDataSource.setNetworkDisconnectedCount(count)
+    }
+
+    override suspend fun setHasSeenGuidePopup() {
+        settingDataSource.saveHasSeenGuidePopup()
+    }
+
+    override suspend fun getHasSeenGuidePopup(): Boolean {
+        return settingDataSource.getHasSeenGuidePopup()
     }
 }

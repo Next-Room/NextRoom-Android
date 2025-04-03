@@ -12,9 +12,28 @@
     <!-- Link -->
     <string name="link_signup">https://nextroom.co.kr/signup</string>
     <string name="link_privacy_policy">https://basalt-cathedral-c81.notion.site/fbb1f04ae70d473380e64d12ed013df8?pvs=4</string>
+    <string name="link_official_instagram">https://www.instagram.com/team_nextroom/</string>
+    <string name="link_usage_guide">https://held-notebook-420.notion.site/134ed57b9c574733b31feab0ea5c36a5?pvs=4</string>
 
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
     <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
+
+    <!-- array -->
+    <string-array name="signup_source">
+        <item>네이버 검색</item>
+        <item>구글 검색</item>
+        <item>네이버 카페(오프라인 방탈출)</item>
+        <item>지인 추천</item>
+        <item>홍보물</item>
+        <item>기타</item>
+    </string-array>
+
+    <string-array name="signup_reason">
+        <item>운영 중인 매장에 도입하기 위해</item>
+        <item>오픈 예정인 매장에 도입하기 위해</item>
+        <item>학교 혹은 공공기관에서 이벤트성으로 사용</item>
+        <item>기타</item>
+    </string-array>
 
     <string name="sign_up">회원가입</string>
 
@@ -37,8 +56,7 @@
     <string name="memo_pen_description">그리기</string>
     <string name="memo_eraser_description">지우개</string>
 
-    <string name="admin_code_no_account_guide"><u>계정이 없으신가요?</u></string>
-    <string name="text_kakao_cs_underline"><u>카카오로 문의하기</u></string>
+    <string name="text_kakao_cs_underline">카카오로 문의하기</string>
     <string name="text_customer_service">문의하기</string>
 
     <string name="admin_main_update_hint">관리자 웹 사이트에서 힌트를 업데이트 했다면 반드시 업데이트 버튼을 눌러주세요!</string>
@@ -47,7 +65,6 @@
     <string name="admin_main_updated_at">최근 업데이트 일 : %s</string>
     <string name="admin_main_empty_theme_guide">관리자 페이지에서\n테마를 추가해주세요!</string>
 
-    <string name="login_title">안녕하세요 사장님\n넥스트룸입니다</string>
     <string name="login_description">이메일과 비밀번호를 입력해주세요</string>
     <string name="login_admin_email_hint">이메일</string>
     <string name="login_password_hint">비밀번호</string>
@@ -183,4 +200,25 @@
 
     <string name="text_app_version">앱 버전</string>
     <string name="text_no_available_browser_guide">사용 가능한 브라우저가 없습니다.</string>
+    <string name="text_recommend_google_login_guide">⚡️ 3초만에 빠른 로그인</string>
+    <string name="text_start_with_google">구글로 시작하기</string>
+    <string name="text_start_with_email">이메일로 시작하기</string>
+    <string name="text_login">로그인</string>
+    <string name="text_email_login">이메일 로그인</string>
+    <string name="text_signup_complete">가입완료</string>
+    <string name="text_shop_name">매장명</string>
+    <string name="text_asterisk">*</string>
+    <string name="text_please_input">입력해 주세요.</string>
+    <string name="text_please_select">선택해 주세요.</string>
+    <string name="text_singup_source">가입 경로</string>
+    <string name="text_singup_reason">가입 이유</string>
+    <string name="text_agree_all_terms">모두 동의합니다.</string>
+    <string name="text_service_term_agree"><u>서비스 이용약관</u> 동의</string>
+    <string name="text_required_label">(필수)</string>
+    <string name="text_marketing_term_agree">새로운 업데이트 소식 받기</string>
+    <string name="text_select_signup_source">가입 경로 선택</string>
+    <string name="text_select_signup_reason">가입 이유 선택</string>
+    <string name="text_suggest_guide_popup_title">환영합니다!</string>
+    <string name="text_suggest_guide_popup_message">넥스트룸 사용 방법을 알아볼까요?</string>
+    <string name="text_see_guide">가이드 보기</string>
 </resources>

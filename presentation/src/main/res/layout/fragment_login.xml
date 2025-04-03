@@ -4,133 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Dark01">
+    tools:background="@color/Dark01"
+    tools:context=".ui.onboarding.LoginFragment">
+
+    <TextView
+        android:id="@+id/tv_description"
+        style="@style/Pretendard.20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="92dp"
+        android:text="@string/onboarding_description"
+        android:textColor="@color/Gray01"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/Pretendard.32.bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/onboarding_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_description" />
 
     <ImageView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:alpha="0.4"
+        android:layout_marginTop="32dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/bg_login"
+        android:src="@drawable/bg_onboarding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bg_black_to_white_gradient"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="24dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="24dp" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/white_12"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_label"
+        app:layout_constraintEnd_toStartOf="@id/tv_login_label"
+        app:layout_constraintStart_toStartOf="@id/ll_start_with_google"
+        app:layout_constraintTop_toTopOf="@id/tv_login_label" />
 
     <TextView
-        android:id="@+id/tv_login_title"
+        android:id="@+id/tv_login_label"
+        style="@style/Pretendard.14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"
-        android:text="@string/login_title"
-        android:textAppearance="@style/Pretendard.32.bold"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="16dp"
+        android:text="@string/text_recommend_google_login_guide"
+        app:layout_constraintBottom_toTopOf="@id/ll_start_with_google"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <EditText
-        android:id="@+id/et_email"
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/white_12"
+        app:layout_constraintBottom_toBottomOf="@id/tv_login_label"
+        app:layout_constraintEnd_toEndOf="@id/ll_start_with_google"
+        app:layout_constraintStart_toEndOf="@id/tv_login_label"
+        app:layout_constraintTop_toTopOf="@id/tv_login_label" />
+
+    <LinearLayout
+        android:id="@+id/ll_start_with_google"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:hint="@string/login_admin_email_hint"
-        android:inputType="textEmailAddress"
-        android:textAppearance="@style/Pretendard.16"
-        android:textColor="@color/White"
-        android:textColorHint="@color/Gray01"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_login_title" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_white_border_r_100"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="20dp"
+        app:layout_constraintBottom_toTopOf="@id/tv_start_with_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <EditText
-        android:id="@+id/et_password"
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_google" />
+
+        <TextView
+            style="@style/Pretendard.16.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/text_start_with_google"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_start_with_email"
+        style="@style/Pretendard.16.Bold"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:hint="@string/login_password_hint"
-        android:inputType="textPassword"
-        android:textAppearance="@style/Pretendard.16"
-        android:textColor="@color/White"
-        android:textColorHint="@color/Gray01"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/et_email" />
-
-    <CheckBox
-        android:id="@+id/cb_id_save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/email_save_title"
-        android:textColor="@color/Gray02"
-        app:layout_constraintStart_toStartOf="@+id/guide_start"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login"
-        style="@style/Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="@string/login_button"
-        android:textColor="@color/Dark01"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/cb_id_save" />
-
-    <TextView
-        android:id="@+id/tv_no_account_guide"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/admin_code_no_account_guide"
-        android:textAppearance="@style/Pretendard.12"
-        android:textColor="@color/color_gray01_text_button"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toEndOf="@id/tv_customer_service"
-        app:layout_constraintTop_toBottomOf="@id/btn_login" />
-
-    <TextView
-        android:id="@+id/tv_customer_service"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/text_kakao_cs_underline"
-        android:textAppearance="@style/Pretendard.12"
-        android:textColor="@color/color_gray01_text_button"
-        app:layout_constraintEnd_toStartOf="@id/tv_no_account_guide"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/btn_login" />
-
-    <TextView
-        android:id="@+id/tv_privacy_policy"
-        style="@style/Pretendard.12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="24dp"
-        android:text="@string/privacy_policy"
-        android:textColor="@color/Gray01"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/bg_black_border_white20_r_100"
+        android:gravity="center"
+        android:paddingVertical="20dp"
+        android:text="@string/text_start_with_email"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.nextroom.nextroom.presentation.common.NRLoading
         android:id="@+id/pb_loading"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

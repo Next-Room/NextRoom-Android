@@ -26,13 +26,13 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
+class EmailLoginViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
-) : BaseViewModel<LoginState, LoginEvent>() {
+) : BaseViewModel<EmailLoginState, EmailLoginEvent>() {
 
-    override val container: Container<LoginState, LoginEvent> = container(LoginState())
+    override val container: Container<EmailLoginState, EmailLoginEvent> = container(EmailLoginState())
     val loginState: StateFlow<Boolean> = adminRepository.loggedIn.stateIn(
         viewModelScope,
         SharingStarted.Eagerly,
@@ -45,11 +45,6 @@ class LoginViewModel @Inject constructor(
         baseViewModelScope.launch {
             adminRepository.loggedIn.collect {
                 if (it) verifySuccess() // 로그인 됐으면 테마 목록으로 이동
-            }
-        }
-        baseViewModelScope.launch {
-            if (dataStoreRepository.getIsInitLaunch()) {
-                event(LoginEvent.GoToOnboardingScreen)
             }
         }
         baseViewModelScope.launch {
@@ -110,7 +105,7 @@ class LoginViewModel @Inject constructor(
             }.onFailure {
                 reduce { state.copy(idInputState = InputState.Error(R.string.blank)) }
                 when (it) {
-                    is Result.Failure.HttpError -> event(LoginEvent.LoginFailed(it.message))
+                    is Result.Failure.HttpError -> event(EmailLoginEvent.EmailLoginFailed(it.message))
                     is Result.Failure.NetworkError -> showMessage(R.string.error_network)
                     else -> showMessage(R.string.error_something)
                 }
@@ -132,18 +127,44 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun showMessage(message: String) = intent {
-        postSideEffect(LoginEvent.ShowMessage(UiText(message)))
+        postSideEffect(EmailLoginEvent.ShowMessage(UiText(message)))
     }
 
     private fun showMessage(@StringRes messageId: Int) = intent {
-        postSideEffect(LoginEvent.ShowMessage(UiText(messageId)))
+        postSideEffect(EmailLoginEvent.ShowMessage(UiText(messageId)))
     }
 
-    private fun event(event: LoginEvent) {
+    private fun event(event: EmailLoginEvent) {
         when (event) {
-            is LoginEvent.LoginFailed -> showMessage(event.message)
-            LoginEvent.GoToOnboardingScreen -> intent { postSideEffect(LoginEvent.GoToOnboardingScreen) }
+            is EmailLoginEvent.EmailLoginFailed -> showMessage(event.message)
             else -> {}
+        }
+    }
+
+    fun requestGoogleAuth() = intent {
+        baseViewModelScope.launch {
+            reduce { state.copy(loading = true) }
+            try {
+                adminRepository.requestGoogleAuth().getOrThrow
+                    .also { postGoogleLogin(it.idToken) }
+            } catch (e: Exception) {
+                postSideEffect(EmailLoginEvent.GoogleAuthFailed)
+            }
+            reduce { state.copy(loading = false) }
+        }
+    }
+
+    private fun postGoogleLogin(idToken: String) = intent {
+        baseViewModelScope.launch {
+            try {
+                adminRepository.postGoogleLogin(idToken).getOrThrow.let {
+                    if (!it.isComplete) {
+                        postSideEffect(EmailLoginEvent.NeedAdditionalUserInfo(it.shopName))
+                    }
+                }
+            } catch (e: Exception) {
+                postSideEffect(EmailLoginEvent.GoogleLoginFailed)
+            }
         }
     }
 }
