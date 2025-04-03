@@ -10,6 +10,7 @@ import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModelFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentLoginBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -65,15 +66,15 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
     }
 
     private fun moveToThemeSelect() {
-        LoginFragmentDirections.moveToThemeSelect().also { findNavController().navigate(it) }
+        LoginFragmentDirections.moveToThemeSelect().also { findNavController().safeNavigate(it) }
     }
 
     private fun moveToEmailLogin() {
-        LoginFragmentDirections.moveToEmailLogin().also { findNavController().navigate(it) }
+        LoginFragmentDirections.moveToEmailLogin().also { findNavController().safeNavigate(it) }
     }
 
     private fun moveToSignup() {
-        LoginFragmentDirections.moveToSignup(SIGNUP_REQUEST_KEY).also { findNavController().navigate(it) }
+        LoginFragmentDirections.moveToSignup(SIGNUP_REQUEST_KEY).also { findNavController().safeNavigate(it) }
     }
 
     override fun onClick(v: View) {
