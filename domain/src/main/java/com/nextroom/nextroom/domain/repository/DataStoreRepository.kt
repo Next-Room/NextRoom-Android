@@ -8,4 +8,7 @@ interface DataStoreRepository {
 
     fun setRecommendBackgroundCustomDialogHidden(time: Long)
     fun getRecommendBackgroundCustomDialogHiddenUntil(): Long
+
+    suspend fun setHasSeenGuidePopup()
+    suspend fun getHasSeenGuidePopup(): Boolean
 }

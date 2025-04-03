@@ -11,4 +11,5 @@ sealed interface ThemeSelectEvent {
     data class ReadyToGameStart(val subscribeStatus: SubscribeStatus) : ThemeSelectEvent
     data object NeedToSetPassword : ThemeSelectEvent
     data class NeedToCheckPasswordForStartGame(val themeId: String) : ThemeSelectEvent
+    data object GuidePopupNotSeen : ThemeSelectEvent
 }

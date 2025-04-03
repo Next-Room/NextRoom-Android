@@ -49,6 +49,12 @@ class ThemeSelectViewModel @Inject constructor(
                 updateShopInfo(it)
             }
         }
+        baseViewModelScope.launch {
+            if (dataStoreRepository.getHasSeenGuidePopup().not()) {
+                intent { postSideEffect(ThemeSelectEvent.GuidePopupNotSeen) }
+                dataStoreRepository.setHasSeenGuidePopup()
+            }
+        }
     }
 
     fun onResume() {

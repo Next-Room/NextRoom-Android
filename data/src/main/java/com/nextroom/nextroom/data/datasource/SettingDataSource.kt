@@ -114,4 +114,12 @@ class SettingDataSource @Inject constructor(
     }
 
     suspend fun getAppPassword() = data.first().appPassword
+
+    suspend fun saveHasSeenGuidePopup() {
+        dataStore.updateData {
+            it.copy(hasSeenGuidePopup = true)
+        }
+    }
+
+    suspend fun getHasSeenGuidePopup() = data.first().hasSeenGuidePopup
 }

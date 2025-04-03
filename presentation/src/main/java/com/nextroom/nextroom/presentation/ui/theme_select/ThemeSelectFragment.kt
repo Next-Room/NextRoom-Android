@@ -254,6 +254,7 @@ class ThemeSelectFragment :
             ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             ThemeSelectEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
+            ThemeSelectEvent.GuidePopupNotSeen -> Unit // TODO: 팝업 보여주기
         }
     }
 

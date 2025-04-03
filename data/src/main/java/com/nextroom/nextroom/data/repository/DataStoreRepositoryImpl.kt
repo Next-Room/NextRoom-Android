@@ -36,4 +36,12 @@ class DataStoreRepositoryImpl @Inject constructor(
     override fun setNetworkDisconnectedCount(count: Int) {
         settingDataSource.setNetworkDisconnectedCount(count)
     }
+
+    override suspend fun setHasSeenGuidePopup() {
+        settingDataSource.saveHasSeenGuidePopup()
+    }
+
+    override suspend fun getHasSeenGuidePopup(): Boolean {
+        return settingDataSource.getHasSeenGuidePopup()
+    }
 }
