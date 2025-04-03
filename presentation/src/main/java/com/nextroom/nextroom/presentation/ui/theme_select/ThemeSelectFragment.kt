@@ -114,6 +114,7 @@ class ThemeSelectFragment :
                     }
                 } catch (e: Exception) {
                     Logger.e(e)
+                    toast(getString(R.string.error_something))
                 }
             }
         }
