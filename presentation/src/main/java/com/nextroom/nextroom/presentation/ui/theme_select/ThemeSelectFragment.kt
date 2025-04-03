@@ -35,6 +35,7 @@ import com.nextroom.nextroom.presentation.extension.statusBarHeight
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
+import com.nextroom.nextroom.presentation.util.Logger
 import com.nextroom.nextroom.presentation.util.isOnline
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -85,6 +86,7 @@ class ThemeSelectFragment :
     private fun initSubscribe() {
         setFragmentResultListener(requestKeyCheckPassword, ::handleFragmentResults)
         setFragmentResultListener(dialogKeyNeedToSetPassword, ::handleFragmentResults)
+        setFragmentResultListener(SHOW_USAGE_GUIDE_DIALOG_KEY, ::handleFragmentResults)
     }
 
     private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
@@ -103,6 +105,17 @@ class ThemeSelectFragment :
             }
 
             dialogKeyNeedToSetPassword -> moveToSetPassword()
+            SHOW_USAGE_GUIDE_DIALOG_KEY -> {
+                try {
+                    getString(R.string.link_usage_guide).let { url ->
+                        Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
+                    }.also {
+                        startActivity(it)
+                    }
+                } catch (e: Exception) {
+                    Logger.e(e)
+                }
+            }
         }
     }
 
@@ -254,7 +267,7 @@ class ThemeSelectFragment :
             ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             ThemeSelectEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
-            ThemeSelectEvent.GuidePopupNotSeen -> Unit // TODO: 팝업 보여주기
+            ThemeSelectEvent.GuidePopupNotSeen -> showSuggestGuidePopup()
         }
     }
 
@@ -328,6 +341,18 @@ class ThemeSelectFragment :
             .also { findNavController().safeNavigate(it) }
     }
 
+    private fun showSuggestGuidePopup() {
+        NavGraphDirections.moveToNrTwoButtonDialog(
+            NRTwoButtonDialog.NRTwoButtonArgument(
+                title = getString(R.string.text_suggest_guide_popup_title),
+                message = getString(R.string.text_suggest_guide_popup_message),
+                negBtnText = getString(R.string.text_cancel),
+                posBtnText = getString(R.string.text_see_guide),
+                dialogKey = SHOW_USAGE_GUIDE_DIALOG_KEY,
+            )
+        ).also { findNavController().safeNavigate(it) }
+    }
+
     private fun ThemeInfoPresentation.toAdapterUI(): ThemesAdapter.ThemeInfo {
         return ThemesAdapter.ThemeInfo(
             id = this.id,
@@ -356,6 +381,7 @@ class ThemeSelectFragment :
     companion object {
         private const val requestKeyCheckPassword = "requestKeyCheckPassword"
         private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
+        private const val SHOW_USAGE_GUIDE_DIALOG_KEY = "SHOW_USAGE_GUIDE_DIALOG_KEY"
         private const val AUTO_SCROLL_INTERVAL_TIME = 3500L
         private const val PAGING_ANIMATION_DURATION = 400L
     }

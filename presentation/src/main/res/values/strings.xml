@@ -13,6 +13,7 @@
     <string name="link_signup">https://nextroom.co.kr/signup</string>
     <string name="link_privacy_policy">https://basalt-cathedral-c81.notion.site/fbb1f04ae70d473380e64d12ed013df8?pvs=4</string>
     <string name="link_official_instagram">https://www.instagram.com/team_nextroom/</string>
+    <string name="link_usage_guide">https://held-notebook-420.notion.site/134ed57b9c574733b31feab0ea5c36a5?pvs=4</string>
 
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
     <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
@@ -217,4 +218,7 @@
     <string name="text_marketing_term_agree">새로운 업데이트 소식 받기</string>
     <string name="text_select_signup_source">가입 경로 선택</string>
     <string name="text_select_signup_reason">가입 이유 선택</string>
+    <string name="text_suggest_guide_popup_title">환영합니다!</string>
+    <string name="text_suggest_guide_popup_message">넥스트룸 사용 방법을 알아볼까요?</string>
+    <string name="text_see_guide">가이드 보기</string>
 </resources>
