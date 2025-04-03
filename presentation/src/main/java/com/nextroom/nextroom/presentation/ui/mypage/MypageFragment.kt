@@ -18,7 +18,6 @@ import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
-import com.nextroom.nextroom.presentation.ui.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -62,10 +61,9 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         }
         clCustomerService.setOnClickListener {
             try {
-                Constants.KAKAO_BUSINESS_CHANNEL_URL
-                    .let { url ->
-                        Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
-                    }.also { startActivity(it) }
+                getString(R.string.link_official_instagram).let { url ->
+                    Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
+                }.also { startActivity(it) }
             } catch (e: Exception) {
                 toast(getString(R.string.error_something))
             }

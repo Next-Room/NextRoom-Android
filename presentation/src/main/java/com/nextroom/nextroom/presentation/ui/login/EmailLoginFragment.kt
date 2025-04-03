@@ -20,7 +20,6 @@ import com.nextroom.nextroom.presentation.extension.setStateListener
 import com.nextroom.nextroom.presentation.extension.showKeyboard
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
-import com.nextroom.nextroom.presentation.ui.Constants.KAKAO_BUSINESS_CHANNEL_URL
 import com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment.Companion.SIGNUP_REQUEST_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
@@ -75,11 +74,9 @@ class EmailLoginFragment : BaseFragment<FragmentEmailLoginBinding>(FragmentEmail
 
         tvCustomerService.setOnClickListener {
             try {
-                viewModel.container.stateFlow.value.kakaoChannelUrl
-                    .ifEmpty { KAKAO_BUSINESS_CHANNEL_URL }
-                    .let { url ->
-                        Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
-                    }.also { startActivity(it) }
+                getString(R.string.link_official_instagram).let { url ->
+                    Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
+                }.also { startActivity(it) }
             } catch (e: Exception) {
                 toast(getString(R.string.error_something))
             }

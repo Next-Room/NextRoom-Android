@@ -10,5 +10,4 @@ data class EmailLoginState(
     val passwordInputState: InputState = InputState.Empty,
     val idSaveChecked: Boolean = false,
     val userEmail: String = "",
-    val kakaoChannelUrl: String = "",
 )

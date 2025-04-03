@@ -7,8 +7,6 @@ import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onFinally
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
-import com.nextroom.nextroom.domain.repository.DataStoreRepository
-import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.InputState
@@ -28,8 +26,6 @@ import javax.inject.Inject
 @HiltViewModel
 class EmailLoginViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
-    private val dataStoreRepository: DataStoreRepository,
-    private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository
 ) : BaseViewModel<EmailLoginState, EmailLoginEvent>() {
 
     override val container: Container<EmailLoginState, EmailLoginEvent> = container(EmailLoginState())
@@ -45,17 +41,6 @@ class EmailLoginViewModel @Inject constructor(
         baseViewModelScope.launch {
             adminRepository.loggedIn.collect {
                 if (it) verifySuccess() // 로그인 됐으면 테마 목록으로 이동
-            }
-        }
-        baseViewModelScope.launch {
-            intent {
-                firebaseRemoteConfigRepository
-                    .getFirebaseRemoteConfigValue(FirebaseRemoteConfigRepository.REMOTE_KEY_KAKAO_BUSINESS_CHANNEL_URL)
-                    .collect { kakaoChannelUrl ->
-                        reduce {
-                            state.copy(kakaoChannelUrl = kakaoChannelUrl)
-                        }
-                    }
             }
         }
     }
