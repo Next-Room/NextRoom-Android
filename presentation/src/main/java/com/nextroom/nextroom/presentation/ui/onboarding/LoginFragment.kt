@@ -52,8 +52,6 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
                     when (event) {
                         LoginViewModel.UIEvent.GoogleAuthFailed,
                         LoginViewModel.UIEvent.GoogleLoginFailed -> toast(R.string.error_something)
-
-                        LoginViewModel.UIEvent.GoogleLoginSuccess -> moveToThemeSelect()
                         is LoginViewModel.UIEvent.NeedAdditionalUserInfo -> moveToSignup()
                     }
                 }

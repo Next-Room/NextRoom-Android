@@ -46,12 +46,10 @@ class LoginViewModel @Inject constructor(
         baseViewModelScope.launch {
             try {
                 adminRepository.postGoogleLogin(idToken).getOrThrow.let {
-                    if (it.isComplete) {
-                        UIEvent.GoogleLoginSuccess
-                    } else {
-                        UIEvent.NeedAdditionalUserInfo(it.shopName)
+                    if (!it.isComplete) {
+                        _uiEvent.emit(UIEvent.NeedAdditionalUserInfo(it.shopName))
                     }
-                }.also { _uiEvent.emit(it) }
+                }
             } catch (e: Exception) {
                 _uiEvent.emit(UIEvent.GoogleLoginFailed)
             }
@@ -60,7 +58,6 @@ class LoginViewModel @Inject constructor(
 
     sealed interface UIEvent {
         data object GoogleAuthFailed : UIEvent
-        data object GoogleLoginSuccess : UIEvent
         data object GoogleLoginFailed : UIEvent
         data class NeedAdditionalUserInfo(val shopName: String?) : UIEvent
     }
