@@ -59,7 +59,6 @@ class ThemeSelectViewModel @Inject constructor(
 
     fun onResume() {
         loadData()
-        checkNeedToSetPassword()
     }
 
     fun incrementNetworkDisconnectedCount() {
@@ -178,6 +177,7 @@ class ThemeSelectViewModel @Inject constructor(
     fun onThemeClicked(themeId: String) {
         baseViewModelScope.launch {
             intent {
+                checkNeedToSetPassword()
                 if (adminRepository.getAppPassword().isEmpty()) {
                     ThemeSelectEvent.NeedToSetPassword
                 } else {
