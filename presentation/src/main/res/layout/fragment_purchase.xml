@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/tv_main_label"
-                style="@style/Pretendard.32.bold"
+                style="@style/Pretendard.24.Bold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="64dp"
