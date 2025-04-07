@@ -30,6 +30,7 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
     }
 
     private fun render(state: BackgroundCustomState) {
+        binding.llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         (binding.rvTheme.adapter as? ThemeBackgroundToggleAdapter)?.submitList(state.themes)
 
         binding.llInfo.removeAllViews()
