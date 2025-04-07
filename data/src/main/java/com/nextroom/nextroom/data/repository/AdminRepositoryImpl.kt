@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.data.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -59,16 +58,11 @@ class AdminRepositoryImpl @Inject constructor(
     }
 
     override suspend fun requestGoogleAuth(): Result<GoogleAuthResponse> {
-        return try {
-            val result = credentialManager.getCredential(
-                request = getCredentialRequest,
-                context = context,
-            )
-            handleSignIn(result)
-        } catch (e: Exception) {
-            Log.d(TAG_NR, e.toString())
-            Result.Failure.NetworkError(e)
-        }
+        val result = credentialManager.getCredential(
+            request = getCredentialRequest,
+            context = context,
+        )
+        return handleSignIn(result)
     }
 
     private fun handleSignIn(result: GetCredentialResponse): Result.Success<GoogleAuthResponse> {

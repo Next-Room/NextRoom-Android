@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.onboarding
 
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
@@ -34,6 +35,8 @@ class LoginViewModel @Inject constructor(
                 apiLoading.emit(true)
                 adminRepository.requestGoogleAuth().getOrThrow
                     .also { postGoogleLogin(it.idToken) }
+            } catch (e: GetCredentialCancellationException) {
+                // do nothing
             } catch (e: Exception) {
                 _uiEvent.emit(UIEvent.GoogleAuthFailed)
             } finally {

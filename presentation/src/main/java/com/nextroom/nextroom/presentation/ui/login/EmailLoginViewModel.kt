@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.presentation.ui.login
 
 import androidx.annotation.StringRes
+import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
@@ -132,6 +133,8 @@ class EmailLoginViewModel @Inject constructor(
             try {
                 adminRepository.requestGoogleAuth().getOrThrow
                     .also { postGoogleLogin(it.idToken) }
+            } catch (e: GetCredentialCancellationException) {
+                // do nothing
             } catch (e: Exception) {
                 postSideEffect(EmailLoginEvent.GoogleAuthFailed)
             }
