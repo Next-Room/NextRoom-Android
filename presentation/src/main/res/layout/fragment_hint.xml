@@ -80,12 +80,12 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_progress" />
 
             <TextView
+                style="@style/Pretendard.20"
                 android:id="@+id/tv_hint_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/common_hint_eng"
-                android:textAppearance="@style/Poppins.24"
                 app:layout_constraintStart_toStartOf="@id/guide_start"
                 app:layout_constraintTop_toBottomOf="@id/divider1" />
 
@@ -141,12 +141,12 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_hint" />
 
             <TextView
+                style="@style/Pretendard.20"
                 android:id="@+id/tv_answer_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/game_answer"
-                android:textAppearance="@style/Poppins.24"
                 app:layout_constraintStart_toStartOf="@id/guide_start"
                 app:layout_constraintTop_toBottomOf="@id/divider2" />
 
