@@ -61,13 +61,17 @@
             <TextView
                 android:id="@+id/tv_shop_name"
                 style="@style/Pretendard.20.SemiBold"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="32dp"
                 android:includeFontPadding="false"
+                android:ellipsize="end"
+                android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="@+id/img_locate"
                 app:layout_constraintStart_toEndOf="@+id/img_locate"
                 app:layout_constraintTop_toTopOf="@+id/img_locate"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="비트포비아 강남 2호점" />
 
             <androidx.viewpager2.widget.ViewPager2
