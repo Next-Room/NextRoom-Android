@@ -13,138 +13,151 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_purchase_background"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:importantForAccessibility="no"
-        android:src="@drawable/subscribe"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="20dp" />
-
-    <TextView
-        android:id="@+id/tv_main_label"
-        style="@style/Pretendard.32.bold"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:gravity="center"
-        android:textColor="@color/White"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
+        android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintTop_toBottomOf="@id/tb_purchase"
-        tools:text="멤버십 회원을 위한 기능이\n업데이트 될 예정입니다" />
-
-    <TextView
-        android:id="@+id/tv_sub_label"
-        style="@style/Pretendard.20"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:textColor="@color/White"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        app:layout_constraintTop_toBottomOf="@id/tv_main_label"
-        tools:text="새로운 기능이 생기기 전까지\n넥스트룸 운영을 위해 후원해주세요" />
-
-    <TextView
-        android:id="@+id/tv_name"
-        style="@style/Pretendard.20.SemiBold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="42dp"
-        android:textColor="@color/White"
-        app:layout_constraintBottom_toTopOf="@id/btn_subscribe"
-        app:layout_constraintStart_toStartOf="@id/guide_start"
-        tools:text="스타" />
-
-    <TextView
-        android:id="@+id/tv_discount_rate"
-        style="@style/Pretendard.24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:textColor="@color/Red"
-        app:layout_constraintBottom_toBottomOf="@id/tv_sell_price"
-        app:layout_constraintEnd_toStartOf="@id/tv_sell_price"
-        tools:text="50%" />
-
-    <TextView
-        android:id="@+id/tv_origin_price"
-        style="@style/Pretendard.14.SemiBold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="2dp"
-        android:textColor="@color/Gray04"
-        app:layout_constraintBottom_toTopOf="@id/tv_sell_price"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        tools:text="19,900원" />
-
-    <TextView
-        android:id="@+id/tv_sell_price"
-        style="@style/Pretendard.24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/White"
-        app:layout_constraintBottom_toBottomOf="@id/tv_name"
-        app:layout_constraintEnd_toStartOf="@id/tv_month"
-        tools:text="9,900원" />
-
-    <TextView
-        android:id="@+id/tv_month"
-        style="@style/Pretendard.16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:text="@string/per_month"
-        android:textColor="@color/White"
-        app:layout_constraintBottom_toBottomOf="@id/tv_name"
-        app:layout_constraintEnd_toEndOf="@id/guide_end" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_subscribe"
-        style="@style/Button.Kor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:text="@string/ticket_subscribe"
-        app:layout_constraintBottom_toTopOf="@id/tv_see_more"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_see_more"
-        style="@style/Pretendard.14.SemiBold"
-        android:layout_width="140dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:gravity="center"
-        android:paddingVertical="16dp"
-        android:text="자세히 보기"
-        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guide_end"
-        app:layout_constraintStart_toStartOf="@id/guide_start" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guide_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="20dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guide_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="20dp" />
+
+            <ImageView
+                android:id="@+id/iv_purchase_background"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="250dp"
+                android:src="@drawable/bg_purchase"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_main_label" />
+
+            <TextView
+                android:id="@+id/tv_main_label"
+                style="@style/Pretendard.32.bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp"
+                android:gravity="center"
+                android:textColor="@color/White"
+                app:layout_constraintEnd_toEndOf="@id/guide_end"
+                app:layout_constraintStart_toStartOf="@id/guide_start"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="멤버십 회원을 위한 기능이\n업데이트 될 예정입니다" />
+
+            <TextView
+                android:id="@+id/tv_sub_label"
+                style="@style/Pretendard.20"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textColor="@color/White"
+                app:layout_constraintEnd_toEndOf="@id/guide_end"
+                app:layout_constraintStart_toStartOf="@id/guide_start"
+                app:layout_constraintTop_toBottomOf="@id/tv_main_label"
+                tools:text="새로운 기능이 생기기 전까지\n넥스트룸 운영을 위해 후원해주세요" />
+
+            <TextView
+                android:id="@+id/tv_name"
+                style="@style/Pretendard.20.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="42dp"
+                android:textColor="@color/White"
+                app:layout_constraintBottom_toTopOf="@id/btn_subscribe"
+                app:layout_constraintStart_toStartOf="@id/guide_start"
+                tools:text="스타" />
+
+            <TextView
+                android:id="@+id/tv_discount_rate"
+                style="@style/Pretendard.24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/Red"
+                app:layout_constraintBottom_toBottomOf="@id/tv_sell_price"
+                app:layout_constraintEnd_toStartOf="@id/tv_sell_price"
+                tools:text="50%" />
+
+            <TextView
+                android:id="@+id/tv_origin_price"
+                style="@style/Pretendard.14.SemiBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="2dp"
+                android:textColor="@color/Gray04"
+                app:layout_constraintBottom_toTopOf="@id/tv_sell_price"
+                app:layout_constraintEnd_toEndOf="@id/guide_end"
+                tools:text="19,900원" />
+
+            <TextView
+                android:id="@+id/tv_sell_price"
+                style="@style/Pretendard.24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White"
+                app:layout_constraintBottom_toBottomOf="@id/tv_name"
+                app:layout_constraintEnd_toStartOf="@id/tv_month"
+                tools:text="9,900원" />
+
+            <TextView
+                android:id="@+id/tv_month"
+                style="@style/Pretendard.16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:text="@string/per_month"
+                android:textColor="@color/White"
+                app:layout_constraintBottom_toBottomOf="@id/tv_name"
+                app:layout_constraintEnd_toEndOf="@id/guide_end" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_subscribe"
+                style="@style/Button.Kor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/ticket_subscribe"
+                app:layout_constraintBottom_toTopOf="@id/tv_see_more"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_see_more"
+                style="@style/Pretendard.14.SemiBold"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:gravity="center"
+                android:paddingVertical="16dp"
+                android:text="자세히 보기"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guide_end"
+                app:layout_constraintStart_toStartOf="@id/guide_start" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
     <com.nextroom.nextroom.presentation.common.NRLoading
         android:id="@+id/pb_loading"
