@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.common
 
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
@@ -23,6 +24,11 @@ class NRTwoButtonDialog :
     BaseDialogFragment<DialogFragmentNrTwoButtonBinding>(DialogFragmentNrTwoButtonBinding::inflate) {
 
     private val args: NRTwoButtonDialogArgs by navArgs()
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        isCancelable = args.nrTwoButtonArgument.isCancelable
+        return super.onCreateDialog(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bg = InsetDrawable(ColorDrawable(Color.TRANSPARENT), 36.dp)
