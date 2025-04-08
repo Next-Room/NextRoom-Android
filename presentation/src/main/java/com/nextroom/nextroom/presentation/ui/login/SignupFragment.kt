@@ -194,11 +194,13 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
     override fun onClick(v: View) {
         when (v) {
             binding.llSignupSource -> {
+                binding.etShopName.clearFocus()
                 (viewModel.uiState.value as? SignupViewModel.UIState.Loaded)?.let { loaded ->
                     showSelectSignupSourceBottomSheet(loaded.selectedSignupSource)
                 }
             }
             binding.llSignupReason -> {
+                binding.etShopName.clearFocus()
                 (viewModel.uiState.value as? SignupViewModel.UIState.Loaded)?.let { loaded ->
                     showSelectSignupReasonBottomSheet(loaded.selectedSignupReason)
                 }
