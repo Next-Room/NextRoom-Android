@@ -57,6 +57,14 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                 requireActivity().inputMethodManager?.hideSoftInputFromWindow(v.windowToken, 0)
                 binding.etShopName.clearFocus()
             }
+
+            if (hasFocus) {
+                R.drawable.bg_black_border_white50_r8
+            } else {
+                R.drawable.bg_black_border_white20_r8
+            }.also {
+                binding.etShopName.setBackgroundResource(it)
+            }
         }
         binding.etShopName.setOnEditorActionListener { v, actionId, event ->
             binding.etShopName.clearFocus()
