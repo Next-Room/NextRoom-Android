@@ -103,6 +103,7 @@
                 android:textAppearance="@style/Pretendard.16"
                 android:textColor="@color/White"
                 android:textColorHint="@color/Gray01"
+                android:inputType="text"
                 app:layout_constraintEnd_toEndOf="@id/gl_end"
                 app:layout_constraintStart_toStartOf="@id/gl_start"
                 app:layout_constraintTop_toBottomOf="@id/tv_shop_name_label" />
