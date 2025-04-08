@@ -58,6 +58,10 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                 binding.etShopName.clearFocus()
             }
         }
+        binding.etShopName.setOnEditorActionListener { v, actionId, event ->
+            binding.etShopName.clearFocus()
+            false
+        }
     }
 
     override fun setFragmentResultListeners() {
