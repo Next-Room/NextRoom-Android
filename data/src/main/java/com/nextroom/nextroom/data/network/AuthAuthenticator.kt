@@ -36,6 +36,7 @@ class AuthAuthenticator @Inject constructor(
                 }.onFailure {
                     Timber.tag("MANGBAAM-AuthAuthenticator").d("Refresh Token EXPIRED!!: $it")
                     authDataSource.logout()
+                    authDataSource.emitRefreshTokenExpired()
                 }.getOrNull
         }
     }

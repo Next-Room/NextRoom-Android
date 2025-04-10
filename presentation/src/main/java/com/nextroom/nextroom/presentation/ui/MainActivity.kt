@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.common.NRDialog
@@ -63,6 +65,7 @@ class MainActivity :
                 billingClientLifecycle.launchBillingFlow(this@MainActivity, it)
             }
         }
+        initObserve()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -97,6 +100,22 @@ class MainActivity :
             }
 
             MainEvent.ShowForceUpdateDialog -> showForceUpdateDialog()
+        }
+    }
+
+    private fun initObserve() {
+        repeatOn(Lifecycle.State.CREATED) {
+            viewModel.authEvent.collect { event ->
+                when (event) {
+                    AdminRepository.AuthEvent.RefreshTokenExpired -> {
+                        Toast.makeText(
+                            this@MainActivity,
+                            getString(R.string.error_refresh_token_expired_message),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
     }
 

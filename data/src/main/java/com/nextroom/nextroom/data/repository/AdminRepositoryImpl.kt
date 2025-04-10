@@ -45,6 +45,8 @@ class AdminRepositoryImpl @Inject constructor(
 
     override val shopName: Flow<String> = settingDataSource.shopName
 
+    override val authEvent: Flow<AdminRepository.AuthEvent> = authDataSource.authEvent
+
     override suspend fun login(adminCode: String, password: String, emailSaveChecked: Boolean): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
             if (emailSaveChecked) {

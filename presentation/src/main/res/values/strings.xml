@@ -17,6 +17,7 @@
 
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
     <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
+    <string name="error_refresh_token_expired_message">인증이 만료되었습니다. 다시 로그인해 주세요.</string>
 
     <!-- array -->
     <string-array name="signup_source">

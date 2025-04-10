@@ -14,6 +14,7 @@ interface AdminRepository {
 
     val shopName: Flow<String>
     val loggedIn: Flow<Boolean>
+    val authEvent: Flow<AuthEvent>
 
     /**
      * @return shopName
@@ -37,4 +38,8 @@ interface AdminRepository {
         signupReason: String,
         marketingTermAgreed: Boolean
     ): Result<AdditionalUserInfoResponse>
+
+    sealed interface AuthEvent {
+        data object RefreshTokenExpired : AuthEvent
+    }
 }

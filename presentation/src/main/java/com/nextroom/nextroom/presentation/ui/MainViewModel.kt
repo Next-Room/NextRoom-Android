@@ -34,6 +34,8 @@ class MainViewModel @Inject constructor(
         false,
     )
 
+    val authEvent = adminRepository.authEvent
+
     init {
         viewModelScope.launch {
             try {
