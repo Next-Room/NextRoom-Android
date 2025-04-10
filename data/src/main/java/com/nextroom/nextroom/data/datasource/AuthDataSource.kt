@@ -42,7 +42,6 @@ class AuthDataSource @Inject constructor(
                 shopName = "",
                 accessToken = "",
                 refreshToken = "",
-                appPassword = "",
             )
         }
     }
