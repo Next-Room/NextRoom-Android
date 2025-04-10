@@ -42,6 +42,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
     override fun initListeners() {
         super.initListeners()
 
+        binding.ivBack.setOnClickListener(this)
         binding.llSignupSource.setOnClickListener(this)
         binding.llSignupReason.setOnClickListener(this)
         binding.clAgreeAllTerms.setOnClickListener(this)
@@ -193,6 +194,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
 
     override fun onClick(v: View) {
         when (v) {
+            binding.ivBack -> findNavController().navigateUp()
             binding.llSignupSource -> {
                 binding.etShopName.clearFocus()
                 (viewModel.uiState.value as? SignupViewModel.UIState.Loaded)?.let { loaded ->
