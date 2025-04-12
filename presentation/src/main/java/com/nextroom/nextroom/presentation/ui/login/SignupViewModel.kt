@@ -22,6 +22,8 @@ class SignupViewModel @Inject constructor(
     private val _shopName = MutableStateFlow<String?>(null)
     private val _selectedSignupSource = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
     private val _selectedSignupReason = MutableStateFlow<UIState.Loaded.SelectedItem?>(null)
+    private val _customSignupSource = MutableStateFlow<String?>(null)
+    private val _customSignupReason = MutableStateFlow<String?>(null)
     private val _serviceTermAgree = MutableStateFlow(false)
     private val _marketingTermAgree = MutableStateFlow(false)
     private val _apiLoading = MutableStateFlow(false)
@@ -69,6 +71,14 @@ class SignupViewModel @Inject constructor(
         _selectedSignupReason.update { selectedItem }
     }
 
+    fun setCustomSignupSource(text: String?) {
+        _customSignupSource.update { text }
+    }
+
+    fun setCustomSignupReason(text: String?) {
+        _customSignupReason.update { text }
+    }
+
     fun onAllTermsAgreeClicked(agree: Boolean) {
         _serviceTermAgree.update { agree }
         _marketingTermAgree.update { agree }
@@ -85,13 +95,16 @@ class SignupViewModel @Inject constructor(
     fun signup() {
         baseViewModelScope.launch {
             val shopName = requireNotNull(_shopName.value.toString())
-            val signupSource = requireNotNull(_selectedSignupSource.value?.text)
+            val signupSource =
+                _customSignupSource.value.takeIf { !it.isNullOrEmpty() } ?: _selectedSignupSource.value?.text ?: ""
+            val signupReason =
+                _customSignupReason.value.takeIf { !it.isNullOrEmpty() } ?: _selectedSignupReason.value?.text ?: ""
 
             _apiLoading.emit(true)
             adminRepository.putAdditionalUserInfo(
                 shopName = shopName,
                 signupSource = signupSource,
-                signupReason = _selectedSignupReason.value?.text ?: "",
+                signupReason = signupReason,
                 marketingTermAgreed = _marketingTermAgree.value
             ).onSuccess {
                 _uiEvent.emit(UIEvent.SignupSuccess)

@@ -161,6 +161,25 @@
                     android:src="@drawable/ic_arrow_down" />
             </LinearLayout>
 
+            <EditText
+                android:id="@+id/et_signup_source"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_black_border_white20_r8"
+                android:hint="@string/text_please_input"
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:textAppearance="@style/Pretendard.16"
+                android:textColor="@color/White"
+                android:textColorHint="@color/Gray01"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/gl_end"
+                app:layout_constraintStart_toStartOf="@id/gl_start"
+                app:layout_constraintTop_toBottomOf="@id/ll_signup_source"
+                tools:visibility="visible" />
+
             <TextView
                 android:id="@+id/tv_signup_reason_label"
                 style="@style/Pretendard.16"
@@ -170,7 +189,7 @@
                 android:text="@string/text_singup_reason"
                 android:textColor="@color/white_70"
                 app:layout_constraintStart_toStartOf="@id/gl_start"
-                app:layout_constraintTop_toBottomOf="@id/ll_signup_source" />
+                app:layout_constraintTop_toBottomOf="@id/et_signup_source" />
 
             <LinearLayout
                 android:id="@+id/ll_signup_reason"
@@ -204,6 +223,25 @@
                     android:src="@drawable/ic_arrow_down" />
             </LinearLayout>
 
+            <EditText
+                android:id="@+id/et_signup_reason"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_black_border_white20_r8"
+                android:hint="@string/text_please_input"
+                android:inputType="text"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="12dp"
+                android:textAppearance="@style/Pretendard.16"
+                android:textColor="@color/White"
+                android:textColorHint="@color/Gray01"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/gl_end"
+                app:layout_constraintStart_toStartOf="@id/gl_start"
+                app:layout_constraintTop_toBottomOf="@id/ll_signup_reason"
+                tools:visibility="visible" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_agree_all_terms"
                 android:layout_width="0dp"
@@ -214,7 +252,7 @@
                 android:paddingVertical="12dp"
                 app:layout_constraintEnd_toEndOf="@id/gl_end"
                 app:layout_constraintStart_toStartOf="@id/gl_start"
-                app:layout_constraintTop_toBottomOf="@id/ll_signup_reason">
+                app:layout_constraintTop_toBottomOf="@id/et_signup_reason">
 
                 <TextView
                     android:id="@+id/tv_agree_all_terms_label"

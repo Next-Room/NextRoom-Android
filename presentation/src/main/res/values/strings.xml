@@ -222,4 +222,5 @@
     <string name="text_suggest_guide_popup_title">환영합니다!</string>
     <string name="text_suggest_guide_popup_message">넥스트룸 사용 방법을 알아볼까요?</string>
     <string name="text_see_guide">가이드 보기</string>
+    <string name="text_etc">기타</string>
 </resources>

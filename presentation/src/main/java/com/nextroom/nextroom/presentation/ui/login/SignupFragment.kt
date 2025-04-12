@@ -2,6 +2,7 @@ package com.nextroom.nextroom.presentation.ui.login
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
@@ -42,6 +43,27 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
     override fun initListeners() {
         super.initListeners()
 
+        fun setEditTextFocusSettings(editText: EditText) {
+            editText.setOnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    requireActivity().inputMethodManager?.hideSoftInputFromWindow(v.windowToken, 0)
+                    editText.clearFocus()
+                }
+
+                if (hasFocus) {
+                    R.drawable.bg_black_border_white50_r8
+                } else {
+                    R.drawable.bg_black_border_white20_r8
+                }.also {
+                    editText.setBackgroundResource(it)
+                }
+            }
+            editText.setOnEditorActionListener { _, _, _ ->
+                editText.clearFocus()
+                false
+            }
+        }
+
         binding.ivBack.setOnClickListener(this)
         binding.llSignupSource.setOnClickListener(this)
         binding.llSignupReason.setOnClickListener(this)
@@ -53,24 +75,15 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.etShopName.addTextChangedListener {
             viewModel.onShopNameChanged(it.toString())
         }
-        binding.etShopName.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus) {
-                requireActivity().inputMethodManager?.hideSoftInputFromWindow(v.windowToken, 0)
-                binding.etShopName.clearFocus()
-            }
-
-            if (hasFocus) {
-                R.drawable.bg_black_border_white50_r8
-            } else {
-                R.drawable.bg_black_border_white20_r8
-            }.also {
-                binding.etShopName.setBackgroundResource(it)
-            }
+        binding.etSignupSource.addTextChangedListener {
+            viewModel.setCustomSignupSource(it.toString())
         }
-        binding.etShopName.setOnEditorActionListener { v, actionId, event ->
-            binding.etShopName.clearFocus()
-            false
+        binding.etSignupReason.addTextChangedListener {
+            viewModel.setCustomSignupReason(it.toString())
         }
+        setEditTextFocusSettings(binding.etShopName)
+        setEditTextFocusSettings(binding.etSignupSource)
+        setEditTextFocusSettings(binding.etSignupReason)
     }
 
     override fun setFragmentResultListeners() {
@@ -92,13 +105,25 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         when (requestKey) {
             SELECT_SIGNUP_SOURCE_REQUEST_KEY -> {
                 if (bundle.hasResultData()) {
-                    bundle.toSelectedItem()?.let { viewModel.setSelectedSignupSource(it) }
+                    bundle.toSelectedItem()?.let {
+                        viewModel.setSelectedSignupSource(it)
+                        if (it.text != getString(R.string.text_etc)) {
+                            viewModel.setCustomSignupSource(null)
+                            binding.etSignupSource.text = null
+                        }
+                    }
                 }
             }
 
             SELECT_SIGNUP_REASON_REQUEST_KEY -> {
                 if (bundle.hasResultData()) {
-                    bundle.toSelectedItem()?.let { viewModel.setSelectedSignupReason(it) }
+                    bundle.toSelectedItem()?.let {
+                        viewModel.setSelectedSignupReason(it)
+                        if (it.text != getString(R.string.text_etc)) {
+                            viewModel.setCustomSignupReason(null)
+                            binding.etSignupReason.text = null
+                        }
+                    }
                 }
             }
         }
@@ -148,6 +173,10 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         binding.cbServiceTermAgree.isChecked = state.serviceTermAgreed
         binding.cbMarketingTermsAgree.isChecked = state.marketingTermAgreed
         binding.tvSignupComplete.isEnabled = state.allRequiredFieldFilled
+        binding.etSignupSource.isVisible =
+            state.selectedSignupSource?.let { it.text == getString(R.string.text_etc) } ?: false
+        binding.etSignupReason.isVisible =
+            state.selectedSignupReason?.let { it.text == getString(R.string.text_etc) } ?: false
     }
 
     private fun showSelectSignupSourceBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {
