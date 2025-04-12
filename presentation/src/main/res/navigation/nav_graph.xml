@@ -22,6 +22,16 @@
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
     </dialog>
 
+    <dialog
+        android:id="@+id/nr_one_button_dialog"
+        android:name="com.nextroom.nextroom.presentation.common.NROneButtonDialog"
+        tools:layout="@layout/dialog_fragment_nr_one_button">
+
+        <argument
+            android:name="nrOneButtonArgument"
+            app:argType="com.nextroom.nextroom.presentation.common.NROneButtonDialog$NROneButtonArgument" />
+    </dialog>
+
     <fragment
         android:id="@+id/image_viewer_fragment"
         android:name="com.nextroom.nextroom.presentation.common.ImageViewerFragment"
@@ -100,10 +110,19 @@
     <action
         android:id="@+id/move_to_nr_two_button_dialog"
         app:destination="@id/nr_two_button_dialog">
-        <argument
 
+        <argument
             android:name="nrTwoButtonArgument"
             app:argType="com.nextroom.nextroom.presentation.common.NRTwoButtonDialog$NRTwoButtonArgument" />
+    </action>
+
+    <action
+        android:id="@+id/move_to_nr_one_button_dialog"
+        app:destination="@id/nr_one_button_dialog">
+        <argument
+
+            android:name="nrOneButtonArgument"
+            app:argType="com.nextroom.nextroom.presentation.common.NROneButtonDialog$NROneButtonArgument" />
     </action>
 
     <action
