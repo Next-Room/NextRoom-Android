@@ -6,12 +6,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModelFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentLoginBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
-import com.nextroom.nextroom.presentation.extension.toast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -51,8 +49,6 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
             launch {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
-                        LoginViewModel.UIEvent.GoogleAuthFailed,
-                        LoginViewModel.UIEvent.GoogleLoginFailed -> toast(R.string.error_something)
                         is LoginViewModel.UIEvent.NeedAdditionalUserInfo -> moveToSignup()
                     }
                 }
