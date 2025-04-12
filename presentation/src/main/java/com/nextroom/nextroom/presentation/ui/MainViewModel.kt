@@ -38,13 +38,13 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            try {
-                adminRepository.getUserSubscribe().getOrThrow.status
-            } catch (e: Exception) {
-                SubscribeStatus.Default
-            }.also { subscribeStatus ->
-                gameStateRepository.getGameState()?.let { gameState ->
-                    event(MainEvent.GoToGameScreen(gameState, subscribeStatus))
+            gameStateRepository.getGameState()?.let { gameState ->
+                try {
+                    adminRepository.getUserSubscribe().getOrThrow.status
+                } catch (e: Exception) {
+                    SubscribeStatus.Default
+                }.also {
+                    event(MainEvent.GoToGameScreen(gameState, it))
                 }
             }
         }
