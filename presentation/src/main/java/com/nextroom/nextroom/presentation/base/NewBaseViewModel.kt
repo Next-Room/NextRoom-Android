@@ -23,7 +23,7 @@ abstract class NewBaseViewModel : ViewModel() {
     private val _errorFlow = MutableSharedFlow<Throwable>(extraBufferCapacity = 1)
     val errorFlow = _errorFlow.asSharedFlow()
 
-    private fun handleError(throwable: Throwable) {
+    fun handleError(throwable: Throwable) {
         when (throwable) {
             is CancellationException -> Unit
             else -> {
