@@ -123,7 +123,7 @@ class ThemeSelectViewModel @Inject constructor(
                 shownBackgroundCustomDialog = true
                 postSideEffect(ThemeSelectEvent.RecommendBackgroundCustom)
             }
-        }
+        }.onFailure(::handleError)
         reduce { state.copy(opaqueLoading = false, loading = false) }
     }
 
