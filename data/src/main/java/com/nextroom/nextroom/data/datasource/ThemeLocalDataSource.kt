@@ -45,10 +45,6 @@ class ThemeLocalDataSource @Inject constructor(
         return themeDao.isThemeExist(themeId)
     }
 
-    suspend fun getUpdatedInfo(themeId: Int): Long {
-        return themeTimeDao.getTimeInfo(themeId)?.recentUpdated ?: 0L
-    }
-
     suspend fun updateUpdatedInfo(themeId: Int, updatedAt: Long) {
         if (themeTimeDao.isTimeInfoExists(themeId)) {
             themeTimeDao.updateRecentUpdated(themeId, updatedAt)
