@@ -56,10 +56,6 @@ class ThemeRepositoryImpl @Inject constructor(
         return themeLocalDataSource.getTheme(latestThemeId)
     }
 
-    override suspend fun getUpdatedInfo(themeId: Int): Long {
-        return themeLocalDataSource.getUpdatedInfo(themeId)
-    }
-
     override suspend fun activateThemeBackgroundImage(activeThemeIdList: List<Int>, deActiveThemeIdList: List<Int>): Result<Unit> {
         return themeRemoteDateSource.putActiveThemeBackgroundImage(ThemeBackgroundActivationId(activeThemeIdList, deActiveThemeIdList))
     }

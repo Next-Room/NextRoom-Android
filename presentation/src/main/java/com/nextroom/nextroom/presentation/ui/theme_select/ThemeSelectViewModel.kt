@@ -36,6 +36,7 @@ class ThemeSelectViewModel @Inject constructor(
         ThemeSelectState(
             opaqueLoading = true,
             loading = true,
+            recentUpdatedDate = null
         )
     )
 
@@ -122,20 +123,17 @@ class ThemeSelectViewModel @Inject constructor(
                 shownBackgroundCustomDialog = true
                 postSideEffect(ThemeSelectEvent.RecommendBackgroundCustom)
             }
-        }
+        }.onFailure(::handleError)
         reduce { state.copy(opaqueLoading = false, loading = false) }
     }
 
     private suspend fun getThemes() {
-        themeRepository.getThemes().onSuccess {
-            updateThemes(
-                it.map { themeInfo ->
-                    val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                    themeInfo.toPresentation(updatedAt)
-                },
-            )
+        themeRepository.getThemes().onSuccess { themes ->
+            themes
+                .map { it.toPresentation() }
+                .also { updateThemes(it) }
 
-            it.forEach { themeInfo ->
+            themes.forEach { themeInfo ->
                 hintRepository.saveHints(themeInfo.id).onFailure(::handleError)
             }
             updateNetworkDisconnectedCount(0)
@@ -152,7 +150,12 @@ class ThemeSelectViewModel @Inject constructor(
     }
 
     private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {
-        reduce { state.copy(themes = themes) }
+        reduce {
+            state.copy(
+                themes = themes,
+                recentUpdatedDate = System.currentTimeMillis(),
+            )
+        }
     }
 
     fun tryGameStart(themeId: Int) = intent {

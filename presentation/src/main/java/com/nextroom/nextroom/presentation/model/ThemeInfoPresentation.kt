@@ -53,14 +53,13 @@ fun ThemeInfoPresentation.toDomain(themeImageCustomInfo: ThemeInfoPresentation.T
     )
 }
 
-fun ThemeInfo.toPresentation(recentUpdated: Long): ThemeInfoPresentation {
+fun ThemeInfo.toPresentation(): ThemeInfoPresentation {
     return ThemeInfoPresentation(
         id = id,
         title = title,
         timeLimit = timeLimitInMinute,
         hintLimit = hintLimit,
         hints = hints,
-        recentUpdated = recentUpdated,
         useTimerUrl = useTimerUrl,
         themeImageUrl = themeImageUrl,
         themeImageCustomInfo = themeImageCustomInfo?.toPresentation()

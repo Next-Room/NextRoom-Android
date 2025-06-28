@@ -16,9 +16,6 @@ interface ThemeTimeDao {
     @Query("UPDATE $THEME_TIME_TABLE_NAME SET recentUpdated = :updatedAt WHERE themeId = :themeId")
     suspend fun updateRecentUpdated(themeId: Int, updatedAt: Long)
 
-    @Query("SELECT * FROM $THEME_TIME_TABLE_NAME WHERE themeId = :themeId")
-    suspend fun getTimeInfo(themeId: Int): ThemeTimeEntity?
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTimeInfo(vararg themeTimeEntity: ThemeTimeEntity)
 
