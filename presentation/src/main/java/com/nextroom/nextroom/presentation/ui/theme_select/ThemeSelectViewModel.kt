@@ -127,15 +127,12 @@ class ThemeSelectViewModel @Inject constructor(
     }
 
     private suspend fun getThemes() {
-        themeRepository.getThemes().onSuccess {
-            updateThemes(
-                it.map { themeInfo ->
-                    val updatedAt = themeRepository.getUpdatedInfo(themeInfo.id)
-                    themeInfo.toPresentation(updatedAt)
-                },
-            )
+        themeRepository.getThemes().onSuccess { themes ->
+            themes
+                .map { it.toPresentation() }
+                .also { updateThemes(it) }
 
-            it.forEach { themeInfo ->
+            themes.forEach { themeInfo ->
                 hintRepository.saveHints(themeInfo.id).onFailure(::handleError)
             }
             updateNetworkDisconnectedCount(0)

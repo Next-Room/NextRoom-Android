@@ -66,9 +66,8 @@ class BackgroundCustomViewModel @Inject constructor(
     fun onThemeImageClicked(theme: ThemeInfoPresentation) = intent {
         baseViewModelScope.launch {
             try {
-                val updatedAt = themeRepository.getUpdatedInfo(theme.id)
                 themeRepository.getThemeById(theme.id)
-                    .toPresentation(updatedAt)
+                    .toPresentation()
                     .let {
                         postSideEffect(BackgroundCustomEvent.ThemeImageClicked(it))
                     }
