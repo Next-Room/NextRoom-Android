@@ -143,6 +143,7 @@
     <string name="tv_theme">테마</string>
     <string name="text_background_setting">배경 설정</string>
     <string name="text_last_hint_update">최근 힌트 업데이트 %s</string>
+    <string name="text_last_hint_update_fail">최근 힌트 업데이트를 불러오지 못했습니다.</string>
     <string name="text_timer_background_custom">타이머 배경 설정</string>
     <string name="text_background_custom_info_1">PC에서 배경을 등록하면 힌트폰에서 확인할 수 있습니다.</string>
     <string name="text_background_custom_info_2">미리보기에서 이미지의 어두움와 위치를 조정할 수 있습니다.</string>

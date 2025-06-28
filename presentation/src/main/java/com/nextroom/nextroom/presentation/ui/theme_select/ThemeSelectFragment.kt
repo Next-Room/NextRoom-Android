@@ -240,10 +240,16 @@ class ThemeSelectFragment :
         llEmptyThemeGuide.isVisible = state.themes.isEmpty()
         adapter.submitList(state.themes.map { it.toAdapterUI() })
         tvThemeCount.text = state.themes.size.toString()
-        tvLastUpdate.text = getString(
-            R.string.text_last_hint_update,
-            DateTimeUtil().longToDateString(System.currentTimeMillis(), pattern = "yyyy.MM.dd HH:mm")
-        )
+        if (state.recentUpdatedDate == null) {
+            getString(R.string.text_last_hint_update_fail)
+        } else {
+            getString(
+                R.string.text_last_hint_update,
+                DateTimeUtil().longToDateString(state.recentUpdatedDate, pattern = "yyyy.MM.dd HH:mm")
+            )
+        }.also {
+            tvLastUpdate.text = it
+        }
 
         if (state.opaqueLoading) {
             NRLoading.BackgroundType.BLACK

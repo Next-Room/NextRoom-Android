@@ -36,6 +36,7 @@ class ThemeSelectViewModel @Inject constructor(
         ThemeSelectState(
             opaqueLoading = true,
             loading = true,
+            recentUpdatedDate = null
         )
     )
 
@@ -149,7 +150,12 @@ class ThemeSelectViewModel @Inject constructor(
     }
 
     private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {
-        reduce { state.copy(themes = themes) }
+        reduce {
+            state.copy(
+                themes = themes,
+                recentUpdatedDate = System.currentTimeMillis(),
+            )
+        }
     }
 
     fun tryGameStart(themeId: Int) = intent {
