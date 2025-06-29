@@ -207,10 +207,14 @@ class ThemeSelectFragment :
     }
 
     private fun setCurrentBannerPosition(currentPosition: Int) {
-        (binding.vpBanner.adapter as? BannerAdapter)
-            ?.itemCount
-            ?.let { currentPosition % it }
-            ?.let { viewModel.setCurrentBannerPosition(it) }
+        try {
+            (binding.vpBanner.adapter as? BannerAdapter)
+                ?.itemCount
+                ?.let { currentPosition % it }
+                ?.let { viewModel.setCurrentBannerPosition(it) }
+        } catch (e: Exception) {
+            // do nothing
+        }
     }
 
     private fun navByDeepLink(deeplinkUrl: String) {
