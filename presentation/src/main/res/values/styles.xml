@@ -44,4 +44,10 @@
         <item name="android:textAppearance">@style/Poppins.24</item>
         <item name="android:textColor">@color/color_keypad_text</item>
     </style>
+
+    <style name="NumberPicker">
+        <item name="android:fontFamily">@font/pretendard_semi_bold</item>
+        <item name="android:textSize">24dp</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
 </resources>
