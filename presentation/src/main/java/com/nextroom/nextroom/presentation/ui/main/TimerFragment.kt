@@ -23,10 +23,13 @@ import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.common.NRDialog
+import com.nextroom.nextroom.presentation.common.NROneButtonDialog
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentTimerBinding
 import com.nextroom.nextroom.presentation.extension.disableFullScreen
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
+import com.nextroom.nextroom.presentation.extension.getResultData
+import com.nextroom.nextroom.presentation.extension.hasResultData
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.snackbar
@@ -34,6 +37,7 @@ import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.extension.vibrator
 import com.nextroom.nextroom.presentation.model.InputState
+import com.nextroom.nextroom.presentation.ui.main.ModifyTimeBottomSheet.Companion.BUNDLE_KEY_MODIFIED_TIME
 import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
 import com.nextroom.nextroom.presentation.util.Logger
 import dagger.hilt.android.AndroidEntryPoint
@@ -88,6 +92,26 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
             painterViewModel.clear()
             viewModel.finishGame { findNavController().popBackStack() }
         }
+
+        setFragmentResultListener(REQUEST_KEY_MODIFY_TIME) { _, bundle ->
+            try {
+                checkPasswordForModifyTime(modifiedTimeInMinute = bundle.getInt(BUNDLE_KEY_MODIFIED_TIME))
+            } catch (e: Exception) {
+                showError(e.message)
+            }
+        }
+
+        setFragmentResultListener(REQUEST_KEY_CHECK_PASSWORD) { _, bundle ->
+            try {
+                if (bundle.hasResultData()) {
+                    bundle.getResultData()?.let { modifiedTimeInMinute ->
+                        viewModel.restartGameWithModifiedTime(modifiedTimeInMinute = modifiedTimeInMinute.toInt())
+                    }
+                }
+            } catch (e: Exception) {
+                showError(e.message)
+            }
+        }
     }
 
     private fun initViews() = with(binding) {
@@ -101,6 +125,14 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
             ivBack.alpha = 0.2F
             ivBack.setOnLongClickListener(1000) {
                 showExitDialog()
+            }
+            tvTimer.setOnLongClickListener(1000) {
+                if (viewModel.checkGameFinished()) {
+                    snackbar(R.string.game_finished)
+                } else {
+                    val timeLimitInMinute = viewModel.container.stateFlow.value.totalSeconds / 60
+                    showModifyTimeBottomSheet(timeLimitInMinute)
+                }
             }
         }
         initKeypad()
@@ -259,6 +291,32 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
             .also { findNavController().safeNavigate(it) }
     }
 
+    private fun showModifyTimeBottomSheet(timeLimitInMinute: Int) {
+        TimerFragmentDirections
+            .showModifyTimeBottomSheet(
+                requestKey = REQUEST_KEY_MODIFY_TIME,
+                timeLimitInMinute = timeLimitInMinute
+            )
+            .also { findNavController().safeNavigate(it) }
+    }
+
+    private fun showError(errorText: String?) {
+        NavGraphDirections.moveToNrOneButtonDialog(
+            NROneButtonDialog.NROneButtonArgument(
+                title = getString(R.string.dialog_noti),
+                message = getString(R.string.error_something),
+                btnText = getString(R.string.text_confirm),
+                errorText = errorText,
+            )
+        ).also { findNavController().safeNavigate(it) }
+    }
+
+    private fun checkPasswordForModifyTime(modifiedTimeInMinute: Int) {
+        NavGraphDirections
+            .moveToCheckPassword(requestKey = REQUEST_KEY_CHECK_PASSWORD, resultData = modifiedTimeInMinute.toString())
+            .also { findNavController().safeNavigate(it) }
+    }
+
     private fun initKeypad() = with(binding) {
         tvKey1.setOnClickListener { viewModel.inputHintCode(1) }
         tvKey2.setOnClickListener { viewModel.inputHintCode(2) }
@@ -285,5 +343,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     companion object {
         const val REQUEST_KEY_FINISH_GAME = "REQUEST_KEY_FINISH_GAME"
+        const val REQUEST_KEY_MODIFY_TIME = "REQUEST_KEY_MODIFY_TIME"
+        const val REQUEST_KEY_CHECK_PASSWORD = "REQUEST_KEY_CHECK_PASSWORD"
     }
 }

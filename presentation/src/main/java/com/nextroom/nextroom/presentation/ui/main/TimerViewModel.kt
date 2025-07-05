@@ -49,8 +49,8 @@ class TimerViewModel @Inject constructor(
             if (isNewGame()) {
                 showGameBackgroundImage(loadLatestTheme())
                 showGameStartConfirmDialog()
-            } else {
-                resumeGame(latestGame ?: return@launch)
+            } else if (latestGame != null) {
+                resumeGame(latestGame, modifiedTimeInMinute = null)
             }
         }
     }
@@ -77,10 +77,15 @@ class TimerViewModel @Inject constructor(
         return themeRepository.getLatestTheme().first()
     }
 
-    private fun startOrResumeGame() {
+    fun restartGameWithModifiedTime(modifiedTimeInMinute: Int) {
+        timerRepository.stopTimer()
+        startOrResumeGame(modifiedTimeInMinute)
+    }
+
+    private fun startOrResumeGame(modifiedTimeInMinute: Int? = null) {
         baseViewModelScope.launch {
-            gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하는 경우
-                resumeGame(gameState)
+            gameStateRepository.getGameState()?.let { gameState -> // 비정상 종료된 게임이 존재하거나 수정된 시간으로 게임을 재개하는 경우
+                resumeGame(gameState, modifiedTimeInMinute)
             } ?: run { // 새로운 게임을 시작하는 경우
                 with(themeRepository.getLatestTheme().first()) {
                     val startTime = System.currentTimeMillis()
@@ -112,19 +117,45 @@ class TimerViewModel @Inject constructor(
 //                statsRepository.recordGameStartStats(GameStats(it.id, DateTimeUtil().currentTime() ?: ""))
     }
 
-    private fun resumeGame(gameState: GameState) {
-        with(gameState) {
-            setGameScreenState(
-                seconds = timeLimitInMinute * 60,
-                hintLimit = hintLimit,
-                usedHints = usedHints,
-                lastSeconds = lastSeconds,
-                startTime = startTime,
-                themeImageUrl = themeImageUrl,
-                themeImageCustomInfo = themeImageCustomInfo,
-                themeImageEnabled = useTimerUrl,
-            )
-            startGame(startTime + timeLimitInMinute * 60 * 1000)
+    private suspend fun resumeGame(gameState: GameState, modifiedTimeInMinute: Int?) {
+        if (modifiedTimeInMinute == null) {
+            with(gameState) {
+                setGameScreenState(
+                    seconds = timeLimitInMinute * 60,
+                    hintLimit = hintLimit,
+                    usedHints = usedHints,
+                    lastSeconds = lastSeconds,
+                    startTime = startTime,
+                    themeImageUrl = themeImageUrl,
+                    themeImageCustomInfo = themeImageCustomInfo,
+                    themeImageEnabled = useTimerUrl,
+                )
+                startGame(startTime + timeLimitInMinute * 60 * 1000)
+            }
+        } else {
+            val startTime = System.currentTimeMillis()
+            with(gameState) {
+                gameStateRepository.saveGameState(
+                    timeLimitInMinute = modifiedTimeInMinute,
+                    hintLimit = hintLimit,
+                    usedHints = usedHints,
+                    startTime = startTime,
+                    useTimerUrl = useTimerUrl,
+                    themeImageUrl = themeImageUrl,
+                    themeImageCustomInfo = themeImageCustomInfo
+                )
+                setGameScreenState(
+                    seconds = modifiedTimeInMinute * 60,
+                    hintLimit = hintLimit,
+                    usedHints = usedHints,
+                    lastSeconds = modifiedTimeInMinute * 60,
+                    startTime = startTime,
+                    themeImageUrl = themeImageUrl,
+                    themeImageCustomInfo = themeImageCustomInfo,
+                    themeImageEnabled = useTimerUrl,
+                )
+                startGame(startTime + modifiedTimeInMinute * 60 * 1000)
+            }
         }
     }
 
@@ -257,6 +288,10 @@ class TimerViewModel @Inject constructor(
                 themeImageEnabled = themeImageEnabled
             )
         }
+    }
+
+    fun checkGameFinished(): Boolean {
+        return timerRepository.timerState.value is TimerState.Finished
     }
 
     override fun onCleared() {

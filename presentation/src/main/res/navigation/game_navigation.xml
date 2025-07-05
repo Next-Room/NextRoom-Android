@@ -23,6 +23,9 @@
         <action
             android:id="@+id/move_to_memo_fragment"
             app:destination="@id/memo_fragment" />
+        <action
+            android:id="@+id/show_modify_time_bottom_sheet"
+            app:destination="@id/modify_time_bottom_sheet" />
         <argument
             android:name="overflowTime"
             android:defaultValue="0L"
@@ -57,4 +60,18 @@
             android:defaultValue="false"
             app:argType="boolean" />
     </fragment>
+
+    <dialog
+        android:id="@+id/modify_time_bottom_sheet"
+        android:name="com.nextroom.nextroom.presentation.ui.main.ModifyTimeBottomSheet"
+        tools:layout="@layout/bottom_sheet_modify_time">
+
+        <argument
+            android:name="request_key"
+            app:argType="string" />
+
+        <argument
+            android:name="time_limit_in_minute"
+            app:argType="integer" />
+    </dialog>
 </navigation>
