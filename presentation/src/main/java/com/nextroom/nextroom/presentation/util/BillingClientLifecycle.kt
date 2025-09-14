@@ -10,12 +10,14 @@ import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
 import com.android.billingclient.api.BillingFlowParams
 import com.android.billingclient.api.BillingResult
+import com.android.billingclient.api.PendingPurchasesParams
 import com.android.billingclient.api.ProductDetails
 import com.android.billingclient.api.ProductDetailsResponseListener
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.PurchasesResponseListener
 import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
+import com.android.billingclient.api.QueryProductDetailsResult
 import com.android.billingclient.api.QueryPurchasesParams
 import com.nextroom.nextroom.presentation.ui.Constants
 import kotlinx.coroutines.CoroutineScope
@@ -67,7 +69,7 @@ class BillingClientLifecycle private constructor(
     override fun onCreate(owner: LifecycleOwner) {
         billingClient = BillingClient.newBuilder(applicationContext)
             .setListener(this)
-            .enablePendingPurchases()
+            .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
             .build()
         if (!billingClient.isReady) {
             billingClient.startConnection(this)
@@ -127,14 +129,14 @@ class BillingClientLifecycle private constructor(
     // 상품 정보 조회 완료시 호출됨
     override fun onProductDetailsResponse(
         billingResult: BillingResult,
-        productDetailsList: MutableList<ProductDetails>,
+        queryProductDetailsResult: QueryProductDetailsResult,
     ) {
         val response = BillingResponse(billingResult.responseCode)
         val debugMessage = billingResult.debugMessage
 
         when {
             response.isOk -> {
-                processProductDetails(productDetailsList)
+                processProductDetails(queryProductDetailsResult.productDetailsList)
             }
 
             response.isTerribleFailure -> {
