@@ -197,18 +197,16 @@ class BillingViewModel
             Constants.MEMBERSHIP_PRODUCT -> membershipProductWithProductDetails.value
             else -> null
         }?.also { productDetails ->
-            productDetails.subscriptionOfferDetails?.let { offerDetailsList ->
-                retrieveEligibleOffers(
-                    offerDetails = offerDetailsList,
-                    tag = tag,
-                )
-            }.let { offers ->
-                offers?.let { leastPricedOfferToken(it) }.toString()
+            retrieveEligibleOffers(
+                offerDetails = requireNotNull(productDetails.subscriptionOfferDetails),
+                tag = tag,
+            ).let { offers ->
+                leastPricedOfferToken(offers)
             }.also { offerToken ->
                 launchFlow(upDowngrade, offerToken, productDetails)
             }
         } ?: run {
-            Timber.e("Could not find product details.")
+            throw Exception("Could not find product details.")
         }
     }
 

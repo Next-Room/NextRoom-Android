@@ -17,10 +17,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
+import com.nextroom.nextroom.presentation.common.NROneButtonDialog
 import com.nextroom.nextroom.presentation.databinding.BottomSheetSubscriptionPromotionBinding
 import com.nextroom.nextroom.presentation.databinding.ItemBenefitBinding
 import com.nextroom.nextroom.presentation.extension.dpToPx
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
+import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
@@ -95,11 +97,15 @@ class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
         binding.acbSubscribe.setOnClickListener {
             viewModel.container.stateFlow.value.plan.plans.firstOrNull()?.let {
                 binding.pbLoading.isVisible = true
-                billingViewModel.buyPlans(
-                    productId = it.subscriptionProductId,
-                    tag = "",
-                    upDowngrade = false,
-                )
+                try {
+                    billingViewModel.buyPlans(
+                        productId = it.subscriptionProductId,
+                        tag = "",
+                        upDowngrade = false,
+                    )
+                } catch (e: Exception) {
+                    showErrorDialog(e.message ?: "")
+                }
             }
         }
         binding.ivClose.setOnClickListener {
@@ -165,6 +171,18 @@ class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
             is SubscriptionPromotionEvent.UnknownError -> snackbar(R.string.error_something)
             is SubscriptionPromotionEvent.ClientError -> snackbar(event.message)
         }
+    }
+
+    private fun showErrorDialog(errorText: String) {
+        NavGraphDirections
+            .moveToNrOneButtonDialog(
+                NROneButtonDialog.NROneButtonArgument(
+                    title = getString(R.string.dialog_noti),
+                    message = getString(R.string.error_something),
+                    btnText = getString(R.string.text_confirm),
+                    errorText = errorText
+                )
+            ).also { findNavController().safeNavigate(it) }
     }
 
     data class Benefit(

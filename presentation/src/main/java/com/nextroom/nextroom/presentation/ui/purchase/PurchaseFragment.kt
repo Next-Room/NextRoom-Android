@@ -10,12 +10,12 @@ import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.common.NROneButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentPurchaseBinding
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.strikeThrow
-import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,11 +48,15 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         binding.btnSubscribe.setOnClickListener {
             (viewModel.uiState.value as? PurchaseViewModel.UiState.Loaded)?.let { loaded ->
                 binding.pbLoading.isVisible = true // TODO JH: 개선
-                billingViewModel.buyPlans(
-                    productId = loaded.subscriptionProductId,
-                    tag = "",
-                    upDowngrade = false,
-                )
+                try {
+                    billingViewModel.buyPlans(
+                        productId = loaded.subscriptionProductId,
+                        tag = "",
+                        upDowngrade = false,
+                    )
+                } catch (e: Exception) {
+                    showErrorDialog(errorText = e.message ?: "")
+                }
             }
         }
     }
@@ -90,12 +94,9 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                         }
 
                         is BillingEvent.PurchaseFailed -> {
-                            toast(
-                                getString(
-                                    R.string.purchase_error_message,
-                                    event.purchaseState,
-                                ),
-                            )
+                            val errorText = event.errorMessage + "\n" +
+                                    event.purchaseState?.let { getString(R.string.text_error_code, it) }
+                            showErrorDialog(errorText)
                             binding.pbLoading.isVisible = false // TODO JH: 개선
                         }
                     }
@@ -121,5 +122,17 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 }
             }
         }
+    }
+
+    private fun showErrorDialog(errorText: String) {
+        NavGraphDirections
+            .moveToNrOneButtonDialog(
+                NROneButtonDialog.NROneButtonArgument(
+                    title = getString(R.string.dialog_noti),
+                    message = getString(R.string.error_something),
+                    btnText = getString(R.string.text_confirm),
+                    errorText = errorText
+                )
+            ).also { findNavController().safeNavigate(it) }
     }
 }
