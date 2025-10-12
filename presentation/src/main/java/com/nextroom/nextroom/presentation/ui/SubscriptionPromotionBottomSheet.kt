@@ -100,7 +100,6 @@ class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
                 try {
                     billingViewModel.buyPlans(
                         productId = it.subscriptionProductId,
-                        tag = "",
                         upDowngrade = false,
                     )
                 } catch (e: Exception) {

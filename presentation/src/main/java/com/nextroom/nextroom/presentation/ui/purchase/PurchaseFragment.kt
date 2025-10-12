@@ -51,7 +51,6 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                 try {
                     billingViewModel.buyPlans(
                         productId = loaded.subscriptionProductId,
-                        tag = "",
                         upDowngrade = false,
                     )
                 } catch (e: Exception) {
