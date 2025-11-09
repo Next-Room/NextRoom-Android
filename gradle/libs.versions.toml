@@ -131,4 +131,4 @@ android-test = ["junit", "androidx-junit", "androidx-espresso-core", "kotlinx-co
 network = ["retrofit", "converter-gson", "logging-interceptor"]
 db = ["androidx-datastore", "androidx-datastore-preferences-core", "androidx-room-runtime", "androidx-room-ktx"]
 firebase = ["firebase-analytics-ktx", "firebase-crashlytics-ktx"]
-flipper = ["flipper", "soloader", "flipper-network-plugin"]
+flipper = ["flipper", "soloader"]

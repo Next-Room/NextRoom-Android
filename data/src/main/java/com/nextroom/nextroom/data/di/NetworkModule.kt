@@ -76,7 +76,7 @@ object NetworkModule {
     fun provideAuthOkHttpClient(
         authInterceptor: AuthInterceptor,
         authAuthenticator: AuthAuthenticator,
-        flipperPlugin: NetworkFlipperPlugin,
+        flipperPlugin: NetworkFlipperPlugin?,
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
@@ -85,21 +85,25 @@ object NetworkModule {
                 HttpLoggingInterceptor.Level.NONE
             }
         }
-        return OkHttpClient.Builder()
+        val builder = OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .authenticator(authAuthenticator)
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
-            .build()
+
+        flipperPlugin?.let {
+            builder.addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
+        }
+
+        return builder.build()
     }
 
     @Singleton
     @Provides
     @Named("defaultOkHttpClient")
     fun provideDefaultOkHttpClient(
-        flipperPlugin: NetworkFlipperPlugin,
+        flipperPlugin: NetworkFlipperPlugin?,
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
@@ -108,12 +112,16 @@ object NetworkModule {
                 HttpLoggingInterceptor.Level.NONE
             }
         }
-        return OkHttpClient.Builder()
+        val builder = OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
-            .addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin))
-            .build()
+
+        flipperPlugin?.let {
+            builder.addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
+        }
+
+        return builder.build()
     }
 
     @Singleton
@@ -130,11 +138,5 @@ object NetworkModule {
         @Named("defaultApiService") apiService: ApiService,
     ): AuthAuthenticator {
         return AuthAuthenticator(tokenDataSource, authDataSource, apiService)
-    }
-
-    @Singleton
-    @Provides
-    fun provideNetworkFlipperPlugin(): NetworkFlipperPlugin {
-        return NetworkFlipperPlugin()
     }
 }

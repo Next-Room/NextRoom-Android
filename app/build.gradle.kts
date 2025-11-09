@@ -63,6 +63,9 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    sourceSets.getByName("debug") {
+        java.setSrcDirs(listOf("src/debug/java"))
+    }
 }
 
 dependencies {
@@ -80,6 +83,7 @@ dependencies {
 
     debugImplementation(libs.bundles.flipper)
     releaseImplementation(libs.flipper.noop)
+    implementation(libs.flipper.network.plugin)
 
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

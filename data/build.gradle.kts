@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.credentials.auth)
     implementation(libs.google.identity)
 
+    implementation(libs.flipper.network.plugin)
     debugImplementation(libs.bundles.flipper)
     releaseImplementation(libs.flipper.noop)
 
