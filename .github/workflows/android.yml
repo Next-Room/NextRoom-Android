@@ -1,14 +1,13 @@
-name: Android CI
+name: Android CI CD
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "develop", "release" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "develop", "release" ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +20,7 @@ jobs:
           cache: gradle
 
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -61,11 +60,11 @@ jobs:
       - name: Build clean
         run: ./gradlew clean
 
-        #    - name: Run ktlint
-        #      run: ./gradlew ktlintCheck
-        #
-        #    - name: Run detekt
-        #      run: ./gradlew detekt
+      - name: Run ktlint
+        run: ./gradlew ktlintCheck
+        
+      - name: Run detekt
+        run: ./gradlew detekt
 
       - name: Build assemble debug apk
         run: ./gradlew assembleDebug --stacktrace
@@ -74,18 +73,21 @@ jobs:
         run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK
-        uses: actions/upload-artifact@v3
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release')
+        uses: actions/upload-artifact@v4
         with:
           name: debug
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Release APK
-        uses: actions/upload-artifact@v3
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
         with:
           name: release
           path: ./app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload apk to Firebase App Distribution
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release')
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
@@ -94,6 +96,7 @@ jobs:
           file: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Publish to Play Store
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
