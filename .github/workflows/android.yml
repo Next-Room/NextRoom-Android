@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -35,11 +35,12 @@ jobs:
 
       - name: Create local.properties
         run: |
-          echo "DEV_BASE_URL=\"DEV_BASE_URL\"" > local.properties
-          echo "PROD_BASE_URL=\"PROD_BASE_URL\"" >> local.properties
+          echo "DEV_BASE_URL=$DEV_BASE_URL" > local.properties
+          echo "PROD_BASE_URL=$PROD_BASE_URL" >> local.properties
           echo "key_alias=$key_alias" >> local.properties
           echo "key_password=$key_password" >> local.properties
           echo "store_password=$store_password" >> local.properties
+          echo "o_auth_web_client_id=$o_auth_web_client_id" >> local.properties
         shell: bash
         env:
           DEV_BASE_URL: ${{ secrets.DEV_BASE_URL }}
@@ -47,6 +48,7 @@ jobs:
           key_alias: ${{ secrets.ALIAS }}
           key_password: ${{ secrets.KEY_PASSWORD }}
           store_password: ${{ secrets.KEY_STORE_PASSWORD }}
+          o_auth_web_client_id: ${{ secrets.O_AUTH_WEB_CLIENT_ID }}
 
       - name: Decode keystore and create jks
         run: echo "${{ secrets.SIGNING_KEY }}" | base64 --decode > nextroom_key
