@@ -1,7 +1,7 @@
 package com.nextroom.nextroom.data.di
 
-import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
-import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
+import android.content.Context
+import com.nextroom.nextroom.FlavorExtraFunction
 import com.nextroom.nextroom.data.BuildConfig
 import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
@@ -12,7 +12,9 @@ import com.nextroom.nextroom.data.network.ResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -76,7 +78,7 @@ object NetworkModule {
     fun provideAuthOkHttpClient(
         authInterceptor: AuthInterceptor,
         authAuthenticator: AuthAuthenticator,
-        flipperPlugin: NetworkFlipperPlugin,
+        flipperInterceptor: Interceptor?,
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
@@ -91,7 +93,11 @@ object NetworkModule {
             .authenticator(authAuthenticator)
             .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(FlipperOkhttpInterceptor(flipperPlugin, true))
+            .apply {
+                flipperInterceptor?.let {
+                    addInterceptor(it)
+                }
+            }
             .build()
     }
 
@@ -99,7 +105,7 @@ object NetworkModule {
     @Provides
     @Named("defaultOkHttpClient")
     fun provideDefaultOkHttpClient(
-        flipperPlugin: NetworkFlipperPlugin,
+        flipperInterceptor: Interceptor?,
     ): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = if (BuildConfig.DEBUG) {
@@ -112,7 +118,11 @@ object NetworkModule {
             .connectTimeout(10, TimeUnit.SECONDS)
             .readTimeout(10, TimeUnit.SECONDS)
             .addInterceptor(loggingInterceptor)
-            .addNetworkInterceptor(FlipperOkhttpInterceptor(flipperPlugin))
+            .apply {
+                flipperInterceptor?.let {
+                    addInterceptor(it)
+                }
+            }
             .build()
     }
 
@@ -134,7 +144,17 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideNetworkFlipperPlugin(): NetworkFlipperPlugin {
-        return NetworkFlipperPlugin()
+    fun provideFlipperInterceptor(
+        flavorExtraFunction: FlavorExtraFunction,
+    ): Interceptor? {
+        return flavorExtraFunction.getFlipperInterceptor()
+    }
+
+    @Singleton
+    @Provides
+    fun provideFlavorExtraFunction(
+        @ApplicationContext context: Context,
+    ): FlavorExtraFunction {
+        return FlavorExtraFunction(context)
     }
 }
