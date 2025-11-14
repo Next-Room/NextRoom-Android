@@ -111,3 +111,4 @@ jobs:
           packageName: com.nextroom.nextroom
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: internal
+          status: draft
