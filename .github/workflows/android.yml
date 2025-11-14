@@ -66,8 +66,8 @@ jobs:
       - name: Build assemble debug apk
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Build assemble release aab
-        run: ./gradlew bundleRelease --stacktrace
+      #      - name: Build assemble release aab
+      #        run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
