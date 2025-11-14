@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main", "develop", "release", "feature/*" ]
   pull_request:
-    branches: [ "main", "develop", "release" ]
+    branches: [ "main", "develop", "release", "feature/*" ]
 
 jobs:
   build:
@@ -83,7 +83,7 @@ jobs:
       #          path: ./app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload apk to Firebase App Distribution
-        if: github.event_name == 'push' && (
+        if: github.event_name == 'pull_request' && (
           github.ref == 'refs/heads/develop' ||
           startsWith(github.ref, 'refs/heads/feature/')
           )
