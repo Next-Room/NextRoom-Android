@@ -70,7 +70,7 @@ jobs:
         run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release')
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release' || github.ref == 'refs/heads/feature/*' )
         uses: actions/upload-artifact@v4
         with:
           name: debug
@@ -84,7 +84,7 @@ jobs:
           path: ./app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload apk to Firebase App Distribution
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release')
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release' || github.ref == 'refs/heads/feature/*')
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
