@@ -114,63 +114,6 @@ class BillingViewModel
         ).build()
     }
 
-    /**
-     * Calculates the lowest priced offer amongst all eligible offers.
-     * In this implementation the lowest price of all offers' pricing phases is returned.
-     * It's possible the logic can be implemented differently.
-     * For example, the lowest average price in terms of month could be returned instead.
-     *
-     * @param offerDetails List of of eligible offers and base plans.
-     *
-     * @return the offer id token of the lowest priced offer.
-     *
-     */
-    private fun leastPricedOfferToken(
-        offerDetails: List<ProductDetails.SubscriptionOfferDetails>,
-    ): String {
-        var offerToken = String()
-        var leastPricedOffer: ProductDetails.SubscriptionOfferDetails
-        var lowestPrice = Int.MAX_VALUE
-
-        if (offerDetails.isNotEmpty()) {
-            for (offer in offerDetails) {
-                for (price in offer.pricingPhases.pricingPhaseList) {
-                    if (price.priceAmountMicros < lowestPrice) {
-                        lowestPrice = price.priceAmountMicros.toInt()
-                        leastPricedOffer = offer
-                        offerToken = leastPricedOffer.offerToken
-                    }
-                }
-            }
-        }
-        return offerToken
-
-        TODO("Replace this with least average priced offer implementation")
-    }
-
-    /**
-     * Retrieves all eligible base plans and offers using tags from ProductDetails.
-     *
-     * @param offerDetails offerDetails from a ProductDetails returned by the library.
-     * @param tag string representing tags associated with offers and base plans.
-     *
-     * @return the eligible offers and base plans in a list.
-     *
-     */
-    private fun retrieveEligibleOffers(
-        offerDetails: MutableList<ProductDetails.SubscriptionOfferDetails>,
-        tag: String,
-    ):
-        List<ProductDetails.SubscriptionOfferDetails> {
-        val eligibleOffers = emptyList<ProductDetails.SubscriptionOfferDetails>().toMutableList()
-        offerDetails.forEach { offerDetail ->
-            if (offerDetail.offerTags.contains(tag)) {
-                eligibleOffers.add(offerDetail)
-            }
-        }
-        return eligibleOffers
-    }
-
     // 이미 구독 중인 상품이 있는지 체크
     private fun purchaseForProduct(purchases: List<Purchase>?, product: String) =
         purchases?.firstOrNull { it.products.first() == product }
@@ -182,11 +125,10 @@ class BillingViewModel
     /**
      * 요금제 구매
      *
-     * @param tag: 요금제와 관련된 태그를 나타내는 문자열
      * @param productId: 구매 하려는 상품의 id
      * @param upDowngrade: 구매가 업그레이드 또는 다운그레이드인지, 요금제를 전환하려는 경우에 true
      */
-    fun buyPlans(tag: String, productId: String, upDowngrade: Boolean) {
+    fun buyPlans(productId: String, upDowngrade: Boolean) {
         val isProductOnDevice = deviceHasGooglePlaySubscription(purchases.value, productId)
         if (isProductOnDevice) {
             Timber.d("The user already owns this item: $productId")
@@ -196,19 +138,11 @@ class BillingViewModel
         when (productId) {
             Constants.MEMBERSHIP_PRODUCT -> membershipProductWithProductDetails.value
             else -> null
-        }?.also { productDetails ->
-            productDetails.subscriptionOfferDetails?.let { offerDetailsList ->
-                retrieveEligibleOffers(
-                    offerDetails = offerDetailsList,
-                    tag = tag,
-                )
-            }.let { offers ->
-                offers?.let { leastPricedOfferToken(it) }.toString()
-            }.also { offerToken ->
-                launchFlow(upDowngrade, offerToken, productDetails)
-            }
+        }?.let { productDetails ->
+            val offerToken = requireNotNull(productDetails.subscriptionOfferDetails?.firstOrNull()?.offerToken)
+            launchFlow(upDowngrade, offerToken, productDetails)
         } ?: run {
-            Timber.e("Could not find product details.")
+            throw Exception("Could not find product details. productId: $productId")
         }
     }
 

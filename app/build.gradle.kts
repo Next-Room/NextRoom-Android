@@ -78,9 +78,6 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.billing)
 
-    debugImplementation(libs.bundles.flipper)
-    releaseImplementation(libs.flipper.noop)
-
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
 }

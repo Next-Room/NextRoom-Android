@@ -46,6 +46,12 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    sourceSets.getByName("debug") {
+        java.setSrcDirs(listOf("src/debug/java"))
+    }
+    sourceSets.getByName("release") {
+        java.setSrcDirs(listOf("src/release/java"))
+    }
 }
 
 dependencies {
