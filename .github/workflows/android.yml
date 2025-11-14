@@ -2,7 +2,7 @@ name: Android CI CD
 
 on:
   push:
-    branches: [ "main", "develop", "release" ]
+    branches: [ "main", "develop", "release", "feature" ]
   pull_request:
     branches: [ "main", "develop", "release" ]
 
