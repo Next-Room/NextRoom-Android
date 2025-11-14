@@ -80,6 +80,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         initListener()
         setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+        enableFullScreen()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -140,7 +141,6 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     override fun onResume() {
         super.onResume()
-        enableFullScreen()
         updateSystemPadding(false)
     }
 
