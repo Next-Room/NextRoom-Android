@@ -90,6 +90,17 @@ jobs:
           groups: testers
           file: app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Notify Slack about new distribution
+        if: github.event_name == 'push'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"text\": \"🔥 Firebase Distribution 업로드 완료! \n🔧 브랜치: ${GITHUB_REF##*/}\n🔗 커밋: ${GITHUB_SHA}\"
+          }" \
+          SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION
+        env:
+          SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION: ${{ secrets.SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION }}
+
       - name: Publish to Play Store
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: r0adkll/upload-google-play@v1
