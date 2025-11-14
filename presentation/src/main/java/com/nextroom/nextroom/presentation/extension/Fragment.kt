@@ -6,6 +6,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.nextroom.nextroom.presentation.common.NRSnackbar
 import com.nextroom.nextroom.presentation.util.WindowInsetsManager
@@ -75,14 +76,14 @@ fun Fragment.updateSystemPadding(
 }
 
 /**
- * 현재 프래그먼트를 전체 화면으로 설정한다. [Fragment.onAttach] 에서 호출.
+ * 현재 프래그먼트를 전체 화면으로 설정한다.
  *
  */
 fun Fragment.enableFullScreen(
     hideStatusBar: Boolean = true,
     hideNavigationBar: Boolean = true,
 ) {
-    viewLifecycleOwner.repeatOnStarted {
+    viewLifecycleOwner.repeatOn(state = Lifecycle.State.RESUMED) {
         (requireActivity() as? WindowInsetsManager)?.enableFullScreen(
             hideStatusBar = hideStatusBar,
             hideNavigationBar = hideNavigationBar,
