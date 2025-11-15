@@ -51,6 +51,7 @@ photoview = "2.3.0"
 biometric = "1.1.0"
 flipper = "0.200.0"
 soloader = "0.10.4"
+leak-canary = "2.14"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity-ktx" }
@@ -110,6 +111,7 @@ flipper-network-plugin = { module = "com.facebook.flipper:flipper-network-plugin
 credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 credentials-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials-auth" }
 google-identity = { module = "com.google.android.libraries.identity.googleid:googleid", version.ref = "google-identity" }
+leak-canary = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leak-canary" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }

@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.billing)
     implementation(libs.photoview)
     implementation(libs.biometric)
+    debugImplementation(libs.leak.canary)
     
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics.ktx)
