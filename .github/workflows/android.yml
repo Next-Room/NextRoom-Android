@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main", "develop", "release" ]
   pull_request:
-    branches: [ "main", "develop", "release" ]
+    branches: [ "feature/*" ]
 
 jobs:
   build:
@@ -64,27 +64,29 @@ jobs:
         run: ./gradlew lint
 
       - name: Build assemble debug apk
+        if: (github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/feature/'))
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Build assemble release aab
+        if: github.ref == 'refs/heads/main'
         run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release')
+        if: github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/feature/')
         uses: actions/upload-artifact@v4
         with:
           name: debug
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Release APK
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
         uses: actions/upload-artifact@v4
         with:
           name: release
           path: ./app/build/outputs/bundle/release/app-release.aab
 
       - name: Upload apk to Firebase App Distribution
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/release')
+        if: github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/feature/')
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
@@ -92,11 +94,23 @@ jobs:
           groups: testers
           file: app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Notify Slack about new distribution
+        if: github.event_name == 'pull_request' && startsWith(github.ref, 'refs/heads/feature/')
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"text\": \"🔥 Firebase Distribution 업로드 완료! \n🔧 브랜치: ${GITHUB_REF##*/}\n🔗 커밋: ${GITHUB_SHA}\"
+          }" \
+          "$SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION"
+        env:
+          SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION: ${{ secrets.SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION }}
+
       - name: Publish to Play Store
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
           packageName: com.nextroom.nextroom
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: internal
+          status: draft
