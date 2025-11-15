@@ -9,22 +9,39 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.nextroom.nextroom.presentation.common.NRSnackbar
+import com.nextroom.nextroom.presentation.util.Logger
 import com.nextroom.nextroom.presentation.util.WindowInsetsManager
 
 fun Fragment.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(requireContext(), message, duration).show()
+    try {
+        Toast.makeText(requireContext(), message, duration).show()
+    } catch (e: Exception) {
+        Logger.e(e)
+    }
 }
 
 fun Fragment.toast(@StringRes stringId: Int, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(requireContext(), stringId, duration).show()
+    try {
+        Toast.makeText(requireContext(), stringId, duration).show()
+    } catch (e: Exception) {
+        Logger.e(e)
+    }
 }
 
 fun Fragment.snackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
-    NRSnackbar.make(requireView(), message, duration).show()
+    try {
+        NRSnackbar.make(requireView(), message, duration).show()
+    } catch (e: Exception) {
+        Logger.e(e)
+    }
 }
 
 fun Fragment.snackbar(@StringRes messageId: Int, duration: Int = Snackbar.LENGTH_SHORT) {
-    NRSnackbar.make(requireView(), messageId, duration).show()
+    try {
+        NRSnackbar.make(requireView(), messageId, duration).show()
+    } catch (e: Exception) {
+        Logger.e(e)
+    }
 }
 
 /**
