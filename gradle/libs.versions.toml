@@ -2,7 +2,7 @@
 minSdk = "24"
 review = "2.0.1"
 reviewKtx = "2.0.1"
-targetSdk = "34"
+targetSdk = "35"
 versionCode = "65"
 versionName = "1.4.7"
 compileSdk = "34"
