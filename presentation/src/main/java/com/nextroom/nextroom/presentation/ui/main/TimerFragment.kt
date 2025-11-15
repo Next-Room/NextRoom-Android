@@ -51,19 +51,10 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
     private val viewModel: TimerViewModel by viewModels()
     private val painterViewModel: PainterViewModel by activityViewModels()
 
-    private val gameStartConfirmDialog by lazy {
-        NRDialog.Builder(requireContext())
-            .setTitle(R.string.dialog_title_game_start_confirm)
-            .setMessage(R.string.dialog_message_game_start_confirm)
-            .setCancelable(false)
-            .setPositiveButton(R.string.start) { _, _ ->
-                viewModel.onGameStartClicked()
-                dismissStartConfirmDialog()
-            }.create()
-    }
+    private var gameStartConfirmDialog: NRDialog? = null
 
     private fun dismissStartConfirmDialog() {
-        gameStartConfirmDialog.dismiss()
+        gameStartConfirmDialog?.dismiss()
     }
     
     override fun onAttach(context: Context) {
@@ -81,6 +72,18 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         setFragmentResultListeners()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
         enableFullScreen()
+        setGameStartConfirmDialog()
+    }
+
+    private fun setGameStartConfirmDialog() {
+        gameStartConfirmDialog = NRDialog.Builder(requireContext())
+            .setTitle(R.string.dialog_title_game_start_confirm)
+            .setMessage(R.string.dialog_message_game_start_confirm)
+            .setCancelable(false)
+            .setPositiveButton(R.string.start) { _, _ ->
+                viewModel.onGameStartClicked()
+                dismissStartConfirmDialog()
+            }.create()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -272,7 +275,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
             TimerEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
             TimerEvent.NewTimer -> {
-                gameStartConfirmDialog.show(parentFragmentManager, "GameStartConfirmDialog")
+                gameStartConfirmDialog?.show(parentFragmentManager, "GameStartConfirmDialog")
             }
         }
     }
@@ -339,6 +342,11 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         disableFullScreen()
         backCallback.remove()
         super.onDetach()
+    }
+
+    override fun onDestroyView() {
+        gameStartConfirmDialog = null
+        super.onDestroyView()
     }
 
     companion object {
