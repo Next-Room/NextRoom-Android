@@ -2,7 +2,7 @@ name: Android CI CD
 
 on:
   push:
-    branches: [ "main", "develop", "release" ]
+    branches: [ "develop", "release/*" ]
   pull_request:
     branches: [ "feature/*" ]
 
@@ -68,7 +68,7 @@ jobs:
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Build assemble release aab
-        if: github.ref == 'refs/heads/main'
+        if: startsWith(github.ref, 'refs/heads/release/')
         run: ./gradlew bundleRelease --stacktrace
 
       - name: Upload Debug APK
@@ -79,7 +79,7 @@ jobs:
           path: ./app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Release APK
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+        if: startsWith(github.ref, 'refs/heads/release/')
         uses: actions/upload-artifact@v4
         with:
           name: release
@@ -106,7 +106,7 @@ jobs:
           SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION: ${{ secrets.SLACK_WEBHOOK_URL_FIREBASE_DISTRIBUTION }}
 
       - name: Publish to Play Store
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
+        if: startsWith(github.ref, 'refs/heads/release/')
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_JSON }}
