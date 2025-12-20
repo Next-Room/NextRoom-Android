@@ -3,6 +3,12 @@ name: Auto Implement from Issue
 on:
   issues:
     types: [labeled]
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number to implement'
+        required: true
+        type: number
 
 jobs:
   auto-implement:
