@@ -1,0 +1,69 @@
+name: Auto Implement from Issue
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  auto-implement:
+    # "auto-implement" 라벨이 추가된 경우에만 실행
+    if: github.event.label.name == 'auto-implement'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install google-generativeai requests PyGithub
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "NextRoom Bot"
+          git config --global user.email "bot@nextroom.app"
+
+      - name: Run Auto Implementation
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          python .github/scripts/auto_implementer.py
+
+      - name: Comment on issue
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '';
+
+            try {
+              const result = fs.readFileSync('/tmp/implementation_result.txt', 'utf8');
+              comment = result;
+            } catch (error) {
+              comment = '⚠️ 자동 구현 중 오류가 발생했습니다. 로그를 확인해주세요.';
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
