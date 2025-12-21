@@ -212,7 +212,7 @@ def create_pull_request(branch_name, pr_title, pr_body):
             title=pr_title,
             body=pr_body,
             head=branch_name,
-            base='main'
+            base='develop'
         )
 
         print(f"✓ Created PR: {pr.html_url}")
