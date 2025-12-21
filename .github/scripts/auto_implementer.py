@@ -42,7 +42,7 @@ def get_codebase_structure():
 def analyze_and_implement(issue_title, issue_body, project_context, structure):
     """Gemini API를 사용하여 이슈 분석 및 구현"""
 
-    model = genai.GenerativeModel('gemini-2.0-flash-exp')
+    model = genai.GenerativeModel('gemini-1.5-flash')
 
     prompt = f"""당신은 Android 개발 전문가입니다. NextRoom Android 프로젝트의 GitHub 이슈를 분석하고 구현해야 합니다.
 
