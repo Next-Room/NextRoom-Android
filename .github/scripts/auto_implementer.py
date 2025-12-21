@@ -91,7 +91,7 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
 
     try:
         response = client.models.generate_content(
-            model='gemini-3-pro',
+            model='gemini-2.5-flash',
             contents=prompt
         )
         response_text = response.text.strip()
@@ -233,7 +233,7 @@ def save_result(success, message, pr_url=None):
 🔗 Pull Request: {pr_url}
 
 ---
-*🤖 Powered by Gemini 2.0 Flash*
+*🤖 Powered by Gemini 2.5 Flash*
 """
     else:
         content = f"""❌ **자동 구현 실패**

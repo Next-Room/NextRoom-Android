@@ -111,8 +111,8 @@ def get_gemini_review(prompt: str, api_key: str) -> str:
 
     genai.configure(api_key=api_key)
 
-    # Using Gemini 3 Pro
-    model = genai.GenerativeModel('gemini-3-pro')
+    # Using Gemini 2.5 flash
+    model = genai.GenerativeModel('gemini-2.5-flash')
 
     try:
         response = model.generate_content(
