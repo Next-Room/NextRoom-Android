@@ -91,7 +91,7 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
 
     try:
         response = client.models.generate_content(
-            model='gemini-2.5-flash-lite',
+            model='gemini-3-pro',
             contents=prompt
         )
         response_text = response.text.strip()
