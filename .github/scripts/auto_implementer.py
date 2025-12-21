@@ -85,6 +85,8 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
 - 파일 경로는 프로젝트 루트 기준 상대 경로
 - content에는 파일의 전체 내용을 포함하세요
 - JSON 형식만 출력하고 다른 설명은 포함하지 마세요
+- **중요**: JSON 문자열 내의 백슬래시는 반드시 이중 백슬래시(\\\\)로 이스케이프하세요
+- **중요**: 코드 내의 특수문자(따옴표, 백슬래시 등)를 JSON에 포함할 때는 올바르게 이스케이프하세요
 """
 
     try:
@@ -98,10 +100,30 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
         if response_text.startswith('```'):
             # ```json ... ``` 형식 처리
             lines = response_text.split('\n')
-            response_text = '\n'.join(lines[1:-1])
+            # 첫 줄(```json)과 마지막 줄(```) 제거
+            if lines[0].startswith('```'):
+                lines = lines[1:]
+            if lines and lines[-1].strip() == '```':
+                lines = lines[:-1]
+            response_text = '\n'.join(lines)
+
+        # 응답 저장 (디버깅용)
+        print(f"\n📝 Gemini 응답 (처음 500자):")
+        print(response_text[:500])
+        print("...")
 
         result = json.loads(response_text)
         return result
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON 파싱 오류: {e}")
+        print(f"\n전체 응답 내용:")
+        print(response_text)
+
+        # 파일로 저장
+        with open('/tmp/gemini_response.txt', 'w', encoding='utf-8') as f:
+            f.write(response_text)
+        print("\n응답이 /tmp/gemini_response.txt에 저장되었습니다.")
+        raise
     except Exception as e:
         print(f"Error in Gemini API call: {e}")
         print(f"Response: {response.text if 'response' in locals() else 'No response'}")
