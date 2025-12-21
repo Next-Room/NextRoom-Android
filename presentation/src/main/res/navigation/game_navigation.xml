@@ -12,14 +12,7 @@
 
         <action
             android:id="@+id/move_to_hint_fragment"
-            app:destination="@id/hint_fragment">
-            <argument
-                android:name="hint"
-                app:argType="com.nextroom.nextroom.presentation.model.Hint" />
-            <argument
-                android:name="subscribeStatus"
-                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        </action>
+            app:destination="@id/hint_fragment" />
         <action
             android:id="@+id/move_to_memo_fragment"
             app:destination="@id/memo_fragment" />
@@ -43,12 +36,6 @@
         <action
             android:id="@+id/move_to_memo_fragment"
             app:destination="@id/memo_fragment" />
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        <argument
-            android:name="hint"
-            app:argType="com.nextroom.nextroom.presentation.model.Hint" />
     </fragment>
 
     <fragment

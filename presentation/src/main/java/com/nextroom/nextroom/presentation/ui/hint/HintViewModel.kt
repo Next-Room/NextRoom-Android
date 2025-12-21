@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import androidx.lifecycle.SavedStateHandle
 import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
@@ -18,7 +17,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HintViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val timerRepository: TimerRepository,
     private val statsRepository: StatisticsRepository,
     private val adminRepository: AdminRepository,
@@ -26,12 +24,7 @@ class HintViewModel @Inject constructor(
 ) : BaseViewModel<HintState, HintEvent>() {
 
     override val container: Container<HintState, HintEvent> =
-        container(
-            HintState(
-                hint = savedStateHandle.get<Hint>("hint") ?: Hint(),
-                userSubscribeStatus = HintFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus,
-            )
-        )
+        container(HintState())
 
     private val state: HintState
         get() = container.stateFlow.value
@@ -58,6 +51,20 @@ class HintViewModel @Inject constructor(
 
     private fun updateNetworkDisconnectedCount(count: Int) = intent {
         reduce { state.copy(networkDisconnectedCount = count) }
+    }
+
+    /**
+     * Called by HintFragment when hint is received from GameSharedViewModel
+     */
+    fun setHint(hint: Hint) = intent {
+        reduce { state.copy(hint = hint) }
+    }
+
+    /**
+     * Called by HintFragment when subscribeStatus is received from GameSharedViewModel
+     */
+    fun setSubscribeStatus(subscribeStatus: com.nextroom.nextroom.domain.model.SubscribeStatus) = intent {
+        reduce { state.copy(userSubscribeStatus = subscribeStatus) }
     }
 
     fun openAnswer() = intent {

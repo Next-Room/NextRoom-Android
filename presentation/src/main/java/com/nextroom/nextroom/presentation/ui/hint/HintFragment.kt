@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -29,6 +30,9 @@ import timber.log.Timber
 class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::inflate) {
 
     private val viewModel: HintViewModel by viewModels()
+    private val gameSharedViewModel: com.nextroom.nextroom.presentation.ui.main.GameSharedViewModel by hiltNavGraphViewModels(
+        R.id.game_navigation
+    )
     private val state: HintState
         get() = viewModel.container.stateFlow.value
 
@@ -43,6 +47,21 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         FirebaseAnalytics.getInstance(requireContext()).logEvent("screen_view", bundleOf("screen_name" to "hint"))
+
+        // Shared ViewModel에서 hint 수집
+        viewLifecycleOwner.repeatOnStarted {
+            gameSharedViewModel.currentHint.collect { hint ->
+                hint?.let { viewModel.setHint(it) }
+            }
+        }
+
+        // Shared ViewModel에서 subscribeStatus 수집
+        viewLifecycleOwner.repeatOnStarted {
+            gameSharedViewModel.subscribeStatus.collect { subscribeStatus ->
+                viewModel.setSubscribeStatus(subscribeStatus)
+            }
+        }
+
         initViews()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
