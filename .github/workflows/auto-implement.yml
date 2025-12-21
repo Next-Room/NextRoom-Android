@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install google-generativeai requests PyGithub
+          pip install google-genai requests PyGithub
 
       - name: Configure Git
         run: |

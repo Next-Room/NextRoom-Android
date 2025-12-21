@@ -9,7 +9,7 @@ import sys
 import json
 import subprocess
 from pathlib import Path
-import google.generativeai as genai
+from google import genai
 from github import Github
 
 # 환경 변수 읽기
@@ -20,8 +20,8 @@ ISSUE_TITLE = os.environ.get('ISSUE_TITLE')
 ISSUE_BODY = os.environ.get('ISSUE_BODY')
 REPOSITORY = os.environ.get('REPOSITORY')
 
-# API 설정
-genai.configure(api_key=GEMINI_API_KEY)
+# API 클라이언트 생성
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 def read_project_context():
     """프로젝트 컨텍스트 읽기 (CLAUDE.md)"""
@@ -41,8 +41,6 @@ def get_codebase_structure():
 
 def analyze_and_implement(issue_title, issue_body, project_context, structure):
     """Gemini API를 사용하여 이슈 분석 및 구현"""
-
-    model = genai.GenerativeModel('gemini-1.5-flash')
 
     prompt = f"""당신은 Android 개발 전문가입니다. NextRoom Android 프로젝트의 GitHub 이슈를 분석하고 구현해야 합니다.
 
@@ -90,7 +88,10 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
 """
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.5-flash-lite',
+            contents=prompt
+        )
         response_text = response.text.strip()
 
         # JSON 추출 (마크다운 코드 블록 제거)
