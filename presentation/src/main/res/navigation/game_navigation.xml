@@ -2,76 +2,30 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/game_navigation"
-    app:startDestination="@id/timer_fragment">
+    android:id="@id/game_navigation"
+    app:startDestination="@id/timerFragment">
 
     <fragment
-        android:id="@+id/timer_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
+        android:id="@id/timerFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.game.timer.TimerFragment"
+        android:label="TimerFragment"
         tools:layout="@layout/fragment_timer">
-
         <action
-            android:id="@+id/move_to_hint_fragment"
-            app:destination="@id/hint_fragment">
-            <argument
-                android:name="hint"
-                app:argType="com.nextroom.nextroom.presentation.model.Hint" />
-            <argument
-                android:name="subscribeStatus"
-                app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        </action>
-        <action
-            android:id="@+id/move_to_memo_fragment"
-            app:destination="@id/memo_fragment" />
-        <action
-            android:id="@+id/show_modify_time_bottom_sheet"
-            app:destination="@id/modify_time_bottom_sheet" />
-        <argument
-            android:name="overflowTime"
-            android:defaultValue="0L"
-            app:argType="long" />
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+            android:id="@id/action_timerFragment_to_hintFragment"
+            app:destination="@id/hintFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/hint_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.hint.HintFragment"
+        android:id="@id/hintFragment"
+        android:name="com.nextroom.nextroom.presentation.ui.game.hint.HintFragment"
+        android:label="HintFragment"
         tools:layout="@layout/fragment_hint">
-
         <action
-            android:id="@+id/move_to_memo_fragment"
-            app:destination="@id/memo_fragment" />
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
-        <argument
-            android:name="hint"
-            app:argType="com.nextroom.nextroom.presentation.model.Hint" />
+            android:id="@id/action_hintFragment_to_timerFragment"
+            app:destination="@id/timerFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/memo_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.memo.MemoFragment"
-        tools:layout="@layout/fragment_memo">
-        <argument
-            android:name="fromHint"
-            android:defaultValue="false"
-            app:argType="boolean" />
-    </fragment>
+    <!-- Hilt는 navGraphViewModels 어노테이션을 통해 기본적으로 해당 네비게이션 그래프의 ViewModel을 관리합니다. -->
+    <!-- 별도의 Hilt 모듈 설정 없이 @AndroidEntryPoint 및 @HiltViewModel을 사용하면 정상적으로 동작합니다. -->
 
-    <dialog
-        android:id="@+id/modify_time_bottom_sheet"
-        android:name="com.nextroom.nextroom.presentation.ui.main.ModifyTimeBottomSheet"
-        tools:layout="@layout/bottom_sheet_modify_time">
-
-        <argument
-            android:name="request_key"
-            app:argType="string" />
-
-        <argument
-            android:name="time_limit_in_minute"
-            app:argType="integer" />
-    </dialog>
 </navigation>
