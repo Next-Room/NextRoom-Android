@@ -7,6 +7,7 @@ GitHub 이슈를 분석하고 자동으로 코드를 생성하여 PR을 만듭�
 import os
 import sys
 import json
+import base64
 import subprocess
 from pathlib import Path
 from google import genai
@@ -69,7 +70,7 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
     {{
       "path": "상대 경로 (예: presentation/src/main/java/.../SomeFragment.kt)",
       "action": "create|modify|delete",
-      "content": "전체 파일 내용 (modify인 경우 수정된 전체 파일)",
+      "content_base64": "파일 내용을 Base64로 인코딩한 문자열",
       "reason": "변경 이유 (한글)"
     }}
   ],
@@ -83,10 +84,9 @@ def analyze_and_implement(issue_title, issue_body, project_context, structure):
 - Hilt, Orbit MVI, View Binding 사용
 - 패키지 구조를 준수하세요 (com.nextroom.nextroom.*)
 - 파일 경로는 프로젝트 루트 기준 상대 경로
-- content에는 파일의 전체 내용을 포함하세요
+- **중요**: content_base64 필드에는 파일의 전체 내용을 Base64로 인코딩하여 포함하세요
+- Base64 인코딩 방법: 파일 내용을 UTF-8 바이트로 변환 후 Base64 인코딩
 - JSON 형식만 출력하고 다른 설명은 포함하지 마세요
-- **중요**: JSON 문자열 내의 백슬래시는 반드시 이중 백슬래시(\\\\)로 이스케이프하세요
-- **중요**: 코드 내의 특수문자(따옴표, 백슬래시 등)를 JSON에 포함할 때는 올바르게 이스케이프하세요
 """
 
     try:
@@ -142,8 +142,20 @@ def apply_file_changes(files):
                 # 디렉토리 생성
                 file_path.parent.mkdir(parents=True, exist_ok=True)
 
+                # Base64 디코딩
+                if 'content_base64' in file_info:
+                    # Base64로 인코딩된 내용 디코딩
+                    content_bytes = base64.b64decode(file_info['content_base64'])
+                    content = content_bytes.decode('utf-8')
+                elif 'content' in file_info:
+                    # 하위 호환성: 일반 텍스트 content 지원
+                    content = file_info['content']
+                else:
+                    print(f"⚠️ {file_path}: content나 content_base64가 없습니다. 건너뜁니다.")
+                    continue
+
                 # 파일 작성
-                file_path.write_text(file_info['content'], encoding='utf-8')
+                file_path.write_text(content, encoding='utf-8')
                 print(f"✓ {action.upper()}: {file_path}")
                 changed_files.append(str(file_path))
 
@@ -154,6 +166,8 @@ def apply_file_changes(files):
                     changed_files.append(str(file_path))
         except Exception as e:
             print(f"✗ Error processing {file_path}: {e}")
+            import traceback
+            traceback.print_exc()
 
     return changed_files
 
