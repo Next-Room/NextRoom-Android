@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -20,8 +21,10 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
+import com.nextroom.nextroom.presentation.ui.main.GameSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.viewmodel.observe
 import timber.log.Timber
 
@@ -29,6 +32,7 @@ import timber.log.Timber
 class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::inflate) {
 
     private val viewModel: HintViewModel by viewModels()
+    private val gameSharedViewModel: GameSharedViewModel by hiltNavGraphViewModels(R.id.game_navigation)
     private val state: HintState
         get() = viewModel.container.stateFlow.value
 
@@ -44,6 +48,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
         super.onViewCreated(view, savedInstanceState)
         FirebaseAnalytics.getInstance(requireContext()).logEvent("screen_view", bundleOf("screen_name" to "hint"))
         initViews()
+        initSubscribe()
         viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
     }
 
@@ -66,6 +71,21 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
             } else {
                 // 정답 보기
                 viewModel.openAnswer()
+            }
+        }
+    }
+
+    private fun initSubscribe() {
+        viewLifecycleOwner.repeatOnStarted {
+            launch {
+                gameSharedViewModel.currentHint.collect { hint ->
+                    hint?.let { viewModel.setHint(it) }
+                }
+            }
+            launch {
+                gameSharedViewModel.subscribeStatus.collect { subscribeStatus ->
+                    viewModel.setSubscribeStatus(subscribeStatus)
+                }
             }
         }
     }

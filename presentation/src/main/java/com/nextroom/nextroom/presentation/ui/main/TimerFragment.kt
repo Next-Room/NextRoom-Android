@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -50,6 +51,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     private val viewModel: TimerViewModel by viewModels()
     private val painterViewModel: PainterViewModel by activityViewModels()
+    private val gameSharedViewModel: GameSharedViewModel by hiltNavGraphViewModels(R.id.game_navigation)
 
     private var gameStartConfirmDialog: NRDialog? = null
 
@@ -266,7 +268,8 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         when (event) {
             is TimerEvent.ClearHintCode -> binding.customCodeInput.setCode("")
             is TimerEvent.OnOpenHint -> {
-                val action = TimerFragmentDirections.moveToHintFragment(event.hint, event.subscribeStatus)
+                gameSharedViewModel.setCurrentHint(event.hint)
+                val action = TimerFragmentDirections.moveToHintFragment()
                 findNavController().safeNavigate(action)
                 viewModel.clearHintCode()
             }
