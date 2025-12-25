@@ -26,8 +26,4 @@ class GameSharedViewModel @Inject constructor(
     fun setCurrentHint(hint: Hint) {
         _currentHint.value = hint
     }
-
-    fun updateCurrentHint(hint: Hint) {
-        _currentHint.value = hint
-    }
 }
