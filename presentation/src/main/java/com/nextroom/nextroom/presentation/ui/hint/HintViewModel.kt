@@ -1,10 +1,8 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import androidx.lifecycle.SavedStateHandle
 import com.mangbaam.commonutil.DateTimeUtil
-import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
-import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.Hint
@@ -18,20 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HintViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val timerRepository: TimerRepository,
-    private val statsRepository: StatisticsRepository,
-    private val adminRepository: AdminRepository,
     private val dataStoreRepository: DataStoreRepository,
 ) : BaseViewModel<HintState, HintEvent>() {
 
     override val container: Container<HintState, HintEvent> =
-        container(
-            HintState(
-                hint = savedStateHandle.get<Hint>("hint") ?: Hint(),
-                userSubscribeStatus = HintFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus,
-            )
-        )
+        container(HintState())
 
     private val state: HintState
         get() = container.stateFlow.value
@@ -50,20 +40,22 @@ class HintViewModel @Inject constructor(
                     updateNetworkDisconnectedCount(it)
                 }
         }
-        /*viewModelScope.launch {
-            // 힌트 오픈 시간 통계 집계
-            statsRepository.recordHintStats(HintStats(state.hint.id, DateTimeUtil().currentTime() ?: "", ""))
-        }*/
     }
 
     private fun updateNetworkDisconnectedCount(count: Int) = intent {
         reduce { state.copy(networkDisconnectedCount = count) }
     }
 
+    fun setHint(hint: Hint) = intent {
+        reduce { state.copy(hint = hint) }
+    }
+
+    fun setSubscribeStatus(subscribeStatus: SubscribeStatus) = intent {
+        reduce { state.copy(userSubscribeStatus = subscribeStatus) }
+    }
+
     fun openAnswer() = intent {
         reduce { state.copy(hint = state.hint.copy(answerOpened = true)) }
-        // 정답 오픈 시간 통계 집계
-//        statsRepository.recordAnswerOpenTime(state.hint.id, dateTimeUtil.currentTime() ?: "")
     }
 
     private fun tick(lastSeconds: Int) = intent {

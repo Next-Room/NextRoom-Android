@@ -208,8 +208,7 @@ class TimerViewModel @Inject constructor(
                         answerOpened = state.answerOpenedHints.contains(hint.id),
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
-                    ),
-                    TimerFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
+                    )
                 ),
             )
             setGameState()
