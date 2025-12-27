@@ -38,9 +38,10 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.3"  // Kotlin 1.9.10과 호환
     }
 }
 
@@ -75,6 +76,12 @@ dependencies {
     implementation(libs.photoview)
     implementation(libs.biometric)
     debugImplementation(libs.leak.canary)
+
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.coil.compose)
     
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics.ktx)
