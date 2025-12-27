@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import com.mangbaam.commonutil.DateTimeUtil
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
@@ -23,16 +22,9 @@ class HintViewModel @Inject constructor(
     override val container: Container<HintState, HintEvent> =
         container(HintState())
 
-    private val state: HintState
-        get() = container.stateFlow.value
-
-    private val dateTimeUtil: DateTimeUtil by lazy { DateTimeUtil() }
+    val lastSeconds = timerRepository.lastSeconds
 
     init {
-        baseViewModelScope.launch {
-            timerRepository.lastSeconds.collect(::tick)
-        }
-
         baseViewModelScope.launch {
             dataStoreRepository
                 .getNetworkDisconnectedCount()
@@ -47,7 +39,9 @@ class HintViewModel @Inject constructor(
     }
 
     fun setHint(hint: Hint) = intent {
-        reduce { state.copy(hint = hint) }
+        reduce {
+            state.copy(hint = hint.copy(answerOpened = state.hint.answerOpened))
+        }
     }
 
     fun setSubscribeStatus(subscribeStatus: SubscribeStatus) = intent {
@@ -56,9 +50,5 @@ class HintViewModel @Inject constructor(
 
     fun openAnswer() = intent {
         reduce { state.copy(hint = state.hint.copy(answerOpened = true)) }
-    }
-
-    private fun tick(lastSeconds: Int) = intent {
-        reduce { state.copy(lastSeconds = lastSeconds) }
     }
 }
