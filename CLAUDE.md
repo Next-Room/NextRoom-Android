@@ -39,7 +39,7 @@ app → presentation → domain ← data
   - `customview/`: Custom views
   - `extension/`: Extension functions
   - `model/`: Presentation models
-  - Uses Orbit MVI for state management
+  - **State Management**: Gradually migrating away from Orbit MVI (legacy)
 
 - **app**: Application module
   - `di/`: Application-level Hilt modules
@@ -109,7 +109,7 @@ o_auth_web_client_id="..."
 ### Key Libraries
 - **DI**: Hilt 2.48 with KAPT
 - **Networking**: Retrofit 2.9.0, OkHttp logging interceptor
-- **State Management**: Orbit MVI 6.0.0
+- **State Management**: Orbit MVI 6.0.0 (LEGACY - being phased out)
 - **Navigation**: Navigation Component 2.7.4 with SafeArgs
 - **Async**: Coroutines 1.7.3
 - **Database**: Room 2.5.2 with KSP for annotation processing
@@ -125,12 +125,19 @@ o_auth_web_client_id="..."
 Note: Project uses both KAPT (for Hilt, Glide) and KSP (for Room) for annotation processing.
 
 ### Architecture Patterns
-- **MVI**: Orbit for unidirectional data flow
+
+- **MVI**: Orbit for unidirectional data flow (LEGACY - being phased out)
 - **Repository Pattern**: Domain defines interfaces, data implements them
 - **Use Cases**: Single responsibility business logic
 - **Custom Result Type**: Network calls return `Result<T>` using custom `ResultCallAdapter`
 
-## State Management with Orbit MVI
+## State Management with Orbit MVI (LEGACY)
+
+**⚠️ DEPRECATION NOTICE**: Orbit MVI is being gradually phased out from this project. When working
+on new features or refactoring existing code, prefer alternative state management approaches instead
+of Orbit.
+
+### Legacy Orbit Pattern (Still in use, but avoid for new features)
 
 ViewModels extend `BaseViewModel<STATE, SIDE_EFFECT>` which implements:
 - `ContainerHost` from Orbit
@@ -149,6 +156,12 @@ class SomeViewModel @Inject constructor(
         container(SomeState())
 }
 ```
+
+### Migration Strategy
+
+- **For new features**: Do NOT use Orbit MVI
+- **For existing features**: Gradually remove Orbit when refactoring
+- **When in doubt**: Ask the user for guidance on state management approach
 
 ## Fragment Base Classes
 
@@ -297,3 +310,45 @@ The project follows a Git Flow-based branching strategy:
 
 ### Current Branch
 You are on: `feature/NR-122`
+
+## User Notifications
+
+**IMPORTANT**: Always send notifications to the user using `terminal-notifier` in the following
+scenarios:
+
+### 1. Task Completion
+
+After completing ANY task, send a notification:
+
+```bash
+terminal-notifier -title "Claude Code" -message "[Task description]" -sound default
+```
+
+Examples:
+
+- File creation:
+  `terminal-notifier -title "Claude Code" -message "Created Color.kt and Type.kt files" -sound default`
+- Build completion:
+  `terminal-notifier -title "Claude Code" -message "Build completed successfully" -sound default`
+- Error fixes:
+  `terminal-notifier -title "Claude Code" -message "Fixed 5 type errors" -sound default`
+
+### 2. User Input Required
+
+When asking the user a question (using AskUserQuestion tool or otherwise), send a notification
+BEFORE asking:
+
+```bash
+terminal-notifier -title "Claude Code" -message "질문이 있습니다" -sound default
+```
+
+This applies to:
+
+- Clarification questions about implementation approaches
+- Choices between multiple options
+- Requests for additional information
+- **Permission to modify files**: When asking which files can be modified or if a specific file can
+  be edited
+- Any situation requiring user input to proceed
+
+The notification helps the user know when their attention is needed.
