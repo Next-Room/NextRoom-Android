@@ -19,8 +19,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
-import com.nextroom.nextroom.presentation.base.BaseFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentHintBinding
+import com.nextroom.nextroom.presentation.base.ComposeBaseViewModelFragment
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -33,8 +32,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::inflate) {
-    private val viewModel: HintViewModel by viewModels()
+class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
+    override val screenName: String = "hint"
+    override val viewModel: HintViewModel by viewModels()
     private val gameSharedViewModel: GameSharedViewModel by hiltNavGraphViewModels(R.id.game_navigation)
 
     override fun onCreateView(
@@ -47,7 +47,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
             )
             setContent {
-                val state by viewModel.container.stateFlow.collectAsState()
+                val state by viewModel.uiState.collectAsState()
 
                 Column(modifier = Modifier.fillMaxSize()) {
                     HintTimerToolbar(
@@ -70,16 +70,11 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        FirebaseAnalytics.getInstance(requireContext())
-            .logEvent("screen_view", bundleOf("screen_name" to "hint"))
-
         enableFullScreen()
         updateSystemPadding(false)
-
-        initSubscribe()
     }
 
-    private fun initSubscribe() {
+    override fun initSubscribe() {
         viewLifecycleOwner.repeatOnStarted {
             launch {
                 gameSharedViewModel.currentHint.collect { hint ->
@@ -92,13 +87,13 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
                 }
             }
             launch {
-                viewModel.container.sideEffectFlow.collect(::handleEvent)
+                viewModel.uiEvent.collect(::handleEvent)
             }
         }
     }
 
     private fun handleAnswerButton() {
-        if (viewModel.container.stateFlow.value.hint.answerOpened) {
+        if (viewModel.uiState.value.hint.answerOpened) {
             gotoHome()
         } else {
             viewModel.openAnswer()
@@ -106,7 +101,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun navigateToHintImageViewer(position: Int) {
-        val state = viewModel.container.stateFlow.value
+        val state = viewModel.uiState.value
         if (state.userSubscribeStatus == SubscribeStatus.Subscribed) {
             NavGraphDirections.moveToImageViewerFragment(
                 imageUrlList = state.hint.hintImageUrlList.toTypedArray(),
@@ -120,7 +115,7 @@ class HintFragment : BaseFragment<FragmentHintBinding>(FragmentHintBinding::infl
     }
 
     private fun navigateToAnswerImageViewer(position: Int) {
-        val state = viewModel.container.stateFlow.value
+        val state = viewModel.uiState.value
         if (state.userSubscribeStatus == SubscribeStatus.Subscribed) {
             NavGraphDirections.moveToImageViewerFragment(
                 imageUrlList = state.hint.answerImageUrlList.toTypedArray(),
