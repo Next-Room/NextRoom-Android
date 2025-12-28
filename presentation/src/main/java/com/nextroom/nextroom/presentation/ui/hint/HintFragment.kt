@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -20,6 +19,7 @@ import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.ComposeBaseViewModelFragment
+import com.nextroom.nextroom.presentation.extension.assistedViewModel
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
@@ -30,12 +30,20 @@ import com.nextroom.nextroom.presentation.ui.hint.compose.HintTimerToolbar
 import com.nextroom.nextroom.presentation.ui.main.GameSharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
     override val screenName: String = "hint"
-    override val viewModel: HintViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: HintViewModel.Factory
+
     private val gameSharedViewModel: GameSharedViewModel by hiltNavGraphViewModels(R.id.game_navigation)
+
+    override val viewModel: HintViewModel by assistedViewModel {
+        viewModelFactory.create(gameSharedViewModel)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +68,8 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
                         state = state,
                         onAnswerButtonClick = ::handleAnswerButton,
                         onHintImageClick = ::navigateToHintImageViewer,
-                        onAnswerImageClick = ::navigateToAnswerImageViewer
+                        onAnswerImageClick = ::navigateToAnswerImageViewer,
+                        onHintOpenClick = { gameSharedViewModel.addOpenedHintId(state.hint.id) }
                     )
                 }
             }

@@ -5,22 +5,35 @@ import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import com.nextroom.nextroom.presentation.model.Hint
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.nextroom.nextroom.presentation.ui.main.GameSharedViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class HintViewModel @Inject constructor(
+class HintViewModel @AssistedInject constructor(
     private val timerRepository: TimerRepository,
     private val dataStoreRepository: DataStoreRepository,
+    @Assisted private val gameSharedViewModel: GameSharedViewModel
 ) : NewBaseViewModel() {
 
     private val _uiState = MutableStateFlow(HintState())
-    val uiState = _uiState.asStateFlow()
+    val uiState = combine(
+        _uiState,
+        gameSharedViewModel.openedHintIds
+    ) { state, openedHintIds ->
+        state.copy(isHintOpened = state.hint.id in openedHintIds)
+    }.stateIn(
+        baseViewModelScope,
+        SharingStarted.Lazily,
+        _uiState.value
+    )
 
     private val _uiEvent = MutableSharedFlow<HintEvent>(extraBufferCapacity = 1)
     val uiEvent = _uiEvent.asSharedFlow()
@@ -55,5 +68,10 @@ class HintViewModel @Inject constructor(
         _uiState.value = _uiState.value.copy(
             hint = _uiState.value.hint.copy(answerOpened = true)
         )
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(gameSharedViewModel: GameSharedViewModel): HintViewModel
     }
 }

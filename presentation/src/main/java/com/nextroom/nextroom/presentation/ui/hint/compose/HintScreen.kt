@@ -9,10 +9,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -28,8 +32,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +46,7 @@ import com.nextroom.nextroom.presentation.common.compose.NRColor
 import com.nextroom.nextroom.presentation.common.compose.NRLoading
 import com.nextroom.nextroom.presentation.common.compose.NRToolbar
 import com.nextroom.nextroom.presentation.common.compose.NRTypo
+import com.nextroom.nextroom.presentation.extension.throttleClick
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.ui.hint.HintState
@@ -52,6 +59,7 @@ fun HintScreen(
     onAnswerButtonClick: () -> Unit,
     onHintImageClick: (Int) -> Unit,
     onAnswerImageClick: (Int) -> Unit,
+    onHintOpenClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -115,24 +123,78 @@ fun HintScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        if (state.hint.hintImageUrlList.isNotEmpty()) {
-                            ImagePager(
-                                imageUrls = state.hint.hintImageUrlList,
-                                subscribeStatus = state.userSubscribeStatus,
-                                networkDisconnectedCount = state.networkDisconnectedCount,
-                                onImageClick = onHintImageClick,
-                                modifier = Modifier.padding(top = 12.dp)
-                            )
-                        }
-
-                        Text(
-                            text = state.hint.hint,
-                            style = NRTypo.Pretendard.size20,
-                            color = NRColor.Gray01,
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .wrapContentHeight()
+                                .heightIn(min = if (state.isHintOpened) 0.dp else 200.dp)
                                 .padding(top = 12.dp)
-                        )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .blur(if (state.isHintOpened) 0.dp else 10.dp)
+                            ) {
+                                if (state.hint.hintImageUrlList.isNotEmpty() && state.isHintOpened) {
+                                    ImagePager(
+                                        imageUrls = state.hint.hintImageUrlList,
+                                        subscribeStatus = state.userSubscribeStatus,
+                                        networkDisconnectedCount = state.networkDisconnectedCount,
+                                        onImageClick = onHintImageClick,
+                                        modifier = Modifier.padding(bottom = 20.dp)
+                                    )
+                                }
+
+                                Text(
+                                    text = state.hint.hint,
+                                    style = NRTypo.Pretendard.size20,
+                                    color = NRColor.Gray01,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+
+                            if (!state.isHintOpened) {
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .background(NRColor.Black.copy(alpha = 0.1f))
+                                        .throttleClick { onHintOpenClick() },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier.padding(horizontal = 20.dp)
+                                    ) {
+                                        Image(
+                                            modifier = modifier.size(20.dp),
+                                            painter = painterResource(R.drawable.ic_lock),
+                                            colorFilter = ColorFilter.tint(NRColor.White),
+                                            contentDescription = null,
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.text_open_hint_guide_message),
+                                            color = NRColor.White,
+                                            style = NRTypo.Pretendard.size14SemiBold,
+                                            modifier = modifier
+                                                .padding(top = 10.dp)
+                                                .throttleClick { onHintOpenClick() }
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.game_view_hint),
+                                            color = NRColor.Black,
+                                            style = NRTypo.Pretendard.size16Bold,
+                                            modifier = modifier
+                                                .padding(top = 20.dp)
+                                                .background(
+                                                    color = NRColor.White,
+                                                    shape = RoundedCornerShape(8.dp)
+                                                )
+                                                .padding(vertical = 8.dp, horizontal = 12.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -160,7 +222,7 @@ fun HintScreen(
                                     subscribeStatus = state.userSubscribeStatus,
                                     networkDisconnectedCount = state.networkDisconnectedCount,
                                     onImageClick = onAnswerImageClick,
-                                    modifier = Modifier.padding(top = 12.dp)
+                                    modifier = Modifier.padding(top = 12.dp, bottom = 20.dp)
                                 )
                             }
 
@@ -241,11 +303,13 @@ private fun HintScreenWithNoImagesPreview() {
                 answerImageUrlList = emptyList()
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0
+            networkDisconnectedCount = 0,
+            isHintOpened = true
         ),
         onAnswerButtonClick = {},
         onHintImageClick = {},
-        onAnswerImageClick = {}
+        onAnswerImageClick = {},
+        onHintOpenClick = {}
     )
 }
 
@@ -268,11 +332,13 @@ private fun HintScreenWithImagesPreview() {
                 answerImageUrlList = emptyList()
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0
+            networkDisconnectedCount = 0,
+            isHintOpened = false
         ),
         onAnswerButtonClick = {},
         onHintImageClick = {},
-        onAnswerImageClick = {}
+        onAnswerImageClick = {},
+        onHintOpenClick = {}
     )
 }
 
@@ -292,11 +358,13 @@ private fun HintScreenAnswerOpenedPreview() {
                 answerImageUrlList = emptyList(),
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0
+            networkDisconnectedCount = 0,
+            isHintOpened = true
         ),
         onAnswerButtonClick = {},
         onHintImageClick = {},
-        onAnswerImageClick = {}
+        onAnswerImageClick = {},
+        onHintOpenClick = {}
     )
 }
 
