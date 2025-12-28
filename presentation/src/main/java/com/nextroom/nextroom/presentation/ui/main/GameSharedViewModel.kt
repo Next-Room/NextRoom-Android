@@ -45,10 +45,6 @@ class GameSharedViewModel @Inject constructor(
         _state.update { it.copy(openedHintIds = hintIds) }
     }
 
-    fun hasOpenedHint(hintId: Int): Boolean {
-        return state.value.openedHintIds.contains(hintId)
-    }
-
     fun getOpenedHintCount() = state.value.openedHintIds.size
 
     fun addOpenedAnswerId(hintId: Int) {
