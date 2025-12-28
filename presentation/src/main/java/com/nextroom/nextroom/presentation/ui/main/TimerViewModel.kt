@@ -17,7 +17,10 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -35,6 +38,17 @@ class TimerViewModel @AssistedInject constructor(
 ) : BaseViewModel<TimerScreenState, TimerEvent>() {
 
     override val container: Container<TimerScreenState, TimerEvent> = container(TimerScreenState())
+
+    val uiState = combine(
+        container.stateFlow,
+        gameSharedViewModel.openedHintIds
+    ) { state, openedHintIds ->
+        state.copy(openedHintCount = openedHintIds.size)
+    }.stateIn(
+        baseViewModelScope,
+        SharingStarted.Lazily,
+        container.stateFlow.value
+    )
 
     init {
         baseViewModelScope.launch {
@@ -189,7 +203,6 @@ class TimerViewModel @AssistedInject constructor(
 
     private fun validateHintCode() = intent {
         suspend fun openHint(hint: com.nextroom.nextroom.domain.model.Hint) {
-            gameSharedViewModel.addOpenedHintId(hint.id)
             reduce {
                 state.copy(inputState = InputState.Ok, openedHintCount = gameSharedViewModel.getOpenedHintCount())
             }

@@ -31,6 +31,7 @@ import com.nextroom.nextroom.presentation.extension.disableFullScreen
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.getResultData
 import com.nextroom.nextroom.presentation.extension.hasResultData
+import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.setOnLongClickListener
 import com.nextroom.nextroom.presentation.extension.snackbar
@@ -42,7 +43,7 @@ import com.nextroom.nextroom.presentation.ui.main.ModifyTimeBottomSheet.Companio
 import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
 import com.nextroom.nextroom.presentation.util.Logger
 import dagger.hilt.android.AndroidEntryPoint
-import org.orbitmvi.orbit.viewmodel.observe
+import kotlinx.coroutines.launch
 import java.util.Locale
 import javax.inject.Inject
 
@@ -78,9 +79,20 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         initViews()
         initListener()
         setFragmentResultListeners()
-        viewModel.observe(viewLifecycleOwner, state = ::render, sideEffect = ::handleEvent)
+        initObserve()
         enableFullScreen()
         setGameStartConfirmDialog()
+    }
+
+    private fun initObserve() {
+        viewLifecycleOwner.repeatOnStarted {
+            launch {
+                viewModel.uiState.collect(::render)
+            }
+            launch {
+                viewModel.container.sideEffectFlow.collect(::handleEvent)
+            }
+        }
     }
 
     private fun setGameStartConfirmDialog() {
