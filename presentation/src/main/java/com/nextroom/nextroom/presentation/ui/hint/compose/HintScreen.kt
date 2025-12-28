@@ -9,27 +9,24 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,32 +37,22 @@ import com.nextroom.nextroom.presentation.common.compose.NRColor
 import com.nextroom.nextroom.presentation.common.compose.NRLoading
 import com.nextroom.nextroom.presentation.common.compose.NRToolbar
 import com.nextroom.nextroom.presentation.common.compose.NRTypo
+import com.nextroom.nextroom.presentation.extension.throttleClick
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.ui.hint.HintState
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HintScreen(
     state: HintState,
-    onAnswerButtonClick: () -> Unit,
     onHintImageClick: (Int) -> Unit,
     onAnswerImageClick: (Int) -> Unit,
+    onHintOpenClick: () -> Unit,
+    onAnswerOpenClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-    var hasScrolledToAnswer by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(state.hint.answerOpened) {
-        if (state.hint.answerOpened && !hasScrolledToAnswer) {
-            coroutineScope.launch {
-                listState.animateScrollToItem(index = 1)
-                hasScrolledToAnswer = true
-            }
-        }
-    }
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -115,28 +102,82 @@ fun HintScreen(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        if (state.hint.hintImageUrlList.isNotEmpty()) {
-                            ImagePager(
-                                imageUrls = state.hint.hintImageUrlList,
-                                subscribeStatus = state.userSubscribeStatus,
-                                networkDisconnectedCount = state.networkDisconnectedCount,
-                                onImageClick = onHintImageClick,
-                                modifier = Modifier.padding(top = 12.dp)
-                            )
-                        }
-
-                        Text(
-                            text = state.hint.hint,
-                            style = NRTypo.Pretendard.size20,
-                            color = NRColor.Gray01,
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .wrapContentHeight()
+                                .heightIn(min = if (state.isHintOpened) 0.dp else 200.dp)
                                 .padding(top = 12.dp)
-                        )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .blur(if (state.isHintOpened) 0.dp else 10.dp)
+                            ) {
+                                if (state.hint.hintImageUrlList.isNotEmpty() && state.isHintOpened) {
+                                    ImagePager(
+                                        imageUrls = state.hint.hintImageUrlList,
+                                        subscribeStatus = state.userSubscribeStatus,
+                                        networkDisconnectedCount = state.networkDisconnectedCount,
+                                        onImageClick = onHintImageClick,
+                                        modifier = Modifier.padding(bottom = 20.dp)
+                                    )
+                                }
+
+                                Text(
+                                    text = state.hint.hint,
+                                    style = NRTypo.Pretendard.size20,
+                                    color = NRColor.Gray01,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                            }
+
+                            if (!state.isHintOpened) {
+                                Box(
+                                    modifier = Modifier
+                                        .matchParentSize()
+                                        .background(NRColor.Black.copy(alpha = 0.1f))
+                                        .throttleClick { onHintOpenClick() },
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Column(
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                        modifier = Modifier.padding(horizontal = 20.dp)
+                                    ) {
+                                        Image(
+                                            modifier = modifier.size(20.dp),
+                                            painter = painterResource(R.drawable.ic_lock),
+                                            colorFilter = ColorFilter.tint(NRColor.White),
+                                            contentDescription = null,
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.text_open_hint_guide_message),
+                                            color = NRColor.White,
+                                            style = NRTypo.Pretendard.size14SemiBold,
+                                            modifier = modifier
+                                                .padding(top = 10.dp)
+                                                .throttleClick { onHintOpenClick() }
+                                        )
+                                        Text(
+                                            text = stringResource(R.string.game_view_hint),
+                                            color = NRColor.Black,
+                                            style = NRTypo.Pretendard.size16Bold,
+                                            modifier = modifier
+                                                .padding(top = 20.dp)
+                                                .background(
+                                                    color = NRColor.White,
+                                                    shape = RoundedCornerShape(8.dp)
+                                                )
+                                                .padding(vertical = 8.dp, horizontal = 12.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
-                if (state.hint.answerOpened) {
+                if (state.isHintOpened) {
                     item {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -154,70 +195,87 @@ fun HintScreen(
                                 modifier = Modifier.fillMaxWidth()
                             )
 
-                            if (state.hint.answerImageUrlList.isNotEmpty()) {
-                                ImagePager(
-                                    imageUrls = state.hint.answerImageUrlList,
-                                    subscribeStatus = state.userSubscribeStatus,
-                                    networkDisconnectedCount = state.networkDisconnectedCount,
-                                    onImageClick = onAnswerImageClick,
-                                    modifier = Modifier.padding(top = 12.dp)
-                                )
-                            }
-
-                            Text(
-                                text = state.hint.answer,
-                                style = NRTypo.Pretendard.size20,
-                                color = NRColor.Gray01,
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .heightIn(min = if (state.isAnswerOpened) 0.dp else 200.dp)
                                     .padding(top = 12.dp)
-                            )
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .blur(if (state.isAnswerOpened) 0.dp else 10.dp)
+                                ) {
+                                    if (state.hint.answerImageUrlList.isNotEmpty() && state.isAnswerOpened) {
+                                        ImagePager(
+                                            imageUrls = state.hint.answerImageUrlList,
+                                            subscribeStatus = state.userSubscribeStatus,
+                                            networkDisconnectedCount = state.networkDisconnectedCount,
+                                            onImageClick = onAnswerImageClick,
+                                            modifier = Modifier.padding(bottom = 20.dp)
+                                        )
+                                    }
 
-                            Spacer(modifier = Modifier.height(200.dp))
+                                    Text(
+                                        text = state.hint.answer,
+                                        style = NRTypo.Pretendard.size20,
+                                        color = NRColor.Gray01,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+
+                                if (!state.isAnswerOpened) {
+                                    Box(
+                                        modifier = Modifier
+                                            .matchParentSize()
+                                            .background(NRColor.Black.copy(alpha = 0.1f))
+                                            .throttleClick { onAnswerOpenClick() },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier.padding(horizontal = 20.dp)
+                                        ) {
+                                            Image(
+                                                modifier = modifier.size(20.dp),
+                                                painter = painterResource(R.drawable.ic_lock),
+                                                colorFilter = ColorFilter.tint(NRColor.White),
+                                                contentDescription = null,
+                                            )
+                                            Text(
+                                                text = stringResource(R.string.text_open_answer_guide_message),
+                                                color = NRColor.White,
+                                                style = NRTypo.Pretendard.size14SemiBold,
+                                                modifier = modifier
+                                                    .padding(top = 10.dp)
+                                                    .throttleClick { onAnswerOpenClick() }
+                                            )
+                                            Text(
+                                                text = stringResource(R.string.game_view_answer),
+                                                color = NRColor.Black,
+                                                style = NRTypo.Pretendard.size16Bold,
+                                                modifier = modifier
+                                                    .padding(top = 20.dp)
+                                                    .background(
+                                                        color = NRColor.White,
+                                                        shape = RoundedCornerShape(8.dp)
+                                                    )
+                                                    .padding(vertical = 8.dp, horizontal = 12.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(80.dp))
                         }
                     }
                 } else {
                     item {
-                        Spacer(modifier = Modifier.height(200.dp))
+                        Spacer(modifier = Modifier.height(80.dp))
                     }
                 }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            NRColor.Black
-                        )
-                    )
-                ),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            Button(
-                onClick = onAnswerButtonClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 40.dp)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = NRColor.White
-                )
-            ) {
-                Text(
-                    text = if (state.hint.answerOpened) {
-                        stringResource(R.string.game_hint_button_goto_home)
-                    } else {
-                        stringResource(R.string.game_hint_button_show_answer)
-                    },
-                    color = NRColor.Black,
-                    style = NRTypo.Pretendard.size16Bold
-                )
             }
         }
 
@@ -236,16 +294,17 @@ private fun HintScreenWithNoImagesPreview() {
                 progress = 45,
                 hint = "이 힌트는 미로 출구를 찾는 데 도움이 됩니다. 벽의 패턴을 주의 깊게 살펴보세요.",
                 answer = "미로의 출구는 북쪽 벽의 세 번째 문입니다. 빨간색 표시를 따라가세요.",
-                answerOpened = false,
                 hintImageUrlList = emptyList(),
                 answerImageUrlList = emptyList()
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0
+            networkDisconnectedCount = 0,
+            isHintOpened = true
         ),
-        onAnswerButtonClick = {},
         onHintImageClick = {},
-        onAnswerImageClick = {}
+        onAnswerImageClick = {},
+        onHintOpenClick = {},
+        onAnswerOpenClick = {}
     )
 }
 
@@ -260,7 +319,6 @@ private fun HintScreenWithImagesPreview() {
                 progress = 45,
                 hint = "이 힌트는 미로 출구를 찾는 데 도움이 됩니다. 벽의 패턴을 주의 깊게 살펴보세요.",
                 answer = "미로의 출구는 북쪽 벽의 세 번째 문입니다. 빨간색 표시를 따라가세요.",
-                answerOpened = false,
                 hintImageUrlList = listOf(
                     "https://example.com/hint1.jpg",
                     "https://example.com/hint2.jpg"
@@ -268,11 +326,13 @@ private fun HintScreenWithImagesPreview() {
                 answerImageUrlList = emptyList()
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0
+            networkDisconnectedCount = 0,
+            isHintOpened = false
         ),
-        onAnswerButtonClick = {},
         onHintImageClick = {},
-        onAnswerImageClick = {}
+        onAnswerImageClick = {},
+        onHintOpenClick = {},
+        onAnswerOpenClick = {}
     )
 }
 
@@ -287,16 +347,18 @@ private fun HintScreenAnswerOpenedPreview() {
                 progress = 85,
                 hint = "이 힌트는 미로 출구를 찾는 데 도움이 됩니다. 벽의 패턴을 주의 깊게 살펴보세요.",
                 answer = "미로의 출구는 북쪽 벽의 세 번째 문입니다. 빨간색 표시를 따라가세요.",
-                answerOpened = true,
                 hintImageUrlList = emptyList(),
                 answerImageUrlList = emptyList(),
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0
+            networkDisconnectedCount = 0,
+            isHintOpened = true,
+            isAnswerOpened = true
         ),
-        onAnswerButtonClick = {},
         onHintImageClick = {},
-        onAnswerImageClick = {}
+        onAnswerImageClick = {},
+        onHintOpenClick = {},
+        onAnswerOpenClick = {}
     )
 }
 

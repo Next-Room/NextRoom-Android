@@ -83,6 +83,8 @@
     <string name="game_main_exit_dialog_message">종료하시면 모든 기록은 초기화됩니다.</string>
     <string name="game_finished">게임이 종료되었습니다</string>
     <string name="game_view_hint">힌트 보기</string>
+    <string name="game_view_answer">정답 보기</string>
+    <string name="text_open_answer_guide_message">정답을 보려면 클릭하세요!</string>
     <string name="game_wrong_hint_code">힌트 코드를 잘못 입력했습니다</string>
     <string name="game_hint_limit_exceed">사용 가능한 힌트 개수를 초과했습니다.</string>
     <string name="game_hint_code_label">Hint Code</string>
@@ -230,4 +232,5 @@
     <string name="text_modify_time">시간 수정</string>
     <string name="text_minute">분</string>
     <string name="text_error_code">에러 코드: %d</string>
+    <string name="text_open_hint_guide_message">힌트를 보려면 클릭하세요!</string>
 </resources>

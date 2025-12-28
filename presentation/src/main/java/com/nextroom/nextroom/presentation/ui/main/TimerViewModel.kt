@@ -1,23 +1,26 @@
 package com.nextroom.nextroom.presentation.ui.main
 
-import androidx.lifecycle.SavedStateHandle
 import com.nextroom.nextroom.domain.model.GameState
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.domain.model.ThemeInfo
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
-import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.model.InputState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -25,19 +28,27 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class TimerViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+class TimerViewModel @AssistedInject constructor(
     private val themeRepository: ThemeRepository,
     private val timerRepository: TimerRepository,
     private val gameStateRepository: GameStateRepository,
     private val hintRepository: HintRepository,
-    private val statsRepository: StatisticsRepository,
+    @Assisted private val gameSharedViewModel: GameSharedViewModel
 ) : BaseViewModel<TimerScreenState, TimerEvent>() {
 
     override val container: Container<TimerScreenState, TimerEvent> = container(TimerScreenState())
+
+    val uiState = combine(
+        container.stateFlow,
+        gameSharedViewModel.state
+    ) { state, gameSharedState ->
+        state.copy(openedHintCount = gameSharedState.openedHintIds.size)
+    }.stateIn(
+        baseViewModelScope,
+        SharingStarted.Lazily,
+        container.stateFlow.value
+    )
 
     init {
         baseViewModelScope.launch {
@@ -193,10 +204,7 @@ class TimerViewModel @Inject constructor(
     private fun validateHintCode() = intent {
         suspend fun openHint(hint: com.nextroom.nextroom.domain.model.Hint) {
             reduce {
-                state.copy(
-                    usedHints = state.usedHints + hint.id,
-                    inputState = InputState.Ok,
-                )
+                state.copy(inputState = InputState.Ok, openedHintCount = gameSharedViewModel.getOpenedHintCount())
             }
             postSideEffect(
                 TimerEvent.OnOpenHint(
@@ -205,13 +213,11 @@ class TimerViewModel @Inject constructor(
                         progress = hint.progress,
                         hint = hint.description,
                         answer = hint.answer,
-                        answerOpened = state.answerOpenedHints.contains(hint.id),
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     )
                 ),
             )
-            setGameState()
         }
 
         if (timerRepository.timerState.value is TimerState.Finished) {
@@ -222,32 +228,11 @@ class TimerViewModel @Inject constructor(
         }
 
         hintRepository.getHint(state.currentInput)?.let { hint ->
-            if (state.usedHints.contains(hint.id)) {
-                openHint(hint)
-            } else if (state.usedHintsCount < state.totalHintCount) {
-                openHint(hint)
-            } else {
-                postSideEffect(TimerEvent.ShowAvailableHintExceedError)
-                reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
-            }
+            openHint(hint)
         } ?: run {
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
             clearHintCode()
-        }
-    }
-
-    private fun setGameState() = intent {
-        if (timerRepository.timerState.value !is TimerState.Finished) {
-            gameStateRepository.saveGameState(
-                timeLimitInMinute = state.totalSeconds / 60,
-                hintLimit = state.totalHintCount,
-                usedHints = state.usedHints,
-                startTime = state.startTime,
-                useTimerUrl = state.themeImageEnabled,
-                themeImageUrl = state.themeImageUrl,
-                themeImageCustomInfo = state.themeImageCustomInfo
-            )
         }
     }
 
@@ -275,12 +260,14 @@ class TimerViewModel @Inject constructor(
         themeImageCustomInfo: ThemeImageCustomInfo? = null,
         themeImageEnabled: Boolean,
     ) = intent {
+        gameSharedViewModel.updateOpenedHintIds(usedHints)
+        gameSharedViewModel.setTotalHintCount(hintLimit)
         reduce {
             state.copy(
                 totalSeconds = seconds,
                 totalHintCount = hintLimit,
-                usedHints = usedHints,
                 lastSeconds = lastSeconds,
+                openedHintCount = usedHints.size,
                 startTime = startTime,
                 themeImageUrl = themeImageUrl,
                 themeImageCustomInfo = themeImageCustomInfo,
@@ -297,5 +284,10 @@ class TimerViewModel @Inject constructor(
         timerRepository.stopTimer()
         super.onCleared()
         Timber.d("onCleared: GameViewModel")
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(gameSharedViewModel: GameSharedViewModel): TimerViewModel
     }
 }

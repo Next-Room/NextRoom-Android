@@ -8,14 +8,10 @@ data class TimerScreenState(
     val lastSeconds: Int = 0,
     val currentInput: String = "",
     val inputState: InputState = InputState.Empty,
-    val usedHints: Set<Int> = emptySet(),
-    val answerOpenedHints: Set<Int> = emptySet(),
+    val openedHintCount: Int = 0,
     val totalHintCount: Int = -1,
     val startTime: Long = -1,
     val themeImageUrl: String? = null,
     val themeImageCustomInfo: ThemeImageCustomInfo? = null,
     val themeImageEnabled: Boolean = false
-) {
-    val usedHintsCount: Int
-        get() = usedHints.size
-}
+)

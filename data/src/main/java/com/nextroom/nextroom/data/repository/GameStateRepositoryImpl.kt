@@ -48,4 +48,8 @@ class GameStateRepositoryImpl @Inject constructor(
     override suspend fun getGameState(): GameState? {
         return gameStateDao.getGameState()?.toDomain()
     }
+
+    override suspend fun updateUsedHints(usedHints: Set<Int>) {
+        gameStateDao.updateUsedHints(usedHints)
+    }
 }

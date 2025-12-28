@@ -18,4 +18,6 @@ interface GameStateRepository {
     suspend fun finishGame(onFinished: () -> Unit = {})
 
     suspend fun getGameState(): GameState?
+
+    suspend fun updateUsedHints(usedHints: Set<Int>)
 }

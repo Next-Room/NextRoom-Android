@@ -6,7 +6,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.nextroom.nextroom.presentation.common.NRSnackbar
 import com.nextroom.nextroom.presentation.util.Logger
@@ -110,4 +113,35 @@ fun Fragment.enableFullScreen(
 
 fun Fragment.disableFullScreen() {
     (requireActivity() as? WindowInsetsManager)?.disableFullScreen()
+}
+
+/**
+ * AssistedInject를 사용하는 ViewModel을 쉽게 생성하기 위한 확장 함수
+ *
+ * ## 사용 예시
+ * ```kotlin
+ * @Inject
+ * lateinit var viewModelFactory: HintViewModel.Factory
+ *
+ * private val gameSharedViewModel: GameSharedViewModel by hiltNavGraphViewModels(R.id.game_navigation)
+ *
+ * override val viewModel: HintViewModel by assistedViewModel {
+ *     viewModelFactory.create(gameSharedViewModel)
+ * }
+ * ```
+ *
+ * @param factory ViewModel을 생성하는 람다 함수
+ * @return ViewModel의 Lazy 인스턴스
+ */
+inline fun <reified VM : ViewModel> Fragment.assistedViewModel(
+    crossinline factory: () -> VM
+): Lazy<VM> {
+    return viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return factory() as T
+            }
+        }
+    }
 }
