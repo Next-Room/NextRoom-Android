@@ -17,4 +17,7 @@ interface GameStateDao {
 
     @Query("DELETE FROM $GAME_STATE_TABLE")
     suspend fun deleteGameState()
+
+    @Query("UPDATE $GAME_STATE_TABLE SET usedHints = :usedHints")
+    suspend fun updateUsedHints(usedHints: Set<Int>)
 }

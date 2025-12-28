@@ -2,17 +2,20 @@ package com.nextroom.nextroom.presentation.ui.main
 
 import androidx.lifecycle.SavedStateHandle
 import com.nextroom.nextroom.domain.model.SubscribeStatus
+import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import com.nextroom.nextroom.presentation.model.Hint
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GameSharedViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val gameStateRepository: GameStateRepository
 ) : NewBaseViewModel() {
 
     private val _subscribeStatus = MutableStateFlow(
@@ -32,6 +35,9 @@ class GameSharedViewModel @Inject constructor(
 
     fun addOpenedHintId(hintId: Int) {
         _openedHintIds.value += hintId
+        baseViewModelScope.launch {
+            gameStateRepository.updateUsedHints(_openedHintIds.value)
+        }
     }
 
     fun updateOpenedHintIds(hintIds: Set<Int>) {

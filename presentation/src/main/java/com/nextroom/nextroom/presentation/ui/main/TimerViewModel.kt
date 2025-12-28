@@ -219,7 +219,6 @@ class TimerViewModel @AssistedInject constructor(
                     )
                 ),
             )
-            setGameState()
         }
 
         if (timerRepository.timerState.value is TimerState.Finished) {
@@ -242,20 +241,6 @@ class TimerViewModel @AssistedInject constructor(
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
             clearHintCode()
-        }
-    }
-
-    private fun setGameState() = intent {
-        if (timerRepository.timerState.value !is TimerState.Finished) {
-            gameStateRepository.saveGameState(
-                timeLimitInMinute = state.totalSeconds / 60,
-                hintLimit = state.totalHintCount,
-                usedHints = gameSharedViewModel.openedHintIds.value,
-                startTime = state.startTime,
-                useTimerUrl = state.themeImageEnabled,
-                themeImageUrl = state.themeImageUrl,
-                themeImageCustomInfo = state.themeImageCustomInfo
-            )
         }
     }
 
