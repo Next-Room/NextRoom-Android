@@ -41,9 +41,9 @@ class TimerViewModel @AssistedInject constructor(
 
     val uiState = combine(
         container.stateFlow,
-        gameSharedViewModel.openedHintIds
-    ) { state, openedHintIds ->
-        state.copy(openedHintCount = openedHintIds.size)
+        gameSharedViewModel.state
+    ) { state, gameSharedState ->
+        state.copy(openedHintCount = gameSharedState.openedHintIds.size)
     }.stateIn(
         baseViewModelScope,
         SharingStarted.Lazily,
@@ -213,7 +213,7 @@ class TimerViewModel @AssistedInject constructor(
                         progress = hint.progress,
                         hint = hint.description,
                         answer = hint.answer,
-                        answerOpened = gameSharedViewModel.openedHintIds.value.contains(hint.id),
+                        answerOpened = gameSharedViewModel.state.value.openedHintIds.contains(hint.id),
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     )

@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,49 +19,47 @@ class GameSharedViewModel @Inject constructor(
     private val gameStateRepository: GameStateRepository
 ) : NewBaseViewModel() {
 
-    private val _subscribeStatus = MutableStateFlow(
-        TimerFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
+    private val _state = MutableStateFlow(
+        GameSharedState(
+            subscribeStatus = TimerFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
+        )
     )
-    val subscribeStatus: StateFlow<SubscribeStatus> = _subscribeStatus.asStateFlow()
-
-    private val _currentHint = MutableStateFlow<Hint?>(null)
-    val currentHint: StateFlow<Hint?> = _currentHint.asStateFlow()
-
-    private val _openedHintIds = MutableStateFlow<Set<Int>>(emptySet())
-    val openedHintIds: StateFlow<Set<Int>> = _openedHintIds.asStateFlow()
-
-    private val _openedAnswerIds = MutableStateFlow<Set<Int>>(emptySet())
-    val openedAnswerIds: StateFlow<Set<Int>> = _openedAnswerIds.asStateFlow()
-
-    private val _totalHintCount = MutableStateFlow(-1)
-    val totalHintCount: StateFlow<Int> = _totalHintCount.asStateFlow()
+    val state: StateFlow<GameSharedState> = _state.asStateFlow()
 
     fun setCurrentHint(hint: Hint) {
-        _currentHint.value = hint
+        _state.update { it.copy(currentHint = hint) }
     }
 
     fun setTotalHintCount(count: Int) {
-        _totalHintCount.value = count
+        _state.update { it.copy(totalHintCount = count) }
     }
 
     fun addOpenedHintId(hintId: Int) {
-        _openedHintIds.value += hintId
+        _state.update { it.copy(openedHintIds = it.openedHintIds + hintId) }
         baseViewModelScope.launch {
-            gameStateRepository.updateUsedHints(_openedHintIds.value)
+            gameStateRepository.updateUsedHints(_state.value.openedHintIds)
         }
     }
 
     fun updateOpenedHintIds(hintIds: Set<Int>) {
-        _openedHintIds.value = hintIds
+        _state.update { it.copy(openedHintIds = hintIds) }
     }
 
     fun hasOpenedHint(hintId: Int): Boolean {
-        return openedHintIds.value.contains(hintId)
+        return state.value.openedHintIds.contains(hintId)
     }
 
-    fun getOpenedHintCount() = openedHintIds.value.size
+    fun getOpenedHintCount() = state.value.openedHintIds.size
 
     fun addOpenedAnswerId(hintId: Int) {
-        _openedAnswerIds.value += hintId
+        _state.update { it.copy(openedAnswerIds = it.openedAnswerIds + hintId) }
     }
 }
+
+data class GameSharedState(
+    val subscribeStatus: SubscribeStatus,
+    val currentHint: Hint? = null,
+    val openedHintIds: Set<Int> = emptySet(),
+    val openedAnswerIds: Set<Int> = emptySet(),
+    val totalHintCount: Int = -1
+)

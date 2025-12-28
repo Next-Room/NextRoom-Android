@@ -26,14 +26,12 @@ class HintViewModel @AssistedInject constructor(
     private val _uiState = MutableStateFlow(HintState())
     val uiState = combine(
         _uiState,
-        gameSharedViewModel.openedHintIds,
-        gameSharedViewModel.openedAnswerIds,
-        gameSharedViewModel.totalHintCount
-    ) { state, openedHintIds, openedAnswerIds, totalHintCount ->
+        gameSharedViewModel.state
+    ) { state, gameSharedState ->
         state.copy(
-            isHintOpened = state.hint.id in openedHintIds,
-            isAnswerOpened = state.hint.id in openedAnswerIds,
-            totalHintCount = totalHintCount
+            isHintOpened = state.hint.id in gameSharedState.openedHintIds,
+            isAnswerOpened = state.hint.id in gameSharedState.openedAnswerIds,
+            totalHintCount = gameSharedState.totalHintCount
         )
     }.stateIn(
         baseViewModelScope,
