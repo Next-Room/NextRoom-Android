@@ -26,9 +26,13 @@ class HintViewModel @AssistedInject constructor(
     private val _uiState = MutableStateFlow(HintState())
     val uiState = combine(
         _uiState,
-        gameSharedViewModel.openedHintIds
-    ) { state, openedHintIds ->
-        state.copy(isHintOpened = state.hint.id in openedHintIds)
+        gameSharedViewModel.openedHintIds,
+        gameSharedViewModel.openedAnswerIds
+    ) { state, openedHintIds, openedAnswerIds ->
+        state.copy(
+            isHintOpened = state.hint.id in openedHintIds,
+            isAnswerOpened = state.hint.id in openedAnswerIds
+        )
     }.stateIn(
         baseViewModelScope,
         SharingStarted.Lazily,
@@ -62,12 +66,6 @@ class HintViewModel @AssistedInject constructor(
 
     fun setSubscribeStatus(subscribeStatus: SubscribeStatus) {
         _uiState.value = _uiState.value.copy(userSubscribeStatus = subscribeStatus)
-    }
-
-    fun openAnswer() {
-        _uiState.value = _uiState.value.copy(
-            hint = _uiState.value.hint.copy(answerOpened = true)
-        )
     }
 
     @AssistedFactory

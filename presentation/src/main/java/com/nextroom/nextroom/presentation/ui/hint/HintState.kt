@@ -8,5 +8,6 @@ data class HintState(
     val hint: Hint = Hint(),
     val userSubscribeStatus: SubscribeStatus = SubscribeStatus.Default,
     val networkDisconnectedCount: Int = 0,
-    val isHintOpened: Boolean = false
+    val isHintOpened: Boolean = false,
+    val isAnswerOpened: Boolean = false
 )

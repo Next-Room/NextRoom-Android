@@ -17,24 +17,15 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,30 +41,18 @@ import com.nextroom.nextroom.presentation.extension.throttleClick
 import com.nextroom.nextroom.presentation.extension.toTimerFormat
 import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.ui.hint.HintState
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HintScreen(
     state: HintState,
-    onAnswerButtonClick: () -> Unit,
     onHintImageClick: (Int) -> Unit,
     onAnswerImageClick: (Int) -> Unit,
     onHintOpenClick: () -> Unit,
+    onAnswerOpenClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
-    val coroutineScope = rememberCoroutineScope()
-    var hasScrolledToAnswer by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(state.hint.answerOpened) {
-        if (state.hint.answerOpened && !hasScrolledToAnswer) {
-            coroutineScope.launch {
-                listState.animateScrollToItem(index = 1)
-                hasScrolledToAnswer = true
-            }
-        }
-    }
 
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -198,7 +177,7 @@ fun HintScreen(
                     }
                 }
 
-                if (state.hint.answerOpened) {
+                if (state.isHintOpened) {
                     item {
                         Column(
                             modifier = Modifier.fillMaxWidth(),
@@ -216,70 +195,87 @@ fun HintScreen(
                                 modifier = Modifier.fillMaxWidth()
                             )
 
-                            if (state.hint.answerImageUrlList.isNotEmpty()) {
-                                ImagePager(
-                                    imageUrls = state.hint.answerImageUrlList,
-                                    subscribeStatus = state.userSubscribeStatus,
-                                    networkDisconnectedCount = state.networkDisconnectedCount,
-                                    onImageClick = onAnswerImageClick,
-                                    modifier = Modifier.padding(top = 12.dp, bottom = 20.dp)
-                                )
-                            }
-
-                            Text(
-                                text = state.hint.answer,
-                                style = NRTypo.Pretendard.size20,
-                                color = NRColor.Gray01,
+                            Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
+                                    .wrapContentHeight()
+                                    .heightIn(min = if (state.isAnswerOpened) 0.dp else 200.dp)
                                     .padding(top = 12.dp)
-                            )
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .blur(if (state.isAnswerOpened) 0.dp else 10.dp)
+                                ) {
+                                    if (state.hint.answerImageUrlList.isNotEmpty() && state.isAnswerOpened) {
+                                        ImagePager(
+                                            imageUrls = state.hint.answerImageUrlList,
+                                            subscribeStatus = state.userSubscribeStatus,
+                                            networkDisconnectedCount = state.networkDisconnectedCount,
+                                            onImageClick = onAnswerImageClick,
+                                            modifier = Modifier.padding(bottom = 20.dp)
+                                        )
+                                    }
 
-                            Spacer(modifier = Modifier.height(200.dp))
+                                    Text(
+                                        text = state.hint.answer,
+                                        style = NRTypo.Pretendard.size20,
+                                        color = NRColor.Gray01,
+                                        modifier = Modifier.fillMaxWidth()
+                                    )
+                                }
+
+                                if (!state.isAnswerOpened) {
+                                    Box(
+                                        modifier = Modifier
+                                            .matchParentSize()
+                                            .background(NRColor.Black.copy(alpha = 0.1f))
+                                            .throttleClick { onAnswerOpenClick() },
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Column(
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            modifier = Modifier.padding(horizontal = 20.dp)
+                                        ) {
+                                            Image(
+                                                modifier = modifier.size(20.dp),
+                                                painter = painterResource(R.drawable.ic_lock),
+                                                colorFilter = ColorFilter.tint(NRColor.White),
+                                                contentDescription = null,
+                                            )
+                                            Text(
+                                                text = stringResource(R.string.text_open_answer_guide_message),
+                                                color = NRColor.White,
+                                                style = NRTypo.Pretendard.size14SemiBold,
+                                                modifier = modifier
+                                                    .padding(top = 10.dp)
+                                                    .throttleClick { onAnswerOpenClick() }
+                                            )
+                                            Text(
+                                                text = stringResource(R.string.game_view_answer),
+                                                color = NRColor.Black,
+                                                style = NRTypo.Pretendard.size16Bold,
+                                                modifier = modifier
+                                                    .padding(top = 20.dp)
+                                                    .background(
+                                                        color = NRColor.White,
+                                                        shape = RoundedCornerShape(8.dp)
+                                                    )
+                                                    .padding(vertical = 8.dp, horizontal = 12.dp)
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(80.dp))
                         }
                     }
                 } else {
                     item {
-                        Spacer(modifier = Modifier.height(200.dp))
+                        Spacer(modifier = Modifier.height(80.dp))
                     }
                 }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color.Transparent,
-                            NRColor.Black
-                        )
-                    )
-                ),
-            contentAlignment = Alignment.BottomCenter
-        ) {
-            Button(
-                onClick = onAnswerButtonClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 40.dp)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = NRColor.White
-                )
-            ) {
-                Text(
-                    text = if (state.hint.answerOpened) {
-                        stringResource(R.string.game_hint_button_goto_home)
-                    } else {
-                        stringResource(R.string.game_hint_button_show_answer)
-                    },
-                    color = NRColor.Black,
-                    style = NRTypo.Pretendard.size16Bold
-                )
             }
         }
 
@@ -306,10 +302,10 @@ private fun HintScreenWithNoImagesPreview() {
             networkDisconnectedCount = 0,
             isHintOpened = true
         ),
-        onAnswerButtonClick = {},
         onHintImageClick = {},
         onAnswerImageClick = {},
-        onHintOpenClick = {}
+        onHintOpenClick = {},
+        onAnswerOpenClick = {}
     )
 }
 
@@ -335,10 +331,10 @@ private fun HintScreenWithImagesPreview() {
             networkDisconnectedCount = 0,
             isHintOpened = false
         ),
-        onAnswerButtonClick = {},
         onHintImageClick = {},
         onAnswerImageClick = {},
-        onHintOpenClick = {}
+        onHintOpenClick = {},
+        onAnswerOpenClick = {}
     )
 }
 
@@ -359,12 +355,13 @@ private fun HintScreenAnswerOpenedPreview() {
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
             networkDisconnectedCount = 0,
-            isHintOpened = true
+            isHintOpened = true,
+            isAnswerOpened = true
         ),
-        onAnswerButtonClick = {},
         onHintImageClick = {},
         onAnswerImageClick = {},
-        onHintOpenClick = {}
+        onHintOpenClick = {},
+        onAnswerOpenClick = {}
     )
 }
 

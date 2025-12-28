@@ -66,10 +66,10 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
 
                     HintScreen(
                         state = state,
-                        onAnswerButtonClick = ::handleAnswerButton,
                         onHintImageClick = ::navigateToHintImageViewer,
                         onAnswerImageClick = ::navigateToAnswerImageViewer,
-                        onHintOpenClick = { gameSharedViewModel.addOpenedHintId(state.hint.id) }
+                        onHintOpenClick = { gameSharedViewModel.addOpenedHintId(state.hint.id) },
+                        onAnswerOpenClick = { gameSharedViewModel.addOpenedAnswerId(state.hint.id) }
                     )
                 }
             }
@@ -98,14 +98,6 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
             launch {
                 viewModel.uiEvent.collect(::handleEvent)
             }
-        }
-    }
-
-    private fun handleAnswerButton() {
-        if (viewModel.uiState.value.hint.answerOpened) {
-            gotoHome()
-        } else {
-            viewModel.openAnswer()
         }
     }
 
@@ -144,7 +136,6 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
 
     private fun handleEvent(event: HintEvent) {
         when (event) {
-            HintEvent.OpenAnswer -> viewModel.openAnswer()
             is HintEvent.NetworkError -> snackbar(R.string.error_network)
             is HintEvent.UnknownError -> snackbar(R.string.error_something)
             is HintEvent.ClientError -> snackbar(event.message)
