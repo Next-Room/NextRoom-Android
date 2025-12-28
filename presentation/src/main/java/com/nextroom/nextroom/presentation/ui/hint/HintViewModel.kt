@@ -1,10 +1,8 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
-import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.ui.main.GameSharedViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -29,8 +27,10 @@ class HintViewModel @AssistedInject constructor(
         gameSharedViewModel.state
     ) { state, gameSharedState ->
         state.copy(
-            isHintOpened = state.hint.id in gameSharedState.openedHintIds,
-            isAnswerOpened = state.hint.id in gameSharedState.openedAnswerIds,
+            hint = gameSharedState.currentHint ?: state.hint,
+            userSubscribeStatus = gameSharedState.subscribeStatus,
+            isHintOpened = (gameSharedState.currentHint?.id ?: state.hint.id) in gameSharedState.openedHintIds,
+            isAnswerOpened = (gameSharedState.currentHint?.id ?: state.hint.id) in gameSharedState.openedAnswerIds,
             totalHintCount = gameSharedState.totalHintCount
         )
     }.stateIn(
@@ -56,16 +56,6 @@ class HintViewModel @AssistedInject constructor(
 
     private fun updateNetworkDisconnectedCount(count: Int) {
         _uiState.value = _uiState.value.copy(networkDisconnectedCount = count)
-    }
-
-    fun setHint(hint: Hint) {
-        _uiState.value = _uiState.value.copy(
-            hint = hint
-        )
-    }
-
-    fun setSubscribeStatus(subscribeStatus: SubscribeStatus) {
-        _uiState.value = _uiState.value.copy(userSubscribeStatus = subscribeStatus)
     }
 
     fun tryOpenHint(hintId: Int) {

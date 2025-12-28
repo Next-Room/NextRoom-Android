@@ -86,12 +86,6 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
     override fun initSubscribe() {
         viewLifecycleOwner.repeatOnStarted {
             launch {
-                gameSharedViewModel.state.collect { gameSharedState ->
-                    gameSharedState.currentHint?.let { viewModel.setHint(it) }
-                    viewModel.setSubscribeStatus(gameSharedState.subscribeStatus)
-                }
-            }
-            launch {
                 viewModel.uiEvent.collect(::handleEvent)
             }
         }
