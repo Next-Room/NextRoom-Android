@@ -294,7 +294,6 @@ private fun HintScreenWithNoImagesPreview() {
                 progress = 45,
                 hint = "이 힌트는 미로 출구를 찾는 데 도움이 됩니다. 벽의 패턴을 주의 깊게 살펴보세요.",
                 answer = "미로의 출구는 북쪽 벽의 세 번째 문입니다. 빨간색 표시를 따라가세요.",
-                answerOpened = false,
                 hintImageUrlList = emptyList(),
                 answerImageUrlList = emptyList()
             ),
@@ -320,7 +319,6 @@ private fun HintScreenWithImagesPreview() {
                 progress = 45,
                 hint = "이 힌트는 미로 출구를 찾는 데 도움이 됩니다. 벽의 패턴을 주의 깊게 살펴보세요.",
                 answer = "미로의 출구는 북쪽 벽의 세 번째 문입니다. 빨간색 표시를 따라가세요.",
-                answerOpened = false,
                 hintImageUrlList = listOf(
                     "https://example.com/hint1.jpg",
                     "https://example.com/hint2.jpg"
@@ -349,7 +347,6 @@ private fun HintScreenAnswerOpenedPreview() {
                 progress = 85,
                 hint = "이 힌트는 미로 출구를 찾는 데 도움이 됩니다. 벽의 패턴을 주의 깊게 살펴보세요.",
                 answer = "미로의 출구는 북쪽 벽의 세 번째 문입니다. 빨간색 표시를 따라가세요.",
-                answerOpened = true,
                 hintImageUrlList = emptyList(),
                 answerImageUrlList = emptyList(),
             ),

@@ -213,7 +213,6 @@ class TimerViewModel @AssistedInject constructor(
                         progress = hint.progress,
                         hint = hint.description,
                         answer = hint.answer,
-                        answerOpened = gameSharedViewModel.state.value.openedHintIds.contains(hint.id),
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     )

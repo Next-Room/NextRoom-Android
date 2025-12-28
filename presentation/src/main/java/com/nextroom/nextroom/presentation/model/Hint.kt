@@ -7,7 +7,6 @@ data class Hint(
     val progress: Int = 0,
     val hint: String = "",
     val answer: String = "",
-    val answerOpened: Boolean = false,
     val hintImageUrlList: List<String> = emptyList(),
     val answerImageUrlList: List<String> = emptyList()
 ) : Serializable

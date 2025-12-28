@@ -60,7 +60,7 @@ class HintViewModel @AssistedInject constructor(
 
     fun setHint(hint: Hint) {
         _uiState.value = _uiState.value.copy(
-            hint = hint.copy(answerOpened = _uiState.value.hint.answerOpened)
+            hint = hint
         )
     }
 
