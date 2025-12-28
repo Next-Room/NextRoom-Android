@@ -11,7 +11,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -27,6 +26,7 @@ import com.nextroom.nextroom.presentation.common.NRDialog
 import com.nextroom.nextroom.presentation.common.NROneButtonDialog
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.databinding.FragmentTimerBinding
+import com.nextroom.nextroom.presentation.extension.assistedViewModel
 import com.nextroom.nextroom.presentation.extension.disableFullScreen
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.getResultData
@@ -44,12 +44,18 @@ import com.nextroom.nextroom.presentation.util.Logger
 import dagger.hilt.android.AndroidEntryPoint
 import org.orbitmvi.orbit.viewmodel.observe
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::inflate) {
     private lateinit var backCallback: OnBackPressedCallback
 
-    private val viewModel: TimerViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: TimerViewModel.Factory
+
+    private val viewModel: TimerViewModel by assistedViewModel {
+        viewModelFactory.create(gameSharedViewModel)
+    }
     private val painterViewModel: PainterViewModel by activityViewModels()
     private val gameSharedViewModel: GameSharedViewModel by hiltNavGraphViewModels(R.id.game_navigation)
 
@@ -238,7 +244,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
         tvHintCount.text = String.format(
             Locale.getDefault(),
             "%d/%s",
-            state.usedHintsCount,
+            state.openedHintCount,
             if (state.totalHintCount == -1) "∞" else state.totalHintCount.toString(),
         )
 

@@ -1,20 +1,20 @@
 package com.nextroom.nextroom.presentation.ui.main
 
-import androidx.lifecycle.SavedStateHandle
 import com.nextroom.nextroom.domain.model.GameState
 import com.nextroom.nextroom.domain.model.ThemeImageCustomInfo
 import com.nextroom.nextroom.domain.model.ThemeInfo
 import com.nextroom.nextroom.domain.model.TimerState
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
-import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseViewModel
 import com.nextroom.nextroom.presentation.model.Hint
 import com.nextroom.nextroom.presentation.model.InputState
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -25,16 +25,13 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import timber.log.Timber
-import javax.inject.Inject
 
-@HiltViewModel
-class TimerViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
+class TimerViewModel @AssistedInject constructor(
     private val themeRepository: ThemeRepository,
     private val timerRepository: TimerRepository,
     private val gameStateRepository: GameStateRepository,
     private val hintRepository: HintRepository,
-    private val statsRepository: StatisticsRepository,
+    @Assisted private val gameSharedViewModel: GameSharedViewModel
 ) : BaseViewModel<TimerScreenState, TimerEvent>() {
 
     override val container: Container<TimerScreenState, TimerEvent> = container(TimerScreenState())
@@ -192,11 +189,9 @@ class TimerViewModel @Inject constructor(
 
     private fun validateHintCode() = intent {
         suspend fun openHint(hint: com.nextroom.nextroom.domain.model.Hint) {
+            gameSharedViewModel.addOpenedHintId(hint.id)
             reduce {
-                state.copy(
-                    usedHints = state.usedHints + hint.id,
-                    inputState = InputState.Ok,
-                )
+                state.copy(inputState = InputState.Ok, openedHintCount = gameSharedViewModel.getOpenedHintCount())
             }
             postSideEffect(
                 TimerEvent.OnOpenHint(
@@ -205,7 +200,7 @@ class TimerViewModel @Inject constructor(
                         progress = hint.progress,
                         hint = hint.description,
                         answer = hint.answer,
-                        answerOpened = state.answerOpenedHints.contains(hint.id),
+                        answerOpened = gameSharedViewModel.openedHintIds.value.contains(hint.id),
                         hintImageUrlList = hint.hintImageUrlList.toList(),
                         answerImageUrlList = hint.answerImageUrlList.toList()
                     )
@@ -222,9 +217,9 @@ class TimerViewModel @Inject constructor(
         }
 
         hintRepository.getHint(state.currentInput)?.let { hint ->
-            if (state.usedHints.contains(hint.id)) {
+            if (gameSharedViewModel.hasOpenedHint(hint.id)) {
                 openHint(hint)
-            } else if (state.usedHintsCount < state.totalHintCount) {
+            } else if (gameSharedViewModel.getOpenedHintCount() < state.totalHintCount) {
                 openHint(hint)
             } else {
                 postSideEffect(TimerEvent.ShowAvailableHintExceedError)
@@ -242,7 +237,7 @@ class TimerViewModel @Inject constructor(
             gameStateRepository.saveGameState(
                 timeLimitInMinute = state.totalSeconds / 60,
                 hintLimit = state.totalHintCount,
-                usedHints = state.usedHints,
+                usedHints = gameSharedViewModel.openedHintIds.value,
                 startTime = state.startTime,
                 useTimerUrl = state.themeImageEnabled,
                 themeImageUrl = state.themeImageUrl,
@@ -275,12 +270,13 @@ class TimerViewModel @Inject constructor(
         themeImageCustomInfo: ThemeImageCustomInfo? = null,
         themeImageEnabled: Boolean,
     ) = intent {
+        gameSharedViewModel.updateOpenedHintIds(usedHints)
         reduce {
             state.copy(
                 totalSeconds = seconds,
                 totalHintCount = hintLimit,
-                usedHints = usedHints,
                 lastSeconds = lastSeconds,
+                openedHintCount = usedHints.size,
                 startTime = startTime,
                 themeImageUrl = themeImageUrl,
                 themeImageCustomInfo = themeImageCustomInfo,
@@ -297,5 +293,10 @@ class TimerViewModel @Inject constructor(
         timerRepository.stopTimer()
         super.onCleared()
         Timber.d("onCleared: GameViewModel")
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(gameSharedViewModel: GameSharedViewModel): TimerViewModel
     }
 }
