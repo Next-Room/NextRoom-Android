@@ -68,7 +68,7 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
                         state = state,
                         onHintImageClick = ::navigateToHintImageViewer,
                         onAnswerImageClick = ::navigateToAnswerImageViewer,
-                        onHintOpenClick = { gameSharedViewModel.addOpenedHintId(state.hint.id) },
+                        onHintOpenClick = { viewModel.tryOpenHint(state.hint.id) },
                         onAnswerOpenClick = { gameSharedViewModel.addOpenedAnswerId(state.hint.id) }
                     )
                 }
@@ -139,6 +139,7 @@ class HintFragment : ComposeBaseViewModelFragment<HintViewModel>() {
             is HintEvent.NetworkError -> snackbar(R.string.error_network)
             is HintEvent.UnknownError -> snackbar(R.string.error_something)
             is HintEvent.ClientError -> snackbar(event.message)
+            is HintEvent.HintLimitExceed -> snackbar(R.string.game_hint_limit_exceed)
         }
     }
 

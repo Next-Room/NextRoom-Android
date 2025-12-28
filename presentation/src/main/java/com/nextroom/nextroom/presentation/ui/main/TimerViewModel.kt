@@ -229,14 +229,7 @@ class TimerViewModel @AssistedInject constructor(
         }
 
         hintRepository.getHint(state.currentInput)?.let { hint ->
-            if (gameSharedViewModel.hasOpenedHint(hint.id)) {
-                openHint(hint)
-            } else if (gameSharedViewModel.getOpenedHintCount() < state.totalHintCount) {
-                openHint(hint)
-            } else {
-                postSideEffect(TimerEvent.ShowAvailableHintExceedError)
-                reduce { state.copy(inputState = InputState.Typing, currentInput = "") }
-            }
+            openHint(hint)
         } ?: run {
             reduce { state.copy(inputState = InputState.Error(R.string.game_wrong_hint_code)) }
             delay(500)
@@ -269,6 +262,7 @@ class TimerViewModel @AssistedInject constructor(
         themeImageEnabled: Boolean,
     ) = intent {
         gameSharedViewModel.updateOpenedHintIds(usedHints)
+        gameSharedViewModel.setTotalHintCount(hintLimit)
         reduce {
             state.copy(
                 totalSeconds = seconds,

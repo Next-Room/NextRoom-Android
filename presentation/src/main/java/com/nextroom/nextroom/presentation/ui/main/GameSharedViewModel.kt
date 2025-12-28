@@ -32,8 +32,15 @@ class GameSharedViewModel @Inject constructor(
     private val _openedAnswerIds = MutableStateFlow<Set<Int>>(emptySet())
     val openedAnswerIds: StateFlow<Set<Int>> = _openedAnswerIds.asStateFlow()
 
+    private val _totalHintCount = MutableStateFlow(-1)
+    val totalHintCount: StateFlow<Int> = _totalHintCount.asStateFlow()
+
     fun setCurrentHint(hint: Hint) {
         _currentHint.value = hint
+    }
+
+    fun setTotalHintCount(count: Int) {
+        _totalHintCount.value = count
     }
 
     fun addOpenedHintId(hintId: Int) {

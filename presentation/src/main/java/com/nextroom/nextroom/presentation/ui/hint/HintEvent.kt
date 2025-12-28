@@ -4,4 +4,5 @@ sealed interface HintEvent {
     data object NetworkError : HintEvent
     data object UnknownError : HintEvent
     data class ClientError(val message: String) : HintEvent
+    data object HintLimitExceed : HintEvent
 }

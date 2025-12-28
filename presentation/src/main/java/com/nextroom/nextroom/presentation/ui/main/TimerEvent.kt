@@ -10,6 +10,5 @@ sealed interface TimerEvent {
     data object TimerFinish : TimerEvent
     data object ClearHintCode : TimerEvent
 
-    data object ShowAvailableHintExceedError : TimerEvent
     data object NewTimer : TimerEvent
 }

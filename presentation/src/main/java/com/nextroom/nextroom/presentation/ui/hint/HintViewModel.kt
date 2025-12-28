@@ -27,11 +27,13 @@ class HintViewModel @AssistedInject constructor(
     val uiState = combine(
         _uiState,
         gameSharedViewModel.openedHintIds,
-        gameSharedViewModel.openedAnswerIds
-    ) { state, openedHintIds, openedAnswerIds ->
+        gameSharedViewModel.openedAnswerIds,
+        gameSharedViewModel.totalHintCount
+    ) { state, openedHintIds, openedAnswerIds, totalHintCount ->
         state.copy(
             isHintOpened = state.hint.id in openedHintIds,
-            isAnswerOpened = state.hint.id in openedAnswerIds
+            isAnswerOpened = state.hint.id in openedAnswerIds,
+            totalHintCount = totalHintCount
         )
     }.stateIn(
         baseViewModelScope,
@@ -66,6 +68,17 @@ class HintViewModel @AssistedInject constructor(
 
     fun setSubscribeStatus(subscribeStatus: SubscribeStatus) {
         _uiState.value = _uiState.value.copy(userSubscribeStatus = subscribeStatus)
+    }
+
+    fun tryOpenHint(hintId: Int) {
+        val openedCount = gameSharedViewModel.getOpenedHintCount()
+        val openableHintCount = uiState.value.totalHintCount
+
+        if (openableHintCount == -1 || openedCount < openableHintCount) {
+            gameSharedViewModel.addOpenedHintId(hintId)
+        } else {
+            _uiEvent.tryEmit(HintEvent.HintLimitExceed)
+        }
     }
 
     @AssistedFactory

@@ -294,7 +294,6 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
             is TimerEvent.TimerFinish -> snackbar(R.string.game_finished)
 
-            TimerEvent.ShowAvailableHintExceedError -> snackbar(message = getString(R.string.game_hint_limit_exceed))
             TimerEvent.NewTimer -> {
                 gameStartConfirmDialog?.show(parentFragmentManager, "GameStartConfirmDialog")
             }
