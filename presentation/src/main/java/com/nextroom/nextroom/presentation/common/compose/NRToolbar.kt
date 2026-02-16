@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,23 +23,27 @@ import com.nextroom.nextroom.presentation.extension.throttleClick
 
 @Composable
 fun NRToolbar(
-    title: String,
-    onBackClick: () -> Unit,
-    onRightButtonClick: () -> Unit,
+    title: String? = null,
+    onBackClick: (() -> Unit)? = null,
+    rightButtonText: String? = null,
+    onRightButtonClick: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     Box(
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = title,
-            style = NRTypo.Poppins.size20,
-            color = NRColor.White,
-            textAlign = TextAlign.Center,
-        )
+        if (title != null) {
+            Text(
+                text = title,
+                style = NRTypo.Poppins.size20,
+                color = NRColor.White,
+                textAlign = TextAlign.Center,
+            )
+        }
 
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -48,26 +51,28 @@ fun NRToolbar(
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_navigate_back_24),
-                modifier = modifier
+                modifier = Modifier
                     .size(64.dp)
-                    .throttleClick { onBackClick() }
+                    .throttleClick { onBackClick?.invoke() }
                     .padding(20.dp),
                 contentDescription = null,
             )
 
-            Text(
-                text = stringResource(R.string.memo_button),
-                color = NRColor.Dark01,
-                style = NRTypo.Poppins.size14,
-                modifier = modifier
-                    .padding(end = 20.dp)
-                    .background(
-                        color = NRColor.White,
-                        shape = RoundedCornerShape(size = 50.dp)
-                    )
-                    .padding(vertical = 6.dp, horizontal = 16.dp)
-                    .throttleClick { onRightButtonClick() }
-            )
+            if (rightButtonText != null) {
+                Text(
+                    text = rightButtonText,
+                    color = NRColor.Dark01,
+                    style = NRTypo.Poppins.size14,
+                    modifier = Modifier
+                        .padding(end = 20.dp)
+                        .background(
+                            color = NRColor.White,
+                            shape = RoundedCornerShape(size = 50.dp)
+                        )
+                        .padding(vertical = 6.dp, horizontal = 16.dp)
+                        .throttleClick { onRightButtonClick?.invoke() }
+                )
+            }
         }
     }
 }
@@ -78,6 +83,7 @@ private fun NRToolbarPreview() {
     NRToolbar(
         title = "01:23:45",
         onBackClick = {},
+        rightButtonText = "MEMO",
         onRightButtonClick = {}
     )
 }
