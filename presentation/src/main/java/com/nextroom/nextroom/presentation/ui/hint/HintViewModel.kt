@@ -29,6 +29,7 @@ class HintViewModel @AssistedInject constructor(
         state.copy(
             hint = gameSharedState.currentHint ?: state.hint,
             userSubscribeStatus = gameSharedState.subscribeStatus,
+            networkDisconnectedCount = state.networkDisconnectedCount,
             isHintOpened = (gameSharedState.currentHint?.id ?: state.hint.id) in gameSharedState.openedHintIds,
             isAnswerOpened = (gameSharedState.currentHint?.id ?: state.hint.id) in gameSharedState.openedAnswerIds,
             totalHintCount = gameSharedState.totalHintCount
