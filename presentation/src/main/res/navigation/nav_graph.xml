@@ -106,6 +106,21 @@
             app:argType="com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg" />
     </dialog>
 
+    <dialog
+        android:id="@+id/modify_time_bottom_sheet"
+        android:name="com.nextroom.nextroom.presentation.ui.main.ModifyTimeBottomSheet"
+        tools:layout="@layout/bottom_sheet_modify_time">
+
+        <argument
+            android:name="request_key"
+            app:argType="string" />
+
+        <argument
+            android:name="time_limit_in_minute"
+            app:argType="integer" />
+    </dialog>
+
+
     <!-- global actions -->
     <action
         android:id="@+id/move_to_nr_two_button_dialog"
@@ -165,6 +180,10 @@
             android:name="argument"
             app:argType="com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg" />
     </action>
+
+    <action
+        android:id="@+id/show_modify_time_bottom_sheet"
+        app:destination="@id/modify_time_bottom_sheet" />
 
     <!-- local fragments -->
     <fragment
@@ -239,6 +258,10 @@
                 app:argType="string"
                 app:nullable="false" />
         </action>
+
+        <action
+            android:id="@+id/move_to_tutorial"
+            app:destination="@id/tutorial_navigation" />
     </fragment>
 
     <action

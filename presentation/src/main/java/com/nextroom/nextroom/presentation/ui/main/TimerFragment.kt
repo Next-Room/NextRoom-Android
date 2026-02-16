@@ -315,7 +315,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
     }
 
     private fun showModifyTimeBottomSheet(timeLimitInMinute: Int) {
-        TimerFragmentDirections
+        NavGraphDirections
             .showModifyTimeBottomSheet(
                 requestKey = REQUEST_KEY_MODIFY_TIME,
                 timeLimitInMinute = timeLimitInMinute
