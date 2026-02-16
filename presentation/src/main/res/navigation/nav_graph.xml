@@ -9,6 +9,7 @@
     <include app:graph="@navigation/game_navigation" />
     <include app:graph="@navigation/mypage_navigation" />
     <include app:graph="@navigation/background_custom_navigation" />
+    <include app:graph="@navigation/tutorial_navigation" />
 
 
     <!-- global fragments -->
