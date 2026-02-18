@@ -238,4 +238,12 @@
     <string name="text_try_without_login">로그인 없이 체험하기</string>
     <string name="text_tutorial_exit_dialog_title">체험 종료</string>
     <string name="text_tutorial_exit_dialog_message">체험 모드를 종료하시겠습니까?</string>
+    <string name="text_tutorial_tooltip_progress">남은 시간과 힌트 수 표시</string>
+    <string name="text_tutorial_tooltip_memo">메모 하러 이동</string>
+    <string name="text_tutorial_tooltip_keypad">힌트 코드 입력</string>
+    <string name="text_tutorial_tooltip_back">길게 꾹 눌러 종료</string>
+    <string name="text_tutorial_tooltip_pen">그리기</string>
+    <string name="text_tutorial_tooltip_eraser">지우기</string>
+    <string name="text_tutorial_tooltip_erase_all">전체 삭제</string>
+    <string name="text_tutorial_tooltip_hint">힌트는 열람했을 때만\n차감됩니다</string>
 </resources>
