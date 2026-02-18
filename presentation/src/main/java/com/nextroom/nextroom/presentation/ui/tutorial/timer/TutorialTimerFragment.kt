@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.ComposeBaseViewModelFragment
-import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.extension.assistedViewModel
 import com.nextroom.nextroom.presentation.extension.enableFullScreen
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
@@ -70,9 +69,9 @@ class TutorialTimerFragment : ComposeBaseViewModelFragment<TutorialTimerViewMode
                     onKeyInput = viewModel::inputHintCode,
                     onBackspace = viewModel::backspaceHintCode,
                     onMemoClick = ::navigateToMemo,
-                    onExitLongPress = ::showExitDialog,
                     onTimerLongPress = ::showModifyTimeBottomSheet,
-                    onDismissTooltips = viewModel::dismissTooltips
+                    onDismissTooltips = viewModel::dismissTooltips,
+                    onExitConfirmed = viewModel::exitTutorial,
                 )
             }
         }
@@ -119,18 +118,6 @@ class TutorialTimerFragment : ComposeBaseViewModelFragment<TutorialTimerViewMode
         )
     }
 
-    private fun showExitDialog() {
-        NavGraphDirections.moveToNrTwoButtonDialog(
-            NRTwoButtonDialog.NRTwoButtonArgument(
-                title = getString(R.string.text_tutorial_exit_dialog_title),
-                message = getString(R.string.text_tutorial_exit_dialog_message),
-                posBtnText = getString(R.string.dialog_yes),
-                negBtnText = getString(R.string.dialog_no),
-                dialogKey = REQUEST_KEY_EXIT_TUTORIAL
-            )
-        ).also { findNavController().safeNavigate(it) }
-    }
-
     private fun showModifyTimeBottomSheet() {
         val currentMinutes = viewModel.uiState.value.totalSeconds / 60
         NavGraphDirections.showModifyTimeBottomSheet(
@@ -140,9 +127,6 @@ class TutorialTimerFragment : ComposeBaseViewModelFragment<TutorialTimerViewMode
     }
 
     override fun setFragmentResultListeners() {
-        setFragmentResultListener(REQUEST_KEY_EXIT_TUTORIAL) { _, _ ->
-            viewModel.exitTutorial()
-        }
         setFragmentResultListener(REQUEST_KEY_MODIFY_TIME) { _, bundle ->
             val modifiedTime = bundle.getInt(ModifyTimeBottomSheet.BUNDLE_KEY_MODIFIED_TIME)
             tutorialSharedViewModel.modifyTime(modifiedTime)
@@ -155,7 +139,6 @@ class TutorialTimerFragment : ComposeBaseViewModelFragment<TutorialTimerViewMode
     }
 
     companion object {
-        const val REQUEST_KEY_EXIT_TUTORIAL = "REQUEST_KEY_EXIT_TUTORIAL"
         const val REQUEST_KEY_MODIFY_TIME = "REQUEST_KEY_MODIFY_TIME"
     }
 }

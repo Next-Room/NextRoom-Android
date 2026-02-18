@@ -236,8 +236,6 @@
 
     <!-- 튜토리얼(체험) -->
     <string name="text_try_without_login">로그인 없이 체험하기</string>
-    <string name="text_tutorial_exit_dialog_title">체험 종료</string>
-    <string name="text_tutorial_exit_dialog_message">체험 모드를 종료하시겠습니까?</string>
     <string name="text_tutorial_tooltip_progress">남은 시간과 힌트 수 표시</string>
     <string name="text_tutorial_tooltip_memo">메모 하러 이동</string>
     <string name="text_tutorial_tooltip_keypad">힌트 코드 입력</string>
@@ -246,4 +244,10 @@
     <string name="text_tutorial_tooltip_eraser">지우기</string>
     <string name="text_tutorial_tooltip_erase_all">전체 삭제</string>
     <string name="text_tutorial_tooltip_hint">힌트는 열람했을 때만\n차감됩니다</string>
+    <string name="tutorial_exit_sheet_title">지금 가입하고\n더 다양한 기능을 사용해보세요!</string>
+    <string name="tutorial_exit_sheet_subtitle">체험 모드에서는 사용할 수 없는\n기능들을 만나보세요</string>
+    <string name="tutorial_exit_sheet_feature_image">힌트 이미지 첨부</string>
+    <string name="tutorial_exit_sheet_feature_background">우리 매장만의 화면 커스텀</string>
+    <string name="tutorial_exit_sheet_feature_manage">오프라인 환경 플레이 등</string>
+    <string name="tutorial_exit_sheet_exit_button">로그인 화면으로 돌아가기</string>
 </resources>

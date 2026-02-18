@@ -20,8 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,22 +46,23 @@ import com.nextroom.nextroom.presentation.common.compose.NRColor
 import com.nextroom.nextroom.presentation.common.compose.NRTypo
 import com.nextroom.nextroom.presentation.ui.tutorial.timer.TutorialTimerState
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TutorialTimerScreen(
     state: TutorialTimerState,
     onKeyInput: (Int) -> Unit,
     onBackspace: () -> Unit,
     onMemoClick: () -> Unit,
-    onExitLongPress: () -> Unit,
     onTimerLongPress: () -> Unit,
     onDismissTooltips: () -> Unit,
-    modifier: Modifier = Modifier
+    onExitConfirmed: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var arcCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var memoCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var keypadCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
     var backCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var showExitBottomSheet by remember { mutableStateOf(false) }
 
     BoxWithConstraints(
         modifier = modifier
@@ -86,7 +90,7 @@ fun TutorialTimerScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             TutorialToolbar(
-                onBackLongPress = onExitLongPress,
+                onBackLongPress = { showExitBottomSheet = true },
                 onMemoClick = onMemoClick,
                 onBackPositioned = { backCoords = it },
                 onMemoPositioned = { memoCoords = it }
@@ -177,6 +181,18 @@ fun TutorialTimerScreen(
                 onDismiss = onDismissTooltips
             )
         }
+
+        if (showExitBottomSheet) {
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+            ModalBottomSheet(
+                onDismissRequest = { showExitBottomSheet = false },
+                sheetState = sheetState,
+                containerColor = NRColor.Sub1,
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+            ) {
+                TutorialExitBottomSheetContent(onExitClick = onExitConfirmed)
+            }
+        }
     }
 }
 
@@ -253,9 +269,9 @@ private fun TutorialTimerScreenPreview() {
         onKeyInput = {},
         onBackspace = {},
         onMemoClick = {},
-        onExitLongPress = {},
         onTimerLongPress = {},
-        onDismissTooltips = {}
+        onDismissTooltips = {},
+        onExitConfirmed = {},
     )
 }
 
@@ -274,8 +290,8 @@ private fun TutorialTimerScreenWithInputPreview() {
         onKeyInput = {},
         onBackspace = {},
         onMemoClick = {},
-        onExitLongPress = {},
         onTimerLongPress = {},
-        onDismissTooltips = {}
+        onDismissTooltips = {},
+        onExitConfirmed = {},
     )
 }
