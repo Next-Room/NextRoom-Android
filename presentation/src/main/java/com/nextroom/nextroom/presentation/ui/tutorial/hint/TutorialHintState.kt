@@ -8,5 +8,6 @@ data class TutorialHintState(
     val isHintOpened: Boolean = false,
     val isAnswerOpened: Boolean = false,
     val totalHintCount: Int = 3,
-    val lastSeconds: Int = 0
+    val lastSeconds: Int = 0,
+    val showTooltip: Boolean = false
 )

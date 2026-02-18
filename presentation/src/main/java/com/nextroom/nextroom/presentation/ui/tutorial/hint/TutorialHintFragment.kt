@@ -5,12 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.stringResource
@@ -26,6 +30,7 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.updateSystemPadding
 import com.nextroom.nextroom.presentation.ui.tutorial.TutorialSharedViewModel
 import com.nextroom.nextroom.presentation.ui.tutorial.hint.compose.TutorialHintScreen
+import com.nextroom.nextroom.presentation.ui.tutorial.hint.compose.TutorialHintTooltipOverlay
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -58,24 +63,35 @@ class TutorialHintFragment : ComposeBaseViewModelFragment<TutorialHintViewModel>
                     val seconds = state.lastSeconds % 60
                     "%02d:%02d".format(minutes, seconds)
                 }
+                var hintAreaCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(NRColor.Dark01)
                 ) {
-                    NRToolbar(
-                        title = timerText,
-                        onBackClick = ::goBack,
-                        rightButtonText = stringResource(R.string.memo_button),
-                        onRightButtonClick = ::navigateToMemo
-                    )
+                    Column(modifier = Modifier.fillMaxSize()) {
+                        NRToolbar(
+                            title = timerText,
+                            onBackClick = ::goBack,
+                            rightButtonText = stringResource(R.string.memo_button),
+                            onRightButtonClick = ::navigateToMemo
+                        )
 
-                    TutorialHintScreen(
-                        state = state,
-                        onHintOpenClick = { viewModel.openHint() },
-                        onAnswerOpenClick = { viewModel.openAnswer() }
-                    )
+                        TutorialHintScreen(
+                            state = state,
+                            onHintOpenClick = { viewModel.openHint() },
+                            onAnswerOpenClick = { viewModel.openAnswer() },
+                            onHintAreaPositioned = { hintAreaCoords = it }
+                        )
+                    }
+
+                    if (state.showTooltip) {
+                        TutorialHintTooltipOverlay(
+                            hintAreaCoords = hintAreaCoords,
+                            onDismiss = { viewModel.dismissTooltip() }
+                        )
+                    }
                 }
             }
         }

@@ -48,6 +48,14 @@ class TutorialSharedViewModel @Inject constructor() : NewBaseViewModel() {
         _state.update { it.copy(openedAnswerIds = it.openedAnswerIds + hintId) }
     }
 
+    fun markMemoTooltipShown() {
+        _state.update { it.copy(memoTooltipShown = true) }
+    }
+
+    fun markHintTooltipShown() {
+        _state.update { it.copy(hintTooltipShown = true) }
+    }
+
     fun finishTutorial() {
         timerJob?.cancel()
         _state.value = TutorialSharedState()
@@ -65,5 +73,7 @@ data class TutorialSharedState(
     val currentHint: TutorialHint? = null,
     val openedHintIds: Set<Int> = emptySet(),
     val openedAnswerIds: Set<Int> = emptySet(),
-    val totalHintCount: Int = 3
+    val totalHintCount: Int = 3,
+    val memoTooltipShown: Boolean = false,
+    val hintTooltipShown: Boolean = false,
 )

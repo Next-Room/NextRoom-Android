@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -46,60 +48,79 @@ fun TutorialMemoScreen(
     onEraserClick: () -> Unit,
     onEraseAllClick: () -> Unit,
     onPathsChanged: (List<PathData>) -> Unit,
+    onDismissTooltips: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(NRColor.Dark01)
-    ) {
-        NRToolbar(
-            title = state.lastSeconds.toTimerFormat(),
-            onBackClick = onBackClick,
-            rightButtonText = if (fromHint) stringResource(R.string.common_hint_eng) else null,
-            onRightButtonClick = if (fromHint) onHintClick else null
-        )
+    var penCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var eraserCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var deleteCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
 
-        // Drawing area with tool buttons overlaid at bottom-right
-        Box(modifier = Modifier.weight(1f)) {
-            DrawingCanvas(
-                paths = state.paths,
-                currentTool = state.currentTool,
-                clearCanvas = state.clearCanvas,
-                onPathsChanged = onPathsChanged,
-                modifier = Modifier.fillMaxSize()
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(NRColor.Dark01)
+        ) {
+            NRToolbar(
+                title = state.lastSeconds.toTimerFormat(),
+                onBackClick = onBackClick,
+                rightButtonText = if (fromHint) stringResource(R.string.common_hint_eng) else null,
+                onRightButtonClick = if (fromHint) onHintClick else null
             )
 
-            // Tool buttons: vertically stacked at bottom-right
-            // Matches fragment_memo.xml: guide_end=20dp, marginBottom=60dp for last button
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(end = 20.dp, bottom = 60.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                ToolButton(
-                    iconRes = if (state.currentTool == TutorialDrawingTool.Pen) {
-                        R.drawable.ic_pen_selected
-                    } else {
-                        R.drawable.ic_pen_normal
-                    },
-                    onClick = onPenClick,
+            // Drawing area with tool buttons overlaid at bottom-right
+            Box(modifier = Modifier.weight(1f)) {
+                DrawingCanvas(
+                    paths = state.paths,
+                    currentTool = state.currentTool,
+                    clearCanvas = state.clearCanvas,
+                    onPathsChanged = onPathsChanged,
+                    modifier = Modifier.fillMaxSize()
                 )
-                ToolButton(
-                    iconRes = if (state.currentTool == TutorialDrawingTool.Eraser) {
-                        R.drawable.ic_eraser_selected
-                    } else {
-                        R.drawable.ic_eraser_normal
-                    },
-                    onClick = onEraserClick,
-                )
-                ToolButton(
-                    iconRes = R.drawable.ic_delete_normal,
-                    onClick = onEraseAllClick,
-                )
+
+                // Tool buttons: vertically stacked at bottom-right
+                // Matches fragment_memo.xml: guide_end=20dp, marginBottom=60dp for last button
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = 20.dp, bottom = 60.dp),
+                    verticalArrangement = Arrangement.spacedBy(24.dp),
+                    horizontalAlignment = Alignment.End
+                ) {
+                    ToolButton(
+                        iconRes = if (state.currentTool == TutorialDrawingTool.Pen) {
+                            R.drawable.ic_pen_selected
+                        } else {
+                            R.drawable.ic_pen_normal
+                        },
+                        onClick = onPenClick,
+                        modifier = Modifier.onGloballyPositioned { penCoords = it }
+                    )
+                    ToolButton(
+                        iconRes = if (state.currentTool == TutorialDrawingTool.Eraser) {
+                            R.drawable.ic_eraser_selected
+                        } else {
+                            R.drawable.ic_eraser_normal
+                        },
+                        onClick = onEraserClick,
+                        modifier = Modifier.onGloballyPositioned { eraserCoords = it }
+                    )
+                    ToolButton(
+                        iconRes = R.drawable.ic_delete_normal,
+                        onClick = onEraseAllClick,
+                        modifier = Modifier.onGloballyPositioned { deleteCoords = it }
+                    )
+                }
             }
+        }
+
+        if (state.showTooltips) {
+            TutorialMemoTooltipOverlay(
+                penCoords = penCoords,
+                eraserCoords = eraserCoords,
+                deleteCoords = deleteCoords,
+                onDismiss = onDismissTooltips
+            )
         }
     }
 }
@@ -210,11 +231,12 @@ private fun DrawingCanvas(
 private fun ToolButton(
     iconRes: Int,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
     tint: Color = Color.Unspecified
 ) {
     IconButton(
         onClick = onClick,
-        modifier = Modifier.size(50.dp)
+        modifier = modifier.size(50.dp)
     ) {
         Icon(
             painter = painterResource(iconRes),
@@ -237,7 +259,8 @@ private fun TutorialMemoScreenPenPreview() {
     TutorialMemoScreen(
         state = TutorialMemoState(
             lastSeconds = 1800,
-            currentTool = TutorialDrawingTool.Pen
+            currentTool = TutorialDrawingTool.Pen,
+            showTooltips = false,
         ),
         fromHint = false,
         onBackClick = {},
@@ -245,7 +268,8 @@ private fun TutorialMemoScreenPenPreview() {
         onPenClick = {},
         onEraserClick = {},
         onEraseAllClick = {},
-        onPathsChanged = {}
+        onPathsChanged = {},
+        onDismissTooltips = {}
     )
 }
 
@@ -255,7 +279,8 @@ private fun TutorialMemoScreenEraserPreview() {
     TutorialMemoScreen(
         state = TutorialMemoState(
             lastSeconds = 1800,
-            currentTool = TutorialDrawingTool.Eraser
+            currentTool = TutorialDrawingTool.Eraser,
+            showTooltips = false,
         ),
         fromHint = false,
         onBackClick = {},
@@ -263,7 +288,8 @@ private fun TutorialMemoScreenEraserPreview() {
         onPenClick = {},
         onEraserClick = {},
         onEraseAllClick = {},
-        onPathsChanged = {}
+        onPathsChanged = {},
+        onDismissTooltips = {}
     )
 }
 
@@ -273,7 +299,8 @@ private fun TutorialMemoFromHintPreview() {
     TutorialMemoScreen(
         state = TutorialMemoState(
             lastSeconds = 1800,
-            currentTool = TutorialDrawingTool.Eraser
+            currentTool = TutorialDrawingTool.Eraser,
+            showTooltips = false,
         ),
         fromHint = true,
         onBackClick = {},
@@ -281,6 +308,7 @@ private fun TutorialMemoFromHintPreview() {
         onPenClick = {},
         onEraserClick = {},
         onEraseAllClick = {},
-        onPathsChanged = {}
+        onPathsChanged = {},
+        onDismissTooltips = {}
     )
 }

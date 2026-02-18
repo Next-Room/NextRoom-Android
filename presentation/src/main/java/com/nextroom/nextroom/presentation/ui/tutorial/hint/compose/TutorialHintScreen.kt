@@ -23,6 +23,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +41,7 @@ fun TutorialHintScreen(
     state: TutorialHintState,
     onHintOpenClick: () -> Unit,
     onAnswerOpenClick: () -> Unit,
+    onHintAreaPositioned: (LayoutCoordinates) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
@@ -95,6 +98,7 @@ fun TutorialHintScreen(
                             .wrapContentHeight()
                             .heightIn(min = if (state.isHintOpened) 0.dp else 200.dp)
                             .padding(top = 12.dp)
+                            .onGloballyPositioned { onHintAreaPositioned(it) }
                     ) {
                         Column(
                             modifier = Modifier

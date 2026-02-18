@@ -9,5 +9,6 @@ data class TutorialTimerState(
     val currentInput: String = "",
     val inputState: InputState = InputState.Empty,
     val openedHintCount: Int = 0,
-    val totalHintCount: Int = 3
+    val totalHintCount: Int = 3,
+    val showTooltips: Boolean = true
 )

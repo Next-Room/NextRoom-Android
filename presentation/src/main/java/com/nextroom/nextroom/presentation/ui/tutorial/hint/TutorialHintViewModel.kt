@@ -24,7 +24,8 @@ class TutorialHintViewModel @AssistedInject constructor(
             isHintOpened = (sharedState.currentHint?.id ?: 0) in sharedState.openedHintIds,
             isAnswerOpened = (sharedState.currentHint?.id ?: 0) in sharedState.openedAnswerIds,
             totalHintCount = sharedState.totalHintCount,
-            lastSeconds = sharedState.lastSeconds
+            lastSeconds = sharedState.lastSeconds,
+            showTooltip = !sharedState.hintTooltipShown
         )
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, _uiState.value)
 
@@ -38,6 +39,10 @@ class TutorialHintViewModel @AssistedInject constructor(
         tutorialSharedViewModel.state.value.currentHint?.let { hint ->
             tutorialSharedViewModel.addOpenedAnswerId(hint.id)
         }
+    }
+
+    fun dismissTooltip() {
+        tutorialSharedViewModel.markHintTooltipShown()
     }
 
     @AssistedFactory

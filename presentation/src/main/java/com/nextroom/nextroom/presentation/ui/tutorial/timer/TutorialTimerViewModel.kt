@@ -92,6 +92,10 @@ class TutorialTimerViewModel @AssistedInject constructor(
         _uiState.update { it.copy(currentInput = "", inputState = InputState.Empty) }
     }
 
+    fun dismissTooltips() {
+        _uiState.update { it.copy(showTooltips = false) }
+    }
+
     fun exitTutorial() {
         tutorialSharedViewModel.finishTutorial()
         _uiEvent.tryEmit(TutorialTimerEvent.ExitTutorial)

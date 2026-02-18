@@ -20,7 +20,10 @@ class TutorialMemoViewModel @AssistedInject constructor(
         _uiState,
         tutorialSharedViewModel.state
     ) { state, sharedState ->
-        state.copy(lastSeconds = sharedState.lastSeconds)
+        state.copy(
+            lastSeconds = sharedState.lastSeconds,
+            showTooltips = !sharedState.memoTooltipShown,
+        )
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, _uiState.value)
 
     fun pickPen() {
@@ -37,6 +40,10 @@ class TutorialMemoViewModel @AssistedInject constructor(
 
     fun updatePaths(paths: List<PathData>) {
         _uiState.update { it.copy(paths = paths, clearCanvas = false) }
+    }
+
+    fun dismissTooltips() {
+        tutorialSharedViewModel.markMemoTooltipShown()
     }
 
     @AssistedFactory

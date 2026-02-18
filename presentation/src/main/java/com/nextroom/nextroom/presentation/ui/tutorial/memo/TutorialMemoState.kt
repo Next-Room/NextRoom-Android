@@ -12,7 +12,8 @@ data class TutorialMemoState(
     val lastSeconds: Int = 0,
     val currentTool: TutorialDrawingTool = TutorialDrawingTool.Pen,
     val paths: List<PathData> = emptyList(),
-    val clearCanvas: Boolean = false
+    val clearCanvas: Boolean = false,
+    val showTooltips: Boolean = false,
 )
 
 data class PathData(

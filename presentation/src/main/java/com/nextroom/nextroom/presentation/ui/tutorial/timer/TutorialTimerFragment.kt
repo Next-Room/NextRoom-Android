@@ -71,7 +71,8 @@ class TutorialTimerFragment : ComposeBaseViewModelFragment<TutorialTimerViewMode
                     onBackspace = viewModel::backspaceHintCode,
                     onMemoClick = ::navigateToMemo,
                     onExitLongPress = ::showExitDialog,
-                    onTimerLongPress = ::showModifyTimeBottomSheet
+                    onTimerLongPress = ::showModifyTimeBottomSheet,
+                    onDismissTooltips = viewModel::dismissTooltips
                 )
             }
         }

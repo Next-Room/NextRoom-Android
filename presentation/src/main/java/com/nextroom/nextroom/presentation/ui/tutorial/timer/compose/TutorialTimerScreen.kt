@@ -23,12 +23,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,8 +52,14 @@ fun TutorialTimerScreen(
     onMemoClick: () -> Unit,
     onExitLongPress: () -> Unit,
     onTimerLongPress: () -> Unit,
+    onDismissTooltips: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var arcCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var memoCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var keypadCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+    var backCoords by remember { mutableStateOf<LayoutCoordinates?>(null) }
+
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
@@ -76,12 +87,16 @@ fun TutorialTimerScreen(
         ) {
             TutorialToolbar(
                 onBackLongPress = onExitLongPress,
-                onMemoClick = onMemoClick
+                onMemoClick = onMemoClick,
+                onBackPositioned = { backCoords = it },
+                onMemoPositioned = { memoCoords = it }
             )
 
             // Arc + timer text + hint info section (overlaid)
             Box(
-                modifier = Modifier.size(arcSize)
+                modifier = Modifier
+                    .size(arcSize)
+                    .onGloballyPositioned { arcCoords = it }
             ) {
                 val interactionSource = remember { MutableInteractionSource() }
 
@@ -112,7 +127,7 @@ fun TutorialTimerScreen(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "HINT",
+                        text = stringResource(R.string.common_hint_eng),
                         style = NRTypo.Poppins.size20,
                         color = NRColor.White
                     )
@@ -149,6 +164,17 @@ fun TutorialTimerScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 20.dp, end = 20.dp, bottom = 42.dp)
+                    .onGloballyPositioned { keypadCoords = it }
+            )
+        }
+
+        if (state.showTooltips) {
+            TutorialTimerTooltipOverlay(
+                arcCoords = arcCoords,
+                memoCoords = memoCoords,
+                keypadCoords = keypadCoords,
+                backCoords = backCoords,
+                onDismiss = onDismissTooltips
             )
         }
     }
@@ -158,7 +184,9 @@ fun TutorialTimerScreen(
 @Composable
 private fun TutorialToolbar(
     onBackLongPress: () -> Unit,
-    onMemoClick: () -> Unit
+    onMemoClick: () -> Unit,
+    onBackPositioned: (LayoutCoordinates) -> Unit = {},
+    onMemoPositioned: (LayoutCoordinates) -> Unit = {}
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -178,7 +206,8 @@ private fun TutorialToolbar(
                     onLongClick = { onBackLongPress() },
                     onClick = {}
                 )
-                .padding(20.dp),
+                .padding(20.dp)
+                .onGloballyPositioned { onBackPositioned(it) },
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -194,7 +223,8 @@ private fun TutorialToolbar(
                 .clip(RoundedCornerShape(50.dp))
                 .background(NRColor.White)
                 .clickable { onMemoClick() }
-                .padding(horizontal = 16.dp, vertical = 6.dp),
+                .padding(horizontal = 16.dp, vertical = 6.dp)
+                .onGloballyPositioned { onMemoPositioned(it) },
             text = stringResource(R.string.memo_button),
             style = NRTypo.Poppins.size14,
             color = NRColor.Dark01
@@ -217,13 +247,15 @@ private fun TutorialTimerScreenPreview() {
             lastSeconds = 3600,
             currentInput = "",
             openedHintCount = 0,
-            totalHintCount = 3
+            totalHintCount = 3,
+            showTooltips = false,
         ),
         onKeyInput = {},
         onBackspace = {},
         onMemoClick = {},
         onExitLongPress = {},
-        onTimerLongPress = {}
+        onTimerLongPress = {},
+        onDismissTooltips = {}
     )
 }
 
@@ -236,12 +268,14 @@ private fun TutorialTimerScreenWithInputPreview() {
             lastSeconds = 1800,
             currentInput = "12",
             openedHintCount = 1,
-            totalHintCount = 3
+            totalHintCount = 3,
+            showTooltips = false,
         ),
         onKeyInput = {},
         onBackspace = {},
         onMemoClick = {},
         onExitLongPress = {},
-        onTimerLongPress = {}
+        onTimerLongPress = {},
+        onDismissTooltips = {}
     )
 }

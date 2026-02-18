@@ -66,7 +66,8 @@ class TutorialMemoFragment : ComposeBaseViewModelFragment<TutorialMemoViewModel>
                     onPenClick = viewModel::pickPen,
                     onEraserClick = viewModel::pickEraser,
                     onEraseAllClick = viewModel::eraseAll,
-                    onPathsChanged = viewModel::updatePaths
+                    onPathsChanged = viewModel::updatePaths,
+                    onDismissTooltips = viewModel::dismissTooltips
                 )
             }
         }
