@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tutorial_navigation"
+    app:startDestination="@id/tutorial_timer_fragment">
+
+    <fragment
+        android:id="@+id/tutorial_timer_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.tutorial.timer.TutorialTimerFragment"
+        android:label="TutorialTimerFragment">
+
+        <action
+            android:id="@+id/move_to_tutorial_hint_fragment"
+            app:destination="@id/tutorial_hint_fragment" />
+        <action
+            android:id="@+id/move_to_tutorial_memo_fragment"
+            app:destination="@id/tutorial_memo_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorial_hint_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.tutorial.hint.TutorialHintFragment"
+        android:label="TutorialHintFragment">
+
+        <action
+            android:id="@+id/move_to_tutorial_memo_fragment"
+            app:destination="@id/tutorial_memo_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/tutorial_memo_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.tutorial.memo.TutorialMemoFragment"
+        android:label="TutorialMemoFragment">
+
+        <argument
+            android:name="fromHint"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+
+</navigation>

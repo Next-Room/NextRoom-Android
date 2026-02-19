@@ -23,6 +23,7 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
         super.initListeners()
         binding.tvStartWithEmail.setOnClickListener(this)
         binding.llStartWithGoogle.setOnClickListener(this)
+        binding.tvTryWithoutLogin.setOnClickListener(this)
     }
 
     override fun setFragmentResultListeners() {
@@ -73,10 +74,15 @@ class LoginFragment : BaseViewModelFragment<FragmentLoginBinding, LoginViewModel
         LoginFragmentDirections.moveToSignup(SIGNUP_REQUEST_KEY).also { findNavController().safeNavigate(it) }
     }
 
+    private fun moveToTutorial() {
+        LoginFragmentDirections.moveToTutorial().also { findNavController().safeNavigate(it) }
+    }
+
     override fun onClick(v: View) {
         when (v) {
             binding.tvStartWithEmail -> moveToEmailLogin()
             binding.llStartWithGoogle -> viewModel.requestGoogleAuth()
+            binding.tvTryWithoutLogin -> moveToTutorial()
         }
     }
 

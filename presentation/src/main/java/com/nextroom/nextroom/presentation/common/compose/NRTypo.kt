@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.presentation.common.compose
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -19,6 +20,10 @@ object NextRoomFontFamily {
     val Poppins = FontFamily(
         Font(R.font.poppins_medium, FontWeight.Medium),
         Font(R.font.poppins_semi_bold, FontWeight.SemiBold)
+    )
+
+    val NotoSansMono = FontFamily(
+        Font(R.font.notosansmono_semibold, FontWeight.SemiBold)
     )
 }
 
@@ -276,6 +281,18 @@ object NRTypo {
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
                 lineHeight = 38.sp,
+                color = NRColor.White
+            )
+    }
+
+    // ===== NotoSansMono Styles =====
+    object NotoSansMono {
+        val size54: TextStyle
+            @Composable get() = TextStyle(
+                fontFamily = NextRoomFontFamily.NotoSansMono,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 54.sp,
+                platformStyle = PlatformTextStyle(includeFontPadding = false),
                 color = NRColor.White
             )
     }

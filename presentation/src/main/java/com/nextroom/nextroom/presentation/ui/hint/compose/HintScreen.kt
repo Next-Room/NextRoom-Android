@@ -377,6 +377,7 @@ fun HintTimerToolbar(
     NRToolbar(
         title = timerText,
         onBackClick = onBackClick,
+        rightButtonText = stringResource(R.string.memo_button),
         onRightButtonClick = onMemoClick
     )
 }
