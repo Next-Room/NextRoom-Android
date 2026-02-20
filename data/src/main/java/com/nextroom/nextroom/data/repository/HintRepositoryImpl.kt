@@ -10,6 +10,8 @@ import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.mapOnSuccess
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.HintRepository
+import com.nextroom.nextroom.domain.request.AddHintRequest
+import com.nextroom.nextroom.domain.request.EditHintRequest
 import javax.inject.Inject
 
 class HintRepositoryImpl @Inject constructor(
@@ -31,5 +33,21 @@ class HintRepositoryImpl @Inject constructor(
                 themeLocalDataSource.updateUpdatedInfo(themeId, updatedTime)
                 hintLocalDataSource.saveHints(themeId, it)
             }.mapOnSuccess { updatedTime }
+    }
+
+    override suspend fun getHintsForTheme(themeId: Int): Result<List<Hint>> {
+        return hintRemoteDataSource.getHints(themeId)
+    }
+
+    override suspend fun addHint(request: AddHintRequest): Result<Unit> {
+        return hintRemoteDataSource.addHint(request)
+    }
+
+    override suspend fun editHint(request: EditHintRequest): Result<Unit> {
+        return hintRemoteDataSource.editHint(request)
+    }
+
+    override suspend fun deleteHint(hintId: Int): Result<Unit> {
+        return hintRemoteDataSource.deleteHint(hintId)
     }
 }

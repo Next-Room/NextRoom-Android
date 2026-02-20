@@ -1,0 +1,9 @@
+package com.nextroom.nextroom.domain.request
+
+data class EditHintRequest(
+    val id: Int,
+    val hintCode: String,
+    val contents: String,
+    val answer: String,
+    val progress: Int,
+)

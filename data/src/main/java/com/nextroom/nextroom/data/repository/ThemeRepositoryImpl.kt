@@ -8,6 +8,8 @@ import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.ThemeInfo
 import com.nextroom.nextroom.domain.model.suspendOnSuccess
 import com.nextroom.nextroom.domain.repository.ThemeRepository
+import com.nextroom.nextroom.domain.request.AddThemeRequest
+import com.nextroom.nextroom.domain.request.EditThemeRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -62,5 +64,17 @@ class ThemeRepositoryImpl @Inject constructor(
 
     override suspend fun getThemeById(id: Int): ThemeInfo {
         return themeLocalDataSource.getTheme(id).first()
+    }
+
+    override suspend fun addTheme(request: AddThemeRequest): Result<Unit> {
+        return themeRemoteDateSource.addTheme(request)
+    }
+
+    override suspend fun editTheme(request: EditThemeRequest): Result<Unit> {
+        return themeRemoteDateSource.editTheme(request)
+    }
+
+    override suspend fun deleteTheme(themeId: Int): Result<Unit> {
+        return themeRemoteDateSource.deleteTheme(themeId)
     }
 }

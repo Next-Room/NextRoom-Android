@@ -2,8 +2,14 @@ package com.nextroom.nextroom.data.network
 
 import com.nextroom.nextroom.data.model.ThemeBackgroundActivationId
 import com.nextroom.nextroom.data.model.TokenDto
+import com.nextroom.nextroom.data.network.request.AddHintRequestDto
+import com.nextroom.nextroom.data.network.request.AddThemeRequestDto
+import com.nextroom.nextroom.data.network.request.EditHintRequestDto
+import com.nextroom.nextroom.data.network.request.EditThemeRequestDto
 import com.nextroom.nextroom.data.network.request.LoginRequest
 import com.nextroom.nextroom.data.network.request.PurchaseToken
+import com.nextroom.nextroom.data.network.request.RemoveHintRequestDto
+import com.nextroom.nextroom.data.network.request.RemoveThemeRequestDto
 import com.nextroom.nextroom.data.network.request.StatisticsRequest
 import com.nextroom.nextroom.data.network.response.AdditionalUserInfoRequestDto
 import com.nextroom.nextroom.data.network.response.AdditionalUserInfoResponseDto
@@ -24,6 +30,7 @@ import com.nextroom.nextroom.domain.request.TokenRefreshRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Query
@@ -42,8 +49,26 @@ interface ApiService {
     @GET("api/v1/theme")
     suspend fun getThemes(): Result<BaseListResponse<ThemeDto>>
 
+    @POST("api/v1/theme")
+    suspend fun addTheme(@Body request: AddThemeRequestDto): Result<Unit>
+
+    @PUT("api/v1/theme")
+    suspend fun editTheme(@Body request: EditThemeRequestDto): Result<Unit>
+
+    @HTTP(method = "DELETE", path = "api/v1/theme", hasBody = true)
+    suspend fun deleteTheme(@Body request: RemoveThemeRequestDto): Result<Unit>
+
     @GET("api/v1/hint")
     suspend fun getHint(@Query("themeId") themeId: Int): Result<BaseListResponse<HintDto>>
+
+    @POST("api/v1/hint")
+    suspend fun addHint(@Body request: AddHintRequestDto): Result<Unit>
+
+    @PUT("api/v1/hint")
+    suspend fun editHint(@Body request: EditHintRequestDto): Result<Unit>
+
+    @HTTP(method = "DELETE", path = "api/v1/hint", hasBody = true)
+    suspend fun deleteHint(@Body request: RemoveHintRequestDto): Result<Unit>
 
     @GET("api/v1/subscription/status")
     suspend fun getUserSubscriptionStatus(): Result<BaseResponse<UserSubscriptionStatusDto>>

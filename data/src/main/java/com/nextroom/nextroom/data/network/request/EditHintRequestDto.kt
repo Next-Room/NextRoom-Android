@@ -1,0 +1,11 @@
+package com.nextroom.nextroom.data.network.request
+
+import com.google.gson.annotations.SerializedName
+
+data class EditHintRequestDto(
+    @SerializedName("id") val id: Int,
+    @SerializedName("hintCode") val hintCode: String,
+    @SerializedName("contents") val contents: String,
+    @SerializedName("answer") val answer: String,
+    @SerializedName("progress") val progress: Int,
+)
