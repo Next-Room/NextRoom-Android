@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.hint.compose
 
+import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -112,7 +114,15 @@ fun HintScreen(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .blur(if (state.isHintOpened) 0.dp else 10.dp)
+                                    .then(
+                                        if (state.isHintOpened) {
+                                            Modifier
+                                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                            Modifier.blur(10.dp)
+                                        } else {
+                                            Modifier.alpha(0f)
+                                        }
+                                    )
                             ) {
                                 if (state.hint.hintImageUrlList.isNotEmpty() && state.isHintOpened) {
                                     ImagePager(
@@ -205,7 +215,15 @@ fun HintScreen(
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .blur(if (state.isAnswerOpened) 0.dp else 10.dp)
+                                        .then(
+                                            if (state.isAnswerOpened) {
+                                                Modifier
+                                            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                                Modifier.blur(10.dp)
+                                            } else {
+                                                Modifier.alpha(0f)
+                                            }
+                                        )
                                 ) {
                                     if (state.hint.answerImageUrlList.isNotEmpty() && state.isAnswerOpened) {
                                         ImagePager(

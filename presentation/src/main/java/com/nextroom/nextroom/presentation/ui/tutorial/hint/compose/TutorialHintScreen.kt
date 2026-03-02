@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.tutorial.hint.compose
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.LayoutCoordinates
@@ -103,7 +105,15 @@ fun TutorialHintScreen(
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .blur(if (state.isHintOpened) 0.dp else 10.dp)
+                                .then(
+                                    if (state.isHintOpened) {
+                                        Modifier
+                                    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                        Modifier.blur(10.dp)
+                                    } else {
+                                        Modifier.alpha(0f)
+                                    }
+                                )
                         ) {
                             Text(
                                 text = state.hint.hint,
@@ -184,7 +194,15 @@ fun TutorialHintScreen(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .blur(if (state.isAnswerOpened) 0.dp else 10.dp)
+                                    .then(
+                                        if (state.isAnswerOpened) {
+                                            Modifier
+                                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                            Modifier.blur(10.dp)
+                                        } else {
+                                            Modifier.alpha(0f)
+                                        }
+                                    )
                             ) {
                                 Text(
                                     text = state.hint.answer,
