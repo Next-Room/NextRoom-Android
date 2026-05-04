@@ -9,6 +9,7 @@ import com.nextroom.nextroom.data.datasource.BillingDataSource
 import com.nextroom.nextroom.data.datasource.FirebaseRemoteConfigDataSource
 import com.nextroom.nextroom.data.datasource.HintLocalDataSource
 import com.nextroom.nextroom.data.datasource.HintRemoteDataSource
+import com.nextroom.nextroom.data.datasource.ImageUploadDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.data.datasource.StatisticsDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
@@ -68,12 +69,14 @@ object RepositoryModule {
         hintRemoteDataSource: HintRemoteDataSource,
         themeLocalDataSource: ThemeLocalDataSource,
         settingDataSource: SettingDataSource,
+        imageUploadDataSource: ImageUploadDataSource,
     ): HintRepository {
         return HintRepositoryImpl(
             hintLocalDataSource,
             hintRemoteDataSource,
             themeLocalDataSource,
             settingDataSource,
+            imageUploadDataSource,
         )
     }
 

@@ -21,6 +21,7 @@ import com.nextroom.nextroom.data.network.response.GoogleLoginResponseDto
 import com.nextroom.nextroom.data.network.response.HintDto
 import com.nextroom.nextroom.data.network.response.LoginDto
 import com.nextroom.nextroom.data.network.response.MypageDto
+import com.nextroom.nextroom.data.network.response.PresignedUrlResponseDto
 import com.nextroom.nextroom.data.network.response.SubscriptionPlanDto
 import com.nextroom.nextroom.data.network.response.ThemeDto
 import com.nextroom.nextroom.data.network.response.TicketDto
@@ -101,4 +102,11 @@ interface ApiService {
     suspend fun putAdditionalUserInfo(
         @Body request: AdditionalUserInfoRequestDto,
     ): Result<BaseResponse<AdditionalUserInfoResponseDto>>
+
+    @GET("api/v1/hint/url")
+    suspend fun getHintImagePresignedUrls(
+        @Query("themeId") themeId: Int,
+        @Query("hintImageCount") hintImageCount: Int,
+        @Query("answerImageCount") answerImageCount: Int
+    ): Result<BaseResponse<PresignedUrlResponseDto>>
 }

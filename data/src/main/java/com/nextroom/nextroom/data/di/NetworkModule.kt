@@ -8,6 +8,7 @@ import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.network.AuthAuthenticator
 import com.nextroom.nextroom.data.network.AuthInterceptor
+import com.nextroom.nextroom.data.network.ImageUploadService
 import com.nextroom.nextroom.data.network.ResultCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -156,5 +157,13 @@ object NetworkModule {
         @ApplicationContext context: Context,
     ): FlavorExtraFunction {
         return FlavorExtraFunction(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideImageUploadService(
+        @Named("defaultOkHttpClient") okHttpClient: OkHttpClient,
+    ): ImageUploadService {
+        return ImageUploadService(okHttpClient)
     }
 }
