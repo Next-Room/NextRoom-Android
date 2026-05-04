@@ -52,7 +52,10 @@ class NRTwoButtonDialog :
     private fun initListeners() {
         binding.btnPositive.setOnClickListener {
             findNavController().popBackStack()
-            setFragmentResult(args.nrTwoButtonArgument.dialogKey, bundleOf())
+            setFragmentResult(
+                args.nrTwoButtonArgument.dialogKey,
+                args.nrTwoButtonArgument.bundle ?: bundleOf()
+            )
         }
         binding.btnNegative.setOnClickListener {
             findNavController().popBackStack()
@@ -67,5 +70,6 @@ class NRTwoButtonDialog :
         val posBtnText: String? = null,
         val negBtnText: String? = null,
         val dialogKey: String,
+        val bundle: Bundle? = null,
     ) : Parcelable
 }
