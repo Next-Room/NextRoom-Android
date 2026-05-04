@@ -8,4 +8,6 @@ data class EditHintRequestDto(
     @SerializedName("contents") val contents: String,
     @SerializedName("answer") val answer: String,
     @SerializedName("progress") val progress: Int,
+    @SerializedName("hintImageList") val hintImageList: List<String>,
+    @SerializedName("answerImageList") val answerImageList: List<String>,
 )

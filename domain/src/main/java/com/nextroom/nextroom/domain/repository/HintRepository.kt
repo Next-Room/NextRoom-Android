@@ -4,6 +4,12 @@ import com.nextroom.nextroom.domain.model.Hint
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.request.AddHintRequest
 import com.nextroom.nextroom.domain.request.EditHintRequest
+import java.io.File
+
+data class UploadImagesResult(
+    val hintImageFileNames: List<String>,
+    val answerImageFileNames: List<String>
+)
 
 interface HintRepository {
     suspend fun getHint(hintCode: String): Hint?
@@ -12,4 +18,9 @@ interface HintRepository {
     suspend fun addHint(request: AddHintRequest): Result<Unit>
     suspend fun editHint(request: EditHintRequest): Result<Unit>
     suspend fun deleteHint(hintId: Int): Result<Unit>
+    suspend fun uploadImages(
+        themeId: Int,
+        hintImageFiles: List<File>,
+        answerImageFiles: List<File>
+    ): Result<UploadImagesResult>
 }

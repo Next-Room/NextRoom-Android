@@ -28,6 +28,8 @@ class HintRemoteDataSource @Inject constructor(
                 contents = request.contents,
                 answer = request.answer,
                 progress = request.progress,
+                hintImageList = request.hintImageUrlList,
+                answerImageList = request.answerImageUrlList,
             )
         )
     }
@@ -40,6 +42,8 @@ class HintRemoteDataSource @Inject constructor(
                 contents = request.contents,
                 answer = request.answer,
                 progress = request.progress,
+                hintImageList = request.hintImageUrlList,
+                answerImageList = request.answerImageUrlList,
             )
         )
     }

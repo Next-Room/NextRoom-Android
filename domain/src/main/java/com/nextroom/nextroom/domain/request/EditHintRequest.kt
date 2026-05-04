@@ -6,4 +6,6 @@ data class EditHintRequest(
     val contents: String,
     val answer: String,
     val progress: Int,
+    val hintImageUrlList: List<String> = emptyList(),
+    val answerImageUrlList: List<String> = emptyList(),
 )
