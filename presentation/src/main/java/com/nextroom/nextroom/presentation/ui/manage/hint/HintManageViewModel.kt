@@ -206,10 +206,7 @@ class HintManageViewModel @Inject constructor(
                 if (editData.hintImageUris.isNotEmpty() || editData.answerImageUris.isNotEmpty()) {
                     val uploadResult =
                         uploadImages(editData.hintImageUris, editData.answerImageUris)
-                            ?: run {
-                                _isLoading.emit(false)
-                                return@launch
-                            }
+                            ?: return@launch
                     uploadedHintUrls = editData.hintImageUrls + uploadResult.hintImageFileNames
                     uploadedAnswerUrls =
                         editData.answerImageUrls + uploadResult.answerImageFileNames
