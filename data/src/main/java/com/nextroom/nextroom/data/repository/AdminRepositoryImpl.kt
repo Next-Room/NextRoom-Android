@@ -106,6 +106,9 @@ class AdminRepositoryImpl @Inject constructor(
         return settingDataSource.getAdminCode() == code
     }
 
+    /**
+     * [getUserSubscribe] 함수가 구독 상태를 가져오는 용도로 쓰이고 있다. 역할이 중복됨. 불필요하면 추후 제거할 것
+     */
     override suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus> {
         return subscriptionDataSource.getUserSubscriptionStatus()
     }

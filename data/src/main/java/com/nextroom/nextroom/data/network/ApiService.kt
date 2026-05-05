@@ -71,6 +71,9 @@ interface ApiService {
     @HTTP(method = "DELETE", path = "api/v1/hint", hasBody = true)
     suspend fun deleteHint(@Body request: RemoveHintRequestDto): Result<Unit>
 
+    /**
+     * [getMypageInfo] 함수가 구독 상태를 가져오는 용도로 쓰이고 있다. 역할이 중복됨. 불필요하면 추후 제거할 것
+     */
     @GET("api/v1/subscription/status")
     suspend fun getUserSubscriptionStatus(): Result<BaseResponse<UserSubscriptionStatusDto>>
 
