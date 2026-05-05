@@ -8,8 +8,13 @@ import java.io.File
 
 data class UploadImagesResult(
     val hintImageFileNames: List<String>,
-    val answerImageFileNames: List<String>
-)
+    val answerImageFileNames: List<String>,
+    val failedHintImageIndices: Set<Int> = emptySet(),
+    val failedAnswerImageIndices: Set<Int> = emptySet(),
+) {
+    val hasFailures: Boolean
+        get() = failedHintImageIndices.isNotEmpty() || failedAnswerImageIndices.isNotEmpty()
+}
 
 interface HintRepository {
     suspend fun getHint(hintCode: String): Hint?

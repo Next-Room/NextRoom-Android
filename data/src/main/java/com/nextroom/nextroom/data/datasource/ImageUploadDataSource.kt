@@ -4,12 +4,17 @@ import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.network.ImageUploadService
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.mapOnSuccess
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import java.io.File
 import javax.inject.Inject
 
 data class UploadImagesResult(
     val hintImageFileNames: List<String>,
-    val answerImageFileNames: List<String>
+    val answerImageFileNames: List<String>,
+    val failedHintImageIndices: Set<Int>,
+    val failedAnswerImageIndices: Set<Int>,
 )
 
 class ImageUploadDataSource @Inject constructor(
@@ -30,47 +35,58 @@ class ImageUploadDataSource @Inject constructor(
         return when (presignedResult) {
             is Result.Success -> {
                 val presignedData = presignedResult.data
-                val hintFileNames = mutableListOf<String>()
-                val answerFileNames = mutableListOf<String>()
-
-                // Upload hint images
-                presignedData.hintImageUrlList?.forEachIndexed { index, presignedUrl ->
-                    if (index < hintImageFiles.size) {
-                        val contentTypeFromUrl = extractContentType(presignedUrl)
-                        val uploadSuccess = imageUploadService.uploadImage(
-                            presignedUrl = presignedUrl,
-                            imageFile = hintImageFiles[index],
-                            contentType = contentTypeFromUrl
-                        )
-                        if (!uploadSuccess) {
-                            return Result.Failure.UnknownError(Exception("Hint image upload failed at index $index"))
+                try {
+                    coroutineScope {
+                        val hintDeferred = hintImageFiles.mapIndexed { index, file ->
+                            async {
+                                val url = presignedData.hintImageUrlList?.getOrNull(index)
+                                    ?: return@async null
+                                val success = imageUploadService.uploadImage(
+                                    presignedUrl = url,
+                                    imageFile = file,
+                                    contentType = extractContentType(url),
+                                )
+                                if (success) extractFileNameWithoutExtension(url) else null
+                            }
                         }
-                        val fileName = extractFileNameWithoutExtension(presignedUrl)
-                        hintFileNames.add(fileName)
-                    }
-                }
-
-                // Upload answer images
-                presignedData.answerImageUrlList?.forEachIndexed { index, presignedUrl ->
-                    if (index < answerImageFiles.size) {
-                        val contentTypeFromUrl = extractContentType(presignedUrl)
-                        val uploadSuccess = imageUploadService.uploadImage(
-                            presignedUrl = presignedUrl,
-                            imageFile = answerImageFiles[index],
-                            contentType = contentTypeFromUrl
-                        )
-                        if (!uploadSuccess) {
-                            return Result.Failure.UnknownError(Exception("Answer image upload failed at index $index"))
+                        val answerDeferred = answerImageFiles.mapIndexed { index, file ->
+                            async {
+                                val url = presignedData.answerImageUrlList?.getOrNull(index)
+                                    ?: return@async null
+                                val success = imageUploadService.uploadImage(
+                                    presignedUrl = url,
+                                    imageFile = file,
+                                    contentType = extractContentType(url),
+                                )
+                                if (success) extractFileNameWithoutExtension(url) else null
+                            }
                         }
-                        val fileName = extractFileNameWithoutExtension(presignedUrl)
-                        answerFileNames.add(fileName)
-                    }
-                }
 
-                Result.Success(UploadImagesResult(hintFileNames, answerFileNames))
+                        val hintResults = hintDeferred.awaitAll()
+                        val answerResults = answerDeferred.awaitAll()
+
+                        Result.Success(
+                            UploadImagesResult(
+                                hintImageFileNames = hintResults.filterNotNull(),
+                                answerImageFileNames = answerResults.filterNotNull(),
+                                failedHintImageIndices = hintResults.indices.filter { hintResults[it] == null }
+                                    .toSet(),
+                                failedAnswerImageIndices = answerResults.indices.filter { answerResults[it] == null }
+                                    .toSet(),
+                            )
+                        )
+                    }
+                } finally {
+                    hintImageFiles.forEach { it.delete() }
+                    answerImageFiles.forEach { it.delete() }
+                }
             }
 
-            is Result.Failure -> presignedResult
+            is Result.Failure -> {
+                hintImageFiles.forEach { it.delete() }
+                answerImageFiles.forEach { it.delete() }
+                presignedResult
+            }
         }
     }
 

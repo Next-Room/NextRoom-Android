@@ -67,7 +67,9 @@ class HintRepositoryImpl @Inject constructor(
         ).mapOnSuccess {
             UploadImagesResult(
                 hintImageFileNames = it.hintImageFileNames,
-                answerImageFileNames = it.answerImageFileNames
+                answerImageFileNames = it.answerImageFileNames,
+                failedHintImageIndices = it.failedHintImageIndices,
+                failedAnswerImageIndices = it.failedAnswerImageIndices,
             )
         }
     }
