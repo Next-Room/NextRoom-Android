@@ -41,7 +41,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
-                android:contentDescription="@string/mypage_button_description"
                 android:src="@drawable/ic_my"
                 android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -106,6 +105,20 @@
                 app:layout_constraintStart_toEndOf="@+id/tv_theme"
                 app:layout_constraintTop_toTopOf="@+id/tv_theme"
                 tools:text="2" />
+
+            <TextView
+                android:id="@+id/tv_manage_themes"
+                style="@style/Pretendard.14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:text="@string/text_manage_themes"
+                android:textColor="@color/white_70"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_theme_count"
+                app:layout_constraintEnd_toStartOf="@+id/tv_bacground_setting"
+                app:layout_constraintTop_toTopOf="@+id/tv_theme_count" />
 
             <TextView
                 android:id="@+id/tv_bacground_setting"

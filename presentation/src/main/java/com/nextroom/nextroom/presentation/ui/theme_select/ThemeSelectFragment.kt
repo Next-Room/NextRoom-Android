@@ -160,6 +160,11 @@ class ThemeSelectFragment :
             FirebaseAnalytics.getInstance(requireContext()).logEvent("btn_click", bundleOf("btn_name" to "banner"))
         }
 
+        tvManageThemes.setOnClickListener {
+            findNavController().safeNavigate(
+                ThemeSelectFragmentDirections.moveToThemeManageFragment()
+            )
+        }
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(
                 ThemeSelectFragmentDirections.moveToBackgroundCustomFragment(
