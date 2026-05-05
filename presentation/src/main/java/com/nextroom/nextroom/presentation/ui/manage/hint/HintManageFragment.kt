@@ -24,6 +24,7 @@ import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.common.compose.NRLoading
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
+import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.manage.hint.compose.HintManageScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -80,7 +81,7 @@ class HintManageFragment : ComposeBaseViewModelFragment<HintManageViewModel>() {
                                     HintManageEvent.ImageUploadFailed.Reason.UPLOAD_FAIL -> R.string.image_upload_failed
                                     HintManageEvent.ImageUploadFailed.Reason.NOT_SUBSCRIBE -> R.string.feature_for_subscriber
                                 }.also {
-                                    snackbar(it)
+                                    toast(it)
                                 }
                             }
                         }
