@@ -21,6 +21,7 @@ import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.SubscriptionPlan
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import com.nextroom.nextroom.domain.model.mapOnSuccess
@@ -46,6 +47,10 @@ class AdminRepositoryImpl @Inject constructor(
     override val shopName: Flow<String> = settingDataSource.shopName
 
     override val authEvent: Flow<AdminRepository.AuthEvent> = authDataSource.authEvent
+
+    private var _cachedSubscribeStatus: SubscribeStatus = SubscribeStatus.Default
+    override val cachedSubscribeStatus: SubscribeStatus
+        get() = _cachedSubscribeStatus
 
     override suspend fun login(adminCode: String, password: String, emailSaveChecked: Boolean): Result<LoginInfo> {
         return authDataSource.login(adminCode, password).onSuccess {
@@ -110,11 +115,15 @@ class AdminRepositoryImpl @Inject constructor(
      * [getUserSubscribe] 함수가 구독 상태를 가져오는 용도로 쓰이고 있다. 역할이 중복됨. 불필요하면 추후 제거할 것
      */
     override suspend fun getUserSubscribeStatus(): Result<UserSubscribeStatus> {
-        return subscriptionDataSource.getUserSubscriptionStatus()
+        return subscriptionDataSource.getUserSubscriptionStatus().onSuccess {
+            _cachedSubscribeStatus = it.subscribeStatus
+        }
     }
 
     override suspend fun getUserSubscribe(): Result<Mypage> {
-        return subscriptionDataSource.getUserSubscription()
+        return subscriptionDataSource.getUserSubscription().onSuccess {
+            _cachedSubscribeStatus = it.status
+        }
     }
 
     override suspend fun getEmailSaveChecked(): Boolean {

@@ -6,6 +6,7 @@ import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.SubscriptionPlan
 import com.nextroom.nextroom.domain.model.UserSubscribeStatus
 import kotlinx.coroutines.flow.Flow
@@ -15,6 +16,7 @@ interface AdminRepository {
     val shopName: Flow<String>
     val loggedIn: Flow<Boolean>
     val authEvent: Flow<AuthEvent>
+    val cachedSubscribeStatus: SubscribeStatus
 
     /**
      * @return shopName
