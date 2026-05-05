@@ -85,6 +85,7 @@ class ThemeSelectFragment :
 
     private fun initSubscribe() {
         setFragmentResultListener(requestKeyCheckPassword, ::handleFragmentResults)
+        setFragmentResultListener(requestKeyCheckPasswordForManageThemes, ::handleFragmentResults)
         setFragmentResultListener(dialogKeyNeedToSetPassword, ::handleFragmentResults)
         setFragmentResultListener(SHOW_USAGE_GUIDE_DIALOG_KEY, ::handleFragmentResults)
     }
@@ -101,6 +102,14 @@ class ThemeSelectFragment :
                 } catch (e: Exception) {
                     Timber.e(e)
                     snackbar(R.string.error_something)
+                }
+            }
+
+            requestKeyCheckPasswordForManageThemes -> {
+                if (bundle.hasResultData()) {
+                    findNavController().safeNavigate(
+                        ThemeSelectFragmentDirections.moveToThemeManageFragment()
+                    )
                 }
             }
 
@@ -161,9 +170,7 @@ class ThemeSelectFragment :
         }
 
         tvManageThemes.setOnClickListener {
-            findNavController().safeNavigate(
-                ThemeSelectFragmentDirections.moveToThemeManageFragment()
-            )
+            viewModel.onManageThemesClicked()
         }
         tvBacgroundSetting.setOnClickListener {
             findNavController().safeNavigate(
@@ -282,6 +289,7 @@ class ThemeSelectFragment :
             is ThemeSelectEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
             ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
+            ThemeSelectEvent.NeedToCheckPasswordForManageThemes -> moveToCheckPasswordForManageThemes()
             ThemeSelectEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
             ThemeSelectEvent.GuidePopupNotSeen -> showSuggestGuidePopup()
         }
@@ -357,6 +365,15 @@ class ThemeSelectFragment :
             .also { findNavController().safeNavigate(it) }
     }
 
+    private fun moveToCheckPasswordForManageThemes() {
+        NavGraphDirections
+            .moveToCheckPassword(
+                requestKey = requestKeyCheckPasswordForManageThemes,
+                resultData = ""
+            )
+            .also { findNavController().safeNavigate(it) }
+    }
+
     private fun showSuggestGuidePopup() {
         NavGraphDirections.moveToNrTwoButtonDialog(
             NRTwoButtonDialog.NRTwoButtonArgument(
@@ -396,6 +413,8 @@ class ThemeSelectFragment :
 
     companion object {
         private const val requestKeyCheckPassword = "requestKeyCheckPassword"
+        private const val requestKeyCheckPasswordForManageThemes =
+            "requestKeyCheckPasswordForManageThemes"
         private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
         private const val SHOW_USAGE_GUIDE_DIALOG_KEY = "SHOW_USAGE_GUIDE_DIALOG_KEY"
         private const val AUTO_SCROLL_INTERVAL_TIME = 3500L
