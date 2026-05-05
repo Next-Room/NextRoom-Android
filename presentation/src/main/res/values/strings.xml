@@ -290,4 +290,9 @@
     <string name="hint_manage_field_progress">진행률 (0-100)</string>
     <string name="hint_manage_image_uploading">이미지 업로드 중… (%d/%d)</string>
     <string name="hint_manage_image_add_button">추가</string>
+    <string name="image_upload_failed">"이미지 업로드 실패"</string>
+    <string name="image_convert_failed">이미지 파일 변환 실패</string>
+    <string name="image_count_exceed">최대 5개까지 선택 가능합니다</string>
+    <string name="image_invalid_size">이미지 크기는 10MB 이하여야 합니다</string>
+    <string name="image_invalid_format">지원하지 않는 이미지 형식입니다</string>
 </resources>
