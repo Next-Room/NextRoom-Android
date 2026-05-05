@@ -230,6 +230,28 @@
         <action
             android:id="@+id/move_to_timer_fragment"
             app:destination="@id/game_navigation" />
+        <action
+            android:id="@+id/move_to_theme_manage_fragment"
+            app:destination="@id/theme_manage_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/theme_manage_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.manage.theme.ThemeManageFragment">
+        <action
+            android:id="@+id/move_to_hint_manage_fragment"
+            app:destination="@id/hint_manage_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/hint_manage_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.manage.hint.HintManageFragment">
+        <argument
+            android:name="themeId"
+            app:argType="integer" />
+        <argument
+            android:name="themeTitle"
+            app:argType="string" />
     </fragment>
 
     <dialog
