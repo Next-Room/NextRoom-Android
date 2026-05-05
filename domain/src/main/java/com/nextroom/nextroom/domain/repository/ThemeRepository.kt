@@ -2,6 +2,8 @@ package com.nextroom.nextroom.domain.repository
 
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.ThemeInfo
+import com.nextroom.nextroom.domain.request.AddThemeRequest
+import com.nextroom.nextroom.domain.request.EditThemeRequest
 import kotlinx.coroutines.flow.Flow
 
 interface ThemeRepository {
@@ -12,4 +14,7 @@ interface ThemeRepository {
     suspend fun getLatestTheme(): Flow<ThemeInfo> // 최근 플레이 한 테마
     suspend fun activateThemeBackgroundImage(activeThemeIdList: List<Int>, deActiveThemeIdList: List<Int>): Result<Unit>
     suspend fun getThemeById(id: Int): ThemeInfo
+    suspend fun addTheme(request: AddThemeRequest): Result<Unit>
+    suspend fun editTheme(request: EditThemeRequest): Result<Unit>
+    suspend fun deleteTheme(themeId: Int): Result<Unit>
 }

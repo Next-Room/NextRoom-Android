@@ -122,7 +122,6 @@
     <string name="expire_period">구독 기간</string>
     <string name="subscription_status">구독 상태</string>
     <string name="subscription_info">구독 정보</string>
-    <string name="mypage_button_description">마이페이지 이동</string>
     <string name="mypage_title">매장 정보</string>
     <string name="ticket_origin_price">%d원</string>
     <string name="ticket_sell_price">%d원/월</string>
@@ -144,12 +143,27 @@
     <string name="text_recommend_background_custom_desc">테마 포스터로 타이머 배경을 커스텀 할 수 있습니다. 각 테마의 독특한 분위기를 더해 몰입감을 높여보세요.</string>
     <string name="tv_theme">테마</string>
     <string name="text_background_setting">배경 설정</string>
+    <string name="text_manage_themes">테마 관리</string>
+    <string name="theme_manage_title">테마 관리</string>
+    <string name="theme_manage_add">테마 추가</string>
+    <string name="theme_manage_edit">테마 수정</string>
+    <string name="theme_manage_delete_confirm">테마를 정말 삭제하시겠습니까?</string>
+    <string name="theme_manage_delete_confirm_desc">삭제된 테마는 복구할 수 없습니다.</string>
+    <string name="theme_manage_save_success">저장되었습니다.</string>
+    <string name="theme_manage_delete_success">삭제되었습니다.</string>
+    <string name="hint_manage_title">힌트 관리</string>
+    <string name="hint_manage_add">힌트 추가</string>
+    <string name="hint_manage_edit">힌트 수정</string>
+    <string name="hint_manage_save_success">저장되었습니다.</string>
+    <string name="hint_manage_delete_confirm">힌트를 삭제하시겠습니까?</string>
+    <string name="hint_manage_delete_success">삭제되었습니다.</string>
     <string name="text_last_hint_update">최근 힌트 업데이트 %s</string>
     <string name="text_last_hint_update_fail">최근 힌트 업데이트를 불러오지 못했습니다.</string>
     <string name="text_timer_background_custom">타이머 배경 설정</string>
     <string name="text_background_custom_info_1">PC에서 배경을 등록하면 힌트폰에서 확인할 수 있습니다.</string>
     <string name="text_background_custom_info_2">미리보기에서 이미지의 어두움와 위치를 조정할 수 있습니다.</string>
     <string name="text_background_custom_info_3">미구독계정은 1개의 배경 이미지만 활성화할 수 있습니다.</string>
+    <string name="text_theme_manage_web_info">PC에서도 관리할 수 있습니다</string>
     <string name="text_nextroom_subscribe_title">넥스트룸을 구독해보세요✨</string>
     <string name="text_subscribe_benefit_desc">미구독계정은 1개의 배경이미지만 활성화할 수 있습니다.\n넥스트룸을 구독하면 아래 혜택을 누릴 수 있습니다.</string>
     <string name="text_subscribe_monthly_payment">월 ₩%s원으로 구독하기</string>
@@ -185,11 +199,12 @@
     <string name="text_0">0</string>
 
     <string name="text_need_to_set_password_title">안내</string>
-    <string name="text_need_to_set_password_message">관리자만 게임을 시작할 수 있도록\n비밀번호 설정이 필요합니다.</string>
+    <string name="text_need_to_set_password_message">관리자만 사용할 수 있도록\n비밀번호 설정이 필요합니다.</string>
     <string name="text_move_to_setting">설정하기</string>
     <string name="text_finger_print_auth">지문 인증</string>
     <string name="text_prompt_fingerprint">지문을 입력하세요.</string>
     <string name="text_cancel">취소</string>
+    <string name="text_delete">삭제</string>
     <string name="text_biometric_error_message">지문 인증에 실패했습니다.</string>
     <string name="subscribe_beneft_first_title">구독혜택 1.</string>
     <string name="subscribe_benefit_first_desc">힌트와 이미지를 함께 제공</string>
@@ -250,4 +265,35 @@
     <string name="tutorial_exit_sheet_feature_background">우리 매장만의 화면 커스텀</string>
     <string name="tutorial_exit_sheet_feature_manage">오프라인 환경 플레이 등</string>
     <string name="tutorial_exit_sheet_exit_button">로그인 화면으로 돌아가기</string>
+
+    <!-- 테마 관리 -->
+    <string name="theme_manage_empty_guide">등록된 테마가 없습니다.\n오른쪽 상단 + 버튼으로 테마를 추가하세요.</string>
+    <string name="theme_manage_bullet_point">·</string>
+    <string name="theme_manage_time_format">%d분</string>
+    <string name="theme_manage_hint_count">힌트 제한 %d개</string>
+    <string name="theme_manage_field_name">테마 이름</string>
+    <string name="theme_manage_field_time_limit">제한 시간 (분)</string>
+    <string name="theme_manage_field_hint_limit">힌트 제한 개수</string>
+
+    <!-- 힌트 관리 -->
+    <string name="hint_manage_empty_guide">등록된 힌트가 없습니다.\n오른쪽 상단 + 버튼으로 힌트를 추가하세요.</string>
+    <string name="hint_manage_sort_by_progress">진행률순</string>
+    <string name="hint_manage_sort_by_code">힌트코드순</string>
+    <string name="hint_manage_content_empty">(내용 없음)</string>
+    <string name="hint_manage_answer_format">정답: %s</string>
+    <string name="hint_manage_field_code">힌트 코드 (4자리 숫자)</string>
+    <string name="hint_manage_field_code_placeholder">예: 1234</string>
+    <string name="hint_manage_field_contents">힌트 내용</string>
+    <string name="hint_manage_field_hint_image">힌트 이미지 (선택)</string>
+    <string name="hint_manage_field_answer">정답</string>
+    <string name="hint_manage_field_answer_image">정답 이미지 (선택)</string>
+    <string name="hint_manage_field_progress">진행률 (0-100)</string>
+    <string name="hint_manage_image_uploading">이미지 업로드 중… (%d/%d)</string>
+    <string name="hint_manage_image_add_button">추가</string>
+    <string name="image_upload_failed">"이미지 업로드 실패"</string>
+    <string name="image_convert_failed">이미지 파일 변환 실패</string>
+    <string name="image_count_exceed">최대 5개까지 선택 가능합니다</string>
+    <string name="image_invalid_size">이미지 크기는 10MB 이하여야 합니다</string>
+    <string name="image_invalid_format">지원하지 않는 이미지 형식입니다</string>
+    <string name="feature_for_subscriber">구독이 필요한 기능입니다.</string>
 </resources>

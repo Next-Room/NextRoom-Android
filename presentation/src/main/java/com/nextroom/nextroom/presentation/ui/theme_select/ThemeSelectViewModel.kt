@@ -190,6 +190,19 @@ class ThemeSelectViewModel @Inject constructor(
         }
     }
 
+    fun onManageThemesClicked() {
+        baseViewModelScope.launch {
+            intent {
+                checkNeedToSetPassword()
+                if (adminRepository.getAppPassword().isEmpty()) {
+                    ThemeSelectEvent.NeedToSetPassword
+                } else {
+                    ThemeSelectEvent.NeedToCheckPasswordForManageThemes
+                }.also { postSideEffect(it) }
+            }
+        }
+    }
+
     fun onThemeRefreshClicked() = intent {
         reduce { state.copy(loading = true) }
         getThemes()
