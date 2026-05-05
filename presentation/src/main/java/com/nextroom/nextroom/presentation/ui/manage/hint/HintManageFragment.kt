@@ -78,6 +78,7 @@ class HintManageFragment : ComposeBaseViewModelFragment<HintManageViewModel>() {
                                     HintManageEvent.ImageUploadFailed.Reason.EXCEED_IMAGE_COUNT -> R.string.image_count_exceed
                                     HintManageEvent.ImageUploadFailed.Reason.CONVERT_FAIL -> R.string.image_convert_failed
                                     HintManageEvent.ImageUploadFailed.Reason.UPLOAD_FAIL -> R.string.image_upload_failed
+                                    HintManageEvent.ImageUploadFailed.Reason.NOT_SUBSCRIBE -> R.string.feature_for_subscriber
                                 }.also {
                                     snackbar(it)
                                 }

@@ -5,7 +5,9 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import com.nextroom.nextroom.domain.model.Hint
 import com.nextroom.nextroom.domain.model.Result
+import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.onSuccess
+import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.UploadImagesResult
 import com.nextroom.nextroom.domain.request.AddHintRequest
@@ -29,6 +31,7 @@ class HintManageViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val hintRepository: HintRepository,
     @param:ApplicationContext private val context: Context,
+    private val adminRepository: AdminRepository,
 ) : NewBaseViewModel() {
 
     val themeId: Int = checkNotNull(savedStateHandle["themeId"])
@@ -290,6 +293,16 @@ class HintManageViewModel @Inject constructor(
         currentUris: List<Uri>,
         currentUrls: List<String>,
     ): List<Uri>? {
+        when (adminRepository.cachedSubscribeStatus) {
+            SubscribeStatus.Default,
+            SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
+                _uiEvent.emit(HintManageEvent.ImageUploadFailed(Reason.NOT_SUBSCRIBE))
+                return null
+            }
+
+            SubscribeStatus.Subscribed -> Unit
+        }
+
         val validUris = uris.filter { uri ->
             val mimeType = ImageUtil.getMimeType(context, uri)
             val validFormat = ImageUtil.isValidImageFormat(mimeType)

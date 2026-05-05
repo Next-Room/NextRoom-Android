@@ -295,4 +295,5 @@
     <string name="image_count_exceed">최대 5개까지 선택 가능합니다</string>
     <string name="image_invalid_size">이미지 크기는 10MB 이하여야 합니다</string>
     <string name="image_invalid_format">지원하지 않는 이미지 형식입니다</string>
+    <string name="feature_for_subscriber">구독이 필요한 기능입니다.</string>
 </resources>

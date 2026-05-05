@@ -63,7 +63,8 @@ sealed interface HintManageEvent {
             INVALID_SIZE,
             EXCEED_IMAGE_COUNT,
             CONVERT_FAIL,
-            UPLOAD_FAIL
+            UPLOAD_FAIL,
+            NOT_SUBSCRIBE,
         }
     }
 }
