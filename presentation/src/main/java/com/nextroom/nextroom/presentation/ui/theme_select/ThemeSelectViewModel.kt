@@ -10,17 +10,17 @@ import com.nextroom.nextroom.domain.repository.BannerRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
-import com.nextroom.nextroom.presentation.base.BaseViewModel
+import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.model.toPresentation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
-import org.orbitmvi.orbit.syntax.simple.reduce
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,15 +30,19 @@ class ThemeSelectViewModel @Inject constructor(
     private val hintRepository: HintRepository,
     private val dataStoreRepository: DataStoreRepository,
     private val bannerRepository: BannerRepository
-) : BaseViewModel<ThemeSelectState, ThemeSelectEvent>() {
+) : NewBaseViewModel() {
 
-    override val container: Container<ThemeSelectState, ThemeSelectEvent> = container(
-        ThemeSelectState(
+    private val _uiState = MutableStateFlow(
+        ThemeSelectUiState(
             opaqueLoading = true,
             loading = true,
             recentUpdatedDate = null
         )
     )
+    val uiState = _uiState.asStateFlow()
+
+    private val _uiEvent = MutableSharedFlow<ThemeSelectEvent>(extraBufferCapacity = 1)
+    val uiEvent = _uiEvent.asSharedFlow()
 
     private var shownBackgroundCustomDialog = false
 
@@ -46,13 +50,13 @@ class ThemeSelectViewModel @Inject constructor(
         showInAppReview()
 
         baseViewModelScope.launch {
-            adminRepository.shopName.collect {
-                updateShopInfo(it)
+            adminRepository.shopName.collect { shopName ->
+                _uiState.update { it.copy(shopName = shopName) }
             }
         }
         baseViewModelScope.launch {
             if (dataStoreRepository.getHasSeenGuidePopup().not()) {
-                intent { postSideEffect(ThemeSelectEvent.GuidePopupNotSeen) }
+                _uiEvent.emit(ThemeSelectEvent.GuidePopupNotSeen)
                 dataStoreRepository.setHasSeenGuidePopup()
             }
         }
@@ -65,79 +69,89 @@ class ThemeSelectViewModel @Inject constructor(
     fun incrementNetworkDisconnectedCount() {
         baseViewModelScope.launch {
             val count = dataStoreRepository.getNetworkDisconnectedCount()
-            updateNetworkDisconnectedCount(count + 1)
+            dataStoreRepository.setNetworkDisconnectedCount(count + 1)
         }
     }
 
-    private fun updateNetworkDisconnectedCount(count: Int) {
-        dataStoreRepository.setNetworkDisconnectedCount(count)
-    }
-
-    private fun showInAppReview() = intent {
+    private fun showInAppReview() {
         baseViewModelScope.launch {
             delay(200)
-            postSideEffect(ThemeSelectEvent.InAppReview)
+            _uiEvent.emit(ThemeSelectEvent.InAppReview)
         }
     }
 
-    fun loadData() = intent {
-        suspend fun inactiveAllThemeBG(themes: List<ThemeInfoPresentation>) {
-            themeRepository.activateThemeBackgroundImage(
-                activeThemeIdList = emptyList(),
-                deActiveThemeIdList = themes.map { it.id }
-            )
-        }
+    fun loadData() {
+        baseViewModelScope.launch {
+            suspend fun inactiveAllThemeBG(themes: List<ThemeInfoPresentation>) {
+                themeRepository.activateThemeBackgroundImage(
+                    activeThemeIdList = emptyList(),
+                    deActiveThemeIdList = themes.map { it.id }
+                )
+            }
 
-        suspend fun handleThemeActivationBySubscription(
-            subscribeStatus: SubscribeStatus,
-            themes: List<ThemeInfoPresentation>,
-        ) {
-            when (subscribeStatus) {
-                SubscribeStatus.Subscribed -> Unit
-                SubscribeStatus.Default,
-                SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
-                    val activeThemeImageCount = themes.count { it.useTimerUrl }
-                    if (activeThemeImageCount > LIMITED_CUSTOM_BG_COUNT_FOR_FREE) {
-                        inactiveAllThemeBG(themes)
+            suspend fun handleThemeActivationBySubscription(
+                subscribeStatus: SubscribeStatus,
+                themes: List<ThemeInfoPresentation>,
+            ) {
+                when (subscribeStatus) {
+                    SubscribeStatus.Subscribed -> Unit
+                    SubscribeStatus.Default,
+                    SubscribeStatus.SUBSCRIPTION_EXPIRATION -> {
+                        val activeThemeImageCount = themes.count { it.useTimerUrl }
+                        if (activeThemeImageCount > LIMITED_CUSTOM_BG_COUNT_FOR_FREE) {
+                            inactiveAllThemeBG(themes)
+                        }
                     }
                 }
             }
-        }
 
-        reduce { state.copy(loading = true) }
-        adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
-            reduce { state.copy(subscribeStatus = myPage.status) }
+            _uiState.update { it.copy(loading = true) }
+            adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
+                _uiState.update { it.copy(subscribeStatus = myPage.status) }
 
-            getThemes()
-            handleThemeActivationBySubscription(state.subscribeStatus, state.themes)
+                getThemes()
 
-            bannerRepository
-                .getBanners()
-                .onSuccess {
-                    reduce { state.copy(banners = it) }
+                val currentState = _uiState.value
+                handleThemeActivationBySubscription(
+                    currentState.subscribeStatus,
+                    currentState.themes
+                )
+
+                bannerRepository
+                    .getBanners()
+                    .onSuccess { banners ->
+                        _uiState.update { it.copy(banners = banners) }
+                    }
+
+                if (!shouldHideRecommendBackgroundCustomDialogUntil()
+                    && !shownBackgroundCustomDialog
+                ) {
+                    shownBackgroundCustomDialog = true
+                    _uiEvent.emit(ThemeSelectEvent.RecommendBackgroundCustom)
                 }
-
-            if (!shouldHideRecommendBackgroundCustomDialogUntil()
-                && !shownBackgroundCustomDialog
-            ) {
-                shownBackgroundCustomDialog = true
-                postSideEffect(ThemeSelectEvent.RecommendBackgroundCustom)
-            }
-        }.onFailure(::handleError)
-        reduce { state.copy(opaqueLoading = false, loading = false) }
+            }.onFailure(::handleResultError)
+            _uiState.update { it.copy(opaqueLoading = false, loading = false) }
+        }
     }
 
     private suspend fun getThemes() {
         themeRepository.getThemes().onSuccess { themes ->
             themes
                 .map { it.toPresentation() }
-                .also { updateThemes(it) }
+                .also { presentations ->
+                    _uiState.update {
+                        it.copy(
+                            themes = presentations,
+                            recentUpdatedDate = System.currentTimeMillis(),
+                        )
+                    }
+                }
 
             themes.forEach { themeInfo ->
-                hintRepository.saveHints(themeInfo.id).onFailure(::handleError)
+                hintRepository.saveHints(themeInfo.id).onFailure(::handleResultError)
             }
-            updateNetworkDisconnectedCount(0)
-        }.onFailure(::handleError)
+            dataStoreRepository.setNetworkDisconnectedCount(0)
+        }.onFailure(::handleResultError)
     }
 
     private fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
@@ -145,83 +159,66 @@ class ThemeSelectViewModel @Inject constructor(
         return System.currentTimeMillis() < hideUntil
     }
 
-    private fun updateShopInfo(shopName: String) = intent {
-        reduce { state.copy(shopName = shopName) }
-    }
-
-    private fun updateThemes(themes: List<ThemeInfoPresentation>) = intent {
-        reduce {
-            state.copy(
-                themes = themes,
-                recentUpdatedDate = System.currentTimeMillis(),
-            )
+    fun tryGameStart(themeId: Int) {
+        baseViewModelScope.launch {
+            _uiState.update { it.copy(opaqueLoading = true) }
+            themeRepository.updateLatestTheme(themeId)
+            adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
+                _uiEvent.emit(ThemeSelectEvent.ReadyToGameStart(myPage.status))
+            }.onFailure(::handleResultError)
+            _uiState.update { it.copy(opaqueLoading = false) }
         }
-    }
-
-    fun tryGameStart(themeId: Int) = intent {
-        reduce { state.copy(opaqueLoading = true) }
-        themeRepository.updateLatestTheme(themeId)
-        adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
-            postSideEffect(ThemeSelectEvent.ReadyToGameStart(myPage.status))
-        }.onFailure(::handleError)
-        reduce { state.copy(opaqueLoading = false) }
     }
 
     private fun checkNeedToSetPassword() {
         baseViewModelScope.launch {
             if (adminRepository.getAppPassword().isEmpty()) {
-                intent {
-                    postSideEffect(ThemeSelectEvent.NeedToSetPassword)
-                }
+                _uiEvent.emit(ThemeSelectEvent.NeedToSetPassword)
             }
         }
     }
 
     fun onThemeClicked(themeId: String) {
         baseViewModelScope.launch {
-            intent {
-                checkNeedToSetPassword()
-                if (adminRepository.getAppPassword().isEmpty()) {
-                    ThemeSelectEvent.NeedToSetPassword
-                } else {
-                    ThemeSelectEvent.NeedToCheckPasswordForStartGame(themeId)
-                }.also { postSideEffect(it) }
+            checkNeedToSetPassword()
+            if (adminRepository.getAppPassword().isEmpty()) {
+                ThemeSelectEvent.NeedToSetPassword
+            } else {
+                ThemeSelectEvent.NeedToCheckPasswordForStartGame(themeId)
+            }.also {
+                _uiEvent.emit(it)
             }
         }
     }
 
     fun onManageThemesClicked() {
         baseViewModelScope.launch {
-            intent {
-                checkNeedToSetPassword()
-                if (adminRepository.getAppPassword().isEmpty()) {
-                    ThemeSelectEvent.NeedToSetPassword
-                } else {
-                    ThemeSelectEvent.NeedToCheckPasswordForManageThemes
-                }.also { postSideEffect(it) }
+            checkNeedToSetPassword()
+            if (adminRepository.getAppPassword().isEmpty()) {
+                ThemeSelectEvent.NeedToSetPassword
+            } else {
+                ThemeSelectEvent.NeedToCheckPasswordForManageThemes
+            }.also {
+                _uiEvent.emit(it)
             }
         }
     }
 
-    fun onThemeRefreshClicked() = intent {
-        reduce { state.copy(loading = true) }
-        getThemes()
-        reduce { state.copy(loading = false) }
-    }
-
-    fun getCurrentBannerPosition() = container.stateFlow.value.currentBannerPosition
-
-    fun setCurrentBannerPosition(position: Int) {
-        intent {
-            reduce { state.copy(currentBannerPosition = position) }
+    fun onThemeRefreshClicked() {
+        baseViewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
+            getThemes()
+            _uiState.update { it.copy(loading = false) }
         }
     }
 
-    private fun handleError(error: Result.Failure) = intent {
-        when (error) {
-            is Result.Failure.NetworkError -> postSideEffect(ThemeSelectEvent.NetworkError)
-            is Result.Failure.HttpError -> postSideEffect(ThemeSelectEvent.ClientError(error.message))
-            else -> postSideEffect(ThemeSelectEvent.UnknownError)
+    private fun handleResultError(error: Result.Failure) {
+        baseViewModelScope.launch {
+            when (error) {
+                is Result.Failure.NetworkError -> _uiEvent.emit(ThemeSelectEvent.NetworkError)
+                is Result.Failure.HttpError -> _uiEvent.emit(ThemeSelectEvent.ClientError(error.message))
+                else -> _uiEvent.emit(ThemeSelectEvent.UnknownError)
+            }
         }
     }
 
