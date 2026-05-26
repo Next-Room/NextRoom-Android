@@ -207,7 +207,7 @@ private fun ThemeSelectHeader(
 private fun BannerSection(
     banners: List<Banner>,
     onBannerClick: (Banner) -> Unit,
-    autoScrollDuration: Long = 2500L,
+    autoScrollDuration: Long = 3500L,
 ) {
     if (banners.isEmpty()) return
 
