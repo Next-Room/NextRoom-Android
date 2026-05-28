@@ -91,6 +91,9 @@ class MainActivity :
                     direction = NavGraphDirections.moveToTimerFragment(event.subscribeStatus),
                     navOptions = NavOptions.Builder()
                         .setLaunchSingleTop(true)
+                        // 프로세스 죽음으로 복원된 게임 내부 백스택(hint 등)을 정리하여
+                        // 뒤로가기 시 theme_select로 돌아가도록 한다.
+                        .setPopUpTo(R.id.theme_select_fragment, inclusive = false)
                         .build()
                 )
             }
