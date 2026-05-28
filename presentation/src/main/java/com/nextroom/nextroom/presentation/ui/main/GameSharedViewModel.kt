@@ -21,7 +21,8 @@ class GameSharedViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(
         GameSharedState(
-            subscribeStatus = TimerFragmentArgs.fromSavedStateHandle(savedStateHandle).subscribeStatus
+            subscribeStatus = savedStateHandle.get<SubscribeStatus>("subscribeStatus")
+                ?: SubscribeStatus.Default
         )
     )
     val state: StateFlow<GameSharedState> = _state.asStateFlow()
