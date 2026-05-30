@@ -290,8 +290,7 @@
 
     <fragment
         android:id="@+id/signup_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment"
-        tools:layout="@layout/fragment_signup">
+        android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment">
 
         <argument
             android:name="request_key"

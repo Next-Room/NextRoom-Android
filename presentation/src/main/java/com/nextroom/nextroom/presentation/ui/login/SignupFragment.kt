@@ -1,13 +1,15 @@
 package com.nextroom.nextroom.presentation.ui.login
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.EditText
-import android.widget.TextView
+import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.os.BundleCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -15,75 +17,48 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
-import com.nextroom.nextroom.presentation.base.BaseViewModelFragment
-import com.nextroom.nextroom.presentation.databinding.FragmentSignupBinding
+import com.nextroom.nextroom.presentation.base.ComposeBaseViewModelFragment
 import com.nextroom.nextroom.presentation.extension.BUNDLE_KEY_RESULT_DATA
 import com.nextroom.nextroom.presentation.extension.hasResultData
-import com.nextroom.nextroom.presentation.extension.inputMethodManager
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.model.SelectItemBottomSheetArg
+import com.nextroom.nextroom.presentation.ui.login.compose.SignupScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewModel>(FragmentSignupBinding::inflate),
-    View.OnClickListener {
+class SignupFragment : ComposeBaseViewModelFragment<SignupViewModel>() {
     override val screenName = "signup"
     override val viewModel: SignupViewModel by viewModels()
-    val args: SignupFragmentArgs by navArgs()
+    private val args: SignupFragmentArgs by navArgs()
 
-    override fun initViews() {
-        super.initViews()
-
-        binding.tvSignupComplete.isEnabled = false
-    }
-
-    override fun initListeners() {
-        super.initListeners()
-
-        fun setEditTextFocusSettings(editText: EditText) {
-            editText.setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) {
-                    requireActivity().inputMethodManager?.hideSoftInputFromWindow(v.windowToken, 0)
-                    editText.clearFocus()
-                }
-
-                if (hasFocus) {
-                    R.drawable.bg_black_border_white50_r8
-                } else {
-                    R.drawable.bg_black_border_white20_r8
-                }.also {
-                    editText.setBackgroundResource(it)
-                }
-            }
-            editText.setOnEditorActionListener { _, _, _ ->
-                editText.clearFocus()
-                false
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val state by viewModel.uiState.collectAsState()
+                SignupScreen(
+                    state = state,
+                    onBackClick = { findNavController().navigateUp() },
+                    onShopNameChange = viewModel::onShopNameChanged,
+                    onSignupSourceClick = ::showSelectSignupSourceBottomSheet,
+                    onCustomSignupSourceChange = viewModel::setCustomSignupSource,
+                    onSignupReasonClick = ::showSelectSignupReasonBottomSheet,
+                    onCustomSignupReasonChange = viewModel::setCustomSignupReason,
+                    onAllTermsAgreeClick = viewModel::onAllTermsAgreeClicked,
+                    onServiceTermAgreeClick = viewModel::setServiceTermAgree,
+                    onMarketingTermAgreeClick = viewModel::setMarketingTermAgree,
+                    onServiceTermLinkClick = ::moveToServiceTermWebView,
+                    onSignupClick = viewModel::signup,
+                )
             }
         }
-
-        binding.ivBack.setOnClickListener(this)
-        binding.llSignupSource.setOnClickListener(this)
-        binding.llSignupReason.setOnClickListener(this)
-        binding.clAgreeAllTerms.setOnClickListener(this)
-        binding.tvServiceTermAgree.setOnClickListener(this)
-        binding.llServiceTermAgree.setOnClickListener(this)
-        binding.llMarketingTermAgree.setOnClickListener(this)
-        binding.tvSignupComplete.setOnClickListener(this)
-        binding.etShopName.addTextChangedListener {
-            viewModel.onShopNameChanged(it.toString())
-        }
-        binding.etSignupSource.addTextChangedListener {
-            viewModel.setCustomSignupSource(it.toString())
-        }
-        binding.etSignupReason.addTextChangedListener {
-            viewModel.setCustomSignupReason(it.toString())
-        }
-        setEditTextFocusSettings(binding.etShopName)
-        setEditTextFocusSettings(binding.etSignupSource)
-        setEditTextFocusSettings(binding.etSignupReason)
     }
 
     override fun setFragmentResultListeners() {
@@ -96,7 +71,7 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
     private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
         fun Bundle.toSelectedItem(): SignupViewModel.UIState.Loaded.SelectedItem? {
             return BundleCompat.getParcelable(
-                bundle,
+                this,
                 BUNDLE_KEY_RESULT_DATA,
                 SelectItemBottomSheetArg.Item::class.java
             )?.let { SignupViewModel.UIState.Loaded.SelectedItem(id = it.id, text = it.text) }
@@ -109,7 +84,6 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                         viewModel.setSelectedSignupSource(it)
                         if (it.text != getString(R.string.text_etc)) {
                             viewModel.setCustomSignupSource(null)
-                            binding.etSignupSource.text = null
                         }
                     }
                 }
@@ -121,7 +95,6 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
                         viewModel.setSelectedSignupReason(it)
                         if (it.text != getString(R.string.text_etc)) {
                             viewModel.setCustomSignupReason(null)
-                            binding.etSignupReason.text = null
                         }
                     }
                 }
@@ -129,19 +102,8 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         }
     }
 
-    override fun initObserve() {
-        super.initObserve()
-
+    override fun initSubscribe() {
         viewLifecycleOwner.repeatOnStarted {
-            launch {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is SignupViewModel.UIState.Loaded -> updateUI(state)
-                        SignupViewModel.UIState.Loading -> Unit
-                    }
-                    binding.pbLoading.isVisible = state is SignupViewModel.UIState.Loading
-                }
-            }
             launch {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
@@ -156,35 +118,14 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         }
     }
 
-    private fun updateUI(state: SignupViewModel.UIState.Loaded) {
-        fun updateTextView(view: TextView, text: String?) {
-            if (text == null) {
-                view.setTextColor(resources.getColor(R.color.Gray01, null))
-                view.text = getString(R.string.text_please_select)
-            } else {
-                view.setTextColor(resources.getColor(R.color.white, null))
-                view.text = text
-            }
-        }
-
-        updateTextView(binding.tvSignupSource, state.selectedSignupSource?.text)
-        updateTextView(binding.tvSignupReason, state.selectedSignupReason?.text)
-        binding.cbAgreeAllTerms.isChecked = state.allTermsAgreed
-        binding.cbServiceTermAgree.isChecked = state.serviceTermAgreed
-        binding.cbMarketingTermsAgree.isChecked = state.marketingTermAgreed
-        binding.tvSignupComplete.isEnabled = state.allRequiredFieldFilled
-        binding.etSignupSource.isVisible =
-            state.selectedSignupSource?.let { it.text == getString(R.string.text_etc) } ?: false
-        binding.etSignupReason.isVisible =
-            state.selectedSignupReason?.let { it.text == getString(R.string.text_etc) } ?: false
-    }
-
-    private fun showSelectSignupSourceBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {
+    private fun showSelectSignupSourceBottomSheet() {
+        val loaded = viewModel.uiState.value as? SignupViewModel.UIState.Loaded ?: return
+        val selected = loaded.selectedSignupSource
         resources.getStringArray(R.array.signup_source).mapIndexed { index, s ->
             SelectItemBottomSheetArg.Item(
                 id = index.toString(),
                 text = s,
-                isSelected = index == selectedItem?.id?.toIntOrNull()
+                isSelected = index == selected?.id?.toIntOrNull()
             )
         }.let {
             SelectItemBottomSheetArg(
@@ -197,12 +138,14 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         }
     }
 
-    private fun showSelectSignupReasonBottomSheet(selectedItem: SignupViewModel.UIState.Loaded.SelectedItem? = null) {
+    private fun showSelectSignupReasonBottomSheet() {
+        val loaded = viewModel.uiState.value as? SignupViewModel.UIState.Loaded ?: return
+        val selected = loaded.selectedSignupReason
         resources.getStringArray(R.array.signup_reason).mapIndexed { index, s ->
             SelectItemBottomSheetArg.Item(
                 id = index.toString(),
                 text = s,
-                isSelected = index == selectedItem?.id?.toIntOrNull()
+                isSelected = index == selected?.id?.toIntOrNull()
             )
         }.let {
             SelectItemBottomSheetArg(
@@ -219,29 +162,6 @@ class SignupFragment : BaseViewModelFragment<FragmentSignupBinding, SignupViewMo
         EmailLoginFragmentDirections
             .moveToWebViewFragment(getString(R.string.link_privacy_policy))
             .also { findNavController().safeNavigate(it) }
-    }
-
-    override fun onClick(v: View) {
-        when (v) {
-            binding.ivBack -> findNavController().navigateUp()
-            binding.llSignupSource -> {
-                binding.etShopName.clearFocus()
-                (viewModel.uiState.value as? SignupViewModel.UIState.Loaded)?.let { loaded ->
-                    showSelectSignupSourceBottomSheet(loaded.selectedSignupSource)
-                }
-            }
-            binding.llSignupReason -> {
-                binding.etShopName.clearFocus()
-                (viewModel.uiState.value as? SignupViewModel.UIState.Loaded)?.let { loaded ->
-                    showSelectSignupReasonBottomSheet(loaded.selectedSignupReason)
-                }
-            }
-            binding.clAgreeAllTerms -> viewModel.onAllTermsAgreeClicked(binding.cbAgreeAllTerms.isChecked.not())
-            binding.tvServiceTermAgree -> moveToServiceTermWebView()
-            binding.llServiceTermAgree -> viewModel.setServiceTermAgree(binding.cbServiceTermAgree.isChecked.not())
-            binding.llMarketingTermAgree -> viewModel.setMarketingTermAgree(binding.cbMarketingTermsAgree.isChecked.not())
-            binding.tvSignupComplete -> viewModel.signup()
-        }
     }
 
     companion object {

@@ -28,28 +28,40 @@ class SignupViewModel @Inject constructor(
     private val _marketingTermAgree = MutableStateFlow(false)
     private val _apiLoading = MutableStateFlow(false)
 
-    val uiState = combine(
+    private val inputs = combine(
         _shopName,
         _selectedSignupSource,
         _selectedSignupReason,
-        _serviceTermAgree,
-        _marketingTermAgree,
-    ) { shopName, selectedSignupSource, selectedSignupReason, serviceTermAgree, marketingTermAgree ->
-        UIState.Loaded(
+        _customSignupSource,
+        _customSignupReason,
+    ) { shopName, selectedSignupSource, selectedSignupReason, customSignupSource, customSignupReason ->
+        Inputs(
             shopName = shopName,
             selectedSignupSource = selectedSignupSource,
             selectedSignupReason = selectedSignupReason,
+            customSignupSource = customSignupSource,
+            customSignupReason = customSignupReason,
+        )
+    }
+
+    private val terms = combine(_serviceTermAgree, _marketingTermAgree) { service, marketing ->
+        service to marketing
+    }
+
+    val uiState = combine(inputs, terms) { input, (serviceTermAgree, marketingTermAgree) ->
+        UIState.Loaded(
+            shopName = input.shopName,
+            selectedSignupSource = input.selectedSignupSource,
+            selectedSignupReason = input.selectedSignupReason,
+            customSignupSource = input.customSignupSource,
+            customSignupReason = input.customSignupReason,
             serviceTermAgreed = serviceTermAgree,
             marketingTermAgreed = marketingTermAgree,
             allTermsAgreed = serviceTermAgree && marketingTermAgree,
-            allRequiredFieldFilled = !shopName.isNullOrEmpty() && selectedSignupSource != null && serviceTermAgree
+            allRequiredFieldFilled = !input.shopName.isNullOrEmpty() && input.selectedSignupSource != null && serviceTermAgree
         )
     }.combine(_apiLoading) { loaded, loading ->
-        if (loading) {
-            UIState.Loading
-        } else {
-            loaded
-        }
+        if (loading) UIState.Loading else loaded
     }.stateIn(baseViewModelScope, SharingStarted.Lazily, UIState.Loading)
 
     private val _uiEvent = MutableSharedFlow<UIEvent>()
@@ -115,12 +127,22 @@ class SignupViewModel @Inject constructor(
         }
     }
 
+    private data class Inputs(
+        val shopName: String?,
+        val selectedSignupSource: UIState.Loaded.SelectedItem?,
+        val selectedSignupReason: UIState.Loaded.SelectedItem?,
+        val customSignupSource: String?,
+        val customSignupReason: String?,
+    )
+
     sealed interface UIState {
         data object Loading : UIState
         data class Loaded(
             val shopName: String?,
             val selectedSignupSource: SelectedItem?,
             val selectedSignupReason: SelectedItem?,
+            val customSignupSource: String?,
+            val customSignupReason: String?,
             val serviceTermAgreed: Boolean,
             val marketingTermAgreed: Boolean,
             val allTermsAgreed: Boolean,
