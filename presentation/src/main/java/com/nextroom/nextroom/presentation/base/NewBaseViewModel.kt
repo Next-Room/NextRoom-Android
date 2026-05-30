@@ -20,10 +20,10 @@ abstract class NewBaseViewModel : ViewModel() {
 
     protected val baseViewModelScope = viewModelScope + exceptionHandler
 
-    private val _errorFlow = MutableSharedFlow<Throwable>(extraBufferCapacity = 1)
+    private val _errorFlow = MutableSharedFlow<ErrorEvent>(extraBufferCapacity = 1)
     val errorFlow = _errorFlow.asSharedFlow()
 
-    fun handleError(throwable: Throwable) {
+    fun handleError(throwable: Throwable, action: ErrorAction = ErrorAction.STAY) {
         when (throwable) {
             is CancellationException -> Unit
             else -> {
@@ -31,8 +31,12 @@ abstract class NewBaseViewModel : ViewModel() {
                     Logger.e("${this::class.simpleName} generated\n${throwable.message}")
                 }
 
-                _errorFlow.tryEmit(throwable)
+                _errorFlow.tryEmit(ErrorEvent(throwable, action))
             }
         }
     }
+
+    enum class ErrorAction { STAY, POP_BACK_STACK }
+
+    data class ErrorEvent(val throwable: Throwable, val action: ErrorAction)
 }
