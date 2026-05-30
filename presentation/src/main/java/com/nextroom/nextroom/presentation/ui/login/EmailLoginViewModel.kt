@@ -58,7 +58,7 @@ class EmailLoginViewModel @Inject constructor(
     }
 
     fun inputEmail(email: String) {
-        _uiState.update { it.copy(currentEmailInput = email) }
+        _uiState.update { it.copy(currentEmailInput = email, hasError = false) }
     }
 
     fun inputPassword(password: String) {
