@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -147,7 +148,8 @@ private fun ThemeSelectHeader(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, end = 20.dp)
+            .statusBarsPadding()
+            .padding(end = 20.dp)
     ) {
         Row(
             modifier = Modifier.align(Alignment.TopEnd),
