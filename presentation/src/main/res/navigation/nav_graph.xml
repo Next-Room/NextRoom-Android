@@ -209,8 +209,7 @@
 
     <fragment
         android:id="@+id/theme_select_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectFragment"
-        tools:layout="@layout/fragment_theme_select">
+        android:name="com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectFragment">
         <action
             android:id="@+id/move_to_mypage"
             app:destination="@id/mypage_navigation" />
