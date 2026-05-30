@@ -187,8 +187,7 @@
     <!-- local fragments -->
     <fragment
         android:id="@+id/email_login_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.login.EmailLoginFragment"
-        tools:layout="@layout/fragment_email_login">
+        android:name="com.nextroom.nextroom.presentation.ui.login.EmailLoginFragment">
 
         <action
             android:id="@+id/move_to_theme_select_fragment"
@@ -258,8 +257,7 @@
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment"
-        tools:layout="@layout/fragment_login">
+        android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment">
 
         <action
             android:id="@+id/move_to_email_login"
@@ -292,8 +290,7 @@
 
     <fragment
         android:id="@+id/signup_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment"
-        tools:layout="@layout/fragment_signup">
+        android:name="com.nextroom.nextroom.presentation.ui.login.SignupFragment">
 
         <argument
             android:name="request_key"
