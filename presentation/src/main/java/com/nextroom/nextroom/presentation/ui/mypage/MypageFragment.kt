@@ -67,13 +67,6 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
 
         viewLifecycleOwner.repeatOnStarted {
             launch {
-                viewModel.uiState.collect { state ->
-                    if (state is MypageViewModel.UiState.Failure) {
-                        snackbar(R.string.error_something)
-                    }
-                }
-            }
-            launch {
                 viewModel.uiEvent.collect { event ->
                     when (event) {
                         MypageViewModel.UiEvent.ResignFail -> snackbar(R.string.error_something)
