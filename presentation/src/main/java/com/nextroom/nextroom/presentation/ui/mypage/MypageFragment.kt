@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
-import com.nextroom.nextroom.presentation.base.ComposeBaseFragment
+import com.nextroom.nextroom.presentation.base.ComposeBaseViewModelFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.common.compose.NRLoading
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
@@ -27,11 +27,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MypageFragment : ComposeBaseFragment() {
+class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
 
     override val screenName: String = "mypage"
 
-    private val viewModel: MypageViewModel by viewModels()
+    override val viewModel: MypageViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
