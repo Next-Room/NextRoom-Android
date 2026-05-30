@@ -196,6 +196,15 @@ class HintManageViewModel @Inject constructor(
 
     fun saveHint() {
         val editData = _editData.value
+        if (editData.hintId != null &&
+            adminRepository.cachedSubscribeStatus != SubscribeStatus.Subscribed &&
+            (editData.hintImageUrls.isNotEmpty() || editData.answerImageUrls.isNotEmpty())
+        ) {
+            baseViewModelScope.launch {
+                _uiEvent.emit(HintManageEvent.SaveBlockedDueToImages)
+            }
+            return
+        }
         _sheetType.value = HintSheetType.None
         baseViewModelScope.launch {
             try {

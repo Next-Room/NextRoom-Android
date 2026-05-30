@@ -72,6 +72,7 @@ class HintManageFragment : ComposeBaseViewModelFragment<HintManageViewModel>() {
                             is HintManageEvent.RequestDeleteHint -> showDeleteConfirmDialog(event.hint)
                             is HintManageEvent.HintSaved -> snackbar(R.string.hint_manage_save_success)
                             is HintManageEvent.HintDeleted -> snackbar(R.string.hint_manage_delete_success)
+                            is HintManageEvent.SaveBlockedDueToImages -> toast(R.string.hint_save_blocked_due_to_images)
                             is HintManageEvent.ImageUploadFailed -> {
                                 when (event.reason) {
                                     HintManageEvent.ImageUploadFailed.Reason.INVALID_FORMAT -> R.string.image_invalid_format

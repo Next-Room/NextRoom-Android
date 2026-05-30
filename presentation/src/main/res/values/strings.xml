@@ -296,4 +296,5 @@
     <string name="image_invalid_size">이미지 크기는 10MB 이하여야 합니다</string>
     <string name="image_invalid_format">지원하지 않는 이미지 형식입니다</string>
     <string name="feature_for_subscriber">구독이 필요한 기능입니다.</string>
+    <string name="hint_save_blocked_due_to_images">구독이 만료되었습니다. 이미지를 삭제한 후 저장해 주세요.</string>
 </resources>
