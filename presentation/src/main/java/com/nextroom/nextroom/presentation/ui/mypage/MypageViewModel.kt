@@ -52,7 +52,9 @@ class MypageViewModel @Inject constructor(
 
     private fun fetchMyInfo() {
         baseViewModelScope.launch {
-            adminRepository.getUserSubscribe().onSuccess { mypage ->
+            runCatching {
+                adminRepository.getUserSubscribe().getOrThrow
+            }.onSuccess { mypage ->
                 UiState.Loaded(
                     shopName = mypage.name,
                     status = mypage.status,
@@ -61,7 +63,7 @@ class MypageViewModel @Inject constructor(
                     _myInfo.emit(it)
                 }
             }.onFailure {
-                _myInfo.emit(UiState.Failure)
+                handleError(it)
             }
         }
     }
