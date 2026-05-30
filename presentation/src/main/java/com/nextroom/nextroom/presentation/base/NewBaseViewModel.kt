@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.presentation.BuildConfig
 import com.nextroom.nextroom.presentation.util.Logger
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.plus
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -20,10 +20,10 @@ abstract class NewBaseViewModel : ViewModel() {
 
     protected val baseViewModelScope = viewModelScope + exceptionHandler
 
-    private val _errorFlow = MutableSharedFlow<Throwable>(extraBufferCapacity = 1)
-    val errorFlow = _errorFlow.asSharedFlow()
+    private val _errorChannel = Channel<ErrorEvent>(Channel.BUFFERED)
+    val errorFlow = _errorChannel.receiveAsFlow()
 
-    fun handleError(throwable: Throwable) {
+    fun handleError(throwable: Throwable, action: ErrorAction = ErrorAction.STAY) {
         when (throwable) {
             is CancellationException -> Unit
             else -> {
@@ -31,8 +31,12 @@ abstract class NewBaseViewModel : ViewModel() {
                     Logger.e("${this::class.simpleName} generated\n${throwable.message}")
                 }
 
-                _errorFlow.tryEmit(throwable)
+                _errorChannel.trySend(ErrorEvent(throwable, action))
             }
         }
     }
+
+    enum class ErrorAction { STAY, POP_BACK_STACK }
+
+    data class ErrorEvent(val throwable: Throwable, val action: ErrorAction)
 }

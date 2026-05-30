@@ -1,12 +1,11 @@
 package com.nextroom.nextroom.presentation.ui.mypage
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.domain.model.onFailure
 import com.nextroom.nextroom.domain.model.onFinally
 import com.nextroom.nextroom.domain.model.onSuccess
 import com.nextroom.nextroom.domain.repository.AdminRepository
+import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +21,7 @@ import javax.inject.Named
 class MypageViewModel @Inject constructor(
     private val adminRepository: AdminRepository,
     @Named("app_version") private val appVersion: String,
-) : ViewModel() {
+) : NewBaseViewModel() {
 
     private val _myInfo = MutableStateFlow<UiState>(UiState.Loading)
     private val _isResignLoading = MutableStateFlow(false)
@@ -36,7 +35,7 @@ class MypageViewModel @Inject constructor(
         } else {
             myInfo
         }
-    }.stateIn(viewModelScope, SharingStarted.Lazily, UiState.Loading)
+    }.stateIn(baseViewModelScope, SharingStarted.Lazily, UiState.Loading)
 
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -46,14 +45,16 @@ class MypageViewModel @Inject constructor(
     }
 
     fun logout() {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             adminRepository.logout()
         }
     }
 
     private fun fetchMyInfo() {
-        viewModelScope.launch {
-            adminRepository.getUserSubscribe().onSuccess { mypage ->
+        baseViewModelScope.launch {
+            runCatching {
+                adminRepository.getUserSubscribe().getOrThrow
+            }.onSuccess { mypage ->
                 UiState.Loaded(
                     shopName = mypage.name,
                     status = mypage.status,
@@ -62,13 +63,13 @@ class MypageViewModel @Inject constructor(
                     _myInfo.emit(it)
                 }
             }.onFailure {
-                _myInfo.emit(UiState.Failure)
+                handleError(it)
             }
         }
     }
 
     fun resign() {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             _isResignLoading.emit(true)
             adminRepository.resign().onSuccess {
                 _uiEvent.emit(UiEvent.ResignSuccess)
