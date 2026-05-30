@@ -3,17 +3,22 @@ package com.nextroom.nextroom.presentation.ui.mypage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
-import com.nextroom.nextroom.presentation.base.BaseFragment
+import com.nextroom.nextroom.presentation.base.ComposeBaseFragment
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
-import com.nextroom.nextroom.presentation.databinding.FragmentMypageBinding
+import com.nextroom.nextroom.presentation.common.compose.NRLoading
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
@@ -22,67 +27,49 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding::inflate) {
+class MypageFragment : ComposeBaseFragment() {
+
+    override val screenName: String = "mypage"
 
     private val viewModel: MypageViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val uiState by viewModel.uiState.collectAsState()
+                when (val state = uiState) {
+                    is MypageViewModel.UiState.Loaded -> {
+                        MypageScreen(
+                            state = state,
+                            onBackClick = { findNavController().popBackStack() },
+                            onSubscribeClick = ::onSubscribeClick,
+                            onChangeAppPasswordClick = ::moveToSetPassword,
+                            onCustomerServiceClick = ::openCustomerService,
+                            onLogoutClick = viewModel::logout,
+                            onResignClick = ::showConfirmResignDialog,
+                        )
+                    }
 
-        initViews()
-        initListeners()
-        initObserve()
-        setFragmentResultListeners()
-    }
-
-    private fun initViews() = with(binding) {
-        tbMypage.apply {
-            tvButton.isVisible = false
-            tvTitle.text = getString(R.string.mypage_title)
-        }
-    }
-
-    private fun initListeners() = with(binding) {
-        tbMypage.ivBack.setOnClickListener { findNavController().popBackStack() }
-        tvLogoutButton.setOnClickListener { viewModel.logout() }
-        tvResignButton.setOnClickListener { showConfirmResignDialog() }
-        clSubscribe.setOnClickListener {
-            (viewModel.uiState.value as? MypageViewModel.UiState.Loaded)?.let { loaded ->
-                when (loaded.status) {
-                    SubscribeStatus.SUBSCRIPTION_EXPIRATION,
-                    SubscribeStatus.Default -> goToPurchase()
-
-                    SubscribeStatus.Subscribed -> goToSubscriptionInfo()
+                    MypageViewModel.UiState.Failure,
+                    MypageViewModel.UiState.Loading -> NRLoading(true)
                 }
             }
         }
-        clChangeAppPassword.setOnClickListener {
-            moveToSetPassword()
-        }
-        clCustomerService.setOnClickListener {
-            try {
-                getString(R.string.link_official_instagram).let { url ->
-                    Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(url) }
-                }.also { startActivity(it) }
-            } catch (e: Exception) {
-                toast(getString(R.string.error_something))
-            }
-        }
     }
 
-    private fun initObserve() {
+    override fun initObserve() {
+        super.initObserve()
+
         viewLifecycleOwner.repeatOnStarted {
             launch {
                 viewModel.uiState.collect { state ->
-                    when (state) {
-                        MypageViewModel.UiState.Failure -> snackbar(R.string.error_something)
-                        is MypageViewModel.UiState.Loaded -> {
-                            binding.tvShopName.text = state.shopName
-                            binding.pbLoading.isVisible = false
-                            binding.tvAppVersion.text = state.appVersion
-                        }
-
-                        MypageViewModel.UiState.Loading -> binding.pbLoading.isVisible = true
+                    if (state is MypageViewModel.UiState.Failure) {
+                        snackbar(R.string.error_something)
                     }
                 }
             }
@@ -97,9 +84,30 @@ class MypageFragment : BaseFragment<FragmentMypageBinding>(FragmentMypageBinding
         }
     }
 
-    private fun setFragmentResultListeners() {
+    override fun setFragmentResultListeners() {
         setFragmentResultListener(REQUEST_KEY_RESIGN) { _, _ ->
             viewModel.resign()
+        }
+    }
+
+    private fun onSubscribeClick() {
+        val loaded = viewModel.uiState.value as? MypageViewModel.UiState.Loaded ?: return
+        when (loaded.status) {
+            SubscribeStatus.SUBSCRIPTION_EXPIRATION,
+            SubscribeStatus.Default -> goToPurchase()
+
+            SubscribeStatus.Subscribed -> goToSubscriptionInfo()
+        }
+    }
+
+    private fun openCustomerService() {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = Uri.parse(getString(R.string.link_official_instagram))
+            }
+            startActivity(intent)
+        } catch (e: Exception) {
+            toast(getString(R.string.error_something))
         }
     }
 
