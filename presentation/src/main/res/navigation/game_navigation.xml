@@ -5,6 +5,10 @@
     android:id="@+id/game_navigation"
     app:startDestination="@id/timer_fragment">
 
+    <argument
+        android:name="subscribeStatus"
+        app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
+
     <fragment
         android:id="@+id/timer_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.main.TimerFragment"
@@ -20,9 +24,6 @@
             android:name="overflowTime"
             android:defaultValue="0L"
             app:argType="long" />
-        <argument
-            android:name="subscribeStatus"
-            app:argType="com.nextroom.nextroom.domain.model.SubscribeStatus" />
     </fragment>
 
     <fragment
