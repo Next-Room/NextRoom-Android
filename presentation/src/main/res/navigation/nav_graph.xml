@@ -258,8 +258,7 @@
 
     <fragment
         android:id="@+id/login_fragment"
-        android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment"
-        tools:layout="@layout/fragment_login">
+        android:name="com.nextroom.nextroom.presentation.ui.onboarding.LoginFragment">
 
         <action
             android:id="@+id/move_to_email_login"
