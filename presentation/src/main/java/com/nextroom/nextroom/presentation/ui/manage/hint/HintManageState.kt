@@ -57,6 +57,7 @@ sealed interface HintManageEvent {
     data class RequestDeleteHint(val hint: Hint) : HintManageEvent
     data object HintSaved : HintManageEvent
     data object HintDeleted : HintManageEvent
+    data object SaveBlockedDueToImages : HintManageEvent
     data class ImageUploadFailed(val reason: Reason) : HintManageEvent {
         enum class Reason {
             INVALID_FORMAT,
