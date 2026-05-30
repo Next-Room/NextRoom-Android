@@ -77,8 +77,7 @@
 
     <fragment
         android:id="@+id/check_password"
-        android:name="com.nextroom.nextroom.presentation.ui.password.CheckPasswordFragment"
-        tools:layout="@layout/fragment_check_password">
+        android:name="com.nextroom.nextroom.presentation.ui.password.CheckPasswordFragment">
 
         <argument
             android:name="request_key"
@@ -94,8 +93,7 @@
 
     <fragment
         android:id="@+id/set_password"
-        android:name="com.nextroom.nextroom.presentation.ui.password.SetPasswordFragment"
-        tools:layout="@layout/fragment_set_password" />
+        android:name="com.nextroom.nextroom.presentation.ui.password.SetPasswordFragment" />
 
     <dialog
         android:id="@+id/select_item"
