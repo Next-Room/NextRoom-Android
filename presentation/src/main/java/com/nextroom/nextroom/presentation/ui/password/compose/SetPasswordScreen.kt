@@ -6,7 +6,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,7 +57,7 @@ fun SetPasswordScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.65f),
+                    .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.weight(1f))
@@ -80,18 +79,15 @@ fun SetPasswordScreen(
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
-            Column(modifier = Modifier.fillMaxSize()) {
-                Spacer(modifier = Modifier.height(28.dp))
-                PinKeypad(
-                    onKeyClick = onKeyClick,
-                    onBackspaceClick = onBackspaceClick,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Spacer(modifier = Modifier.height(42.dp))
-            }
+            Spacer(modifier = Modifier.height(28.dp))
+            PinKeypad(
+                onKeyClick = onKeyClick,
+                onBackspaceClick = onBackspaceClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            )
+            Spacer(modifier = Modifier.height(42.dp))
         }
     }
 }
