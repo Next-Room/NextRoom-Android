@@ -154,7 +154,7 @@ class ThemeSelectViewModel @Inject constructor(
         }.onFailure(::handleResultError)
     }
 
-    private fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
+    private suspend fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
         val hideUntil = dataStoreRepository.getRecommendBackgroundCustomDialogHiddenUntil()
         return System.currentTimeMillis() < hideUntil
     }
