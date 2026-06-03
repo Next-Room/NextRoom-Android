@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.tutorial.timer.compose
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,7 +20,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -46,6 +49,7 @@ import com.nextroom.nextroom.presentation.common.compose.NRColor
 import com.nextroom.nextroom.presentation.common.compose.NRTypo
 import com.nextroom.nextroom.presentation.ui.tutorial.timer.TutorialTimerState
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TutorialTimerScreen(
@@ -81,9 +85,9 @@ fun TutorialTimerScreen(
                 .alpha(0.15f)
         )
 
-        val arcMaxHeight = maxHeight * 0.48f - 64.dp - 8.dp
+        val arcMaxHeight = (maxHeight * 0.48f - 64.dp - 8.dp).coerceAtLeast(0.dp)
         val arcSize = if (maxWidth < arcMaxHeight) maxWidth else arcMaxHeight
-        val gapAfterArc = maxHeight * 0.50f - 64.dp - arcSize
+        val gapAfterArc = (maxHeight * 0.50f - 64.dp - arcSize).coerceAtLeast(0.dp)
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -96,6 +100,13 @@ fun TutorialTimerScreen(
                 onMemoPositioned = { memoCoords = it }
             )
 
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
             // Arc + timer text + hint info section (overlaid)
             Box(
                 modifier = Modifier
@@ -160,7 +171,7 @@ fun TutorialTimerScreen(
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
 
-            Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(40.dp))
 
             KeypadSection(
                 onKeyClick = onKeyInput,
@@ -170,6 +181,7 @@ fun TutorialTimerScreen(
                     .padding(start = 20.dp, end = 20.dp, bottom = 42.dp)
                     .onGloballyPositioned { keypadCoords = it }
             )
+            }
         }
 
         if (state.showTooltips) {
