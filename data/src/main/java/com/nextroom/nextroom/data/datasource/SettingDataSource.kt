@@ -7,7 +7,6 @@ import com.nextroom.nextroom.data.db.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class SettingDataSource @Inject constructor(
@@ -41,17 +40,17 @@ class SettingDataSource @Inject constructor(
         }
     }
 
-    fun setLastLaunchDate() = runBlocking {
+    suspend fun setLastLaunchDate() {
         dataStore.updateData {
             it.copy(lastLaunchDate = System.currentTimeMillis())
         }
     }
 
-    fun getLastLaunchDate(): Long = runBlocking {
-        data.first().lastLaunchDate
+    suspend fun getLastLaunchDate(): Long {
+        return data.first().lastLaunchDate
     }
 
-    fun setNetworkDisconnectedCount(count: Int) = runBlocking {
+    suspend fun setNetworkDisconnectedCount(count: Int) {
         dataStore.updateData {
             it.copy(networkDisconnectedCount = count)
         }
@@ -79,32 +78,32 @@ class SettingDataSource @Inject constructor(
         }
     }
 
-    fun setEmailSaveChecked(emailSaveChecked: Boolean) = runBlocking {
+    suspend fun setEmailSaveChecked(emailSaveChecked: Boolean) {
         dataStore.updateData {
             it.copy(emailSaveChecked = emailSaveChecked)
         }
     }
 
-    fun getEmailSaveChecked() = runBlocking {
-        data.first().emailSaveChecked
+    suspend fun getEmailSaveChecked(): Boolean {
+        return data.first().emailSaveChecked
     }
 
-    fun saveUserEmail(userEmail: String) = runBlocking {
+    suspend fun saveUserEmail(userEmail: String) {
         dataStore.updateData {
             it.copy(userEmail = userEmail)
         }
     }
 
-    fun getUserEmail() = runBlocking {
-        data.first().userEmail
+    suspend fun getUserEmail(): String {
+        return data.first().userEmail
     }
 
-    fun setRecommendBackgroundCustomDialogHidden(time: Long) = runBlocking {
+    suspend fun setRecommendBackgroundCustomDialogHidden(time: Long) {
         dataStore.updateData { it.copy(backgroundCustomDialogHideUntil = time) }
     }
 
-    fun getRecommendBackgroundCustomDialogHiddenUntil() = runBlocking {
-        data.first().backgroundCustomDialogHideUntil
+    suspend fun getRecommendBackgroundCustomDialogHiddenUntil(): Long {
+        return data.first().backgroundCustomDialogHideUntil
     }
 
     suspend fun saveAppPassword(password: String) {

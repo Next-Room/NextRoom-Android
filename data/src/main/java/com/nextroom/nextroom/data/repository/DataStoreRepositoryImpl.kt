@@ -9,23 +9,22 @@ import javax.inject.Inject
 class DataStoreRepositoryImpl @Inject constructor(
     private val settingDataSource: SettingDataSource,
 ) : DataStoreRepository {
-    override val isFirstInitOfDay: Boolean
-        get() = run {
-            val util = DateTimeUtil()
-            val pattern = "yyyy-MM-dd"
-            val today = util.longToDateString(System.currentTimeMillis(), pattern)
-            val lastLaunchedDate = util.longToDateString(settingDataSource.getLastLaunchDate(), pattern)
-            Timber.tag("MANGBAAM-DataStoreRepositoryImpl()").d("마지막 접속 일자: $lastLaunchedDate")
-            today != lastLaunchedDate
-        }.also { firstInit ->
-            if (firstInit) settingDataSource.setLastLaunchDate()
-        }
+    override suspend fun isFirstInitOfDay(): Boolean {
+        val util = DateTimeUtil()
+        val pattern = "yyyy-MM-dd"
+        val today = util.longToDateString(System.currentTimeMillis(), pattern)
+        val lastLaunchedDate = util.longToDateString(settingDataSource.getLastLaunchDate(), pattern)
+        Timber.tag("MANGBAAM-DataStoreRepositoryImpl()").d("마지막 접속 일자: $lastLaunchedDate")
+        val firstInit = today != lastLaunchedDate
+        if (firstInit) settingDataSource.setLastLaunchDate()
+        return firstInit
+    }
 
-    override fun setRecommendBackgroundCustomDialogHidden(time: Long) {
+    override suspend fun setRecommendBackgroundCustomDialogHidden(time: Long) {
         settingDataSource.setRecommendBackgroundCustomDialogHidden(time)
     }
 
-    override fun getRecommendBackgroundCustomDialogHiddenUntil(): Long {
+    override suspend fun getRecommendBackgroundCustomDialogHiddenUntil(): Long {
         return settingDataSource.getRecommendBackgroundCustomDialogHiddenUntil()
     }
 
@@ -33,7 +32,7 @@ class DataStoreRepositoryImpl @Inject constructor(
         return settingDataSource.getNetworkDisconnectedCount()
     }
 
-    override fun setNetworkDisconnectedCount(count: Int) {
+    override suspend fun setNetworkDisconnectedCount(count: Int) {
         settingDataSource.setNetworkDisconnectedCount(count)
     }
 
