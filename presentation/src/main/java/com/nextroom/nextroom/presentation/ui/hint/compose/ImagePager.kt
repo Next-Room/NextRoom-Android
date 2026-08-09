@@ -35,7 +35,6 @@ import com.nextroom.nextroom.presentation.extension.throttleClick
 fun ImagePager(
     imageUrls: List<String>,
     subscribeStatus: SubscribeStatus,
-    networkDisconnectedCount: Int,
     onImageClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -54,9 +53,6 @@ fun ImagePager(
             val imageModel = when {
                 subscribeStatus == SubscribeStatus.SUBSCRIPTION_EXPIRATION
                         || subscribeStatus == SubscribeStatus.Default ->
-                    R.drawable.img_error
-
-                networkDisconnectedCount > SUBSCRIBE_CHECK_LIMIT ->
                     R.drawable.img_error
 
                 subscribeStatus == SubscribeStatus.Subscribed ->
@@ -125,7 +121,6 @@ private fun ImagePagerPreview() {
             "https://example.com/image3.jpg"
         ),
         subscribeStatus = SubscribeStatus.Subscribed,
-        networkDisconnectedCount = 0,
         onImageClick = {}
     )
 }
@@ -138,9 +133,6 @@ private fun ImagePagerExpiredPreview() {
             "https://example.com/image1.jpg"
         ),
         subscribeStatus = SubscribeStatus.SUBSCRIPTION_EXPIRATION,
-        networkDisconnectedCount = 0,
         onImageClick = {}
     )
 }
-
-private const val SUBSCRIBE_CHECK_LIMIT = 3

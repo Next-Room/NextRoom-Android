@@ -50,16 +50,6 @@ class SettingDataSource @Inject constructor(
         return data.first().lastLaunchDate
     }
 
-    suspend fun setNetworkDisconnectedCount(count: Int) {
-        dataStore.updateData {
-            it.copy(networkDisconnectedCount = count)
-        }
-    }
-
-    suspend fun getNetworkDisconnectedCount(): Int {
-        return data.first().networkDisconnectedCount
-    }
-
     /**
      * 관리자 코드 저장과 로그인 처리
      * */

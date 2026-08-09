@@ -31,7 +31,6 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.util.Logger
-import com.nextroom.nextroom.presentation.util.isOnline
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -151,9 +150,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
     override fun onResume() {
         super.onResume()
         viewModel.onResume()
-        if (isOnline(context ?: return).not()) {
-            viewModel.incrementNetworkDisconnectedCount()
-        }
     }
 
     private fun handleEvent(event: ThemeSelectEvent) {

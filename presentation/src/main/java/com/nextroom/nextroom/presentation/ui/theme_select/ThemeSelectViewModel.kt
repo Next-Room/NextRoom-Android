@@ -74,13 +74,6 @@ class ThemeSelectViewModel @Inject constructor(
         loadData()
     }
 
-    fun incrementNetworkDisconnectedCount() {
-        baseViewModelScope.launch {
-            val count = dataStoreRepository.getNetworkDisconnectedCount()
-            dataStoreRepository.setNetworkDisconnectedCount(count + 1)
-        }
-    }
-
     private fun showInAppReview() {
         baseViewModelScope.launch {
             delay(200)
@@ -158,7 +151,6 @@ class ThemeSelectViewModel @Inject constructor(
             themes.forEach { themeInfo ->
                 hintRepository.saveHints(themeInfo.id).onFailure(::handleResultError)
             }
-            dataStoreRepository.setNetworkDisconnectedCount(0)
         }.onFailure(::handleResultError)
     }
 

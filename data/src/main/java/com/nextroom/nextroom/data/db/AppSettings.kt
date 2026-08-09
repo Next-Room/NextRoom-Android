@@ -14,7 +14,6 @@ data class AppSettings(
     val emailSaveChecked: Boolean = false,
     val userEmail: String = "",
     val backgroundCustomDialogHideUntil: Long = 0L,
-    val networkDisconnectedCount: Int = 0,
     val appPassword: String = "",
     val hasSeenGuidePopup: Boolean = false,
 )

@@ -28,14 +28,6 @@ class DataStoreRepositoryImpl @Inject constructor(
         return settingDataSource.getRecommendBackgroundCustomDialogHiddenUntil()
     }
 
-    override suspend fun getNetworkDisconnectedCount(): Int {
-        return settingDataSource.getNetworkDisconnectedCount()
-    }
-
-    override suspend fun setNetworkDisconnectedCount(count: Int) {
-        settingDataSource.setNetworkDisconnectedCount(count)
-    }
-
     override suspend fun setHasSeenGuidePopup() {
         settingDataSource.saveHasSeenGuidePopup()
     }
