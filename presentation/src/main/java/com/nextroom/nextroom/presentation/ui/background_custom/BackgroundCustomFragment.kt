@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.nextroom.nextroom.domain.model.SubscribeStatus
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.BaseFragment
 import com.nextroom.nextroom.presentation.databinding.FragmentBackgroundCustomBinding
@@ -34,16 +33,10 @@ class BackgroundCustomFragment : BaseFragment<FragmentBackgroundCustomBinding>(F
         (binding.rvTheme.adapter as? ThemeBackgroundToggleAdapter)?.submitList(state.themes)
 
         binding.llInfo.removeAllViews()
-        mutableListOf(
+        listOf(
             getString(R.string.text_background_custom_info_1),
             getString(R.string.text_background_custom_info_2),
-        ).apply {
-            if (state.userSubscribeStatus == SubscribeStatus.Default
-                || state.userSubscribeStatus == SubscribeStatus.SUBSCRIPTION_EXPIRATION
-            ) {
-                add(getString(R.string.text_background_custom_info_3))
-            }
-        }.map {
+        ).map {
             ItemBackgroundCustomInfoBinding
                 .inflate(layoutInflater)
                 .apply {
