@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.domain.repository
 
 import com.nextroom.nextroom.domain.model.AdditionalUserInfoResponse
-import com.nextroom.nextroom.domain.model.GoogleAuthResponse
 import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
@@ -22,7 +21,6 @@ interface AdminRepository {
      * @return shopName
      * */
     suspend fun login(adminCode: String, password: String, emailSaveChecked: Boolean): Result<LoginInfo>
-    suspend fun requestGoogleAuth(): Result<GoogleAuthResponse>
     suspend fun logout()
     suspend fun resign(): Result<Unit>
     suspend fun verifyAdminCode(code: String): Boolean

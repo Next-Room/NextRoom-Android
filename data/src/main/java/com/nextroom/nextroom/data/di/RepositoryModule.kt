@@ -1,8 +1,6 @@
 package com.nextroom.nextroom.data.di
 
 import android.content.Context
-import androidx.credentials.CredentialManager
-import androidx.credentials.GetCredentialRequest
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.BillingDataSource
@@ -122,9 +120,6 @@ object RepositoryModule {
         settingDataSource: SettingDataSource,
         tokenDataSource: TokenDataSource,
         subscriptionDataSource: SubscriptionDataSource,
-        getCredentialRequest: GetCredentialRequest,
-        credentialManager: CredentialManager,
-        @ApplicationContext context: Context,
         apiService: ApiService,
     ): AdminRepository = AdminRepositoryImpl(
         authDataSource = authDataSource,
@@ -132,9 +127,6 @@ object RepositoryModule {
         settingDataSource = settingDataSource,
         tokenDataSource = tokenDataSource,
         subscriptionDataSource = subscriptionDataSource,
-        getCredentialRequest = getCredentialRequest,
-        credentialManager = credentialManager,
-        context = context,
         apiService = apiService,
     )
 

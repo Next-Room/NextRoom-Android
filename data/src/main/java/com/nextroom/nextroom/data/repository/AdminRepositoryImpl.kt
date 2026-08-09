@@ -1,12 +1,5 @@
 package com.nextroom.nextroom.data.repository
 
-import android.content.Context
-import androidx.credentials.CredentialManager
-import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
-import androidx.credentials.GetCredentialResponse
-import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
@@ -16,7 +9,6 @@ import com.nextroom.nextroom.data.network.ApiService
 import com.nextroom.nextroom.data.network.response.AdditionalUserInfoRequestDto
 import com.nextroom.nextroom.data.network.response.GoogleLoginRequestDto
 import com.nextroom.nextroom.domain.model.AdditionalUserInfoResponse
-import com.nextroom.nextroom.domain.model.GoogleAuthResponse
 import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 import com.nextroom.nextroom.domain.model.LoginInfo
 import com.nextroom.nextroom.domain.model.Mypage
@@ -36,9 +28,6 @@ class AdminRepositoryImpl @Inject constructor(
     private val settingDataSource: SettingDataSource,
     private val tokenDataSource: TokenDataSource,
     private val subscriptionDataSource: SubscriptionDataSource,
-    private val getCredentialRequest: GetCredentialRequest,
-    private val credentialManager: CredentialManager,
-    private val context: Context,
     private val apiService: ApiService,
 ) : AdminRepository {
 
@@ -61,39 +50,6 @@ class AdminRepositoryImpl @Inject constructor(
             settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
             settingDataSource.setLoggedIn(true)
-        }
-    }
-
-    override suspend fun requestGoogleAuth(): Result<GoogleAuthResponse> {
-        val result = credentialManager.getCredential(
-            request = getCredentialRequest,
-            context = context,
-        )
-        return handleSignIn(result)
-    }
-
-    private fun handleSignIn(result: GetCredentialResponse): Result.Success<GoogleAuthResponse> {
-        return when (val credential = result.credential) {
-            is CustomCredential -> {
-                if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    try {
-                        val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                        Result.Success(
-                            GoogleAuthResponse(
-                                idToken = googleIdTokenCredential.idToken,
-                                email = googleIdTokenCredential.id,
-                                name = googleIdTokenCredential.displayName,
-                            )
-                        )
-                    } catch (e: GoogleIdTokenParsingException) {
-                        throw Exception("handleSignIn received an invalid google id token response", e)
-                    }
-                } else {
-                    throw Exception("unexpected type of credential")
-                }
-            }
-
-            else -> throw Exception("unexpected type of credential")
         }
     }
 
