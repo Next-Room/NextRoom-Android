@@ -1,0 +1,100 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: "ko-KR"
+
+tone_instructions: >
+  간결하고 실용적인 톤으로 리뷰한다. 사소한 스타일 지적보다 버그, 아키텍처 위반,
+  성능/메모리 이슈처럼 실제로 문제가 되는 부분에 집중한다.
+
+reviews:
+  profile: "chill"
+  request_changes_workflow: false
+  high_level_summary: true
+  review_status: true
+  collapse_walkthrough: false
+  changed_files_summary: true
+  sequence_diagrams: true
+  poem: false
+
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - "main"
+      - "develop"
+      - "release/.*"
+
+  path_filters:
+    - "!**/build/**"
+    - "!**/*.lock"
+    - "!gradle/wrapper/**"
+    - "!**/lint-baseline.xml"
+    - "!**/*.png"
+    - "!**/*.jpg"
+    - "!**/*.webp"
+    - "!**/*.json" # Lottie 애니메이션 등 대용량 에셋
+
+  path_instructions:
+    - path: "**/*.kt"
+      instructions: >
+        NextRoom은 Clean Architecture 멀티모듈(app → presentation → domain ← data) 구조다.
+        다음을 중점적으로 확인한다.
+        - 모듈 의존성 방향 위반 (domain은 순수 Kotlin이며 Android/데이터 계층에 의존하면 안 된다)
+        - 네트워크 호출 결과는 커스텀 `Result<T>`로 다뤄야 하며, onSuccess/onFailure 처리 누락 여부
+        - 코루틴 스코프/디스패처 오용, 취소 처리 누락
+        - Kotlin 관용구 (null 안정성, scope function, sealed class 활용)
+
+    - path: "presentation/**/*.kt"
+      instructions: >
+        - Orbit MVI는 레거시이며 단계적으로 제거 중이다. 신규 코드에서 Orbit 사용 시 지적한다.
+        - Navigation은 반드시 `navigate()` 대신 `safeNavigate()` 확장 함수를 사용해야 한다.
+        - Fragment에서 Flow 수집은 `repeatOnStarted` 등 lifecycle-aware 방식이어야 한다.
+        - View Binding 누수 (Fragment에서 onDestroyView 시 binding 해제) 여부를 확인한다.
+        - Context/Activity 참조를 ViewModel이 보유하지 않는지 확인한다.
+
+    - path: "domain/**/*.kt"
+      instructions: >
+        순수 Kotlin 모듈이다. Android 프레임워크 클래스 import가 있으면 반드시 지적한다.
+        UseCase는 단일 책임을 유지하고, Repository는 인터페이스만 정의되어야 한다.
+
+    - path: "data/**/*.kt"
+      instructions: >
+        - Repository 구현체가 domain 인터페이스 계약을 정확히 지키는지 확인한다.
+        - DTO ↔ 도메인 모델 매핑 누락/오류를 확인한다.
+        - Room 스키마 변경 시 migration 유무를 확인한다.
+        - 토큰/인증 관련 코드에서 민감 정보 로깅 여부를 확인한다.
+
+    - path: "**/*.gradle.kts"
+      instructions: >
+        버전은 `gradle/libs.versions.toml`에서 중앙 관리한다. 하드코딩된 버전이 있으면 지적한다.
+        API 키·시크릿이 하드코딩되지 않고 local.properties에서 주입되는지 확인한다.
+
+    - path: ".github/workflows/**"
+      instructions: >
+        시크릿 노출, 과도한 `permissions` 부여, 서드파티 액션의 태그 대신 SHA 고정 여부를 확인한다.
+
+  tools:
+    gitleaks:
+      enabled: true
+    actionlint:
+      enabled: true
+    github-checks:
+      enabled: true
+      timeout_ms: 300000
+    detekt:
+      enabled: false # 프로젝트에 detekt 설정이 없어 비활성화
+    markdownlint:
+      enabled: false
+    languagetool:
+      enabled: false
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  learnings:
+    scope: "auto"
+  issues:
+    scope: "auto"
+  pull_requests:
+    scope: "auto"

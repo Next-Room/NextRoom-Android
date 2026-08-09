@@ -104,7 +104,8 @@ graph TD
 - Release 브랜치: Lint → Release AAB 빌드 → Play Store 배포 (내부 테스트, 초안)
 
 **자동으로 코드를 작성하고 검수**까지 완료하는 프로세스 구축
-- 깃허브 이슈 등록 → Gemini API를 활용하여 자동으로 코드 작성 → PR push → Gemini로 코드 검수하여 리뷰 코멘트 작성
+
+- 깃허브 이슈 등록 → Gemini API를 활용하여 자동으로 코드 작성 → PR push → CodeRabbit이 코드 검수하여 리뷰 코멘트 작성
 
 ---
 
