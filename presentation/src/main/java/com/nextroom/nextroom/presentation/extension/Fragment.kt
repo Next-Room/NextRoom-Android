@@ -50,40 +50,51 @@ fun Fragment.snackbar(@StringRes messageId: Int, duration: Int = Snackbar.LENGTH
 /**
  * ## 시스템 영역 확보
  *
- * 상태바와 하단 내비게이션바가 노출되는 경우 [systemBar]를 `true`로 설정하여 컨텐츠와 겹치지 않도록 시스템 영역을 확보한다.
+ * 상태바와 하단 내비게이션바, 키보드가 노출되는 경우 [systemBar]를 `true`로 설정하여 컨텐츠와 겹치지 않도록 시스템 영역을 확보한다.
  *
  * 반면 상태바와 하단 내비게이션바가 노출되지 않는 경우 [systemBar]를 `false`로 설정하여 컨텐츠를 표시할 공간을 확보한다.
  *
  * _[systemBar]가 `true`인 경우 `WindowCompat.setDecorFitsSystemWindows(window, true)`와 비슷한 동작을 한다._
- * @param systemBar 상태바와 하단 내비게이션바 영역 확보 여부
+ * @param systemBar 상태바와 하단 내비게이션바, 키보드 영역 확보 여부
  */
 fun Fragment.updateSystemPadding(
     systemBar: Boolean = true,
 ) {
-    updateSystemPadding(systemBar, systemBar)
+    updateSystemPadding(statusBar = systemBar, navigationBar = systemBar, ime = systemBar)
 }
 
 /**
  * ## 시스템 영역 확보
  *
- * 상태바나 하단 내비게이션바가 노출되는 경우 [statusBar]나 [navigationBar]를 `true`로 설정하여 컨텐츠와 겹치지 않도록 시스템 영역을 확보한다.
+ * 상태바나 하단 내비게이션바, 키보드가 노출되는 경우 [statusBar]나 [navigationBar], [ime]를 `true`로 설정하여
+ * 컨텐츠와 겹치지 않도록 시스템 영역을 확보한다.
  *
- * 반면 상태바나 하단 내비게이션바가 노출되지 않는 경우 [statusBar]나 [navigationBar]를 `false`로 설정하여 컨텐츠를 표시할 공간을 확보한다.
+ * 반면 노출되지 않는 경우 `false`로 설정하여 컨텐츠를 표시할 공간을 확보한다.
  *
- * @param statusBar 상태바 영역 확보 여부
+ * edge-to-edge 환경에서는 `android:windowSoftInputMode="adjustResize"`가 더 이상 윈도우 크기를 줄이지 않으므로,
+ * 키보드에 컨텐츠가 가려지지 않으려면 [ime] 인셋을 직접 반영해야 한다.
+ *
+ * @param statusBar 상태바(디스플레이 컷아웃 포함) 영역 확보 여부
  * @param navigationBar 하단 내비게이션바 영역 확보 여부
+ * @param ime 키보드 영역 확보 여부
  */
 fun Fragment.updateSystemPadding(
     statusBar: Boolean = true,
     navigationBar: Boolean = true,
+    ime: Boolean = true,
 ) {
     ViewCompat.setOnApplyWindowInsetsListener(requireView()) { view, windowInsets ->
-        val typeMask = when {
-            statusBar && navigationBar -> WindowInsetsCompat.Type.systemBars()
-            statusBar -> WindowInsetsCompat.Type.statusBars()
-            navigationBar -> WindowInsetsCompat.Type.navigationBars()
-            else -> return@setOnApplyWindowInsetsListener windowInsets
+        var typeMask = 0
+        if (statusBar) {
+            typeMask = typeMask or WindowInsetsCompat.Type.statusBars() or WindowInsetsCompat.Type.displayCutout()
         }
+        if (navigationBar) typeMask = typeMask or WindowInsetsCompat.Type.navigationBars()
+        if (ime) typeMask = typeMask or WindowInsetsCompat.Type.ime()
+
+        if (typeMask == 0) return@setOnApplyWindowInsetsListener windowInsets
+
+        // 여러 타입을 함께 조회하면 각 방향별로 가장 큰 인셋이 반환된다.
+        // 즉 키보드가 올라온 경우 하단 패딩은 max(내비게이션바, 키보드)가 된다.
         val insets = windowInsets.getInsets(typeMask)
         view.updatePadding(
             left = insets.left,
