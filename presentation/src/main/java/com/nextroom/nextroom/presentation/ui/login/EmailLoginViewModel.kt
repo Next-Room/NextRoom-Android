@@ -1,7 +1,6 @@
 package com.nextroom.nextroom.presentation.ui.login
 
 import androidx.annotation.StringRes
-import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.lifecycle.viewModelScope
 import com.nextroom.nextroom.domain.model.Result
 import com.nextroom.nextroom.domain.model.onFailure
@@ -94,23 +93,19 @@ class EmailLoginViewModel @Inject constructor(
         }
     }
 
-    fun requestGoogleAuth() {
-        baseViewModelScope.launch {
-            _uiState.update { it.copy(loading = true) }
-            try {
-                adminRepository.requestGoogleAuth().getOrThrow
-                    .also { postGoogleLogin(it.idToken) }
-            } catch (e: GetCredentialCancellationException) {
-                // do nothing
-            } catch (e: Exception) {
-                _uiEvent.emit(UiEvent.GoogleAuthFailed)
-            }
-            _uiState.update { it.copy(loading = false) }
-        }
+    /**
+     * 계정 선택 UI가 뜨기 전까지도 로딩을 노출하기 위해, 자격증명을 요청하는 Fragment가 로딩 시작/해제를 알린다.
+     */
+    fun setGoogleAuthLoading(loading: Boolean) {
+        _uiState.update { it.copy(loading = loading) }
     }
 
-    private fun postGoogleLogin(idToken: String) {
+    /**
+     * 구글 계정 선택은 Activity가 필요하므로 Fragment가 담당하고, 여기서는 발급받은 id token으로 로그인만 처리한다.
+     */
+    fun loginWithGoogle(idToken: String) {
         baseViewModelScope.launch {
+            _uiState.update { it.copy(loading = true) }
             try {
                 adminRepository.postGoogleLogin(idToken).getOrThrow.let {
                     if (!it.isComplete) {
@@ -120,6 +115,7 @@ class EmailLoginViewModel @Inject constructor(
             } catch (e: Exception) {
                 _uiEvent.emit(UiEvent.GoogleLoginFailed)
             }
+            _uiState.update { it.copy(loading = false) }
         }
     }
 
@@ -138,7 +134,6 @@ class EmailLoginViewModel @Inject constructor(
     sealed interface UiEvent {
         data class EmailLoginFailed(val message: String) : UiEvent
         data class ShowMessage(val message: UiText) : UiEvent
-        data object GoogleAuthFailed : UiEvent
         data object GoogleLoginFailed : UiEvent
         data class NeedAdditionalUserInfo(val shopName: String?) : UiEvent
     }
