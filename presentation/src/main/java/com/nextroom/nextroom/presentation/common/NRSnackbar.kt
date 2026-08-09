@@ -1,5 +1,6 @@
 package com.nextroom.nextroom.presentation.common
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.StringRes
@@ -21,6 +22,7 @@ class NRSnackbar private constructor(
 
     private val context = view.context
     private val snackbar = Snackbar.make(view, message, duration)
+    @SuppressLint("RestrictedApi") // 커스텀 레이아웃 적용을 위해 SnackbarLayout 접근이 필요하다
     private val snackbarLayout = snackbar.view as Snackbar.SnackbarLayout
     private val binding: CommonSnackbarBinding = CommonSnackbarBinding.inflate(
         LayoutInflater.from(context),
