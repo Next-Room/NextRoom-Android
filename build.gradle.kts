@@ -20,5 +20,5 @@ plugins {
 }
 
 task("clean", Delete::class) {
-    delete = setOf(rootProject.buildDir)
+    delete = setOf(rootProject.layout.buildDirectory)
 }
