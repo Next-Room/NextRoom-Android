@@ -17,8 +17,9 @@ plugins {
     alias(libs.plugins.firebase.crashlytics) apply false
     alias(libs.plugins.kotlin.serialization) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 task("clean", Delete::class) {
-    delete = setOf(rootProject.buildDir)
+    delete = setOf(rootProject.layout.buildDirectory)
 }

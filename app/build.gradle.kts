@@ -1,4 +1,4 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import java.util.Properties
 
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
@@ -83,5 +83,11 @@ dependencies {
 }
 
 fun getApiKey(propertyKey: String): String {
-    return gradleLocalProperties(rootDir).getProperty(propertyKey)
+    val localProperties = Properties().apply {
+        rootProject.file("local.properties")
+            .takeIf(File::exists)
+            ?.inputStream()
+            ?.use(::load)
+    }
+    return localProperties.getProperty(propertyKey)
 }
