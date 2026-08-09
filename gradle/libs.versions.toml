@@ -7,9 +7,9 @@ versionCode = "72"
 versionName = "1.6.1"
 compileSdk = "34"
 targetJvm = "17"
-kotlin = "1.9.10"
+kotlin = "2.0.21"
 android = "8.1.2"
-ksp = "1.9.10-1.0.13"
+ksp = "2.0.21-1.0.28"
 credentials = "1.2.2"
 credentials-auth = "1.2.2"
 google-identity = "1.1.0"
@@ -26,7 +26,7 @@ espresso = "3.5.1"
 firebase-bom = "32.3.1"
 coroutines = "1.7.3"
 glide = "4.14.2"
-hilt = "2.48"
+hilt = "2.52"
 hilt-navigation-fragment = "1.0.0"
 javax-inject = "1"
 timber = "5.0.1"
@@ -39,7 +39,7 @@ navigation = "2.7.4"
 orbit = "6.0.0"
 recyclerview = "1.3.1"
 retrofit = "2.9.0"
-room = "2.5.2"
+room = "2.6.1"
 google-services = "4.4.0"
 firebase-crashlytics = "2.9.9"
 billing = "8.0.0"
@@ -138,6 +138,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [bundles]
 coroutines = ["kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm", "kotlinx-coroutines-android"]
