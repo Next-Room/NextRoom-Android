@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     alias(libs.plugins.android.library)
@@ -17,6 +19,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+        buildConfigField("String", "O_AUTH_WEB_CLIENT_ID", getApiKey("o_auth_web_client_id"))
     }
 
     buildTypes {
@@ -90,4 +93,8 @@ dependencies {
     implementation(libs.play.review.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
+}
+
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir).getProperty(propertyKey)
 }
