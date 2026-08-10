@@ -7,7 +7,6 @@ sealed interface ThemeSelectEvent {
     data object UnknownError : ThemeSelectEvent
     data class ClientError(val message: String) : ThemeSelectEvent
     data object InAppReview : ThemeSelectEvent
-    data object RecommendBackgroundCustom : ThemeSelectEvent
     data class ReadyToGameStart(val subscribeStatus: SubscribeStatus) : ThemeSelectEvent
     data object NeedSubscriptionForGameStart : ThemeSelectEvent
     data object NeedToSetPassword : ThemeSelectEvent

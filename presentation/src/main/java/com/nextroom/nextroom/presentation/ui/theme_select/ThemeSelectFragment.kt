@@ -163,13 +163,8 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             ThemeSelectEvent.NeedToCheckPasswordForManageThemes -> moveToCheckPasswordForManageThemes()
-            ThemeSelectEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
             ThemeSelectEvent.GuidePopupNotSeen -> showSuggestGuidePopup()
         }
-    }
-
-    private fun showRecommendBackgroundCustomBottomSheet() {
-        findNavController().safeNavigate(ThemeSelectFragmentDirections.moveToRecommendBackgroundCustom())
     }
 
     private fun showInAppReview() {

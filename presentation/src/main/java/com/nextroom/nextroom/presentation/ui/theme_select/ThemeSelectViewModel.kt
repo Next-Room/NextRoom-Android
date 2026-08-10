@@ -52,8 +52,6 @@ class ThemeSelectViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<ThemeSelectEvent>(extraBufferCapacity = 1)
     val uiEvent = _uiEvent.asSharedFlow()
 
-    private var shownBackgroundCustomDialog = false
-
     init {
         showInAppReview()
 
@@ -123,13 +121,6 @@ class ThemeSelectViewModel @Inject constructor(
                     .onSuccess { banners ->
                         _uiState.update { it.copy(banners = banners) }
                     }
-
-                if (!shouldHideRecommendBackgroundCustomDialogUntil()
-                    && !shownBackgroundCustomDialog
-                ) {
-                    shownBackgroundCustomDialog = true
-                    _uiEvent.emit(ThemeSelectEvent.RecommendBackgroundCustom)
-                }
             }.onFailure(::handleResultError)
             _uiState.update { it.copy(opaqueLoading = false, loading = false) }
         }
@@ -152,11 +143,6 @@ class ThemeSelectViewModel @Inject constructor(
                 hintRepository.saveHints(themeInfo.id).onFailure(::handleResultError)
             }
         }.onFailure(::handleResultError)
-    }
-
-    private suspend fun shouldHideRecommendBackgroundCustomDialogUntil(): Boolean {
-        val hideUntil = dataStoreRepository.getRecommendBackgroundCustomDialogHiddenUntil()
-        return System.currentTimeMillis() < hideUntil
     }
 
     fun tryGameStart(themeId: Int) {
