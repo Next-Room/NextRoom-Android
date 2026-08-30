@@ -71,6 +71,10 @@
     </fragment>
 
     <fragment
+        android:id="@+id/subscription_guide_fragment"
+        android:name="com.nextroom.nextroom.presentation.ui.subscription_guide.SubscriptionGuideFragment" />
+
+    <fragment
         android:id="@+id/purchase_success_fragment"
         android:name="com.nextroom.nextroom.presentation.ui.purchase.success.PurchaseSuccessFragment"
         tools:layout="@layout/fragment_purchase_success" />
@@ -150,6 +154,10 @@
     <action
         android:id="@+id/move_to_purchase_fragment"
         app:destination="@id/purchase_fragment" />
+
+    <action
+        android:id="@+id/move_to_subscription_guide_fragment"
+        app:destination="@id/subscription_guide_fragment" />
 
     <action
         android:id="@+id/move_to_purchase_success"
