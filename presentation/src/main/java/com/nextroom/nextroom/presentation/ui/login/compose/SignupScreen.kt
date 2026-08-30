@@ -66,8 +66,10 @@ fun SignupScreen(
     onCustomSignupReasonChange: (String) -> Unit,
     onAllTermsAgreeClick: (Boolean) -> Unit,
     onServiceTermAgreeClick: (Boolean) -> Unit,
+    onPrivacyPolicyAgreeClick: (Boolean) -> Unit,
     onMarketingTermAgreeClick: (Boolean) -> Unit,
     onServiceTermLinkClick: () -> Unit,
+    onPrivacyPolicyLinkClick: () -> Unit,
     onSignupClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -160,10 +162,18 @@ fun SignupScreen(
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
-                ServiceTermAgreeRow(
+                RequiredTermAgreeRow(
+                    linkText = stringResource(R.string.text_service_term_agree_link),
                     checked = loaded?.serviceTermAgreed == true,
                     onRowClick = { onServiceTermAgreeClick(loaded?.serviceTermAgreed != true) },
                     onLinkClick = onServiceTermLinkClick,
+                )
+
+                RequiredTermAgreeRow(
+                    linkText = stringResource(R.string.text_privacy_policy_agree_link),
+                    checked = loaded?.privacyPolicyAgreed == true,
+                    onRowClick = { onPrivacyPolicyAgreeClick(loaded?.privacyPolicyAgreed != true) },
+                    onLinkClick = onPrivacyPolicyLinkClick,
                 )
 
                 MarketingTermAgreeRow(
@@ -353,16 +363,16 @@ private fun AgreeAllTermsRow(
 }
 
 @Composable
-private fun ServiceTermAgreeRow(
+private fun RequiredTermAgreeRow(
+    linkText: String,
     checked: Boolean,
     onRowClick: () -> Unit,
     onLinkClick: () -> Unit,
 ) {
-    val linkPortion = stringResource(R.string.text_service_term_agree_link)
-    val suffix = stringResource(R.string.text_service_term_agree_suffix)
+    val suffix = stringResource(R.string.text_term_agree_suffix)
     val annotated = buildAnnotatedString {
         withStyle(SpanStyle(textDecoration = TextDecoration.Underline)) {
-            append(linkPortion)
+            append(linkText)
         }
         append(suffix)
     }
@@ -475,6 +485,7 @@ private fun SignupScreenEmptyPreview() {
             customSignupSource = null,
             customSignupReason = null,
             serviceTermAgreed = false,
+            privacyPolicyAgreed = false,
             marketingTermAgreed = false,
             allTermsAgreed = false,
             allRequiredFieldFilled = false,
@@ -487,8 +498,10 @@ private fun SignupScreenEmptyPreview() {
         onCustomSignupReasonChange = {},
         onAllTermsAgreeClick = {},
         onServiceTermAgreeClick = {},
+        onPrivacyPolicyAgreeClick = {},
         onMarketingTermAgreeClick = {},
         onServiceTermLinkClick = {},
+        onPrivacyPolicyLinkClick = {},
         onSignupClick = {},
     )
 }
@@ -510,6 +523,7 @@ private fun SignupScreenFilledPreview() {
             customSignupSource = "지하철 광고",
             customSignupReason = null,
             serviceTermAgreed = true,
+            privacyPolicyAgreed = true,
             marketingTermAgreed = true,
             allTermsAgreed = true,
             allRequiredFieldFilled = true,
@@ -522,8 +536,10 @@ private fun SignupScreenFilledPreview() {
         onCustomSignupReasonChange = {},
         onAllTermsAgreeClick = {},
         onServiceTermAgreeClick = {},
+        onPrivacyPolicyAgreeClick = {},
         onMarketingTermAgreeClick = {},
         onServiceTermLinkClick = {},
+        onPrivacyPolicyLinkClick = {},
         onSignupClick = {},
     )
 }

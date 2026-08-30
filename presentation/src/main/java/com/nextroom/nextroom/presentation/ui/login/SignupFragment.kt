@@ -53,8 +53,10 @@ class SignupFragment : ComposeBaseViewModelFragment<SignupViewModel>() {
                     onCustomSignupReasonChange = viewModel::setCustomSignupReason,
                     onAllTermsAgreeClick = viewModel::onAllTermsAgreeClicked,
                     onServiceTermAgreeClick = viewModel::setServiceTermAgree,
+                    onPrivacyPolicyAgreeClick = viewModel::setPrivacyPolicyAgree,
                     onMarketingTermAgreeClick = viewModel::setMarketingTermAgree,
                     onServiceTermLinkClick = ::moveToServiceTermWebView,
+                    onPrivacyPolicyLinkClick = ::moveToPrivacyPolicyWebView,
                     onSignupClick = viewModel::signup,
                 )
             }
@@ -159,6 +161,12 @@ class SignupFragment : ComposeBaseViewModelFragment<SignupViewModel>() {
     }
 
     private fun moveToServiceTermWebView() {
+        EmailLoginFragmentDirections
+            .moveToWebViewFragment(getString(R.string.link_service_terms))
+            .also { findNavController().safeNavigate(it) }
+    }
+
+    private fun moveToPrivacyPolicyWebView() {
         EmailLoginFragmentDirections
             .moveToWebViewFragment(getString(R.string.link_privacy_policy))
             .also { findNavController().safeNavigate(it) }
