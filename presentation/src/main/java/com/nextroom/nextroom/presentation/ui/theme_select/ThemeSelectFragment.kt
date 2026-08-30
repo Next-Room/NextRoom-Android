@@ -103,7 +103,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
         setFragmentResultListener(requestKeyCheckPassword, ::handleFragmentResults)
         setFragmentResultListener(requestKeyCheckPasswordForManageThemes, ::handleFragmentResults)
         setFragmentResultListener(dialogKeyNeedToSetPassword, ::handleFragmentResults)
-        setFragmentResultListener(dialogKeyNeedSubscriptionForGameStart, ::handleFragmentResults)
         setFragmentResultListener(SHOW_USAGE_GUIDE_DIALOG_KEY, ::handleFragmentResults)
     }
 
@@ -131,7 +130,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             }
 
             dialogKeyNeedToSetPassword -> moveToSetPassword()
-            dialogKeyNeedSubscriptionForGameStart -> goToPurchase()
             SHOW_USAGE_GUIDE_DIALOG_KEY -> {
                 try {
                     getString(R.string.link_usage_guide).let { url ->
@@ -159,7 +157,8 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             is ThemeSelectEvent.ClientError -> snackbar(event.message)
             ThemeSelectEvent.InAppReview -> showInAppReview()
             is ThemeSelectEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
-            ThemeSelectEvent.NeedSubscriptionForGameStart -> showNeedSubscriptionDialog()
+            ThemeSelectEvent.NeedFreeTrialForGameStart -> moveToSubscriptionGuide()
+            ThemeSelectEvent.NeedSubscriptionForGameStart -> moveToPurchase()
             ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             ThemeSelectEvent.NeedToCheckPasswordForManageThemes -> moveToCheckPasswordForManageThemes()
@@ -231,17 +230,24 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             }
     }
 
-    private fun showNeedSubscriptionDialog() {
+    private fun moveToSubscriptionGuide() {
         NavGraphDirections
-            .moveToNrTwoButtonDialog(
-                NRTwoButtonDialog.NRTwoButtonArgument(
-                    title = getString(R.string.text_need_subscription_for_game_start_title),
-                    message = getString(R.string.text_need_subscription_for_game_start_message),
-                    posBtnText = getString(R.string.dialog_subscribe_button),
-                    negBtnText = getString(R.string.dialog_close),
-                    dialogKey = dialogKeyNeedSubscriptionForGameStart,
-                ),
-            ).also {
+            .moveToSubscriptionGuideFragment()
+            .also {
+                findNavController().safeNavigate(
+                    direction = it,
+                    navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
+    }
+
+    /** 무료 체험 자격이 없는 미구독자를 기존 구독 안내(구매) 화면으로 보낸다 */
+    private fun moveToPurchase() {
+        NavGraphDirections
+            .moveToPurchaseFragment()
+            .also {
                 findNavController().safeNavigate(
                     direction = it,
                     navOptions = NavOptions.Builder()
@@ -307,8 +313,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
         private const val requestKeyCheckPasswordForManageThemes =
             "requestKeyCheckPasswordForManageThemes"
         private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
-        private const val dialogKeyNeedSubscriptionForGameStart =
-            "dialogKeyNeedSubscriptionForGameStart"
         private const val SHOW_USAGE_GUIDE_DIALOG_KEY = "SHOW_USAGE_GUIDE_DIALOG_KEY"
     }
 }

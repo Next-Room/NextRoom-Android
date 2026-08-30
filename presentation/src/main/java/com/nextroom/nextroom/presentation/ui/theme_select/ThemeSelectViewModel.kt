@@ -15,6 +15,8 @@ import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
 import com.nextroom.nextroom.presentation.model.toPresentation
+import com.nextroom.nextroom.presentation.ui.Constants
+import com.nextroom.nextroom.presentation.ui.billing.SubscriptionOfferLoader
 import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DATE_PATTERN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -25,6 +27,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -38,6 +41,7 @@ class ThemeSelectViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository,
     private val bannerRepository: BannerRepository,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
+    private val subscriptionOfferLoader: SubscriptionOfferLoader,
 ) : NewBaseViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -152,12 +156,31 @@ class ThemeSelectViewModel @Inject constructor(
             adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
                 if (canStartGame(myPage.status)) {
                     _uiEvent.emit(ThemeSelectEvent.ReadyToGameStart(myPage.status))
+                } else if (hasFreeTrialOffer()) {
+                    _uiEvent.emit(ThemeSelectEvent.NeedFreeTrialForGameStart)
                 } else {
                     _uiEvent.emit(ThemeSelectEvent.NeedSubscriptionForGameStart)
                 }
             }.onFailure(::handleResultError)
             _uiState.update { it.copy(opaqueLoading = false) }
         }
+    }
+
+    /**
+     * 무료 체험 자격 보유 여부.
+     *
+     * Play 콘솔에서 "신규 고객"으로 자격을 제한한 offer는 자격이 있는 사용자에게만 내려오므로,
+     * 체험 구간이 있는 offer가 조회되면 체험 자격이 있는 것으로 본다.
+     *
+     * 조회에 실패하거나 시간이 초과되면 체험 자격이 없는 것으로 보고 기존 구독 안내 화면으로 보낸다.
+     * (무료 체험 안내 화면은 offer 조회에 실패하면 어차피 되돌아 나온다.)
+     */
+    private suspend fun hasFreeTrialOffer(): Boolean {
+        val offer = withTimeoutOrNull(PRODUCT_DETAILS_TIMEOUT_MS) {
+            runCatching { subscriptionOfferLoader.load(Constants.MEMBERSHIP_PRODUCT) }.getOrNull()
+        }
+
+        return offer?.hasFreeTrial == true
     }
 
     /**
@@ -257,5 +280,6 @@ class ThemeSelectViewModel @Inject constructor(
         private const val DEFAULT_SUBSCRIPTION_REQUIRED_DATE = "2026-10-01"
         private const val DATE_PATTERN = "yyyy-MM-dd"
         private const val TIME_ZONE_KST = "Asia/Seoul"
+        private const val PRODUCT_DETAILS_TIMEOUT_MS = 5_000L
     }
 }
