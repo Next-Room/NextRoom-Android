@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.MutableLiveData
 import com.android.billingclient.api.AcknowledgePurchaseParams
 import com.android.billingclient.api.BillingClient
 import com.android.billingclient.api.BillingClientStateListener
@@ -22,6 +21,7 @@ import com.android.billingclient.api.QueryPurchasesParams
 import com.nextroom.nextroom.presentation.ui.Constants
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,9 +29,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import timber.log.Timber
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 import kotlin.math.pow
 
 class BillingClientLifecycle private constructor(
@@ -58,7 +58,8 @@ class BillingClientLifecycle private constructor(
     private var cachedPurchasesList: List<Purchase>? = null
 
     // 콘솔에 등록된 상품들 정보
-    val membershipProductWithProductDetails = MutableLiveData<ProductDetails?>()
+    private val _membershipProductDetails = MutableStateFlow<ProductDetails?>(null)
+    val membershipProductDetails = _membershipProductDetails.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<UIEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -109,22 +110,58 @@ class BillingClientLifecycle private constructor(
      * queryProductDetailsAsync: 상품 정보 조회
      */
     private fun querySubscriptionProductDetails() {
-        val params = QueryProductDetailsParams.newBuilder()
-
-        val productList: MutableList<QueryProductDetailsParams.Product> = arrayListOf()
-        for (product in LIST_OF_SUBSCRIPTION_PRODUCTS) {
-            productList.add(
-                QueryProductDetailsParams.Product.newBuilder()
-                    .setProductId(product)
-                    .setProductType(BillingClient.ProductType.SUBS)
-                    .build(),
-            )
-        }
-
-        params.setProductList(productList).let { productDetailsParams ->
-            billingClient.queryProductDetailsAsync(productDetailsParams.build(), this)
-        }
+        billingClient.queryProductDetailsAsync(buildQueryProductDetailsParams(), this)
     }
+
+    private fun buildQueryProductDetailsParams(): QueryProductDetailsParams {
+        val productList = LIST_OF_SUBSCRIPTION_PRODUCTS.map { product ->
+            QueryProductDetailsParams.Product.newBuilder()
+                .setProductId(product)
+                .setProductType(BillingClient.ProductType.SUBS)
+                .build()
+        }
+
+        return QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build()
+    }
+
+    /**
+     * 상품 정보를 다시 조회한다.
+     *
+     * 무료 체험 같은 offer의 자격은 구매 이력에 따라 바뀌는데, [onBillingSetupFinished] 시점에
+     * 한 번 조회한 정보를 계속 들고 있으면 결제 시점에 낡은 offer 목록을 쓰게 된다.
+     * 결제 직전에 호출해서 자격을 최신화한다.
+     *
+     * @return 조회에 성공한 상품 정보. 실패하면 빈 리스트.
+     */
+    suspend fun refreshSubscriptionProductDetails(): List<ProductDetails> =
+        suspendCancellableCoroutine { continuation ->
+            if (!billingClient.isReady) {
+                Timber.e("refreshSubscriptionProductDetails: BillingClient is not ready")
+                billingClient.startConnection(this)
+                continuation.resume(emptyList())
+                return@suspendCancellableCoroutine
+            }
+
+            billingClient.queryProductDetailsAsync(
+                buildQueryProductDetailsParams(),
+            ) { billingResult, queryProductDetailsResult ->
+                val response = BillingResponse(billingResult.responseCode)
+                if (response.isOk) {
+                    val productDetailsList = queryProductDetailsResult.productDetailsList
+                    // 호출자가 이미 취소됐더라도 캐시는 갱신해둔다.
+                    processProductDetails(productDetailsList)
+                    continuation.resume(productDetailsList)
+                } else {
+                    Timber.e(
+                        "refreshSubscriptionProductDetails: " +
+                            "${billingResult.responseCode} ${billingResult.debugMessage}",
+                    )
+                    continuation.resume(emptyList())
+                }
+            }
+        }
 
     // 상품 정보 조회 완료시 호출됨
     override fun onProductDetailsResponse(
@@ -150,7 +187,7 @@ class BillingClientLifecycle private constructor(
         }
     }
 
-    private fun processProductDetails(productDetailsList: MutableList<ProductDetails>) {
+    private fun processProductDetails(productDetailsList: List<ProductDetails>) {
         val expectedProductDetailsCount = LIST_OF_SUBSCRIPTION_PRODUCTS.size
         if (productDetailsList.isEmpty()) {
             Timber.e(
@@ -169,7 +206,7 @@ class BillingClientLifecycle private constructor(
             when (productDetails.productType) {
                 BillingClient.ProductType.SUBS -> {
                     when (productDetails.productId) {
-                        Constants.MEMBERSHIP_PRODUCT -> membershipProductWithProductDetails.postValue(productDetails)
+                        Constants.MEMBERSHIP_PRODUCT -> _membershipProductDetails.value = productDetails
                     }
                 }
             }
@@ -219,10 +256,12 @@ class BillingClientLifecycle private constructor(
 
             BillingClient.BillingResponseCode.USER_CANCELED -> {
                 Timber.i("onPurchasesUpdated: User canceled the purchase")
+                emitUiEvent(UIEvent.PurchaseCanceled)
             }
 
             BillingClient.BillingResponseCode.ITEM_ALREADY_OWNED -> {
                 Timber.i("onPurchasesUpdated: The user already owns this item")
+                emitUiEvent(UIEvent.PurchaseFailed(responseCode, debugMessage))
             }
 
             BillingClient.BillingResponseCode.DEVELOPER_ERROR -> {
@@ -233,8 +272,19 @@ class BillingClientLifecycle private constructor(
                         "Google Play Console. The product ID must match and the APK you " +
                         "are using must be signed with release keys.",
                 )
+                emitUiEvent(UIEvent.PurchaseFailed(responseCode, debugMessage))
+            }
+
+            // 결제를 시작한 화면이 로딩에 갇히지 않도록 나머지 응답코드도 반드시 알린다.
+            else -> {
+                Timber.e("onPurchasesUpdated: $responseCode $debugMessage")
+                emitUiEvent(UIEvent.PurchaseFailed(responseCode, debugMessage))
             }
         }
+    }
+
+    private fun emitUiEvent(event: UIEvent) {
+        externalScope.launch { _uiEvent.emit(event) }
     }
 
     /**
@@ -297,17 +347,25 @@ class BillingClientLifecycle private constructor(
         val responseCode = billingResult.responseCode
         val debugMessage = billingResult.debugMessage
         Timber.d("launchBillingFlow: BillingResponse $responseCode $debugMessage")
+
+        // 여기서 실패하면 결제 시트가 뜨지 않아 [onPurchasesUpdated]도 호출되지 않는다.
+        if (responseCode != BillingClient.BillingResponseCode.OK) {
+            emitUiEvent(UIEvent.PurchaseFailed(responseCode, debugMessage))
+        }
         return responseCode
     }
 
     // 구매 승인
-    suspend fun acknowledgePurchase(purchaseToken: String): Boolean = suspendCoroutine { continuation ->
+    suspend fun acknowledgePurchase(purchaseToken: String): Boolean = suspendCancellableCoroutine { continuation ->
         val params = AcknowledgePurchaseParams.newBuilder()
             .setPurchaseToken(purchaseToken)
             .build()
 
         val maxRetryAttempt = MAX_RETRY_ATTEMPT
         var currentTrial = 0
+
+        // 재시도는 [externalScope]에서 돌기 때문에 호출자가 취소돼도 알아서 멈추지 않는다.
+        var retryJob: Job? = null
 
         fun acknowledge() {
             billingClient.acknowledgePurchase(params) { billingResult ->
@@ -316,9 +374,7 @@ class BillingClientLifecycle private constructor(
                 when {
                     response.isOk -> {
                         Timber.i("Acknowledge success - token: $purchaseToken")
-                        externalScope.launch {
-                            _uiEvent.emit(UIEvent.PurchaseAcknowledged)
-                        }
+                        emitUiEvent(UIEvent.PurchaseAcknowledged)
                         continuation.resume(true)
                     }
 
@@ -334,7 +390,7 @@ class BillingClientLifecycle private constructor(
                                 "Retrying($currentTrial) to acknowledge for token $purchaseToken - " +
                                     "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
                             )
-                            externalScope.launch {
+                            retryJob = externalScope.launch {
                                 delay(duration)
                                 currentTrial++
                                 acknowledge()
@@ -359,11 +415,18 @@ class BillingClientLifecycle private constructor(
             }
         }
 
+        continuation.invokeOnCancellation { retryJob?.cancel() }
+
         acknowledge()
     }
 
     sealed interface UIEvent {
         data object PurchaseAcknowledged : UIEvent
+
+        /** 사용자가 결제 시트를 그냥 닫은 경우 */
+        data object PurchaseCanceled : UIEvent
+
+        data class PurchaseFailed(val responseCode: Int, val debugMessage: String) : UIEvent
     }
 
     companion object {
