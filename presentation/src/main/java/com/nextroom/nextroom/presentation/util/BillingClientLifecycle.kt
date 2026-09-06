@@ -373,13 +373,13 @@ class BillingClientLifecycle private constructor(
 
                 when {
                     response.isOk -> {
-                        Timber.i("Acknowledge success - token: $purchaseToken")
+                        Timber.i("Acknowledge success - token: ${purchaseToken.masked}")
                         emitUiEvent(UIEvent.PurchaseAcknowledged)
                         continuation.resume(true)
                     }
 
                     response.canFailGracefully -> {
-                        Timber.i("Token $purchaseToken is already owned.")
+                        Timber.i("Token ${purchaseToken.masked} is already owned.")
                         continuation.resume(true)
                     }
 
@@ -387,7 +387,7 @@ class BillingClientLifecycle private constructor(
                         if (currentTrial < maxRetryAttempt) {
                             val duration = 500L * 2.0.pow(currentTrial).toLong()
                             Timber.w(
-                                "Retrying($currentTrial) to acknowledge for token $purchaseToken - " +
+                                "Retrying($currentTrial) to acknowledge for token ${purchaseToken.masked} - " +
                                     "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
                             )
                             retryJob = externalScope.launch {
@@ -397,7 +397,7 @@ class BillingClientLifecycle private constructor(
                             }
                         } else {
                             Timber.e(
-                                "Failed to acknowledge for token $purchaseToken - " +
+                                "Failed to acknowledge for token ${purchaseToken.masked} - " +
                                     "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
                             )
                             continuation.resume(false)
@@ -406,7 +406,7 @@ class BillingClientLifecycle private constructor(
 
                     response.isNonrecoverableError || response.isTerribleFailure -> {
                         Timber.e(
-                            "Failed to acknowledge for token $purchaseToken - " +
+                            "Failed to acknowledge for token ${purchaseToken.masked} - " +
                                 "code: ${billingResult.responseCode}, message: ${billingResult.debugMessage}",
                         )
                         continuation.resume(false)
@@ -444,6 +444,19 @@ class BillingClientLifecycle private constructor(
             }
     }
 }
+
+/**
+ * 구매 토큰은 서버에 그대로 보내 구독 자격을 받는 값이라 로그에 원문을 남기면 안 된다.
+ * 어떤 구매 건인지 구분할 수 있을 만큼만 뒷자리를 남긴다.
+ */
+private val String.masked: String
+    get() = if (length <= MASKED_TOKEN_SUFFIX_LENGTH) "***" else "***${
+        takeLast(
+            MASKED_TOKEN_SUFFIX_LENGTH
+        )
+    }"
+
+private const val MASKED_TOKEN_SUFFIX_LENGTH = 6
 
 @JvmInline
 private value class BillingResponse(val code: Int) {
