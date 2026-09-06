@@ -25,6 +25,7 @@ class SignupViewModel @Inject constructor(
     private val _customSignupSource = MutableStateFlow<String?>(null)
     private val _customSignupReason = MutableStateFlow<String?>(null)
     private val _serviceTermAgree = MutableStateFlow(false)
+    private val _privacyPolicyAgree = MutableStateFlow(false)
     private val _marketingTermAgree = MutableStateFlow(false)
     private val _apiLoading = MutableStateFlow(false)
 
@@ -44,21 +45,31 @@ class SignupViewModel @Inject constructor(
         )
     }
 
-    private val terms = combine(_serviceTermAgree, _marketingTermAgree) { service, marketing ->
-        service to marketing
+    private val terms = combine(
+        _serviceTermAgree,
+        _privacyPolicyAgree,
+        _marketingTermAgree,
+    ) { service, privacyPolicy, marketing ->
+        Terms(
+            serviceTermAgree = service,
+            privacyPolicyAgree = privacyPolicy,
+            marketingTermAgree = marketing,
+        )
     }
 
-    val uiState = combine(inputs, terms) { input, (serviceTermAgree, marketingTermAgree) ->
+    val uiState = combine(inputs, terms) { input, term ->
         UIState.Loaded(
             shopName = input.shopName,
             selectedSignupSource = input.selectedSignupSource,
             selectedSignupReason = input.selectedSignupReason,
             customSignupSource = input.customSignupSource,
             customSignupReason = input.customSignupReason,
-            serviceTermAgreed = serviceTermAgree,
-            marketingTermAgreed = marketingTermAgree,
-            allTermsAgreed = serviceTermAgree && marketingTermAgree,
-            allRequiredFieldFilled = !input.shopName.isNullOrEmpty() && input.selectedSignupSource != null && serviceTermAgree
+            serviceTermAgreed = term.serviceTermAgree,
+            privacyPolicyAgreed = term.privacyPolicyAgree,
+            marketingTermAgreed = term.marketingTermAgree,
+            allTermsAgreed = term.serviceTermAgree && term.privacyPolicyAgree && term.marketingTermAgree,
+            allRequiredFieldFilled = !input.shopName.isNullOrEmpty() && input.selectedSignupSource != null &&
+                    term.serviceTermAgree && term.privacyPolicyAgree
         )
     }.combine(_apiLoading) { loaded, loading ->
         if (loading) UIState.Loading else loaded
@@ -93,11 +104,16 @@ class SignupViewModel @Inject constructor(
 
     fun onAllTermsAgreeClicked(agree: Boolean) {
         _serviceTermAgree.update { agree }
+        _privacyPolicyAgree.update { agree }
         _marketingTermAgree.update { agree }
     }
 
     fun setServiceTermAgree(agree: Boolean) {
         _serviceTermAgree.update { agree }
+    }
+
+    fun setPrivacyPolicyAgree(agree: Boolean) {
+        _privacyPolicyAgree.update { agree }
     }
 
     fun setMarketingTermAgree(agree: Boolean) {
@@ -135,6 +151,12 @@ class SignupViewModel @Inject constructor(
         val customSignupReason: String?,
     )
 
+    private data class Terms(
+        val serviceTermAgree: Boolean,
+        val privacyPolicyAgree: Boolean,
+        val marketingTermAgree: Boolean,
+    )
+
     sealed interface UIState {
         data object Loading : UIState
         data class Loaded(
@@ -144,6 +166,7 @@ class SignupViewModel @Inject constructor(
             val customSignupSource: String?,
             val customSignupReason: String?,
             val serviceTermAgreed: Boolean,
+            val privacyPolicyAgreed: Boolean,
             val marketingTermAgreed: Boolean,
             val allTermsAgreed: Boolean,
             val allRequiredFieldFilled: Boolean,
