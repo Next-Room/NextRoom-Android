@@ -1,6 +1,5 @@
 package com.nextroom.nextroom.presentation.ui.hint
 
-import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import com.nextroom.nextroom.presentation.ui.main.GameSharedViewModel
@@ -13,11 +12,9 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class HintViewModel @AssistedInject constructor(
     private val timerRepository: TimerRepository,
-    private val dataStoreRepository: DataStoreRepository,
     @Assisted private val gameSharedViewModel: GameSharedViewModel
 ) : NewBaseViewModel() {
 
@@ -29,7 +26,6 @@ class HintViewModel @AssistedInject constructor(
         state.copy(
             hint = gameSharedState.currentHint ?: state.hint,
             userSubscribeStatus = gameSharedState.subscribeStatus,
-            networkDisconnectedCount = state.networkDisconnectedCount,
             isHintOpened = (gameSharedState.currentHint?.id ?: state.hint.id) in gameSharedState.openedHintIds,
             isAnswerOpened = (gameSharedState.currentHint?.id ?: state.hint.id) in gameSharedState.openedAnswerIds,
             totalHintCount = gameSharedState.totalHintCount
@@ -44,20 +40,6 @@ class HintViewModel @AssistedInject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
     val lastSeconds = timerRepository.lastSeconds
-
-    init {
-        baseViewModelScope.launch {
-            dataStoreRepository
-                .getNetworkDisconnectedCount()
-                .let {
-                    updateNetworkDisconnectedCount(it)
-                }
-        }
-    }
-
-    private fun updateNetworkDisconnectedCount(count: Int) {
-        _uiState.value = _uiState.value.copy(networkDisconnectedCount = count)
-    }
 
     fun tryOpenHint(hintId: Int) {
         val openedCount = gameSharedViewModel.getOpenedHintCount()

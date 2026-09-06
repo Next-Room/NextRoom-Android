@@ -31,7 +31,6 @@ import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.util.Logger
-import com.nextroom.nextroom.presentation.util.isOnline
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -149,9 +148,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
     override fun onResume() {
         super.onResume()
         viewModel.onResume()
-        if (isOnline(context ?: return).not()) {
-            viewModel.incrementNetworkDisconnectedCount()
-        }
     }
 
     private fun handleEvent(event: ThemeSelectEvent) {
@@ -161,16 +157,13 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             is ThemeSelectEvent.ClientError -> snackbar(event.message)
             ThemeSelectEvent.InAppReview -> showInAppReview()
             is ThemeSelectEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
+            ThemeSelectEvent.NeedFreeTrialForGameStart -> moveToSubscriptionGuide()
+            ThemeSelectEvent.NeedSubscriptionForGameStart -> moveToPurchase()
             ThemeSelectEvent.NeedToSetPassword -> showNeedToSetPasswordDialog()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             ThemeSelectEvent.NeedToCheckPasswordForManageThemes -> moveToCheckPasswordForManageThemes()
-            ThemeSelectEvent.RecommendBackgroundCustom -> showRecommendBackgroundCustomBottomSheet()
             ThemeSelectEvent.GuidePopupNotSeen -> showSuggestGuidePopup()
         }
-    }
-
-    private fun showRecommendBackgroundCustomBottomSheet() {
-        findNavController().safeNavigate(ThemeSelectFragmentDirections.moveToRecommendBackgroundCustom())
     }
 
     private fun showInAppReview() {
@@ -228,6 +221,33 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
                     dialogKey = dialogKeyNeedToSetPassword,
                 ),
             ).also {
+                findNavController().safeNavigate(
+                    direction = it,
+                    navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
+    }
+
+    private fun moveToSubscriptionGuide() {
+        NavGraphDirections
+            .moveToSubscriptionGuideFragment()
+            .also {
+                findNavController().safeNavigate(
+                    direction = it,
+                    navOptions = NavOptions.Builder()
+                        .setLaunchSingleTop(true)
+                        .build()
+                )
+            }
+    }
+
+    /** 무료 체험 자격이 없는 미구독자를 기존 구독 안내(구매) 화면으로 보낸다 */
+    private fun moveToPurchase() {
+        NavGraphDirections
+            .moveToPurchaseFragment()
+            .also {
                 findNavController().safeNavigate(
                     direction = it,
                     navOptions = NavOptions.Builder()

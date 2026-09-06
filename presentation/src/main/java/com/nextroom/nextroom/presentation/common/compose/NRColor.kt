@@ -26,6 +26,10 @@ object NRColor {
     val Blue = Color(0xFF378EFF)
     val Blue15 = Color(0x26378EFF)
 
+    // Green - 앱 전반의 강조 색상
+    val Green = Color(0xFF4ADE80)
+    val Green15 = Color(0x264ADE80)
+
     // Gray Scale
     val Dark01 = Color(0xFF151516)
     val Gray01 = Color(0xFF9898A0)

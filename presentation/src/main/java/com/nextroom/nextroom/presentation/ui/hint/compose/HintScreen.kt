@@ -128,7 +128,6 @@ fun HintScreen(
                                     ImagePager(
                                         imageUrls = state.hint.hintImageUrlList,
                                         subscribeStatus = state.userSubscribeStatus,
-                                        networkDisconnectedCount = state.networkDisconnectedCount,
                                         onImageClick = onHintImageClick,
                                         modifier = Modifier.padding(bottom = 20.dp)
                                     )
@@ -229,7 +228,6 @@ fun HintScreen(
                                         ImagePager(
                                             imageUrls = state.hint.answerImageUrlList,
                                             subscribeStatus = state.userSubscribeStatus,
-                                            networkDisconnectedCount = state.networkDisconnectedCount,
                                             onImageClick = onAnswerImageClick,
                                             modifier = Modifier.padding(bottom = 20.dp)
                                         )
@@ -316,7 +314,6 @@ private fun HintScreenWithNoImagesPreview() {
                 answerImageUrlList = emptyList()
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0,
             isHintOpened = true
         ),
         onHintImageClick = {},
@@ -344,7 +341,6 @@ private fun HintScreenWithImagesPreview() {
                 answerImageUrlList = emptyList()
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0,
             isHintOpened = false
         ),
         onHintImageClick = {},
@@ -369,7 +365,6 @@ private fun HintScreenAnswerOpenedPreview() {
                 answerImageUrlList = emptyList(),
             ),
             userSubscribeStatus = SubscribeStatus.Subscribed,
-            networkDisconnectedCount = 0,
             isHintOpened = true,
             isAnswerOpened = true
         ),

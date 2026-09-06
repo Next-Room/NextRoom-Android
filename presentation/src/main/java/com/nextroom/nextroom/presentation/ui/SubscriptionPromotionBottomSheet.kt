@@ -24,7 +24,6 @@ import com.nextroom.nextroom.presentation.extension.dpToPx
 import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
-import com.nextroom.nextroom.presentation.extension.toast
 import com.nextroom.nextroom.presentation.ui.billing.BillingEvent
 import com.nextroom.nextroom.presentation.ui.billing.BillingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -97,14 +96,12 @@ class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
         binding.acbSubscribe.setOnClickListener {
             viewModel.container.stateFlow.value.plan.plans.firstOrNull()?.let {
                 binding.pbLoading.isVisible = true
-                try {
-                    billingViewModel.buyPlans(
-                        productId = it.subscriptionProductId,
-                        upDowngrade = false,
-                    )
-                } catch (e: Exception) {
-                    showErrorDialog(e.message ?: "")
-                }
+                // 실패는 BillingEvent.PurchaseFailed로 전달된다.
+                billingViewModel.buyPlans(
+                    productId = it.subscriptionProductId,
+                    basePlanId = it.planId,
+                    upDowngrade = false,
+                )
             }
         }
         binding.ivClose.setOnClickListener {
@@ -138,8 +135,15 @@ class SubscriptionPromotionBottomSheet : BottomSheetDialogFragment() {
                                 }
                         }
 
+                        BillingEvent.PurchaseCanceled -> {
+                            binding.pbLoading.isVisible = false
+                        }
+
                         is BillingEvent.PurchaseFailed -> {
-                            toast(getString(R.string.purchase_error_message, event.purchaseState))
+                            // purchaseState는 null일 수 있으므로 %d 포맷에 그대로 넣지 않는다.
+                            val errorText = event.errorMessage + "\n" +
+                                event.purchaseState?.let { getString(R.string.text_error_code, it) }.orEmpty()
+                            showErrorDialog(errorText)
                             binding.pbLoading.isVisible = false
                         }
                     }

@@ -48,14 +48,12 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
         binding.btnSubscribe.setOnClickListener {
             (viewModel.uiState.value as? PurchaseViewModel.UiState.Loaded)?.let { loaded ->
                 binding.pbLoading.isVisible = true // TODO JH: 개선
-                try {
-                    billingViewModel.buyPlans(
-                        productId = loaded.subscriptionProductId,
-                        upDowngrade = false,
-                    )
-                } catch (e: Exception) {
-                    showErrorDialog(errorText = e.message ?: "")
-                }
+                // 실패는 BillingEvent.PurchaseFailed로 전달된다.
+                billingViewModel.buyPlans(
+                    productId = loaded.subscriptionProductId,
+                    basePlanId = loaded.planId,
+                    upDowngrade = false,
+                )
             }
         }
     }
@@ -92,9 +90,13 @@ class PurchaseFragment : BaseFragment<FragmentPurchaseBinding>(FragmentPurchaseB
                                 }
                         }
 
+                        BillingEvent.PurchaseCanceled -> {
+                            binding.pbLoading.isVisible = false
+                        }
+
                         is BillingEvent.PurchaseFailed -> {
                             val errorText = event.errorMessage + "\n" +
-                                    event.purchaseState?.let { getString(R.string.text_error_code, it) }
+                                    event.purchaseState?.let { getString(R.string.text_error_code, it) }.orEmpty()
                             showErrorDialog(errorText)
                             binding.pbLoading.isVisible = false // TODO JH: 개선
                         }

@@ -50,16 +50,6 @@ class SettingDataSource @Inject constructor(
         return data.first().lastLaunchDate
     }
 
-    suspend fun setNetworkDisconnectedCount(count: Int) {
-        dataStore.updateData {
-            it.copy(networkDisconnectedCount = count)
-        }
-    }
-
-    suspend fun getNetworkDisconnectedCount(): Int {
-        return data.first().networkDisconnectedCount
-    }
-
     /**
      * 관리자 코드 저장과 로그인 처리
      * */
@@ -96,14 +86,6 @@ class SettingDataSource @Inject constructor(
 
     suspend fun getUserEmail(): String {
         return data.first().userEmail
-    }
-
-    suspend fun setRecommendBackgroundCustomDialogHidden(time: Long) {
-        dataStore.updateData { it.copy(backgroundCustomDialogHideUntil = time) }
-    }
-
-    suspend fun getRecommendBackgroundCustomDialogHiddenUntil(): Long {
-        return data.first().backgroundCustomDialogHideUntil
     }
 
     suspend fun saveAppPassword(password: String) {

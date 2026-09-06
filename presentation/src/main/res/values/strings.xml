@@ -138,10 +138,7 @@
     <string name="start">시작</string>
     <string name="dialog_title_game_start_confirm">게임을 시작하시겠습니까?</string>
     <string name="dialog_message_game_start_confirm">버튼을 클릭하면 타이머가 시작됩니다</string>
-    <string name="text_no_show_for_a_week">일주일간 보지않기</string>
     <string name="text_confirm">확인</string>
-    <string name="text_background_custom_recommend_title">타이머 배경 커스텀 기능 출시 ✨</string>
-    <string name="text_recommend_background_custom_desc">테마 포스터로 타이머 배경을 커스텀 할 수 있습니다. 각 테마의 독특한 분위기를 더해 몰입감을 높여보세요.</string>
     <string name="tv_theme">테마</string>
     <string name="text_background_setting">배경 설정</string>
     <string name="text_manage_themes">테마 관리</string>
@@ -163,7 +160,6 @@
     <string name="text_timer_background_custom">타이머 배경 설정</string>
     <string name="text_background_custom_info_1">PC에서 배경을 등록하면 힌트폰에서 확인할 수 있습니다.</string>
     <string name="text_background_custom_info_2">미리보기에서 이미지의 어두움와 위치를 조정할 수 있습니다.</string>
-    <string name="text_background_custom_info_3">미구독계정은 1개의 배경 이미지만 활성화할 수 있습니다.</string>
     <string name="text_theme_manage_web_info">PC에서도 관리할 수 있습니다</string>
     <string name="text_nextroom_subscribe_title">넥스트룸을 구독해보세요✨</string>
     <string name="text_subscribe_benefit_desc">미구독계정은 1개의 배경이미지만 활성화할 수 있습니다.\n넥스트룸을 구독하면 아래 혜택을 누릴 수 있습니다.</string>
@@ -301,4 +297,38 @@
     <string name="image_invalid_format">지원하지 않는 이미지 형식입니다</string>
     <string name="feature_for_subscriber">구독이 필요한 기능입니다.</string>
     <string name="hint_save_blocked_due_to_images">구독이 만료되었습니다. 이미지를 삭제한 후 저장해 주세요.</string>
+
+    <!-- 구독 안내 (무료 체험) -->
+    <string name="subscription_guide_badge">기간 한정 혜택</string>
+    <string name="subscription_guide_headline_highlight">%s 무료</string>
+    <string name="subscription_guide_headline">로 체험하세요</string>
+    <string name="subscription_guide_headline_highlight_no_trial">넥스트룸을</string>
+    <string name="subscription_guide_headline_no_trial">구독하세요</string>
+    <string name="subscription_guide_description">10년을 구독해도 외주 의뢰보다 이득이에요.\n방탈출 업계 4년 경력 개발자가 만든 서비스를 이용해 보세요</string>
+    <string name="subscription_guide_discount_rate">무료</string>
+    <string name="subscription_guide_price_period">/ %s</string>
+    <string name="subscription_guide_trial_end_label">무료 체험 종료</string>
+    <string name="subscription_guide_benefit_section">제공 기능</string>
+    <string name="subscription_guide_benefit_1_title">힌트, 정답 이미지 첨부</string>
+    <string name="subscription_guide_benefit_1_description">이미지를 함께 첨부해 설명할 수 있어요</string>
+    <string name="subscription_guide_benefit_2_title">배경·브랜딩 커스터마이즈</string>
+    <string name="subscription_guide_benefit_2_description">테마 분위기에 맞춰 화면을 직접 구성</string>
+    <string name="subscription_guide_benefit_3_title">오프라인 모드</string>
+    <string name="subscription_guide_benefit_3_description">인터넷이 없는 환경에서도 동작</string>
+    <string name="subscription_guide_benefit_4_title">진행 복구 시스템</string>
+    <string name="subscription_guide_benefit_4_description">실수로 앱을 종료해도 플레이 정보를 그대로 복구</string>
+    <string name="subscription_guide_benefit_5_title">그 외 다양한 기능</string>
+    <string name="subscription_guide_benefit_5_description">메모, 웹 관리자 페이지, 보안</string>
+    <string name="subscription_guide_note_1">· 무료 체험은 계정당 1회 제공되며 %s간 유지됩니다.</string>
+    <string name="subscription_guide_note_2">· 체험 기간 중 언제든 해지할 수 있고, 별도 비용은 청구되지 않아요.</string>
+    <string name="subscription_guide_note_1_no_trial">· 구독은 %s마다 자동으로 갱신됩니다.</string>
+    <string name="subscription_guide_note_2_no_trial">· 언제든 Google Play에서 해지할 수 있어요.</string>
+    <string name="subscription_guide_start_button">%s 무료로 시작하기</string>
+    <string name="subscription_guide_start_button_no_trial">구독 시작하기</string>
+
+    <!-- 결제 주기 -->
+    <string name="billing_period_years">%d년</string>
+    <string name="billing_period_months">%d개월</string>
+    <string name="billing_period_weeks">%d주</string>
+    <string name="billing_period_days">%d일</string>
 </resources>
