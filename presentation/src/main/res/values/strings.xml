@@ -15,6 +15,7 @@
     <string name="link_service_terms">https://nextroom-official.notion.site/3be311947d1d8070b4c0dccd390912bf</string>
     <string name="link_official_instagram">https://www.instagram.com/team_nextroom/</string>
     <string name="link_usage_guide">https://nextroom-official.notion.site/38c311947d1d806cb862fe2510c3c6f4</string>
+    <string name="link_notice">https://nextroom-official.notion.site/38c311947d1d8042b4ecdff3e4a5148f</string>
 
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
     <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
@@ -59,6 +60,7 @@
     <string name="memo_eraser_description">지우개</string>
 
     <string name="text_kakao_cs_underline">카카오로 문의하기</string>
+    <string name="text_notice">공지사항</string>
     <string name="text_customer_service">문의하기</string>
 
     <string name="admin_main_update_hint">관리자 웹 사이트에서 힌트를 업데이트 했다면 반드시 업데이트 버튼을 눌러주세요!</string>

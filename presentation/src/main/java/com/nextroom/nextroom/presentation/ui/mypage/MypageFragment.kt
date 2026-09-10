@@ -49,6 +49,7 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
                             onBackClick = { findNavController().popBackStack() },
                             onSubscribeClick = ::onSubscribeClick,
                             onChangeAppPasswordClick = ::moveToSetPassword,
+                            onNoticeClick = ::moveToNoticeWebView,
                             onCustomerServiceClick = ::openCustomerService,
                             onLogoutClick = viewModel::logout,
                             onResignClick = ::showConfirmResignDialog,
@@ -91,6 +92,12 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
 
             SubscribeStatus.Subscribed -> goToSubscriptionInfo()
         }
+    }
+
+    private fun moveToNoticeWebView() {
+        NavGraphDirections
+            .moveToWebViewFragment(getString(R.string.link_notice))
+            .also { findNavController().safeNavigate(it) }
     }
 
     private fun openCustomerService() {

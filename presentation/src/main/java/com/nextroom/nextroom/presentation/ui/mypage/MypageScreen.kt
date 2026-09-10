@@ -34,6 +34,7 @@ fun MypageScreen(
     onBackClick: () -> Unit,
     onSubscribeClick: () -> Unit,
     onChangeAppPasswordClick: () -> Unit,
+    onNoticeClick: () -> Unit,
     onCustomerServiceClick: () -> Unit,
     onLogoutClick: () -> Unit,
     onResignClick: () -> Unit,
@@ -85,6 +86,11 @@ fun MypageScreen(
             MypageMenuRow(
                 title = stringResource(R.string.text_change_app_password),
                 onClick = onChangeAppPasswordClick,
+            )
+
+            MypageMenuRow(
+                title = stringResource(R.string.text_notice),
+                onClick = onNoticeClick,
             )
 
             MypageMenuRow(
@@ -206,6 +212,7 @@ private fun MypageScreenPreview() {
         onBackClick = {},
         onSubscribeClick = {},
         onChangeAppPasswordClick = {},
+        onNoticeClick = {},
         onCustomerServiceClick = {},
         onLogoutClick = {},
         onResignClick = {},
