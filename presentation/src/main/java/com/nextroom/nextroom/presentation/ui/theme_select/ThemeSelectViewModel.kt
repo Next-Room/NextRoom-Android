@@ -9,6 +9,7 @@ import com.nextroom.nextroom.domain.repository.AdminRepository
 import com.nextroom.nextroom.domain.repository.BannerRepository
 import com.nextroom.nextroom.domain.repository.DataStoreRepository
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
+import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_SUBSCRIPTION_PROMOTION_PROBABILITY
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_SUBSCRIPTION_REQUIRED_DATE
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
@@ -18,6 +19,7 @@ import com.nextroom.nextroom.presentation.model.toPresentation
 import com.nextroom.nextroom.presentation.ui.Constants
 import com.nextroom.nextroom.presentation.ui.billing.SubscriptionOfferLoader
 import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DATE_PATTERN
+import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DEFAULT_SUBSCRIPTION_PROMOTION_PROBABILITY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,6 +34,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class ThemeSelectViewModel @Inject constructor(
@@ -70,10 +73,34 @@ class ThemeSelectViewModel @Inject constructor(
                 dataStoreRepository.setHasSeenGuidePopup()
             }
         }
+        baseViewModelScope.launch {
+            if (isSubscriptionPromotionEligible()) {
+                _uiEvent.emit(ThemeSelectEvent.SubscriptionPromotionEligible)
+            }
+        }
     }
 
     fun onResume() {
         loadData()
+    }
+
+    /**
+     * 구독 프로모션 대상자인지 여부.
+     *
+     * 구독 필수 시점 이전이고 무료 체험 자격이 있는 사용자 중
+     * Remote Config로 내려오는 노출 확률에 당첨된 경우에만 true.
+     *
+     * 화면을 오갈 때마다 반복해서 추첨하지 않도록 onResume이 아니라 init에서 한 번만 판단한다.
+     *
+     * 무료 체험 offer는 Play 콘솔에서 "신규 고객"으로 자격이 제한되어 있어 이미 구독 중인
+     * 사용자에게는 내려오지 않으므로, 구독 상태를 따로 조회하지 않는다.
+     * 확률 추첨을 offer 조회보다 먼저 해서 불필요한 Billing 조회를 줄인다.
+     */
+    private suspend fun isSubscriptionPromotionEligible(): Boolean {
+        if (isBeforeSubscriptionRequiredDate().not()) return false
+        if (Random.nextFloat() >= getSubscriptionPromotionProbability()) return false
+
+        return hasFreeTrialOffer()
     }
 
     private fun showInAppReview() {
@@ -192,6 +219,11 @@ class ThemeSelectViewModel @Inject constructor(
             return true
         }
 
+        return isBeforeSubscriptionRequiredDate()
+    }
+
+    /** 구독 필수 시점(KST 자정) 이전인지 여부 */
+    private suspend fun isBeforeSubscriptionRequiredDate(): Boolean {
         // Remote Config 값을 받아오지 못했거나 형식이 올바르지 않으면 기본값 사용
         val subscriptionRequiredAt = parseStartOfDay(getSubscriptionRequiredDate())
             ?: parseStartOfDay(DEFAULT_SUBSCRIPTION_REQUIRED_DATE)
@@ -207,6 +239,21 @@ class ThemeSelectViewModel @Inject constructor(
                 .getFirebaseRemoteConfigValue(REMOTE_KEY_SUBSCRIPTION_REQUIRED_DATE)
                 .first()
         }.getOrDefault("")
+    }
+
+    /**
+     * 프로모션 노출 확률.
+     *
+     * Remote Config 조회에 실패했거나 숫자로 파싱할 수 없으면
+     * [DEFAULT_SUBSCRIPTION_PROMOTION_PROBABILITY]를 사용한다.
+     */
+    private suspend fun getSubscriptionPromotionProbability(): Float {
+        return runCatching {
+            firebaseRemoteConfigRepository
+                .getFirebaseRemoteConfigValue(REMOTE_KEY_SUBSCRIPTION_PROMOTION_PROBABILITY)
+                .first()
+                .toFloat()
+        }.getOrDefault(DEFAULT_SUBSCRIPTION_PROMOTION_PROBABILITY)
     }
 
     /** [date]가 [DATE_PATTERN] 형식이면 해당 날짜 KST 자정의 epoch millis, 아니면 null */
@@ -281,5 +328,6 @@ class ThemeSelectViewModel @Inject constructor(
         private const val DATE_PATTERN = "yyyy-MM-dd"
         private const val TIME_ZONE_KST = "Asia/Seoul"
         private const val PRODUCT_DETAILS_TIMEOUT_MS = 5_000L
+        private const val DEFAULT_SUBSCRIPTION_PROMOTION_PROBABILITY = 0.2f
     }
 }
