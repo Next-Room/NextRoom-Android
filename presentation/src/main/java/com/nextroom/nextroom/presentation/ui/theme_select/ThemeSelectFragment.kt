@@ -163,6 +163,7 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             is ThemeSelectEvent.NeedToCheckPasswordForStartGame -> moveToCheckPasswordForGameStart(event.themeId)
             ThemeSelectEvent.NeedToCheckPasswordForManageThemes -> moveToCheckPasswordForManageThemes()
             ThemeSelectEvent.GuidePopupNotSeen -> showSuggestGuidePopup()
+            ThemeSelectEvent.SubscriptionPromotionEligible -> moveToSubscriptionGuide()
         }
     }
 

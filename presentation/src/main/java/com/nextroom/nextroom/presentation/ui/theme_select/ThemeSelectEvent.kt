@@ -19,4 +19,7 @@ sealed interface ThemeSelectEvent {
     data class NeedToCheckPasswordForStartGame(val themeId: String) : ThemeSelectEvent
     data object NeedToCheckPasswordForManageThemes : ThemeSelectEvent
     data object GuidePopupNotSeen : ThemeSelectEvent
+
+    /** 구독 필수 시점 이전의 무료 체험 자격자이고, 프로모션 추첨에도 당첨된 사용자 */
+    data object SubscriptionPromotionEligible : ThemeSelectEvent
 }
