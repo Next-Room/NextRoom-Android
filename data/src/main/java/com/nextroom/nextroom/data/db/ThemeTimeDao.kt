@@ -24,4 +24,7 @@ interface ThemeTimeDao {
 
     @Query("SELECT EXISTS(SELECT * FROM $THEME_TIME_TABLE_NAME WHERE themeId = :themeId)")
     suspend fun isTimeInfoExists(themeId: Int): Boolean
+
+    @Query("DELETE FROM $THEME_TIME_TABLE_NAME")
+    suspend fun deleteAllTimeInfo()
 }

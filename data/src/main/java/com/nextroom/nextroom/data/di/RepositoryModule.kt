@@ -17,6 +17,7 @@ import com.nextroom.nextroom.data.datasource.TokenDataSource
 import com.nextroom.nextroom.data.datasource.UserDataSource
 import com.nextroom.nextroom.data.db.GameStateDao
 import com.nextroom.nextroom.data.db.HintDao
+import com.nextroom.nextroom.data.db.NextRoomDatabase
 import com.nextroom.nextroom.data.db.ThemeDao
 import com.nextroom.nextroom.data.db.ThemeTimeDao
 import com.nextroom.nextroom.data.network.ApiService
@@ -94,14 +95,18 @@ object RepositoryModule {
 
     @Provides
     fun provideThemeLocalDataSource(
+        database: NextRoomDatabase,
         themeDao: ThemeDao,
         themeTimeDao: ThemeTimeDao,
         hintDao: HintDao,
+        gameStateDao: GameStateDao,
     ): ThemeLocalDataSource {
         return ThemeLocalDataSource(
+            database,
             themeDao,
             themeTimeDao,
             hintDao,
+            gameStateDao,
         )
     }
 
@@ -135,7 +140,8 @@ object RepositoryModule {
     fun provideAuthDataSource(
         @ApplicationContext context: Context,
         @Named("defaultApiService") apiSource: ApiService,
-    ): AuthDataSource = AuthDataSource(context, apiSource)
+        themeLocalDataSource: ThemeLocalDataSource,
+    ): AuthDataSource = AuthDataSource(context, apiSource, themeLocalDataSource)
 
     @Provides
     fun provideUserDataSource(
