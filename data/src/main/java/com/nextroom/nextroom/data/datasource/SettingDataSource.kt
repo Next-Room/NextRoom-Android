@@ -19,10 +19,6 @@ class SettingDataSource @Inject constructor(
     private val data: Flow<AppSettings>
         get() = dataStore.data
 
-    suspend fun getAdminCode(): String {
-        return data.first().adminCode
-    }
-
     val shopName: Flow<String>
         get() = data.map { it.shopName }
 
@@ -50,15 +46,9 @@ class SettingDataSource @Inject constructor(
         return data.first().lastLaunchDate
     }
 
-    /**
-     * 관리자 코드 저장과 로그인 처리
-     * */
-    suspend fun saveAdminInfo(adminCode: String, shopName: String) {
+    suspend fun saveShopName(shopName: String) {
         dataStore.updateData {
-            it.copy(
-                adminCode = adminCode,
-                shopName = shopName,
-            )
+            it.copy(shopName = shopName)
         }
     }
 

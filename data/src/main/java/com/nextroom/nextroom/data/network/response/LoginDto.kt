@@ -14,12 +14,9 @@ data class LoginDto(
     val refreshToken: String?,
     @SerializedName("shopName")
     val shopName: String?,
-    @SerializedName("adminCode")
-    val adminCode: String?,
 ) {
     fun toDomain(): LoginInfo {
         return LoginInfo(
-            adminCode = adminCode ?: "",
             shopName = shopName ?: "",
             accessToken = accessToken ?: "",
             refreshToken = refreshToken ?: "",

@@ -27,4 +27,7 @@ interface HintDao {
 
     @Query("DELETE FROM $HINT_TABLE_NAME WHERE id = :themeId")
     suspend fun deleteHints(themeId: Int)
+
+    @Query("DELETE FROM $HINT_TABLE_NAME")
+    suspend fun deleteAllHints()
 }
