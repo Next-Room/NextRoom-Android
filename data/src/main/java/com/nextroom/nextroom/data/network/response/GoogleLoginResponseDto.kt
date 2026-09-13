@@ -5,7 +5,6 @@ import com.nextroom.nextroom.domain.model.GoogleLoginResponse
 
 data class GoogleLoginResponseDto(
     @SerializedName("shopName") val shopName: String?,
-    @SerializedName("adminCode") val adminCode: String,
     @SerializedName("grantType") val grantType: String,
     @SerializedName("accessToken") val accessToken: String,
     @SerializedName("accessTokenExpiresIn") val accessTokenExpiresIn: Long,
@@ -15,7 +14,6 @@ data class GoogleLoginResponseDto(
     fun toDomainModel(): GoogleLoginResponse {
         return GoogleLoginResponse(
             shopName = shopName,
-            adminCode = adminCode,
             grantType = grantType,
             accessToken = accessToken,
             accessTokenExpiresIn = accessTokenExpiresIn,

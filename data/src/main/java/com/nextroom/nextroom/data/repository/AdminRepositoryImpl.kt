@@ -41,13 +41,13 @@ class AdminRepositoryImpl @Inject constructor(
     override val cachedSubscribeStatus: SubscribeStatus
         get() = _cachedSubscribeStatus
 
-    override suspend fun login(adminCode: String, password: String, emailSaveChecked: Boolean): Result<LoginInfo> {
-        return authDataSource.login(adminCode, password).onSuccess {
+    override suspend fun login(email: String, password: String, emailSaveChecked: Boolean): Result<LoginInfo> {
+        return authDataSource.login(email, password).onSuccess {
             if (emailSaveChecked) {
-                settingDataSource.saveUserEmail(adminCode)
+                settingDataSource.saveUserEmail(email)
             }
             settingDataSource.setEmailSaveChecked(emailSaveChecked)
-            settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName)
+            settingDataSource.saveShopName(it.shopName)
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
             settingDataSource.setLoggedIn(true)
         }
@@ -61,10 +61,6 @@ class AdminRepositoryImpl @Inject constructor(
         return userDataSource.resign().onSuccess {
             logout()
         }
-    }
-
-    override suspend fun verifyAdminCode(code: String): Boolean {
-        return settingDataSource.getAdminCode() == code
     }
 
     /**
@@ -107,7 +103,7 @@ class AdminRepositoryImpl @Inject constructor(
             it.data.toDomainModel()
         }.onSuccess {
             tokenDataSource.saveTokens(it.accessToken, it.refreshToken)
-            settingDataSource.saveAdminInfo(adminCode = it.adminCode, shopName = it.shopName ?: "")
+            settingDataSource.saveShopName(it.shopName ?: "")
             if (it.isComplete) settingDataSource.setLoggedIn(true)
         }
     }
@@ -128,8 +124,7 @@ class AdminRepositoryImpl @Inject constructor(
         ).mapOnSuccess {
             it.data.toDomainModel()
         }.onSuccess {
-            // adminCode는 서비스 내에서 제거될 예정. 현재 사용하고 있지 않고 일부 코드만이 남아있다.
-            settingDataSource.saveAdminInfo(adminCode = it.adminCode ?: "", shopName = it.shopName)
+            settingDataSource.saveShopName(it.shopName)
             settingDataSource.setLoggedIn(true)
         }
     }

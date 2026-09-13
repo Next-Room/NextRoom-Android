@@ -33,18 +33,17 @@ class AuthDataSource @Inject constructor(
     private val _authEvent = MutableSharedFlow<AdminRepository.AuthEvent>()
     val authEvent = _authEvent.asSharedFlow()
 
-    suspend fun login(adminCode: String, password: String): Result<LoginInfo> {
-        return apiService.login(LoginRequest(adminCode, password)).mapOnSuccess { it.data.toDomain() }
+    suspend fun login(email: String, password: String): Result<LoginInfo> {
+        return apiService.login(LoginRequest(email, password)).mapOnSuccess { it.data.toDomain() }
     }
 
     /**
-     * 관리자 코드 제거와 로그아웃 처리
+     * 로그아웃 처리
      * */
     suspend fun logout() {
         dataStore.updateData {
             it.copy(
                 loggedIn = false,
-                adminCode = "",
                 shopName = "",
                 accessToken = "",
                 refreshToken = "",

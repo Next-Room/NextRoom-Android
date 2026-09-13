@@ -21,8 +21,7 @@ class ThemeRepositoryImpl @Inject constructor(
 ) : ThemeRepository {
 
     override suspend fun getLocalThemes(): Flow<List<ThemeInfo>> {
-        val adminCode = settingDataSource.getAdminCode()
-        return themeLocalDataSource.getThemes(adminCode)
+        return themeLocalDataSource.getThemes()
     }
 
     override suspend fun getThemes(): Result<List<ThemeInfo>> {
@@ -33,19 +32,13 @@ class ThemeRepositoryImpl @Inject constructor(
                     else it
                 }
                 .also {
-                    themeLocalDataSource.updateThemes(
-                        settingDataSource.getAdminCode(),
-                        it,
-                    )
+                    themeLocalDataSource.updateThemes(it)
                 }
         }
     }
 
     override suspend fun upsertTheme(themeInfo: ThemeInfo) {
-        themeLocalDataSource.upsertTheme(
-            adminCode = settingDataSource.getAdminCode(),
-            themeInfo = themeInfo,
-        )
+        themeLocalDataSource.upsertTheme(themeInfo)
     }
 
     override suspend fun updateLatestTheme(themeId: Int) {

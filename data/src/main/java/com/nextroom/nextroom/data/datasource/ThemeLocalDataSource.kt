@@ -16,8 +16,8 @@ class ThemeLocalDataSource @Inject constructor(
     private val themeTimeDao: ThemeTimeDao,
     private val hintDao: HintDao,
 ) {
-    suspend fun getThemes(adminCode: String): Flow<List<ThemeInfo>> {
-        return themeDao.getThemes(adminCode).map { themes ->
+    suspend fun getThemes(): Flow<List<ThemeInfo>> {
+        return themeDao.getThemes().map { themes ->
             themes.map { theme ->
                 val hints = hintDao.getHints(theme.themeId)
                 theme.toDomain(hints.map { it.toDomain() })
@@ -25,13 +25,13 @@ class ThemeLocalDataSource @Inject constructor(
         }
     }
 
-    suspend fun updateThemes(adminCode: String, newThemes: List<ThemeInfo>) {
-        val newData = newThemes.toEntity(adminCode).toTypedArray()
+    suspend fun updateThemes(newThemes: List<ThemeInfo>) {
+        val newData = newThemes.toEntity().toTypedArray()
         themeDao.insertThemes(*newData)
     }
 
-    suspend fun upsertTheme(adminCode: String, themeInfo: ThemeInfo) {
-        themeDao.insertTheme(themeInfo.toEntity(adminCode))
+    suspend fun upsertTheme(themeInfo: ThemeInfo) {
+        themeDao.insertTheme(themeInfo.toEntity())
     }
 
     suspend fun getTheme(themeId: Int): Flow<ThemeInfo> {

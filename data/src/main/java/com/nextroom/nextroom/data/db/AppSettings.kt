@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class AppSettings(
     val loggedIn: Boolean = false,
-    val adminCode: String = "",
     val shopName: String = "",
     val latestGameCode: Int = -1,
     val accessToken: String = "",

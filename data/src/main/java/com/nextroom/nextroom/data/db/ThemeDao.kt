@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ThemeDao {
 
-    @Query("SELECT * FROM $THEME_TABLE_NAME WHERE adminCode = :adminCode")
-    fun getThemes(adminCode: String): Flow<List<ThemeEntity>>
+    @Query("SELECT * FROM $THEME_TABLE_NAME")
+    fun getThemes(): Flow<List<ThemeEntity>>
 
     @Query("SELECT * FROM $THEME_TABLE_NAME WHERE themeId = :themeId LIMIT 1")
     fun getTheme(themeId: Int): Flow<ThemeEntity>
@@ -26,6 +26,6 @@ interface ThemeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTheme(theme: ThemeEntity)
 
-    @Query("DELETE FROM $THEME_TABLE_NAME WHERE adminCode = :adminCode")
-    suspend fun deleteThemes(adminCode: String)
+    @Query("DELETE FROM $THEME_TABLE_NAME")
+    suspend fun deleteAllThemes()
 }
