@@ -42,6 +42,7 @@ import com.nextroom.nextroom.presentation.model.InputState
 import com.nextroom.nextroom.presentation.ui.main.ModifyTimeBottomSheet.Companion.BUNDLE_KEY_MODIFIED_TIME
 import com.nextroom.nextroom.presentation.ui.memo.PainterViewModel
 import com.nextroom.nextroom.presentation.util.Logger
+import com.nextroom.nextroom.presentation.util.PresignedGlideUrl
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -169,7 +170,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     private fun setBackground(url: String?, themeImageCustomInfo: ThemeImageCustomInfo?) {
         Glide.with(requireContext())
-            .load(url)
+            .load(url?.let(::PresignedGlideUrl))
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
