@@ -63,6 +63,9 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     private var gameStartConfirmDialog: NRDialog? = null
 
+    /** 배경 이미지를 이미 요청한 URL. 뷰가 새로 만들어질 때마다 초기화된다. */
+    private var requestedBackgroundUrl: String? = null
+
     private fun dismissStartConfirmDialog() {
         gameStartConfirmDialog?.dismiss()
     }
@@ -77,6 +80,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requestedBackgroundUrl = null
         initViews()
         initListener()
         setFragmentResultListeners()
@@ -272,9 +276,13 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(FragmentTimerBinding::i
             else -> {}
         }
 
-        if (binding.pvCustomImage.drawable == null && state.themeImageEnabled && !state.themeImageUrl.isNullOrEmpty()) {
+        // render()는 타이머 tick마다 호출되므로, 같은 URL을 이미 요청했다면 다시 걸지 않는다.
+        // 진행 중인 요청을 매초 취소하고 재시작하거나, 실패한 요청을 무한 재시도하는 것을 막는다.
+        val backgroundUrl = state.themeImageUrl
+        if (state.themeImageEnabled && !backgroundUrl.isNullOrEmpty() && requestedBackgroundUrl != backgroundUrl) {
+            requestedBackgroundUrl = backgroundUrl
             binding.pvCustomImage.isVisible = true
-            setBackground(state.themeImageUrl, state.themeImageCustomInfo)
+            setBackground(backgroundUrl, state.themeImageCustomInfo)
             state.themeImageCustomInfo
                 ?.opacity
                 ?.let {
