@@ -55,7 +55,7 @@ class AuthAuthenticator @Inject constructor(
                 apiService.refreshToken(TokenRefreshRequest(accessToken = access, refreshToken = refresh))
                     .onSuccess { newToken -> tokenDataSource.saveTokens(newToken.data.accessToken, newToken.data.refreshToken) }
                     .mapOnSuccess { newToken ->
-                        Timber.tag("AuthAuthenticator").d("Refresh Token Success: $newToken")
+                        Timber.tag("AuthAuthenticator").d("Refresh Token Success (expiresIn=${newToken.data.accessTokenExpiresIn})")
                         return@mapOnSuccess response.retryWith(newToken.data.accessToken)
                     }.onFailure { failure ->
                         if (failure.isSessionRejected()) {
