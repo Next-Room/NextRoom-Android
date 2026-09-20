@@ -69,6 +69,7 @@ private class ApiResultCall<R>(
                     val message = errorBody?.getString("message") ?: ""
                     when (code) {
                         "400" -> Result.Failure.HttpError.BadRequest(message)
+                        "401" -> Result.Failure.HttpError.Unauthorized(message)
                         "403" -> Result.Failure.HttpError.Forbidden(message)
                         "404" -> Result.Failure.HttpError.NotFound(message)
                         "409" -> Result.Failure.HttpError.Conflict(message)
