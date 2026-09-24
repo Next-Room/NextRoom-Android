@@ -25,6 +25,16 @@ sealed interface Result<out T> {
             }
 
             /**
+             * ## 인증 실패
+             *
+             * 액세스 토큰이 만료됐거나, 리프레시 토큰이 더 이상 유효하지 않은 경우.
+             * 서버가 세션을 거절했다는 뜻이므로 재시도로는 회복되지 않는다.
+             */
+            data class Unauthorized(override val message: String) : HttpError {
+                override val code = 401
+            }
+
+            /**
              * ## 접근 권한 에러
              *
              * 로그인 되어 있는 유저와 요청한 데이터를 소유한 유저가 다른 경우
