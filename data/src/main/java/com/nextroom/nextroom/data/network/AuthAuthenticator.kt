@@ -82,13 +82,14 @@ class AuthAuthenticator @Inject constructor(
     /**
      * 서버가 세션 자체를 거절했는지 여부.
      *
-     * 401/400 은 리프레시 토큰이 더 이상 유효하지 않다는 서버의 답이므로 로그아웃한다.
-     * 반면 네트워크 오류나 서버 장애는 리프레시 토큰이 멀쩡한데 잠깐 닿지 못한 것뿐이다.
-     * 이 경우까지 로그아웃하면 잠깐의 끊김 때문에 매번 재로그인을 요구하게 되므로,
-     * 해당 요청만 실패시키고 다음 요청에서 다시 재발급을 시도하게 둔다.
+     * 서버는 리프레시 토큰이 유효하지 않을 때만 401 을 준다(만료/서명 불일치/폐기 포함).
+     * 400 은 요청 본문을 읽지 못했다는 뜻이고 5xx 는 서버 장애라, 둘 다 리프레시 토큰은
+     * 멀쩡한데 잠깐 실패한 것뿐이다. 네트워크 오류도 마찬가지다. 이 경우까지 로그아웃하면
+     * 일시적 오류 때문에 매번 재로그인을 요구하게 되므로, 해당 요청만 실패시키고
+     * 다음 요청에서 다시 재발급을 시도하게 둔다.
      */
     private fun Result.Failure.isSessionRejected(): Boolean =
-        this is Result.Failure.HttpError && (code == 401 || code == 400)
+        this is Result.Failure.HttpError && code == 401
 
     companion object {
         private const val AUTHORIZATION = "Authorization"
