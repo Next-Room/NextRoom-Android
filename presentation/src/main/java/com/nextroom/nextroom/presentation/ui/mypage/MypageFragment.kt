@@ -63,6 +63,11 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
+
     override fun initObserve() {
         super.initObserve()
 
