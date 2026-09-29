@@ -22,4 +22,7 @@ sealed interface ThemeSelectEvent {
 
     /** 구독 필수 시점 이전의 무료 체험 자격자이고, 프로모션 추첨에도 당첨된 사용자 */
     data object SubscriptionPromotionEligible : ThemeSelectEvent
+
+    /** 구독 필수 안내 기간 중이고, 아직 안내 팝업을 본 적이 없는 사용자 */
+    data object SubscriptionRequiredNoticeUnseen : ThemeSelectEvent
 }

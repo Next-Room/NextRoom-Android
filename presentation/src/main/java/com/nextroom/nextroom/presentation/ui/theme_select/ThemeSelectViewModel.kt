@@ -12,6 +12,7 @@ import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_SUBSCRIPTION_PROMOTION_PROBABILITY
 import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository.Companion.REMOTE_KEY_SUBSCRIPTION_REQUIRED_DATE
 import com.nextroom.nextroom.domain.repository.HintRepository
+import com.nextroom.nextroom.domain.repository.SubscriptionNoticeRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.presentation.base.NewBaseViewModel
 import com.nextroom.nextroom.presentation.model.ThemeInfoPresentation
@@ -30,6 +31,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -45,6 +47,7 @@ class ThemeSelectViewModel @Inject constructor(
     private val bannerRepository: BannerRepository,
     private val firebaseRemoteConfigRepository: FirebaseRemoteConfigRepository,
     private val subscriptionOfferLoader: SubscriptionOfferLoader,
+    private val subscriptionNoticeRepository: SubscriptionNoticeRepository,
 ) : NewBaseViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -59,6 +62,13 @@ class ThemeSelectViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<ThemeSelectEvent>(extraBufferCapacity = 1)
     val uiEvent = _uiEvent.asSharedFlow()
 
+    /** 유료화 전환 안내 확인 이력을 남길 때 쓰는 매장 정보. 마이페이지 조회 성공 시 갱신된다. */
+    private var cachedShopId: String? = null
+    private var cachedShopName: String = ""
+
+    /** 화면 진입 팝업을 이미 판단했는지 여부. 화면을 오갈 때마다 다시 띄우지 않는다. */
+    private var entryPopupChecked = false
+
     init {
         showInAppReview()
 
@@ -67,16 +77,83 @@ class ThemeSelectViewModel @Inject constructor(
                 _uiState.update { it.copy(shopName = shopName) }
             }
         }
-        baseViewModelScope.launch {
-            if (dataStoreRepository.getHasSeenGuidePopup().not()) {
+    }
+
+    /**
+     * 화면 진입 시 노출할 팝업을 한 번만 판단한다.
+     *
+     * 팝업이 겹쳐 뜨지 않도록 한 번의 진입에 하나만 노출하고,
+     * 영업에 직접 영향을 주는 유료화 전환 안내에 가장 높은 우선순위를 준다.
+     *
+     * 매장 식별자와 구독 상태가 필요해서 마이페이지 조회 성공 이후에 호출한다.
+     */
+    private suspend fun showEntryPopupIfNeeded(shopId: String, subscribeStatus: SubscribeStatus) {
+        if (entryPopupChecked) return
+        entryPopupChecked = true
+
+        when {
+            needsSubscriptionRequiredNotice(shopId, subscribeStatus) -> {
+                _uiEvent.emit(ThemeSelectEvent.SubscriptionRequiredNoticeUnseen)
+            }
+
+            dataStoreRepository.getHasSeenGuidePopup().not() -> {
                 _uiEvent.emit(ThemeSelectEvent.GuidePopupNotSeen)
                 dataStoreRepository.setHasSeenGuidePopup()
             }
-        }
-        baseViewModelScope.launch {
-            if (isSubscriptionPromotionEligible()) {
+
+            isSubscriptionPromotionEligible() -> {
                 _uiEvent.emit(ThemeSelectEvent.SubscriptionPromotionEligible)
             }
+        }
+    }
+
+    /**
+     * 유료화 전환 안내 팝업을 띄워야 하는지 여부.
+     *
+     * 안내 기간([SUBSCRIPTION_NOTICE_DEADLINE_DATE] KST 자정) 이전이고,
+     * 아직 확인 기록이 없는 경우에만 띄운다.
+     *
+     * 이미 구독 중인 매장에는 미리 구독을 진행해 달라는 안내가 불필요하므로 띄우지 않는다.
+     *
+     * 확인 기록 조회에 실패하면 안내를 놓치는 쪽이 더 위험하므로 아직 확인하지 않은 것으로 본다.
+     */
+    private suspend fun needsSubscriptionRequiredNotice(
+        shopId: String,
+        subscribeStatus: SubscribeStatus,
+    ): Boolean {
+        if (subscribeStatus == SubscribeStatus.Subscribed) return false
+        if (isBeforeSubscriptionNoticeDeadline().not()) return false
+
+        return subscriptionNoticeRepository
+            .hasConfirmedSubscriptionRequiredNotice(shopId)
+            .getOrNull != true
+    }
+
+    /** 안내 팝업 노출 종료 시점(KST 자정) 이전인지 여부 */
+    private fun isBeforeSubscriptionNoticeDeadline(): Boolean {
+        val deadline = parseStartOfDay(SUBSCRIPTION_NOTICE_DEADLINE_DATE) ?: return false
+
+        return System.currentTimeMillis() < deadline
+    }
+
+    /**
+     * 유료화 전환 안내 팝업의 확인 버튼을 눌렀을 때.
+     *
+     * 매장 식별자와 누른 시각을 Firestore에 남긴다. 이 기록이 다시 띄울지 판단하는 유일한 기준이라,
+     * 기록에 실패하면 다음 화면 진입에서 다시 안내하고 재시도한다.
+     */
+    fun onSubscriptionRequiredNoticeConfirmed() {
+        val confirmedAt = System.currentTimeMillis()
+
+        baseViewModelScope.launch {
+            val shopId = cachedShopId
+            if (shopId.isNullOrEmpty()) {
+                Timber.w("매장 식별자를 알 수 없어 유료화 전환 안내 확인 이력을 남기지 못했다")
+                return@launch
+            }
+
+            subscriptionNoticeRepository
+                .recordSubscriptionRequiredNoticeConfirmed(shopId, cachedShopName, confirmedAt)
         }
     }
 
@@ -137,6 +214,8 @@ class ThemeSelectViewModel @Inject constructor(
 
             _uiState.update { it.copy(loading = true) }
             adminRepository.getUserSubscribe().suspendOnSuccess { myPage ->
+                cachedShopId = myPage.id
+                cachedShopName = myPage.name
                 _uiState.update { it.copy(subscribeStatus = myPage.status) }
 
                 getThemes()
@@ -152,6 +231,10 @@ class ThemeSelectViewModel @Inject constructor(
                     .onSuccess { banners ->
                         _uiState.update { it.copy(banners = banners) }
                     }
+
+                // 팝업 판단에는 Firestore 조회와 Billing 조회가 들어가므로
+                // 로딩 표시가 이 때문에 길어지지 않게 별도 코루틴에서 처리한다.
+                baseViewModelScope.launch { showEntryPopupIfNeeded(myPage.id, myPage.status) }
             }.onFailure(::handleResultError)
             _uiState.update { it.copy(opaqueLoading = false, loading = false) }
         }
@@ -325,6 +408,9 @@ class ThemeSelectViewModel @Inject constructor(
     companion object {
         const val LIMITED_CUSTOM_BG_COUNT_FOR_FREE = 1
         private const val DEFAULT_SUBSCRIPTION_REQUIRED_DATE = "2026-10-01"
+
+        /** 유료화 전환 안내 팝업은 이 날짜(KST 자정) 이전까지만 노출한다 */
+        private const val SUBSCRIPTION_NOTICE_DEADLINE_DATE = "2026-10-03"
         private const val DATE_PATTERN = "yyyy-MM-dd"
         private const val TIME_ZONE_KST = "Asia/Seoul"
         private const val PRODUCT_DETAILS_TIMEOUT_MS = 5_000L

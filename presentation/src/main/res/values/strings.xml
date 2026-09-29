@@ -242,6 +242,11 @@
     <string name="text_suggest_guide_popup_title">환영합니다!</string>
     <string name="text_suggest_guide_popup_message">넥스트룸 사용 방법을 알아볼까요?</string>
     <string name="text_see_guide">가이드 보기</string>
+
+    <!-- 유료화 전환(구독 필수) 안내 팝업 -->
+    <string name="subscription_required_notice_title">중요 공지</string>
+    <string name="subscription_required_notice_message">2026년 10월 3일부터는\n구독 후에만 앱을 사용할 수 있습니다.\n영업에 차질이 없도록\n미리 구독을 진행해 주세요.</string>
+    <string name="subscription_required_notice_confirm">확인했어요</string>
     <string name="text_etc">기타</string>
     <string name="text_show_error">오류 내용 보기</string>
     <string name="text_fold">접기</string>

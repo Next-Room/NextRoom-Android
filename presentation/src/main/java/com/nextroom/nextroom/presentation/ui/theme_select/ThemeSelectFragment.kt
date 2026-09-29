@@ -23,6 +23,7 @@ import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.NavGraphDirections
 import com.nextroom.nextroom.presentation.R
 import com.nextroom.nextroom.presentation.base.ComposeBaseViewModelFragment
+import com.nextroom.nextroom.presentation.common.NROneButtonDialog
 import com.nextroom.nextroom.presentation.common.NRTwoButtonDialog
 import com.nextroom.nextroom.presentation.extension.getResultData
 import com.nextroom.nextroom.presentation.extension.hasResultData
@@ -104,6 +105,7 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
         setFragmentResultListener(requestKeyCheckPasswordForManageThemes, ::handleFragmentResults)
         setFragmentResultListener(dialogKeyNeedToSetPassword, ::handleFragmentResults)
         setFragmentResultListener(SHOW_USAGE_GUIDE_DIALOG_KEY, ::handleFragmentResults)
+        setFragmentResultListener(SUBSCRIPTION_REQUIRED_NOTICE_DIALOG_KEY, ::handleFragmentResults)
     }
 
     private fun handleFragmentResults(requestKey: String, bundle: Bundle) {
@@ -130,6 +132,10 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             }
 
             dialogKeyNeedToSetPassword -> moveToSetPassword()
+            SUBSCRIPTION_REQUIRED_NOTICE_DIALOG_KEY -> {
+                viewModel.onSubscriptionRequiredNoticeConfirmed()
+            }
+
             SHOW_USAGE_GUIDE_DIALOG_KEY -> {
                 try {
                     getString(R.string.link_usage_guide).let { url ->
@@ -164,6 +170,7 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             ThemeSelectEvent.NeedToCheckPasswordForManageThemes -> moveToCheckPasswordForManageThemes()
             ThemeSelectEvent.GuidePopupNotSeen -> showSuggestGuidePopup()
             ThemeSelectEvent.SubscriptionPromotionEligible -> moveToSubscriptionGuide()
+            ThemeSelectEvent.SubscriptionRequiredNoticeUnseen -> showSubscriptionRequiredNotice()
         }
     }
 
@@ -291,6 +298,30 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
         ).also { findNavController().safeNavigate(it) }
     }
 
+    /**
+     * 유료화 전환 안내 팝업.
+     *
+     * 확인 버튼을 눌렀다는 사실을 반드시 남겨야 하므로 취소할 수 없게 띄운다.
+     */
+    private fun showSubscriptionRequiredNotice() {
+        NavGraphDirections.moveToNrOneButtonDialog(
+            NROneButtonDialog.NROneButtonArgument(
+                title = getString(R.string.subscription_required_notice_title),
+                message = getString(R.string.subscription_required_notice_message),
+                isCancelable = false,
+                btnText = getString(R.string.subscription_required_notice_confirm),
+                dialogKey = SUBSCRIPTION_REQUIRED_NOTICE_DIALOG_KEY,
+            )
+        ).also {
+            findNavController().safeNavigate(
+                direction = it,
+                navOptions = NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
+        }
+    }
+
     private fun navByDeepLink(deeplinkUrl: String) {
         try {
             Intent(Intent.ACTION_VIEW)
@@ -315,5 +346,7 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             "requestKeyCheckPasswordForManageThemes"
         private const val dialogKeyNeedToSetPassword = "dialogKeyNeedToSetPassword"
         private const val SHOW_USAGE_GUIDE_DIALOG_KEY = "SHOW_USAGE_GUIDE_DIALOG_KEY"
+        private const val SUBSCRIPTION_REQUIRED_NOTICE_DIALOG_KEY =
+            "SUBSCRIPTION_REQUIRED_NOTICE_DIALOG_KEY"
     }
 }
