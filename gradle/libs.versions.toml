@@ -100,6 +100,8 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-analytics-ktx = { module = "com.google.firebase:firebase-analytics-ktx", version.require = "firebase-analytics" }
 firebase-crashlytics-ktx = { module = "com.google.firebase:firebase-crashlytics-ktx", version.require = "false" }
 firebase-config-ktx = { module = "com.google.firebase:firebase-config-ktx", version.ref = "firebase-config" }
+# 버전은 firebase-bom 이 관리한다
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 review = { module = "com.google.android.play:review", version.ref = "review" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 billing = { module = "com.android.billingclient:billing", version.ref = "billing" }

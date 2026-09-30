@@ -1,6 +1,7 @@
 package com.nextroom.nextroom.data.di
 
 import android.content.Context
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.nextroom.nextroom.data.datasource.AuthDataSource
 import com.nextroom.nextroom.data.datasource.BillingDataSource
@@ -11,6 +12,7 @@ import com.nextroom.nextroom.data.datasource.ImageUploadDataSource
 import com.nextroom.nextroom.data.datasource.SettingDataSource
 import com.nextroom.nextroom.data.datasource.StatisticsDataSource
 import com.nextroom.nextroom.data.datasource.SubscriptionDataSource
+import com.nextroom.nextroom.data.datasource.SubscriptionNoticeDataSource
 import com.nextroom.nextroom.data.datasource.ThemeLocalDataSource
 import com.nextroom.nextroom.data.datasource.ThemeRemoteDataSource
 import com.nextroom.nextroom.data.datasource.TokenDataSource
@@ -29,6 +31,7 @@ import com.nextroom.nextroom.data.repository.FirebaseRemoteConfigRepositoryImpl
 import com.nextroom.nextroom.data.repository.GameStateRepositoryImpl
 import com.nextroom.nextroom.data.repository.HintRepositoryImpl
 import com.nextroom.nextroom.data.repository.StatisticsRepositoryImpl
+import com.nextroom.nextroom.data.repository.SubscriptionNoticeRepositoryImpl
 import com.nextroom.nextroom.data.repository.ThemeRepositoryImpl
 import com.nextroom.nextroom.data.repository.TimerRepositoryImpl
 import com.nextroom.nextroom.domain.repository.AdminRepository
@@ -39,6 +42,7 @@ import com.nextroom.nextroom.domain.repository.FirebaseRemoteConfigRepository
 import com.nextroom.nextroom.domain.repository.GameStateRepository
 import com.nextroom.nextroom.domain.repository.HintRepository
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
+import com.nextroom.nextroom.domain.repository.SubscriptionNoticeRepository
 import com.nextroom.nextroom.domain.repository.ThemeRepository
 import com.nextroom.nextroom.domain.repository.TimerRepository
 import dagger.Module
@@ -232,5 +236,21 @@ object RepositoryModule {
         apiService: ApiService
     ) : BannerRepository {
         return BannerRepositoryImpl(apiService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSubscriptionNoticeDataSource(
+        firestore: FirebaseFirestore,
+    ): SubscriptionNoticeDataSource {
+        return SubscriptionNoticeDataSource(firestore)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSubscriptionNoticeRepository(
+        dataSource: SubscriptionNoticeDataSource,
+    ): SubscriptionNoticeRepository {
+        return SubscriptionNoticeRepositoryImpl(dataSource)
     }
 }

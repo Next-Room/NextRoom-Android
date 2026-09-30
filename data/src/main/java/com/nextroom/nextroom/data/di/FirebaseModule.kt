@@ -2,6 +2,7 @@ package com.nextroom.nextroom.data.di
 
 import android.content.Context
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.nextroom.nextroom.data.util.UserEventLoggerImpl
@@ -28,6 +29,12 @@ object FirebaseModule {
             .apply {
                 setConfigSettingsAsync(configSettings)
             }
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
     }
 
     @Singleton

@@ -75,6 +75,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config.ktx)
     implementation(libs.firebase.analytics.ktx)
+    implementation(libs.firebase.firestore.ktx)
 
     debugImplementation(libs.bundles.flipper)
     releaseImplementation(libs.flipper.noop)
