@@ -21,7 +21,6 @@ import com.nextroom.nextroom.presentation.ui.billing.SubscriptionOfferLoader
 import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DATE_PATTERN
 import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DEFAULT_SUBSCRIPTION_PROMOTION_PROBABILITY
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -60,8 +59,6 @@ class ThemeSelectViewModel @Inject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
     init {
-        showInAppReview()
-
         baseViewModelScope.launch {
             adminRepository.shopName.collect { shopName ->
                 _uiState.update { it.copy(shopName = shopName) }
@@ -101,13 +98,6 @@ class ThemeSelectViewModel @Inject constructor(
         if (Random.nextFloat() >= getSubscriptionPromotionProbability()) return false
 
         return hasFreeTrialOffer()
-    }
-
-    private fun showInAppReview() {
-        baseViewModelScope.launch {
-            delay(200)
-            _uiEvent.emit(ThemeSelectEvent.InAppReview)
-        }
     }
 
     fun loadData() {
