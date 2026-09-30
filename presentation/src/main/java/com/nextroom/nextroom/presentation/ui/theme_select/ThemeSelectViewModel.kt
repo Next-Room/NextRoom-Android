@@ -21,6 +21,7 @@ import com.nextroom.nextroom.presentation.ui.Constants
 import com.nextroom.nextroom.presentation.ui.billing.SubscriptionOfferLoader
 import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DATE_PATTERN
 import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.DEFAULT_SUBSCRIPTION_PROMOTION_PROBABILITY
+import com.nextroom.nextroom.presentation.ui.theme_select.ThemeSelectViewModel.Companion.SUBSCRIPTION_NOTICE_DEADLINE_DATE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -407,7 +408,7 @@ class ThemeSelectViewModel @Inject constructor(
 
     companion object {
         const val LIMITED_CUSTOM_BG_COUNT_FOR_FREE = 1
-        private const val DEFAULT_SUBSCRIPTION_REQUIRED_DATE = "2026-10-01"
+        private const val DEFAULT_SUBSCRIPTION_REQUIRED_DATE = "2026-10-03"
 
         /** 유료화 전환 안내 팝업은 이 날짜(KST 자정) 이전까지만 노출한다 */
         private const val SUBSCRIPTION_NOTICE_DEADLINE_DATE = "2026-10-03"
