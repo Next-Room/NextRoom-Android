@@ -6,7 +6,6 @@ sealed interface ThemeSelectEvent {
     data object NetworkError : ThemeSelectEvent
     data object UnknownError : ThemeSelectEvent
     data class ClientError(val message: String) : ThemeSelectEvent
-    data object InAppReview : ThemeSelectEvent
     data class ReadyToGameStart(val subscribeStatus: SubscribeStatus) : ThemeSelectEvent
 
     /** 무료 체험 자격이 있는 미구독자 → 무료 체험 안내 화면 */

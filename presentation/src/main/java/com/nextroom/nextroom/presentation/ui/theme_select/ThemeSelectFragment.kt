@@ -17,7 +17,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.nextroom.nextroom.domain.repository.StatisticsRepository
 import com.nextroom.nextroom.presentation.NavGraphDirections
@@ -161,7 +160,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             is ThemeSelectEvent.NetworkError -> snackbar(R.string.error_network)
             is ThemeSelectEvent.UnknownError -> snackbar(R.string.error_something)
             is ThemeSelectEvent.ClientError -> snackbar(event.message)
-            ThemeSelectEvent.InAppReview -> showInAppReview()
             is ThemeSelectEvent.ReadyToGameStart -> moveToGameStart(event.subscribeStatus)
             ThemeSelectEvent.NeedFreeTrialForGameStart -> moveToSubscriptionGuide()
             ThemeSelectEvent.NeedSubscriptionForGameStart -> moveToPurchase()
@@ -172,24 +170,6 @@ class ThemeSelectFragment : ComposeBaseViewModelFragment<ThemeSelectViewModel>()
             ThemeSelectEvent.SubscriptionPromotionEligible -> moveToSubscriptionGuide()
             ThemeSelectEvent.SubscriptionRequiredNoticeUnseen -> showSubscriptionRequiredNotice()
         }
-    }
-
-    private fun showInAppReview() {
-        val manager = ReviewManagerFactory.create(context ?: return)
-        manager
-            .requestReviewFlow()
-            .addOnCompleteListener { request ->
-                try {
-                    if (request.isSuccessful) {
-                        manager.launchReviewFlow(
-                            activity ?: return@addOnCompleteListener,
-                            request.result
-                        )
-                    }
-                } catch (ex: Exception) {
-                    Timber.e(ex)
-                }
-            }
     }
 
     private fun goToPurchase() {
