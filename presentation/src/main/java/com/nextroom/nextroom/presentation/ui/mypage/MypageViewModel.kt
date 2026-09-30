@@ -40,7 +40,11 @@ class MypageViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    init {
+    /**
+     * 플레이스토어에서 구독을 해지하고 돌아오는 등 앱 밖에서 구독 상태가 바뀔 수 있으므로
+     * init이 아니라 화면에 돌아올 때마다 다시 조회한다.
+     */
+    fun onResume() {
         fetchMyInfo()
     }
 

@@ -16,6 +16,7 @@
     <string name="link_official_instagram">https://www.instagram.com/team_nextroom/</string>
     <string name="link_usage_guide">https://nextroom-official.notion.site/38c311947d1d806cb862fe2510c3c6f4</string>
     <string name="link_notice">https://nextroom-official.notion.site/38c311947d1d8042b4ecdff3e4a5148f</string>
+    <string name="link_play_store_subscriptions">https://play.google.com/store/account/subscriptions?sku=%1$s&amp;package=%2$s</string>
 
     <string name="error_network">네트워크 연결상태를 확인해주세요</string>
     <string name="error_something">일시적인 오류입니다. 관리자에게 문의해 주세요.</string>
@@ -81,6 +82,9 @@
     <string name="resign">탈퇴</string>
     <string name="text_user_resign">회원탈퇴</string>
     <string name="resign_success_message">탈퇴가 완료되었습니다</string>
+    <string name="resign_blocked_dialog_title">구독 종료 후 탈퇴할 수 있어요</string>
+    <string name="resign_blocked_dialog_message">현재 구독 중이라 탈퇴할 수 없어요. 남은 이용 기간이 끝난 뒤 탈퇴하실 수 있어요.</string>
+    <string name="manage_subscription">구독 관리</string>
 
     <string name="game_main_exit_dialog">방탈출을 종료하시겠습니까?</string>
     <string name="game_main_exit_dialog_message">종료하시면 모든 기록은 초기화됩니다.</string>

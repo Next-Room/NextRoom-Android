@@ -23,6 +23,7 @@ import com.nextroom.nextroom.presentation.extension.repeatOnStarted
 import com.nextroom.nextroom.presentation.extension.safeNavigate
 import com.nextroom.nextroom.presentation.extension.snackbar
 import com.nextroom.nextroom.presentation.extension.toast
+import com.nextroom.nextroom.presentation.ui.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -52,7 +53,7 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
                             onNoticeClick = ::moveToNoticeWebView,
                             onCustomerServiceClick = ::openCustomerService,
                             onLogoutClick = viewModel::logout,
-                            onResignClick = ::showConfirmResignDialog,
+                            onResignClick = ::onResignClick,
                         )
                     }
 
@@ -61,6 +62,11 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
     }
 
     override fun initObserve() {
@@ -81,6 +87,9 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
     override fun setFragmentResultListeners() {
         setFragmentResultListener(REQUEST_KEY_RESIGN) { _, _ ->
             viewModel.resign()
+        }
+        setFragmentResultListener(REQUEST_KEY_MANAGE_SUBSCRIPTION) { _, _ ->
+            openPlayStoreSubscriptions()
         }
     }
 
@@ -121,6 +130,45 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
         findNavController().safeNavigate(action)
     }
 
+    private fun onResignClick() {
+        val loaded = viewModel.uiState.value as? MypageViewModel.UiState.Loaded ?: return
+        when (loaded.status) {
+            SubscribeStatus.Subscribed -> showSubscribingResignBlockedDialog()
+
+            SubscribeStatus.SUBSCRIPTION_EXPIRATION,
+            SubscribeStatus.Default -> showConfirmResignDialog()
+        }
+    }
+
+    private fun showSubscribingResignBlockedDialog() {
+        NavGraphDirections
+            .moveToNrTwoButtonDialog(
+                NRTwoButtonDialog.NRTwoButtonArgument(
+                    title = getString(R.string.resign_blocked_dialog_title),
+                    message = getString(R.string.resign_blocked_dialog_message),
+                    posBtnText = getString(R.string.manage_subscription),
+                    negBtnText = getString(R.string.dialog_close),
+                    dialogKey = REQUEST_KEY_MANAGE_SUBSCRIPTION,
+                ),
+            ).also { findNavController().safeNavigate(it) }
+    }
+
+    /** 플레이스토어의 넥스트룸 구독 관리 화면으로 이동한다. */
+    private fun openPlayStoreSubscriptions() {
+        try {
+            val uri = Uri.parse(
+                getString(
+                    R.string.link_play_store_subscriptions,
+                    Constants.MEMBERSHIP_PRODUCT,
+                    requireContext().packageName,
+                ),
+            )
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        } catch (e: Exception) {
+            toast(getString(R.string.error_something))
+        }
+    }
+
     private fun showConfirmResignDialog() {
         NavGraphDirections
             .moveToNrTwoButtonDialog(
@@ -142,5 +190,6 @@ class MypageFragment : ComposeBaseViewModelFragment<MypageViewModel>() {
 
     companion object {
         const val REQUEST_KEY_RESIGN = "REQUEST_KEY_RESIGN"
+        const val REQUEST_KEY_MANAGE_SUBSCRIPTION = "REQUEST_KEY_MANAGE_SUBSCRIPTION"
     }
 }
